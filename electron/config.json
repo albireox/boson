@@ -1,0 +1,16 @@
+{
+    "windows": {
+        "main": {
+            "width": 800,
+            "height": 600
+        },
+        "connect": {
+            "width": 100,
+            "height": 100
+        }
+    },
+    "connection": {
+        "host": "localhost",
+        "port": 9877
+    }
+}
