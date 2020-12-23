@@ -8,7 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import isDev from 'electron-is-dev';
 import * as path from 'path';
@@ -18,6 +18,7 @@ import store from './store';
 
 type WindowType = BrowserWindow | null;
 
+let windows: {[name: string]: BrowserWindow} = {};
 let mainWindow: WindowType = null;
 
 export function createWindow(name: string = 'main'): BrowserWindow {
@@ -28,6 +29,7 @@ export function createWindow(name: string = 'main'): BrowserWindow {
 
   let win: WindowType = new BrowserWindow({
     ...windowConfig,
+    useContentSize: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
@@ -43,7 +45,8 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     win.loadURL(`file://${__dirname}/../index.html?${name}`);
   }
 
-  win.on('closed', () => win = null);
+  windows[name] = win;
+  win.on('closed', () => { win = null; delete windows[name]; });
 
   // Hot Reloading
   if (name === 'main') {
@@ -86,3 +89,14 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+
+ipcMain.handle('get-window-size', async (event, name) => {
+  let win = windows[name];
+  return win?.getSize();
+})
+
+ipcMain.handle('set-window-size', async (event, name, width, height, animate=false) => {
+  let win = windows[name];
+  if (win !== undefined) win.setSize(width, height, animate);
+})

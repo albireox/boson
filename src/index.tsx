@@ -8,7 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
+import { Container, createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto';
@@ -19,7 +19,7 @@ import ViewManager from './ViewManager';
 
 // Add the contextBridge element to the window.
 declare global {
-  interface Window { electron: any; }
+  interface Window { electron: any; ipc: any; }
 }
 
 
@@ -27,14 +27,19 @@ const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
   },
+  typography: {
+    fontSize: 12
+  }
 });
 
 ReactDOM.render(
     <React.Fragment>
-      <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-        <ViewManager />
-      </ThemeProvider>
+      <Container component="main" maxWidth="xs">
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+          <ViewManager />
+        </ThemeProvider>
+      </Container>
     </React.Fragment>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

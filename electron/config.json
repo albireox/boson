@@ -5,8 +5,9 @@
             "height": 600
         },
         "connect": {
-            "width": 100,
-            "height": 100
+            "width": 315,
+            "height": 380,
+            "resizable": false
         }
     },
     "connection": {

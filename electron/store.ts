@@ -18,11 +18,11 @@ const Store = require('electron-store');
 // Then reset the store.
 const store = new Store();
 
-let config = {...defaults, ...store.get()}
+let config = {...defaults}
 store.set(config)
 
 
-ipcMain.on('get-from-store', (event, key) => {
+ipcMain.handle('get-from-store', async (event, key) => {
     return store.get(key);
 })
 

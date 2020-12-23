@@ -15,7 +15,7 @@ import tron from './tron';
 contextBridge.exposeInMainWorld(
     'electron',
     {
-        ipcRenderer: ipcRenderer,
+        ipc: ipcRenderer,
         tron: tron,
         store: {
             get: async (key: string) => await ipcRenderer.invoke('get-from-store', key)

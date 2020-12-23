@@ -11,6 +11,7 @@
 import { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import LogWindow from './views/MainView';
+import ConnectView from './views/ConnectView';
 
 
 // It seems we need <{}, {}> when extending the component but then the props
@@ -19,6 +20,7 @@ class ViewManager extends Component<{}, {}> {
   static Views(): {[key: string]: any} {
     return {
       main: <LogWindow />,
+      connect: <ConnectView />
     }
   }
 
@@ -32,9 +34,7 @@ class ViewManager extends Component<{}, {}> {
   render() {
     return (
       <BrowserRouter>
-        <div>
-          <Route path='/' component={ViewManager.View} />
-        </div>
+        <Route path='/' component={ViewManager.View} />
        </BrowserRouter>
     );
   }

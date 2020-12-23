@@ -3,152 +3,102 @@
  *  -*- coding: utf-8 -*-
  *
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
- *  @Date: 2020-12-21
+ *  @Date: 2020-12-22
  *  @Filename: ConnectView.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { TextField } from '@material-ui/core';
-import React from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import Container from '@material-ui/core/Container';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import React, { useState } from 'react';
 
 
-function ConnectView() {
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(0),
+    '& > div': {
+      margin: theme.spacing(0.5)
+    }
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 0),
+  },
+  error: {
+    backgroundColor: theme.palette.secondary.main,
+    marginTop: theme.spacing(3),
+    padding: theme.spacing(1),
+    width: '100%',
+    textAlign: 'center',
+  }
+}));
 
-  return (<form noValidate autoComplete="off">
-    <div>
-      <TextField required id="standard-required" label="Required" defaultValue="Hello World" />
-      <TextField disabled id="standard-disabled" label="Disabled" defaultValue="Hello World" />
-      <TextField
-        id="standard-password-input"
-        label="Password"
-        type="password"
-        autoComplete="current-password"
-      />
-      <TextField
-        id="standard-read-only-input"
-        label="Read Only"
-        defaultValue="Hello World"
-        InputProps={{
-          readOnly: true,
-        }}
-      />
-      <TextField
-        id="standard-number"
-        label="Number"
-        type="number"
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-      <TextField id="standard-search" label="Search field" type="search" />
-      <TextField
-        id="standard-helperText"
-        label="Helper text"
-        defaultValue="Default Value"
-        helperText="Some important text"
-      />
-    </div>
-    <div>
-      <TextField
-        required
-        id="filled-required"
-        label="Required"
-        defaultValue="Hello World"
-        variant="filled"
-      />
-      <TextField
-        disabled
-        id="filled-disabled"
-        label="Disabled"
-        defaultValue="Hello World"
-        variant="filled"
-      />
-      <TextField
-        id="filled-password-input"
-        label="Password"
-        type="password"
-        autoComplete="current-password"
-        variant="filled"
-      />
-      <TextField
-        id="filled-read-only-input"
-        label="Read Only"
-        defaultValue="Hello World"
-        InputProps={{
-          readOnly: true,
-        }}
-        variant="filled"
-      />
-      <TextField
-        id="filled-number"
-        label="Number"
-        type="number"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        variant="filled"
-      />
-      <TextField id="filled-search" label="Search field" type="search" variant="filled" />
-      <TextField
-        id="filled-helperText"
-        label="Helper text"
-        defaultValue="Default Value"
-        helperText="Some important text"
-        variant="filled"
-      />
-    </div>
-    <div>
-      <TextField
-        required
-        id="outlined-required"
-        label="Required"
-        defaultValue="Hello World"
-        variant="outlined"
-      />
-      <TextField
-        disabled
-        id="outlined-disabled"
-        label="Disabled"
-        defaultValue="Hello World"
-        variant="outlined"
-      />
-      <TextField
-        id="outlined-password-input"
-        label="Password"
-        type="password"
-        autoComplete="current-password"
-        variant="outlined"
-      />
-      <TextField
-        id="outlined-read-only-input"
-        label="Read Only"
-        defaultValue="Hello World"
-        InputProps={{
-          readOnly: true,
-        }}
-        variant="outlined"
-      />
-      <TextField
-        id="outlined-number"
-        label="Number"
-        type="number"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        variant="outlined"
-      />
-      <TextField id="outlined-search" label="Search field" type="search" variant="outlined" />
-      <TextField
-        id="outlined-helperText"
-        label="Helper text"
-        defaultValue="Default Value"
-        helperText="Some important text"
-        variant="outlined"
-      />
-    </div>
-  </form>
+
+export default function ConnectView() {
+  const classes = useStyles();
+
+  const [error, setError] = useState<undefined | string>(undefined);
+
+  let handleConnect = async (event: any) => {
+    event.preventDefault();
+    if (error === undefined) {
+      const windowSize: number[] = await window.electron.ipc.invoke('get-window-size', 'connect');
+      await window.electron.ipc.invoke('set-window-size', 'connect',
+                                       windowSize[0], windowSize[1] + 60)
+    }
+    setError('Failed!!!');
+  };
+
+  return (
+    <Container component='div' maxWidth='xs'>
+      <div className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon fontSize='large' />
+        </Avatar>
+        <Typography component='h1' variant='h5'>Log in</Typography>
+        <Typography className={classes.error}
+          style={{display: error === undefined ? 'none' : 'initial'}}
+          component='h5'>{error}</Typography>
+        <form className={classes.form} onSubmit={handleConnect}>
+          <TextField variant='outlined' margin='normal' required
+            fullWidth id='program' label='Program' name='program'
+            autoComplete="off" autoFocus size='small'
+            InputLabelProps={{ required: false }} />
+          <TextField variant='outlined' margin='normal' required
+            fullWidth name='user' label='Username' type='user'
+            id='user' autoComplete='off'  size='small'
+            InputLabelProps={{ required: false }} />
+          <TextField variant='outlined' margin='normal' required
+            fullWidth name='password' label='Password' type='password'
+            id='password' autoComplete='off'  size='small'
+            InputLabelProps={{ required: false }} />
+          <FormControlLabel
+            control={<Checkbox value='remember' color='primary' />}
+            label='Remember password' />
+          <Button type='submit' fullWidth variant='contained' color='primary'
+            className={classes.submit}>
+              Connect
+          </Button>
+        </form>
+      </div>
+    </Container>
   );
-
 }
-
-export default ConnectView;
