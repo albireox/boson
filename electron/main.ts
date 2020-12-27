@@ -39,6 +39,7 @@ export function createWindow(name: string = 'main'): BrowserWindow {
   let win: WindowType = new BrowserWindow({
     ...windowConfig,
     show: false,
+    backgroundColor: '#303030',
     useContentSize: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -47,6 +48,10 @@ export function createWindow(name: string = 'main'): BrowserWindow {
       contextIsolation: true
     }
   })
+
+  win.once('ready-to-show', () => {
+    win?.show()
+  });
 
   if (isDev) {
     win.loadURL(`http://localhost:3000/index.html?${name}`);
