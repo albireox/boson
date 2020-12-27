@@ -8,26 +8,22 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { app, BrowserWindow, ipcMain, Menu } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
-import isDev from 'electron-is-dev';
 import * as path from 'path';
+import loadEvents from './events';
 import menu from './menu';
 import store from './store';
-import { TronConnection } from './tron';
 
 require('v8-compile-cache');  // https://bit.ly/3mSfdBM
 
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-
 type WindowType = BrowserWindow | null;
 
-let windows: { [name: string]: BrowserWindow } = {};
+export let windows: { [name: string]: BrowserWindow } = {};
 let mainWindow: WindowType = null;
-
-let tron = TronConnection.getInstance();
 
 
 export function createWindow(name: string = 'main'): BrowserWindow {
@@ -53,18 +49,15 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     win?.show()
   });
 
-  if (isDev) {
-    win.loadURL(`http://localhost:3000/index.html?${name}`);
-  } else {
-    // 'build/index.html'
-    win.loadURL(`file://${__dirname}/../index.html?${name}`);
-  }
+  win.loadURL(`file://${__dirname}/../index.html?${name}`);
 
   windows[name] = win;
   win.on('closed', () => { win = null; delete windows[name]; });
 
   // Hot Reloading
   if (name === 'main') {
+
+    const isDev = require('electron-is-dev');
 
     if (isDev) {
       // 'node_modules/.bin/electronPath'
@@ -82,16 +75,18 @@ export function createWindow(name: string = 'main'): BrowserWindow {
       win.webContents.openDevTools();
     }
 
+    loadEvents();
+
   }
 
   return win
 }
 
+
 app.on('ready', () => {
   mainWindow = createWindow();
   Menu.setApplicationMenu(menu);
 })
-
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -103,36 +98,4 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
   }
-});
-
-
-// ====== Event handling ======
-
-// Main
-ipcMain.handle('get-window-size', async (event, name) => {
-  let win = windows[name];
-  return win?.getSize();
-});
-
-ipcMain.handle('set-window-size', async (event, name, width, height, animate = false) => {
-  let win = windows[name];
-  if (win !== undefined) win.setSize(width, height, animate);
-});
-
-// Store
-ipcMain.handle('get-from-store', async (event, key) => {
-  return store.get(key);
-});
-
-ipcMain.handle('set-in-store', async (event, key, value) => {
-  return store.set(key, value);
-});
-
-// Tron
-ipcMain.handle('tron-connect', async (event, host: string, port: number) => {
-  return await tron.connect(host, port);
-});
-
-ipcMain.handle('tron-add-streamer-window', async (event) => {
-  tron.model.addStreamerWindow(event.sender.id);
 });
