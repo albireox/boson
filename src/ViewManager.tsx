@@ -10,8 +10,8 @@
 
 import { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import LogView from './views/logView';
 import ConnectView from './views/connectView';
+import LogView from './views/logView';
 
 
 // It seems we need <{}, {}> when extending the component but then the props

@@ -32,14 +32,14 @@ const darkTheme = createMuiTheme({
 });
 
 ReactDOM.render(
-    <React.Fragment>
-      <Container component='main' style={{padding: 0}}>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
-          <ViewManager />
-        </ThemeProvider>
-      </Container>
-    </React.Fragment>, document.getElementById('root'));
+  <React.Fragment>
+    <Container component='main' style={{ padding: 0 }}>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <ViewManager />
+      </ThemeProvider>
+    </Container>
+  </React.Fragment>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

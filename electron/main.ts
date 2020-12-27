@@ -24,7 +24,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 type WindowType = BrowserWindow | null;
 
-let windows: {[name: string]: BrowserWindow} = {};
+let windows: { [name: string]: BrowserWindow } = {};
 let mainWindow: WindowType = null;
 
 let tron = TronConnection.getInstance();
@@ -79,15 +79,10 @@ export function createWindow(name: string = 'main'): BrowserWindow {
         .then((name) => console.log(`Added Extension: ${name}`))
         .catch((err) => console.log('An error occurred: ', err));
 
-        win.webContents.openDevTools();
+      win.webContents.openDevTools();
     }
 
   }
-
-  // See https://stackoverflow.com/a/30132661. This seems to work better than ready-to-show.
-  win.webContents.on('did-finish-load', function() {
-    win?.show();
-});
 
   return win
 }
@@ -119,7 +114,7 @@ ipcMain.handle('get-window-size', async (event, name) => {
   return win?.getSize();
 });
 
-ipcMain.handle('set-window-size', async (event, name, width, height, animate=false) => {
+ipcMain.handle('set-window-size', async (event, name, width, height, animate = false) => {
   let win = windows[name];
   if (win !== undefined) win.setSize(width, height, animate);
 });
