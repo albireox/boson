@@ -1,12 +1,9 @@
-import { app, BrowserWindow, Menu, shell } from "electron";
-import tron from './tron';
+import { app, Menu, shell } from "electron";
+// import tron from './tron';
 import { createWindow } from './main';
 
 
 const isMac = process.platform === 'darwin'
-let mainWindow: BrowserWindow;
-
-export function setMainWindow(win: BrowserWindow): void { mainWindow = win; }
 
 // Use any because Typescrip typing fails with ellipsis operator.
 const template: any[] = [
@@ -22,7 +19,7 @@ const template: any[] = [
       { role: 'hideothers' },
       { role: 'unhide' },
       { type: 'separator' },
-      { role: 'quit' }
+      { label: 'Quit', accelerator: 'CmdOrCtrl+Q', click: () => app.exit(0) }
     ]
   }] : []),
   // { role: 'fileMenu' }
@@ -30,7 +27,7 @@ const template: any[] = [
     label: 'File',
     submenu: [
       { label: 'Connect ...', id: 'connect', accelerator: 'CmdOrCtrl+Shift+C', click: () => createWindow('connect')},
-      { label: 'Disconnect', id: 'disconnect', click: () => tron.disconnect()},
+      // { label: 'Disconnect', id: 'disconnect', click: () => tron.disconnect()},
       isMac ? { role: 'close' } : { role: 'quit' }
     ]
   },

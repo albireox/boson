@@ -14,14 +14,13 @@ import ReactDOM from 'react-dom';
 import 'typeface-roboto';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import ViewManager from './ViewManager';
+import ViewManager from './viewManager';
 
 
 // Add the contextBridge element to the window.
 declare global {
-  interface Window { electron: any; ipc: any; }
+  interface Window { api: any; }
 }
-
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -34,7 +33,7 @@ const darkTheme = createMuiTheme({
 
 ReactDOM.render(
     <React.Fragment>
-      <Container component="main" maxWidth="xs">
+      <Container component='main' style={{padding: 0}}>
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
           <ViewManager />

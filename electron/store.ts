@@ -8,9 +8,8 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
- // Default values
-import { ipcMain } from 'electron';
 import defaults from './config.json';
+
 
 const Store = require('electron-store');
 
@@ -22,9 +21,5 @@ let config = {...defaults}
 store.set(config)
 
 
-ipcMain.handle('get-from-store', async (event, key) => {
-    return store.get(key);
-})
-
-
+// This is an anti-pattern and I should replace it with a get_store() or similar.
 export default store;

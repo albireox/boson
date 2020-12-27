@@ -8,7 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-
+import { BrowserWindow } from 'electron';
 import { Socket } from 'net';
 
 
@@ -16,34 +16,86 @@ interface Callback {
   (param?: any): void
 }
 
-enum ConnectionStatus {
+
+export enum ConnectionStatusEnum {
   Disconnected,
   Connecting,
   Connected,
   Authorising,
   Authorised,
-  Failed
+  Failed,
+  TimedOut
 }
 
-class TronConnection {
 
-  connectionStatus: ConnectionStatus = ConnectionStatus.Disconnected;
+export class TronModel {
+
+  stream: string[] = [];
+  model: { [key: string]: any } = {};
+
+  streamers: number[] = [];
+  listeners: { [key: string]: { (keymodel: any): void } } = {};
+
+  addStreamerWindow(windowId: number): void {
+    if (!this.streamers.includes(windowId)) this.streamers.push(windowId);
+  }
+
+  parseData(data: string) {
+    const newLines = data.split(/\r?\n/);
+    this.stream.push(...newLines)
+    for (let line of newLines) {
+      line = line.trim();
+      if (!line) continue;
+      this.streamers.forEach(id => {
+        const webContents: any = BrowserWindow.fromId(id)?.webContents;
+        webContents.send('tron-model-received-line', line);
+      })
+    }
+  }
+}
+
+
+export class TronConnection {
+
+  private static _instance: TronConnection;
+  private _connectionStatus: ConnectionStatusEnum = ConnectionStatusEnum.Disconnected;
+
   client = new Socket();
-  stateCallbacks: {[cbType: string]: Callback[]} = {};
+  model = new TronModel();
+  stateCallbacks: { [cbType: string]: Callback[] } = {};
 
   constructor() {
     this.registerCallback('connect', () => {
-      this.connectionStatus = ConnectionStatus.Connected;
+      this.connectionStatus = ConnectionStatusEnum.Connected;
       console.log('Connected to tron.');
     })
     this.registerCallback('error', (err) => {
-      this.connectionStatus = ConnectionStatus.Failed;
+      this.connectionStatus = ConnectionStatusEnum.Failed;
       console.log(`TronConnection failed: ${err}.`);
     })
     this.registerCallback('end', (err) => {
-      this.connectionStatus = ConnectionStatus.Disconnected;
+      this.connectionStatus = ConnectionStatusEnum.Disconnected;
       console.log('Disconnected from tron.');
     })
+    this.registerCallback('data', (buffer: Buffer) => {
+      this.model.parseData(buffer.toString());
+    })
+  }
+
+  public static getInstance(): TronConnection {
+    if (!TronConnection._instance) {
+      TronConnection._instance = new TronConnection();
+    }
+
+    return TronConnection._instance;
+  }
+
+  get connectionStatus(): ConnectionStatusEnum {
+    return this._connectionStatus;
+  }
+
+  set connectionStatus(value: ConnectionStatusEnum) {
+    this._connectionStatus = value;
   }
 
   registerCallback(cbType: string, cb: Callback) {
@@ -55,21 +107,34 @@ class TronConnection {
     }
 
     this.client.on(cbType,
-                   (...params) => this.stateCallbacks[cbType].forEach(cb => cb(...params)));
+      (...params) => this.stateCallbacks[cbType].forEach(cb => cb(...params)));
 
   }
 
-  connect(host: string, port: number) {
-    if (![ConnectionStatus.Connected,
-          ConnectionStatus.Authorised].includes(this.connectionStatus)) {
-      this.client.connect({host: host, port: port})
+  async connect(host: string, port: number): Promise<ConnectionStatusEnum> {
+
+    if ([ConnectionStatusEnum.Connected, ConnectionStatusEnum.Authorising,
+    ConnectionStatusEnum.Authorised].includes(this.connectionStatus)) {
+      return this.connectionStatus;
     }
+
+    this.connectionStatus = ConnectionStatusEnum.Connecting;
+    this.client.connect({ host: host, port: port })
+
+    let elapsedTime = 0.0;
+    while (elapsedTime < 5.) {
+      if (this.connectionStatus !== ConnectionStatusEnum.Connecting) return this.connectionStatus;
+      await new Promise(r => setTimeout(r, 50));
+    }
+    this.connectionStatus = ConnectionStatusEnum.TimedOut;
+    return this.connectionStatus
+
   }
+
+  // authorise(username: string, password: string, program: string) {}
 
   disconnect() {
     this.client.destroy();
   }
 
 }
-
-export default new TronConnection();

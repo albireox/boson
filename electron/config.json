@@ -2,7 +2,8 @@
     "windows": {
         "main": {
             "width": 800,
-            "height": 600
+            "height": 600,
+            "closable": false
         },
         "connect": {
             "width": 315,

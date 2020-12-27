@@ -10,24 +10,24 @@
 
 import { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import LogWindow from './views/MainView';
-import ConnectView from './views/ConnectView';
+import LogView from './views/logView';
+import ConnectView from './views/connectView';
 
 
 // It seems we need <{}, {}> when extending the component but then the props
 // passed to View() include the location object. Not sure why.
 class ViewManager extends Component<{}, {}> {
-  static Views(): {[key: string]: any} {
+  static Views(): { [key: string]: any } {
     return {
-      main: <LogWindow />,
+      main: <LogView />,
       connect: <ConnectView />
     }
   }
 
-  static View(props: {location: {search: string}}) {
+  static View(props: { location: { search: string } }) {
     let name = props.location.search.slice(1); // Remove the ? at the beginning.
     let view = ViewManager.Views()[name];
-    if(view == null) throw new Error(`View ${name} is undefined.`);
+    if (view == null) throw new Error(`View ${name} is undefined.`);
     return view;
   }
 
@@ -35,7 +35,7 @@ class ViewManager extends Component<{}, {}> {
     return (
       <BrowserRouter>
         <Route path='/' component={ViewManager.View} />
-       </BrowserRouter>
+      </BrowserRouter>
     );
   }
 }
