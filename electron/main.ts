@@ -9,14 +9,13 @@
  */
 
 import { app, BrowserWindow, Menu } from 'electron';
-import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
+import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import * as path from 'path';
 import loadEvents from './events';
 import menu from './menu';
 import store from './store';
 
-require('v8-compile-cache');  // https://bit.ly/3mSfdBM
-
+require('v8-compile-cache'); // https://bit.ly/3mSfdBM
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
@@ -25,40 +24,45 @@ type WindowType = BrowserWindow | null;
 export let windows: { [name: string]: BrowserWindow } = {};
 let mainWindow: WindowType = null;
 
-
 export function createWindow(name: string = 'main'): BrowserWindow {
-
   let windowConfig: object = store.get(`windows.${name}`);
 
-  windowConfig = windowConfig !== undefined ? windowConfig : { width: 800, height: 600 };
+  windowConfig = windowConfig ? windowConfig : store.get(`windows.default`);
 
   let win: WindowType = new BrowserWindow({
     ...windowConfig,
     show: false,
     backgroundColor: '#303030',
     useContentSize: true,
+    icon: path.join(__dirname, 'logo.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
       enableRemoteModule: false,
       contextIsolation: true
     }
-  })
-
-  win.once('ready-to-show', () => {
-    win?.show()
   });
 
-  win.loadURL(`file://${__dirname}/../index.html?${name}`);
+  win.once('ready-to-show', () => {
+    win?.show();
+  });
+
+  const isDev = require('electron-is-dev');
+
+  if (isDev) {
+    win.loadURL(`http://localhost:3000/index.html?${name}`);
+  } else {
+    win.loadURL(`file://${__dirname}/../index.html?${name}`);
+  }
 
   windows[name] = win;
-  win.on('closed', () => { win = null; delete windows[name]; });
+  win.on('closed', () => {
+    win = null;
+    delete windows[name];
+  });
 
   // Hot Reloading
   if (name === 'main') {
-
-    const isDev = require('electron-is-dev');
-
     if (isDev) {
       // 'node_modules/.bin/electronPath'
       require('electron-reload')(__dirname, {
@@ -76,17 +80,15 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     }
 
     loadEvents();
-
   }
 
-  return win
+  return win;
 }
-
 
 app.on('ready', () => {
   mainWindow = createWindow();
   Menu.setApplicationMenu(menu);
-})
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

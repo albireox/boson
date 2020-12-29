@@ -12,19 +12,19 @@ import { Container, createMuiTheme, CssBaseline, ThemeProvider } from '@material
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto';
-import './index.css';
 import * as serviceWorker from './serviceWorker';
 import ViewManager from './viewManager';
 
-
 // Add the contextBridge element to the window.
 declare global {
-  interface Window { api: any; }
+  interface Window {
+    api: any;
+  }
 }
 
 const darkTheme = createMuiTheme({
   palette: {
-    type: 'dark',
+    type: 'dark'
   },
   typography: {
     fontSize: 12
@@ -39,7 +39,9 @@ ReactDOM.render(
         <ViewManager />
       </ThemeProvider>
     </Container>
-  </React.Fragment>, document.getElementById('root'));
+  </React.Fragment>,
+  document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

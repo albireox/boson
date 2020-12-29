@@ -9,25 +9,21 @@
  */
 
 import { contextBridge, ipcRenderer } from 'electron';
-import { ConnectionStatusEnum } from './tron';
+import { ConnectionStatus } from './tron';
 
-
-contextBridge.exposeInMainWorld(
-  'api',
-  {
-    invoke: (channel: string, ...params: any) => {
-      return ipcRenderer.invoke(channel, ...params)
-    },
-    on: (channel: string, listener: any) => {
-      ipcRenderer.removeAllListeners(channel);
-      ipcRenderer.on(channel, (event, ...args) => listener(...args));
-    },
-    tron: {
-      ConnectionStatusEnum: ConnectionStatusEnum
-    },
-    store: {
-      get: async (key: string) => await ipcRenderer.invoke('get-from-store', key),
-      set: async (key: string, value: any) => await ipcRenderer.invoke('set-in-store', key, value)
-    }
-  }
-);
+contextBridge.exposeInMainWorld('api', {
+  invoke: (channel: string, ...params: any) => {
+    return ipcRenderer.invoke(channel, ...params);
+  },
+  on: (channel: string, listener: any) => {
+    ipcRenderer.removeAllListeners(channel);
+    ipcRenderer.on(channel, (event, ...args) => listener(...args));
+  },
+  tron: {
+    ConnectionStatus: ConnectionStatus,
+  },
+  store: {
+    get: async (key: string) => await ipcRenderer.invoke('get-from-store', key),
+    set: async (key: string, value: any) => await ipcRenderer.invoke('set-in-store', key, value),
+  },
+});

@@ -11,7 +11,7 @@
 import { Container, makeStyles, TextField, Typography } from '@material-ui/core';
 import React from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
-
+import { Reply } from '../../electron/tron';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     width: '100vw',
     overflow: 'auto',
-    padding: '1px 8px 1px',
+    padding: '1px 8px 1px'
   },
   logLine: {
     overflow: 'auto',
@@ -34,38 +34,41 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
 function LogView() {
-
-  const classes = useStyles()
+  const classes = useStyles();
   const [lines, setLines] = React.useState<any>('');
 
-  const parseLine = (line: string) => {
+  const parseReply = (reply: Reply) => {
     setLines((lines: any) => [
       ...lines,
       <Typography className={classes.logLine} key={lines.length}>
-        {line}
+        {reply.date.toUTCString().split(' ')[4] + ' ' + reply.rawLine}
       </Typography>
     ]);
-  }
+  };
 
   React.useEffect(() => {
     window.api.invoke('tron-add-streamer-window');
-    window.api.on('tron-model-received-line', parseLine);
+    window.api.on('tron-model-received-reply', parseReply);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Container className={classes.container}>
-      <ScrollToBottom className={classes.logBox}>
-        {lines}
-      </ScrollToBottom>
-      <TextField variant='outlined' margin='none'
-        fullWidth id='command' label='' name='command'
-        autoFocus size='small' style={{ padding: '4px 8px 8px' }} />
+      <ScrollToBottom className={classes.logBox}>{lines}</ScrollToBottom>
+      <TextField
+        variant='outlined'
+        margin='none'
+        fullWidth
+        id='command'
+        label=''
+        name='command'
+        autoFocus
+        size='small'
+        style={{ padding: '4px 8px 8px' }}
+      />
     </Container>
-  )
+  );
 }
-
 
 export default LogView;

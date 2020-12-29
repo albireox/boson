@@ -13,7 +13,6 @@ import React, { memo } from 'react';
 import { FixedSizeList as List, areEqual } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
-
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -29,23 +28,20 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     whiteSpace: 'nowrap',
     display: 'flex',
-    padding: '1px 8px 1px',
+    padding: '1px 8px 1px'
   },
   logLine: {
     fontSize: '14px'
   }
 }));
 
-
 interface RowInterface {
-  [key: string]: any
+  [key: string]: any;
 }
 
-
 function LogViewWithWindow() {
-
   const bottomRef = React.useRef<HTMLInputElement>(null);
-  const classes = useStyles()
+  const classes = useStyles();
   const [lines, setLines] = React.useState<any>('');
 
   const parseLine = (line: string) => {
@@ -55,7 +51,7 @@ function LogViewWithWindow() {
         {line}
       </Typography>
     ]);
-  }
+  };
 
   React.useEffect(() => {
     window.api.invoke('tron-add-streamer-window');
@@ -78,20 +74,32 @@ function LogViewWithWindow() {
       <Box component='div' className={classes.logBox}>
         <AutoSizer style={{ width: '100%', height: '100%' }}>
           {({ height, width }: any) => (
-            <List height={height} itemCount={lines.length} itemData={lines}
-              itemSize={22} width={width}>
+            <List
+              height={height}
+              itemCount={lines.length}
+              itemData={lines}
+              itemSize={22}
+              width={width}
+            >
               {Row}
             </List>
           )}
         </AutoSizer>
       </Box>
 
-      <TextField variant='outlined' margin='none'
-        fullWidth id='command' label='' name='command'
-        autoFocus size='small' style={{ padding: '4px 8px 8px' }} />
+      <TextField
+        variant='outlined'
+        margin='none'
+        fullWidth
+        id='command'
+        label=''
+        name='command'
+        autoFocus
+        size='small'
+        style={{ padding: '4px 8px 8px' }}
+      />
     </Container>
-  )
+  );
 }
-
 
 export default LogViewWithWindow;
