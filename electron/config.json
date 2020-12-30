@@ -11,12 +11,18 @@
         },
         "connect": {
             "width": 315,
-            "height": 380,
+            "height": 480,
             "resizable": false
         }
     },
-    "connection": {
-        "host": "localhost",
-        "port": 9877
+    "user": {
+        "connection": {
+            "program": "observer",
+            "user": "",
+            "host": "localhost",
+            "port": 9877,
+            "httpHost": "localhost",
+            "httpPort": 8080
+        }
     }
 }

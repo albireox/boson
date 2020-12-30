@@ -16,8 +16,12 @@ const Store = require('electron-store');
 // Then reset the store.
 const store = new Store();
 
-let config = { ...defaults };
-store.set(config);
+let userConfig = store.get('user', null);
+if (userConfig) {
+  store.set({ ...defaults, user: userConfig });
+} else {
+  store.set(defaults);
+}
 
 // This is an anti-pattern and I should replace it with a get_store() or similar.
 export default store;

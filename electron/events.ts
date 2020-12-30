@@ -9,6 +9,7 @@
  */
 
 import { ipcMain } from 'electron';
+import * as keytar from 'keytar';
 import { windows } from './main';
 import store from './store';
 import { TronConnection } from './tron';
@@ -36,11 +37,21 @@ export default function loadEvents() {
 
   // Store
   ipcMain.handle('get-from-store', async (event, key) => {
+    if (Array.isArray(key)) return key.map((k) => store.get(k));
     return store.get(key);
   });
 
   ipcMain.handle('set-in-store', async (event, key, value) => {
     return store.set(key, value);
+  });
+
+  // keytar
+  ipcMain.handle('get-password', async (event, service, account) => {
+    return await keytar.getPassword(service, account);
+  });
+
+  ipcMain.handle('set-password', async (event, service, account, value) => {
+    return await keytar.setPassword(service, account, value);
   });
 
   // Tron
