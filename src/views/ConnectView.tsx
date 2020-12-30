@@ -8,6 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import { LinearProgress } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -20,6 +21,13 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import React, { SyntheticEvent, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
+  progress: {
+    width: '100vw',
+    padding: '0px',
+    marginLeft: '-16px',
+    float: 'none',
+    height: '2px'
+  },
   paper: {
     marginTop: theme.spacing(2),
     display: 'flex',
@@ -35,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     padding: theme.spacing(0),
     '& > div': {
-      margin: theme.spacing(0.5)
+      margin: theme.spacing(0.5, 0)
     }
   },
   submit: {
@@ -54,7 +62,7 @@ export default function ConnectView() {
   const NAME = 'connect';
   const classes = useStyles();
 
-  const [connectForm, setConnectForm] = useState<any>({
+  const [connectForm, setConnectForm] = useState<{ [key: string]: any }>({
     program: null,
     user: null,
     password: null,
@@ -62,22 +70,25 @@ export default function ConnectView() {
   });
   const [error, setError] = useState<undefined | string>(undefined);
   const [buttonDisabled, setButtonDisabled] = useState<undefined | boolean>(false);
+  const [showProgress, setShowProgress] = useState<boolean>(false);
 
   React.useEffect(() => {
     if (error !== undefined) {
       window.api.invoke(
-        'set-window-size',
+        'window-set-size',
         NAME,
         document.getElementById('root')?.scrollWidth as number,
         (document.getElementById('paper')?.scrollHeight as number) + 60
       );
       setButtonDisabled(false);
+      setShowProgress(false);
     }
   }, [error]);
 
   let handleConnect = async (event: SyntheticEvent) => {
     event.preventDefault();
     setButtonDisabled(true);
+    setShowProgress(true);
 
     const connectionResult = await window.api.invoke('tron-connect', 'localhost', 9877);
 
@@ -112,6 +123,7 @@ export default function ConnectView() {
 
   return (
     <Container component='div' maxWidth='xs'>
+      {showProgress ? <LinearProgress className={classes.progress} color='secondary' /> : null}
       <div className={classes.paper} id='paper'>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon fontSize='large' />
