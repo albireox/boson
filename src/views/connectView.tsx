@@ -23,10 +23,7 @@ import React, { SyntheticEvent, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   progress: {
-    // width: '100vw',
     padding: '0px',
-    // marginLeft: '-16px',
-    // float: 'none',
     height: '2px'
   },
   paper: {
@@ -42,10 +39,6 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3)
-    // padding: theme.spacing(0)
-    // '& > div': {
-    //   margin: theme.spacing(0.5, 0)
-    // }
   },
   submit: {
     margin: theme.spacing(2, 0, 0)
