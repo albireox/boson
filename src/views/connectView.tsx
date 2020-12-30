@@ -182,7 +182,7 @@ export default function ConnectView() {
   };
 
   return (
-    <div>
+    <>
       {showProgress ? <LinearProgress className={classes.progress} color='secondary' /> : null}
       <Container component='div' maxWidth='xs' style={{ padding: '0px 24px 16px 24px' }}>
         <div className={classes.paper} id='paper'>
@@ -318,6 +318,6 @@ export default function ConnectView() {
           </form>
         </div>
       </Container>
-    </div>
+    </>
   );
 }
