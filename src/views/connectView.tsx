@@ -81,7 +81,7 @@ export default function ConnectView() {
 
   const [error, setError] = useState<undefined | string>(undefined);
   const [buttonDisabled, setButtonDisabled] = useState<undefined | boolean>(false);
-  const [showProgress, setShowProgress] = useState<boolean>(true);
+  const [showProgress, setShowProgress] = useState<boolean>(false);
   const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
 
   let updateHeight = () => {
