@@ -12,16 +12,17 @@ import { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import ConnectView from './views/connectView';
 import LogView from './views/logView';
-
+import MainView from './views/main';
 
 // It seems we need <{}, {}> when extending the component but then the props
 // passed to View() include the location object. Not sure why.
 class ViewManager extends Component<{}, {}> {
   static Views(): { [key: string]: any } {
     return {
-      main: <LogView />,
-      connect: <ConnectView />
-    }
+      main: <MainView />,
+      connect: <ConnectView />,
+      log: <LogView />
+    };
   }
 
   static View(props: { location: { search: string } }) {
