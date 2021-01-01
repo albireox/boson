@@ -13,7 +13,7 @@ import { Socket } from 'net';
 import * as os from 'os';
 
 interface Callback {
-  (event: string, param?: any): void;
+  (event: ConnectionStatus): void;
 }
 
 export interface Keyword {
@@ -47,7 +47,8 @@ export enum ConnectionStatus {
   Authorising,
   Authorised,
   Failed,
-  TimedOut
+  TimedOut,
+  ManualDisconnected
 }
 
 export enum CommandStatus {
@@ -164,8 +165,10 @@ export class TronConnection {
   commands: { [commandId: number]: Command } = {};
 
   constructor() {
-    this._updateStatus = this._updateStatus.bind(this);
-    this.registerCallback(this._updateStatus);
+    this.client.on('connect', () => (this.status = ConnectionStatus.Connected));
+    this.client.on('error', () => (this.status = ConnectionStatus.Failed));
+    this.client.on('end', () => (this.status = ConnectionStatus.Disconnected));
+    this.client.on('data', (buffer: Buffer) => this.parseData(buffer.toString()));
   }
 
   public static getInstance(): TronConnection {
@@ -181,41 +184,21 @@ export class TronConnection {
   }
 
   set status(value: ConnectionStatus) {
-    this._connectionStatus = value;
-  }
+    // We want to retain the manual disconnected status and avoid it to be
+    // replaced by the socket disconnect event.
+    if (
+      value === ConnectionStatus.Disconnected &&
+      this.status === ConnectionStatus.ManualDisconnected
+    )
+      return;
 
-  _updateStatus(event: string, ...params: unknown[]) {
-    console.log(event);
-    switch (event) {
-      case 'connect':
-        this.status = ConnectionStatus.Connected;
-        console.log('Connected to tron.');
-        break;
-      case 'error':
-        const err = params[0] as string;
-        this.status = ConnectionStatus.Failed;
-        console.log(`TronConnection failed: ${err}.`);
-        break;
-      case 'end':
-        this.status = ConnectionStatus.Disconnected;
-        console.log('Disconnected from tron.');
-        break;
-      case 'data':
-        const buffer = params[0] as Buffer;
-        this.parseData(buffer.toString());
-        break;
-    }
+    this._connectionStatus = value;
+    this.stateCallbacks.forEach((cb) => cb(value));
   }
 
   registerCallback(cb: Callback) {
     if (!this.stateCallbacks.includes(cb)) {
       this.stateCallbacks.push(cb);
-    }
-
-    // Subscribe to socket events.
-    const socketEvents = ['connect', 'data', 'end', 'error'];
-    for (let event of socketEvents) {
-      this.client.on(event, (...params) => cb(event, ...params));
     }
   }
 
@@ -249,7 +232,7 @@ export class TronConnection {
       return [false, 'Not connected'];
     }
 
-    this.status = ConnectionStatus.Authorised;
+    this.status = ConnectionStatus.Authorising;
     let kkCommand = await this.sendCommand('auth knockKnock');
     if (kkCommand.didFail()) {
       return [false, `Failed: ${kkCommand.replies[0].keywords['why'].values[0]}`];
@@ -274,12 +257,12 @@ export class TronConnection {
       return [false, `Failed: ${loginCommand.replies[0].keywords['why'].values[0]}`];
     } else {
       this.status = ConnectionStatus.Authorised;
-      this.stateCallbacks.forEach((cb) => cb('authorised'));
       return [true, null];
     }
   }
 
   disconnect() {
+    this.status = ConnectionStatus.ManualDisconnected;
     this.client.end();
   }
 
