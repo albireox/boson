@@ -12,7 +12,7 @@ import { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import ConnectView from './views/connectView';
 import LogView from './views/logView';
-import MainView from './views/main';
+import MainView from './views/mainView';
 
 // It seems we need <{}, {}> when extending the component but then the props
 // passed to View() include the location object. Not sure why.
