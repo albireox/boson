@@ -11,7 +11,7 @@
 import telescope from '@iconify/icons-mdi/telescope';
 import { Icon } from '@iconify/react';
 import { Button, Container, makeStyles, Snackbar, Tab, Tabs } from '@material-ui/core';
-import { Brightness7Outlined, HighlightOutlined } from '@material-ui/icons';
+import { Brightness7, Highlight } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import React, { BaseSyntheticEvent } from 'react';
 
@@ -137,8 +137,8 @@ export default function MainView() {
         textColor='secondary'
       >
         <TabMain icon={<Icon icon={telescope} style={{ fontSize: '35px' }} />} label='TCC' />
-        <TabMain icon={<HighlightOutlined fontSize='large' />} label='APOGEE' />
-        <TabMain icon={<Brightness7Outlined fontSize='large' />} label='BOSS' />
+        <TabMain icon={<Highlight fontSize='large' />} label='APOGEE' />
+        <TabMain icon={<Brightness7 fontSize='large' />} label='BOSS' />
       </Tabs>
       <TabManager tab={selectedTab[1]} />
     </Container>
