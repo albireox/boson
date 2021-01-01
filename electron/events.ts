@@ -91,8 +91,7 @@ export default function loadEvents() {
     } else if (
       event === ConnectionStatus.Disconnected ||
       event === ConnectionStatus.Failed ||
-      event === ConnectionStatus.TimedOut ||
-      event === ConnectionStatus.ManualDisconnected
+      event === ConnectionStatus.TimedOut
     ) {
       menu!.getMenuItemById('connect')!.enabled = true;
       menu!.getMenuItemById('disconnect')!.enabled = false;

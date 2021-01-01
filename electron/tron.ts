@@ -47,8 +47,7 @@ export enum ConnectionStatus {
   Authorising,
   Authorised,
   Failed,
-  TimedOut,
-  ManualDisconnected
+  TimedOut
 }
 
 export enum CommandStatus {
@@ -184,14 +183,6 @@ export class TronConnection {
   }
 
   set status(value: ConnectionStatus) {
-    // We want to retain the manual disconnected status and avoid it to be
-    // replaced by the socket disconnect event.
-    if (
-      value === ConnectionStatus.Disconnected &&
-      this.status === ConnectionStatus.ManualDisconnected
-    )
-      return;
-
     this._connectionStatus = value;
     this.stateCallbacks.forEach((cb) => cb(value));
   }
@@ -262,7 +253,6 @@ export class TronConnection {
   }
 
   disconnect() {
-    this.status = ConnectionStatus.ManualDisconnected;
     this.client.end();
   }
 
