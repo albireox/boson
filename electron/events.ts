@@ -12,7 +12,7 @@ import { ipcMain, Menu } from 'electron';
 import * as keytar from 'keytar';
 import { createWindow, windows } from './main';
 import store from './store';
-import { TronConnection } from './tron';
+import { ConnectionStatus, TronConnection } from './tron';
 
 let tron = TronConnection.getInstance();
 
@@ -82,14 +82,24 @@ export default function loadEvents() {
   });
 
   // Handle connect/disconnect from tron.
-  function handleTronEvents(event: string, ...params: unknown[]) {
+  function handleTronEvents(event: ConnectionStatus) {
     const menu = Menu.getApplicationMenu();
-    if (event === 'authorised') {
+    const mainWindow = windows['main'];
+    if (event === ConnectionStatus.Authorised) {
       menu!.getMenuItemById('connect')!.enabled = false;
       menu!.getMenuItemById('disconnect')!.enabled = true;
-    } else if (event === 'end') {
+    } else if (
+      event === ConnectionStatus.Disconnected ||
+      event === ConnectionStatus.Failed ||
+      event === ConnectionStatus.TimedOut ||
+      event === ConnectionStatus.ManualDisconnected
+    ) {
       menu!.getMenuItemById('connect')!.enabled = true;
       menu!.getMenuItemById('disconnect')!.enabled = false;
+    }
+
+    if (mainWindow) {
+      mainWindow.webContents.send('tron-status', tron.status);
     }
   }
 
