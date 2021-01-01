@@ -156,7 +156,6 @@ export default function ConnectView() {
           'tron-authorise',
           (({ program, user, password }) => ({ program, user, password }))(connectForm)
         );
-        console.log(result, err);
         if (result === true) {
           storeCredentials();
           window.api.invoke('window-close', NAME);
