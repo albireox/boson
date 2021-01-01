@@ -8,8 +8,9 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, app } from 'electron';
 import { Socket } from 'net';
+import * as os from 'os';
 
 interface Callback {
   (event: string, param?: any): void;
@@ -263,8 +264,10 @@ export class TronConnection {
 
     let authCommand =
       `auth login password=${authPassword} ` +
-      `user=${credentials.user} ` +
-      `program=${credentials.program}`;
+      `username="${credentials.user}" ` +
+      `program="${credentials.program.toUpperCase()}" ` +
+      `type=boson version=${app.getVersion()} ` +
+      `platform="${os.platform()}-${os.release()}-${os.arch()}"`;
 
     let loginCommand = await this.sendCommand(authCommand);
     if (loginCommand.didFail()) {
