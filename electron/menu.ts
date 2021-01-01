@@ -33,7 +33,7 @@ const template: any[] = [
       {
         label: 'Connect ...',
         id: 'connect',
-        accelerator: 'CmdOrCtrl+Shift+T',
+        accelerator: 'CmdOrCtrl+Shift+C',
         click: () => createWindow('connect')
       },
       { label: 'Disconnect', id: 'disconnect', click: () => tron.disconnect(), enabled: false },
