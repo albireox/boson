@@ -29,6 +29,30 @@ interface WindowConfig {
 export let windows: { [name: string]: BrowserWindow } = {};
 let mainWindow: WindowType = null;
 
+export function saveWindowPositions() {
+  // Stores the current positions and sizes of the open windows
+
+  // TODO: We could also save the screen in which the window is.
+  // If the screen is not present during restoration we can revert
+  // to the primary or current screen.
+
+  for (let name in windows) {
+    let win = windows[name];
+
+    let winScreen = screen.getDisplayMatching(win.getBounds());
+    let position = win.getPosition();
+
+    store.set(`user.windows.${name}.x`, position[0] - winScreen.bounds.x);
+    store.set(`user.windows.${name}.y`, position[1] - winScreen.bounds.y);
+
+    if (win.isResizable()) {
+      let size = win.getSize();
+      store.set(`user.windows.${name}.width`, size[0]);
+      store.set(`user.windows.${name}.height`, size[1]);
+    }
+  }
+}
+
 export function createWindow(name: string = 'main'): BrowserWindow {
   // Create or show a new window
 
@@ -38,6 +62,10 @@ export function createWindow(name: string = 'main'): BrowserWindow {
 
   let windowConfig: WindowConfig = store.get(`windows.${name}`);
   windowConfig = windowConfig ? windowConfig : store.get(`windows.default`);
+
+  // Checks if there are saved positions and, if so, overrides the config
+  let customConfig: WindowConfig = store.get(`user.windows.${name}`);
+  if (customConfig) windowConfig = { ...windowConfig, ...customConfig };
 
   // Selects the screen to use (defaults to where the cursor is when the
   // app is launched). Otherwise uses the screen in which the main window

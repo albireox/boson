@@ -30,6 +30,7 @@
             "httpHost": "localhost",
             "httpPort": 8080
         },
-        "windows": {}
+        "windows": {
+        }
     }
 }

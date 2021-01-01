@@ -1,5 +1,5 @@
 import { app, Menu, shell } from 'electron';
-import { createWindow } from './main';
+import { createWindow, saveWindowPositions } from './main';
 import { TronConnection } from './tron';
 
 const tron = TronConnection.getInstance();
@@ -15,6 +15,25 @@ const template: any[] = [
           submenu: [
             { role: 'about' },
             { type: 'separator' },
+            {
+              label: 'Connect ...',
+              id: 'connect',
+              accelerator: 'CmdOrCtrl+Shift+C',
+              click: () => createWindow('connect')
+            },
+            {
+              label: 'Disconnect',
+              id: 'disconnect',
+              click: () => tron.disconnect(),
+              enabled: false
+            },
+            { type: 'separator' },
+            {
+              label: 'Save Window Positions',
+              id: 'save-window-positions',
+              click: () => saveWindowPositions()
+            },
+            { type: 'separator' },
             { role: 'services' },
             { type: 'separator' },
             { role: 'hide' },
@@ -26,20 +45,6 @@ const template: any[] = [
         }
       ]
     : []),
-  // { role: 'fileMenu' }
-  {
-    label: 'File',
-    submenu: [
-      {
-        label: 'Connect ...',
-        id: 'connect',
-        accelerator: 'CmdOrCtrl+Shift+C',
-        click: () => createWindow('connect')
-      },
-      { label: 'Disconnect', id: 'disconnect', click: () => tron.disconnect(), enabled: false },
-      isMac ? { role: 'close' } : { role: 'quit' }
-    ]
-  },
   // { role: 'editMenu' }
   {
     label: 'Edit',
