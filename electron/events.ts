@@ -8,7 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { ipcMain } from 'electron';
+import { ipcMain, Menu } from 'electron';
 import * as keytar from 'keytar';
 import { windows } from './main';
 import store from './store';
@@ -76,4 +76,18 @@ export default function loadEvents() {
       replies: command.replies
     };
   });
+
+  // Handle connect/disconnect from tron.
+  function handleTronEvents(event: string, ...params: unknown[]) {
+    const menu = Menu.getApplicationMenu();
+    if (event === 'authorised') {
+      menu!.getMenuItemById('connect')!.enabled = false;
+      menu!.getMenuItemById('disconnect')!.enabled = true;
+    } else if (event === 'end') {
+      menu!.getMenuItemById('connect')!.enabled = true;
+      menu!.getMenuItemById('disconnect')!.enabled = false;
+    }
+  }
+
+  tron.registerCallback(handleTronEvents);
 }

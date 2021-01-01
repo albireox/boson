@@ -118,7 +118,6 @@ export default function ConnectView() {
         return [...res, ''];
       })
       .then((res: any) => {
-        console.log(res);
         setConnectForm({
           ...connectForm,
           program: res[0] || '',
@@ -153,16 +152,16 @@ export default function ConnectView() {
 
     switch (connectionResult) {
       case window.api.tron.ConnectionStatus.Connected:
-        try {
-          await window.api.invoke(
-            'tron-authorise',
-            (({ program, user, password }) => ({ program, user, password }))(connectForm)
-          );
+        const [result, err]: [boolean, string | null] = await window.api.invoke(
+          'tron-authorise',
+          (({ program, user, password }) => ({ program, user, password }))(connectForm)
+        );
+        console.log(result, err);
+        if (result === true) {
           storeCredentials();
           window.api.invoke('window-close', NAME);
-        } catch (error) {
-          setError(error.message);
-          break;
+        } else {
+          setError(err!);
         }
         break;
       case window.api.tron.ConnectionStatus.Failed:
@@ -170,6 +169,9 @@ export default function ConnectView() {
         break;
       case window.api.tron.ConnectionStatus.TimedOut:
         setError('Connection timed out');
+        break;
+      default:
+        window.api.invoke('window-close', NAME);
         break;
     }
   };

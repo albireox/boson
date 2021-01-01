@@ -10,7 +10,7 @@
 
 import telescope from '@iconify/icons-mdi/telescope';
 import { Icon } from '@iconify/react';
-import { Box, Container, makeStyles, Tab, Tabs } from '@material-ui/core';
+import { Container, makeStyles, Tab, Tabs } from '@material-ui/core';
 import { Favorite, PersonPin } from '@material-ui/icons';
 import React, { BaseSyntheticEvent } from 'react';
 
@@ -38,7 +38,7 @@ function TabMain({ icon, ...rest }: { icon: JSX.Element; [key: string]: any }) {
 
 function TabManager({ tab }: { tab: string }) {
   if (tab === 'tcc') {
-    return <div style={{ width: '90%' }}>TCC</div>;
+    return <div style={{ width: '90%' }}></div>;
   }
   return <div />;
 }

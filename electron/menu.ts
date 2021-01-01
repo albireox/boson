@@ -1,7 +1,8 @@
 import { app, Menu, shell } from 'electron';
-// import tron from './tron';
 import { createWindow } from './main';
+import { TronConnection } from './tron';
 
+const tron = TronConnection.getInstance();
 const isMac = process.platform === 'darwin';
 
 // Use any because Typescrip typing fails with ellipsis operator.
@@ -32,10 +33,10 @@ const template: any[] = [
       {
         label: 'Connect ...',
         id: 'connect',
-        accelerator: 'CmdOrCtrl+Shift+C',
+        accelerator: 'CmdOrCtrl+Shift+T',
         click: () => createWindow('connect')
       },
-      // { label: 'Disconnect', id: 'disconnect', click: () => tron.disconnect()},
+      { label: 'Disconnect', id: 'disconnect', click: () => tron.disconnect(), enabled: false },
       isMac ? { role: 'close' } : { role: 'quit' }
     ]
   },

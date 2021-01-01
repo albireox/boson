@@ -12,7 +12,7 @@ import { BrowserWindow } from 'electron';
 import { Socket } from 'net';
 
 interface Callback {
-  (param?: any): void;
+  (event: string, param?: any): void;
 }
 
 export interface Keyword {
@@ -156,28 +156,15 @@ export class TronConnection {
 
   client = new Socket();
 
-  stateCallbacks: { [cbType: string]: Callback[] } = {};
+  stateCallbacks: Callback[] = [];
 
   model = new TronModel();
   replies: Reply[] = [];
   commands: { [commandId: number]: Command } = {};
 
   constructor() {
-    this.registerCallback('connect', () => {
-      this.status = ConnectionStatus.Connected;
-      console.log('Connected to tron.');
-    });
-    this.registerCallback('error', (err: any) => {
-      this.status = ConnectionStatus.Failed;
-      console.log(`TronConnection failed: ${err}.`);
-    });
-    this.registerCallback('end', (err: any) => {
-      this.status = ConnectionStatus.Disconnected;
-      console.log('Disconnected from tron.');
-    });
-    this.registerCallback('data', (buffer: Buffer) => {
-      this.parseData(buffer.toString());
-    });
+    this._updateStatus = this._updateStatus.bind(this);
+    this.registerCallback(this._updateStatus);
   }
 
   public static getInstance(): TronConnection {
@@ -196,16 +183,39 @@ export class TronConnection {
     this._connectionStatus = value;
   }
 
-  registerCallback(cbType: string, cb: Callback) {
-    if (cbType in this.stateCallbacks) {
-      this.stateCallbacks[cbType].push(cb);
-    } else {
-      this.stateCallbacks[cbType] = [cb];
+  _updateStatus(event: string, ...params: unknown[]) {
+    console.log(event);
+    switch (event) {
+      case 'connect':
+        this.status = ConnectionStatus.Connected;
+        console.log('Connected to tron.');
+        break;
+      case 'error':
+        const err = params[0] as string;
+        this.status = ConnectionStatus.Failed;
+        console.log(`TronConnection failed: ${err}.`);
+        break;
+      case 'end':
+        this.status = ConnectionStatus.Disconnected;
+        console.log('Disconnected from tron.');
+        break;
+      case 'data':
+        const buffer = params[0] as Buffer;
+        this.parseData(buffer.toString());
+        break;
+    }
+  }
+
+  registerCallback(cb: Callback) {
+    if (!this.stateCallbacks.includes(cb)) {
+      this.stateCallbacks.push(cb);
     }
 
-    this.client.on(cbType, (...params) =>
-      this.stateCallbacks[cbType].forEach((cb) => cb(...params))
-    );
+    // Subscribe to socket events.
+    const socketEvents = ['connect', 'data', 'end', 'error'];
+    for (let event of socketEvents) {
+      this.client.on(event, (...params) => cb(event, ...params));
+    }
   }
 
   async connect(host: string, port: number): Promise<ConnectionStatus> {
@@ -233,15 +243,15 @@ export class TronConnection {
 
   async authorise(credentials: Credentials) {
     if (this.status === ConnectionStatus.Authorised) {
-      throw new Error('Already authorised!');
+      return [false, 'Already authorised!'];
     } else if (this.status !== ConnectionStatus.Connected) {
-      throw new Error('Not connected');
+      return [false, 'Not connected'];
     }
 
     this.status = ConnectionStatus.Authorised;
     let kkCommand = await this.sendCommand('auth knockKnock');
     if (kkCommand.didFail()) {
-      throw new Error(`Failed: ${kkCommand.replies[0].keywords['why'].values[0]}`);
+      return [false, `Failed: ${kkCommand.replies[0].keywords['why'].values[0]}`];
     }
 
     let nonce: string = kkCommand.replies[0].keywords['nonce'].values[0];
@@ -258,14 +268,16 @@ export class TronConnection {
 
     let loginCommand = await this.sendCommand(authCommand);
     if (loginCommand.didFail()) {
-      throw new Error(`Failed: ${loginCommand.replies[0].keywords['why'].values[0]}`);
+      return [false, `Failed: ${loginCommand.replies[0].keywords['why'].values[0]}`];
     } else {
       this.status = ConnectionStatus.Authorised;
+      this.stateCallbacks.forEach((cb) => cb('authorised'));
+      return [true, null];
     }
   }
 
   disconnect() {
-    this.client.destroy();
+    this.client.end();
   }
 
   async sendCommand(commandString: string) {
@@ -304,7 +316,7 @@ export class TronConnection {
             values = 'T';
           } else {
             key = matched.groups!.key;
-            values = matched.groups!.key;
+            values = matched.groups!.values;
           }
           let keyword: Keyword = {
             key: key,
