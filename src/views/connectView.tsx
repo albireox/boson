@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     height: '2px'
   },
   paper: {
-    paddingTop: theme.spacing(3),
+    paddingTop: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
@@ -185,7 +185,7 @@ export default function ConnectView() {
   return (
     <>
       {showProgress ? <LinearProgress className={classes.progress} color='secondary' /> : null}
-      <Container component='div' maxWidth='xs' style={{ padding: '0px 24px 16px 24px' }}>
+      <Container component='div' maxWidth='xs' style={{ padding: '0px 24px 24px 24px' }}>
         <div className={classes.paper} id='paper'>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon fontSize='large' />

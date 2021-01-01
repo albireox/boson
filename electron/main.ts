@@ -36,6 +36,7 @@ export function createWindow(name: string = 'main'): BrowserWindow {
 
   let win: WindowType = new BrowserWindow({
     ...windowConfig,
+    titleBarStyle: 'hidden',
     show: false,
     backgroundColor: '#303030',
     useContentSize: true,
