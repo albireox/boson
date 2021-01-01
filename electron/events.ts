@@ -10,7 +10,7 @@
 
 import { ipcMain, Menu } from 'electron';
 import * as keytar from 'keytar';
-import { windows } from './main';
+import { createWindow, windows } from './main';
 import store from './store';
 import { TronConnection } from './tron';
 
@@ -20,6 +20,10 @@ export default function loadEvents() {
   // Add events to ipcMain
 
   // Main
+  ipcMain.handle('window-open', async (event, name) => {
+    createWindow(name);
+  });
+
   ipcMain.handle('window-close', async (event, name) => {
     let win = windows[name];
     win.close();

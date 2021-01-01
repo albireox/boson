@@ -25,9 +25,14 @@ export let windows: { [name: string]: BrowserWindow } = {};
 let mainWindow: WindowType = null;
 
 export function createWindow(name: string = 'main'): BrowserWindow {
-  let windowConfig: object = store.get(`windows.${name}`);
+  // Create or show a new window
 
+  let windowConfig: object = store.get(`windows.${name}`);
   windowConfig = windowConfig ? windowConfig : store.get(`windows.default`);
+
+  if (name in windows) {
+    windows[name].show();
+  }
 
   let win: WindowType = new BrowserWindow({
     ...windowConfig,
