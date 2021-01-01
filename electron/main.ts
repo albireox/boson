@@ -8,7 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow, Menu, screen } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import * as path from 'path';
 import loadEvents from './events';
@@ -21,17 +21,37 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 type WindowType = BrowserWindow | null;
 
+interface WindowConfig {
+  x: number;
+  y: number;
+}
+
 export let windows: { [name: string]: BrowserWindow } = {};
 let mainWindow: WindowType = null;
 
 export function createWindow(name: string = 'main'): BrowserWindow {
   // Create or show a new window
 
-  let windowConfig: object = store.get(`windows.${name}`);
-  windowConfig = windowConfig ? windowConfig : store.get(`windows.default`);
-
   if (name in windows) {
     windows[name].show();
+  }
+
+  let windowConfig: WindowConfig = store.get(`windows.${name}`);
+  windowConfig = windowConfig ? windowConfig : store.get(`windows.default`);
+
+  // Selects the screen to use (defaults to where the cursor is when the
+  // app is launched). Otherwise uses the screen in which the main window
+  // currently is.
+  if (name === 'main') {
+    let cursor = screen.getCursorScreenPoint();
+    let currentScreen = screen.getDisplayNearestPoint(cursor);
+    windowConfig['x'] = (windowConfig['x'] || 0) + currentScreen.bounds.x;
+    windowConfig['y'] = (windowConfig['y'] || 0) + currentScreen.bounds.y;
+  } else {
+    let mainPosition = mainWindow!.getPosition();
+    let mainScreen = screen.getDisplayNearestPoint({ x: mainPosition[0], y: mainPosition[1] });
+    windowConfig['x'] = (windowConfig['x'] || 0) + mainScreen.bounds.x;
+    windowConfig['y'] = (windowConfig['y'] || 0) + mainScreen.bounds.y;
   }
 
   let win: WindowType = new BrowserWindow({

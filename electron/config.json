@@ -2,16 +2,22 @@
     "windows": {
         "default": {
             "width": 800,
-            "height": 600
+            "height": 600,
+            "center": true
         },
         "main": {
-            "width": 800,
-            "height": 600,
-            "closable": false
+            "width": 650,
+            "height": 450,
+            "x": 0,
+            "y": 0,
+            "closable": false,
+            "resizable": false
         },
         "connect": {
             "width": 315,
             "height": 480,
+            "x": 100,
+            "y": 100,
             "resizable": false
         }
     },
@@ -23,6 +29,7 @@
             "port": 9877,
             "httpHost": "localhost",
             "httpPort": 8080
-        }
+        },
+        "windows": {}
     }
 }
