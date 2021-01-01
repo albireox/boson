@@ -23,7 +23,7 @@ You can run the application in development mode with
 yarn start
 ```
 
-You can package the application with
+The application can be package for distribution with
 
 ```console
 yarn build
