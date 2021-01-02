@@ -8,7 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { app, BrowserWindow, Menu, screen } from 'electron';
+import { app, BrowserWindow, Menu, screen, nativeTheme } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import * as path from 'path';
 import loadEvents from './events';
@@ -26,7 +26,7 @@ interface WindowConfig {
   y: number;
 }
 
-export let windows: { [name: string]: BrowserWindow } = {};
+export let windows = new Map<string, BrowserWindow>();
 let mainWindow: WindowType = null;
 
 export function saveWindowPositions() {
@@ -36,8 +36,8 @@ export function saveWindowPositions() {
   // If the screen is not present during restoration we can revert
   // to the primary or current screen.
 
-  for (let name in windows) {
-    let win = windows[name];
+  for (let [name, win] of windows) {
+    // let win = windows.get(name);
 
     let winScreen = screen.getDisplayMatching(win.getBounds());
     let position = win.getPosition();
@@ -56,8 +56,8 @@ export function saveWindowPositions() {
 export function createWindow(name: string = 'main'): BrowserWindow {
   // Create or show a new window
 
-  if (name in windows) {
-    windows[name].show();
+  if (name in windows.keys()) {
+    windows.get(name)!.show();
   }
 
   let windowConfig: WindowConfig = store.get(`windows.${name}`);
@@ -86,7 +86,7 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     ...windowConfig,
     titleBarStyle: 'hidden',
     show: false,
-    backgroundColor: '#303030',
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#303030' : '#FFFFFF',
     useContentSize: true,
     icon: path.join(__dirname, 'logo.png'),
     webPreferences: {
@@ -109,10 +109,10 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     win.loadURL(`file://${__dirname}/../index.html?${name}`);
   }
 
-  windows[name] = win;
+  windows.set(name, win);
   win.on('closed', () => {
     win = null;
-    delete windows[name];
+    windows.delete(name);
   });
 
   // Hot Reloading

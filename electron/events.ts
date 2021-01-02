@@ -8,7 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { ipcMain, Menu } from 'electron';
+import { ipcMain, Menu, nativeTheme } from 'electron';
 import * as keytar from 'keytar';
 import { createWindow, windows } from './main';
 import store from './store';
@@ -25,17 +25,17 @@ export default function loadEvents() {
   });
 
   ipcMain.handle('window-close', async (event, name) => {
-    let win = windows[name];
+    let win = windows.get(name)!;
     win.close();
   });
 
   ipcMain.handle('window-get-size', async (event, name) => {
-    let win = windows[name];
-    return win?.getSize();
+    let win = windows.get(name)!;
+    return win.getSize();
   });
 
   ipcMain.handle('window-set-size', async (event, name, width, height, animate = false) => {
-    let win = windows[name];
+    let win = windows.get(name);
     if (win !== undefined) win.setSize(width, height, animate);
   });
 
@@ -84,7 +84,7 @@ export default function loadEvents() {
   // Handle connect/disconnect from tron.
   function handleTronEvents(event: ConnectionStatus) {
     const menu = Menu.getApplicationMenu();
-    const mainWindow = windows['main'];
+    const mainWindow = windows.get('main')!;
     if (event === ConnectionStatus.Authorised) {
       menu!.getMenuItemById('connect')!.enabled = false;
       menu!.getMenuItemById('disconnect')!.enabled = true;
@@ -103,4 +103,17 @@ export default function loadEvents() {
   }
 
   tron.registerCallback(handleTronEvents);
+
+  // Theme
+  function reportTheme() {
+    windows.forEach((win) =>
+      win.webContents.send('theme-updated', nativeTheme.shouldUseDarkColors)
+    );
+  }
+
+  nativeTheme.on('updated', () => reportTheme());
+
+  ipcMain.handle('theme-use-dark', () => {
+    return nativeTheme.shouldUseDarkColors;
+  });
 }
