@@ -28,8 +28,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row'
   },
   tabs: {
-    width: '80px',
-    height: '100vh'
+    minWidth: '80px'
   },
   tab: {
     minWidth: '50px'
@@ -93,19 +92,36 @@ async function getTabView(tab: ValidTabs) {
     tabView = null;
   }
 
-  return <div>{tabView}</div>;
-}
-
 function ConnectSnackbar(): JSX.Element {
+  // Show a reconnect snackbar
+
+  const [open, setOpen] = React.useState<boolean>(false);
+
+  const handleTronStatus = (status: typeof ConnectionStatus) => {
+    // Handle tron status changes. Show the snackbar if disconnected.
+    if (status === ConnectionStatus.Authorised) {
+      setOpen(false);
+    } else if (status === ConnectionStatus.Disconnected) {
+      setOpen(true);
+    }
+  };
+
+  React.useEffect(() => {
+    window.api.on('tron-status', handleTronStatus);
+    handleReconnect(); // Initial connect
+  }, []);
+
   const handleReconnect = async () => {
     const result = await autoconnect();
     if (result[0] === false) {
       await window.api.invoke('window-open', 'connect');
+    } else {
+      setOpen(false);
     }
   };
 
   return (
-    <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={true}>
+    <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={open}>
       <React.Fragment>
         <Alert severity='warning'>
           <span style={{ padding: '0px 24px 0px 0px' }}>Tron is disconnected</span>
@@ -125,30 +141,10 @@ export default function MainView() {
 
   const [selectedTab, setSelectedTab] = React.useState<ValidTabs>('tcc');
   const [tabView, setTabView] = React.useState<JSX.Element | null>(null);
-  const [showConnect, setShowConnect] = React.useState<boolean>(false);
 
   const handleTabChange = (event: BaseSyntheticEvent, value: ValidTabs) => {
     setSelectedTab(value);
   };
-
-  const handleTronStatus = (status: typeof ConnectionStatus) => {
-    // Handle tron status changes. Show the snackbar if disconnected.
-    if (status === ConnectionStatus.Authorised) {
-      setShowConnect(false);
-    } else if (status === ConnectionStatus.Disconnected) {
-      setShowConnect(true);
-    }
-  };
-
-  React.useEffect(() => {
-    // Autoconnect to tron and start listener of tron status.
-    autoconnect().then((res) => {
-      if (res[0] === false) {
-        setShowConnect(true);
-      }
-    });
-    window.api.on('tron-status', handleTronStatus);
-  }, []);
 
   React.useEffect(() => {
     // Update the view of the selected tab when it changes.
@@ -175,7 +171,7 @@ export default function MainView() {
         <MainTab icon={<Brightness7 fontSize='large' />} value='boss' label='BOSS' />
       </Tabs>
       {tabView}
-      {showConnect ? <ConnectSnackbar /> : null}
+      <ConnectSnackbar />
     </Container>
   );
 }

@@ -218,7 +218,7 @@ export class TronConnection {
 
   async authorise(credentials: Credentials) {
     if (this.status === ConnectionStatus.Authorised) {
-      return [false, 'Already authorised!'];
+      return [true, null];
     } else if (this.status !== ConnectionStatus.Connected) {
       return [false, 'Not connected'];
     }
