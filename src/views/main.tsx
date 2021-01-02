@@ -167,7 +167,7 @@ export default function MainView() {
         textColor='secondary'
       >
         <MainTab
-          icon={<Icon icon={telescope} style={{ fontSize: '35px' }} />}
+          icon={<Icon icon={telescope} style={{ fontSize: '30px' }} />}
           value='tcc'
           label='TCC'
         />
