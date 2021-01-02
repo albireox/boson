@@ -23,7 +23,7 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scroll-to-bottom": "^4.0.0",
-    "typeface-roboto": "^1.1.13",
+    "source-map-explorer": "^2.5.1",
     "v8-compile-cache": "^2.2.0"
   },
   "scripts": {
@@ -31,10 +31,12 @@
     "build": "PUBLIC_URL=./ react-scripts build && tsc -p electron && electron-builder",
     "test": "react-scripts test",
     "postinstall": "electron-builder install-app-deps",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "eject": "react-scripts eject"
   },
   "build": {
     "extends": null,
+    "asar": false,
     "files": [
       "build/**/*"
     ],
