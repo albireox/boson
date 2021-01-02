@@ -4,7 +4,7 @@
  *
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
  *  @Date: 2020-12-21
- *  @Filename: logView.tsx
+ *  @Filename: log.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 

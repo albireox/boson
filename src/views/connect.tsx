@@ -4,7 +4,7 @@
  *
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
  *  @Date: 2020-12-22
- *  @Filename: ConnectView.tsx
+ *  @Filename: connect.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 

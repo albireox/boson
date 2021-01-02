@@ -4,7 +4,7 @@
  *
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
  *  @Date: 2020-12-30
- *  @Filename: mainView.tsx
+ *  @Filename: main.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
@@ -88,7 +88,7 @@ async function getTabView(tab: ValidTabs) {
   let tabView: JSX.Element | null;
 
   if (tab === 'tcc') {
-    tabView = require('./tccView').tccView;
+    tabView = require('./tcc').tccView;
   } else {
     tabView = null;
   }

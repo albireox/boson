@@ -24,6 +24,6 @@
     "src/**/*"
   ],
   "exclude": [
-    "src/views/logViewWithWindow.tsx"
+    "src/views/logWithWindow.tsx"
   ]
 }
