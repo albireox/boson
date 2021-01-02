@@ -11,7 +11,6 @@
 import { Container, createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'typeface-roboto';
 import ViewManager from './viewManager';
 
 // Add the contextBridge element to the window.
