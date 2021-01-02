@@ -108,13 +108,14 @@ function ConnectSnackbar(): JSX.Element {
 
   React.useEffect(() => {
     window.api.on('tron-status', handleTronStatus);
-    handleReconnect(); // Initial connect
+    handleReconnect(false); // Initial connect
   }, []);
 
-  const handleReconnect = async () => {
+  const handleReconnect = async (openConnect = true) => {
     const result = await autoconnect();
     if (result[0] === false) {
-      await window.api.invoke('window-open', 'connect');
+      setOpen(true);
+      if (openConnect) await window.api.invoke('window-open', 'connect');
     } else {
       setOpen(false);
     }
@@ -124,8 +125,8 @@ function ConnectSnackbar(): JSX.Element {
     <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={open}>
       <React.Fragment>
         <Alert severity='warning'>
-          <span style={{ padding: '0px 24px 0px 0px' }}>Tron is disconnected</span>
-          <Button color='secondary' size='small' onClick={handleReconnect}>
+          <span style={{ padding: '0px 24px 0px 0px' }}>STUI is disconnected</span>
+          <Button color='secondary' size='small' onClick={() => handleReconnect(true)}>
             RECONNECT
           </Button>
         </Alert>
