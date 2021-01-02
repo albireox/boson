@@ -4,7 +4,7 @@
  *
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
  *  @Date: 2020-12-30
- *  @Filename: main.tsx
+ *  @Filename: mainView.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
@@ -16,6 +16,8 @@ import { Alert } from '@material-ui/lab';
 import React, { BaseSyntheticEvent } from 'react';
 
 let ConnectionStatus = window.api.tron.ConnectionStatus;
+
+type ValidTabs = 'tcc' | 'apogee' | 'boss';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -37,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 async function autoconnect() {
   // Automatically connects to tron. Returns success or failure and whether
   // reconnect is possible.
+
   const config = await window.api.store.get([
     'user.connection.program',
     'user.connection.user',
@@ -62,16 +65,35 @@ async function autoconnect() {
   return [true, true];
 }
 
-function TabMain({ icon, ...rest }: { icon: JSX.Element; [key: string]: any }) {
+function MainTab({ icon, ...rest }: { icon: JSX.Element; [key: string]: any }) {
   const classes = useStyles();
   return <Tab className={classes.tab} icon={icon} {...rest} />;
 }
 
-function TabManager({ tab }: { tab: string }) {
-  if (tab === 'tcc') {
-    return <div style={{ width: '90%' }}></div>;
+async function getTabView(tab: ValidTabs) {
+  // Resizes window and returns the appropriate for the tab
+
+  let winSize = await window.api.store.get(`windows.${tab}`);
+  let width: number;
+  let height: number;
+
+  if (winSize) {
+    ({ width, height } = winSize);
+  } else {
+    ({ width, height } = await window.api.store.get('windows.main'));
   }
-  return <div />;
+
+  window.api.invoke('window-set-size', 'main', width + 100, height + 50, true);
+
+  let tabView: JSX.Element | null;
+
+  if (tab === 'tcc') {
+    tabView = require('./tccView').tccView;
+  } else {
+    tabView = null;
+  }
+
+  return <div>{tabView}</div>;
 }
 
 function ConnectSnackbar(): JSX.Element {
@@ -100,15 +122,17 @@ export default function MainView() {
   // Main view
 
   const classes = useStyles();
-  const [selectedTab, setSelectedTab] = React.useState<[number, string]>([0, 'tcc']);
+
+  const [selectedTab, setSelectedTab] = React.useState<ValidTabs>('tcc');
+  const [tabView, setTabView] = React.useState<JSX.Element | null>(null);
   const [showConnect, setShowConnect] = React.useState<boolean>(false);
 
-  const handleTabChange = (event: BaseSyntheticEvent, value: number) => {
-    let label = event.target.textContent.toLowerCase();
-    setSelectedTab([value, label]);
+  const handleTabChange = (event: BaseSyntheticEvent, value: ValidTabs) => {
+    setSelectedTab(value);
   };
 
   const handleTronStatus = (status: typeof ConnectionStatus) => {
+    // Handle tron status changes. Show the snackbar if disconnected.
     if (status === ConnectionStatus.Authorised) {
       setShowConnect(false);
     } else if (status === ConnectionStatus.Disconnected) {
@@ -117,6 +141,7 @@ export default function MainView() {
   };
 
   React.useEffect(() => {
+    // Autoconnect to tron and start listener of tron status.
     autoconnect().then((res) => {
       if (res[0] === false) {
         setShowConnect(true);
@@ -125,22 +150,32 @@ export default function MainView() {
     window.api.on('tron-status', handleTronStatus);
   }, []);
 
+  React.useEffect(() => {
+    // Update the view of the selected tab when it changes.
+    const updateView = async () => setTabView(await getTabView(selectedTab));
+    updateView();
+  }, [selectedTab]);
+
   return (
     <Container maxWidth='lg' className={classes.container}>
-      {showConnect ? <ConnectSnackbar /> : null}
       <Tabs
         className={classes.tabs}
         orientation='vertical'
-        value={selectedTab[0]}
+        value={selectedTab}
         onChange={handleTabChange}
         indicatorColor='secondary'
         textColor='secondary'
       >
-        <TabMain icon={<Icon icon={telescope} style={{ fontSize: '35px' }} />} label='TCC' />
-        <TabMain icon={<Highlight fontSize='large' />} label='APOGEE' />
-        <TabMain icon={<Brightness7 fontSize='large' />} label='BOSS' />
+        <MainTab
+          icon={<Icon icon={telescope} style={{ fontSize: '35px' }} />}
+          value='tcc'
+          label='TCC'
+        />
+        <MainTab icon={<Highlight fontSize='large' />} value='apogee' label='APOGEE' />
+        <MainTab icon={<Brightness7 fontSize='large' />} value='boss' label='BOSS' />
       </Tabs>
-      <TabManager tab={selectedTab[1]} />
+      {tabView}
+      {showConnect ? <ConnectSnackbar /> : null}
     </Container>
   );
 }

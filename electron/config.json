@@ -13,6 +13,18 @@
             "closable": false,
             "resizable": false
         },
+        "tcc": {
+            "width": 650,
+            "height": 450
+        },
+        "boss": {
+            "width": 400,
+            "height": 600
+        },
+        "apogee": {
+            "width": 400,
+            "height": 400
+        },
         "connect": {
             "width": 315,
             "height": 480,
