@@ -71,6 +71,10 @@ export default function loadEvents() {
     tron.addStreamerWindow(event.sender.id);
   });
 
+  ipcMain.handle('tron-remove-streamer-window', async (event) => {
+    tron.removeStreamerWindow(event.sender.id);
+  });
+
   ipcMain.handle('tron-send-command', async (event, commandString: string) => {
     let command = await tron.sendCommand(commandString);
     return {
@@ -94,6 +98,10 @@ export default function loadEvents() {
       tron.model.removeListener(keys, event, listenOn);
     }
   );
+
+  ipcMain.handle('tron-model-getall', async (event) => {
+    return tron.model.keywords;
+  });
 
   // Handle connect/disconnect from tron.
   function handleTronEvents(event: ConnectionStatus) {
