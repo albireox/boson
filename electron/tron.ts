@@ -8,6 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import { app, BrowserWindow } from 'electron';
 import log from 'electron-log';
 import { IpcMainInvokeEvent } from 'electron/main';
 import { chunk } from 'lodash';
@@ -403,8 +404,8 @@ export class TronConnection {
       line = line.trim();
       if (!line) continue;
 
-      const matched = line.match(
-        /(?<program>\w+)?.(?<user>\w+)\s+(?<commandId>\d+)\s+(?<sender>\w+)\s+(?<code>[d|i|w|f|e|:|>])\s*(?<keywords>.+)\s*/
+      const lineMatched = line.match(
+        /(?<commander>(\w*\.*)*\.\w+)\s+(?<commandId>\d+)\s+(?<sender>[\w|_]+)\s+(?<code>[d|i|w|f|e|:|D|I|W|F|E>])\s*(?<keywords>.+)?/
       );
       if (!lineMatched || !lineMatched.groups) continue;
       if (lineMatched.groups.keywords) {
@@ -421,11 +422,13 @@ export class TronConnection {
             key = kwMatched.groups!.key;
             values = kwMatched.groups!.values;
           }
+          // Select all groups split by , except when the comma is inside quotes.
+          let rawValues = values.matchAll(/[^,"']+|"([^"]*)"|'([^']*)'/g);
           let keyword: Keyword = {
             actor: actor,
             key: key,
-            values: values.split(/\s*,\s*/).map((value: string) => {
-              return evaluateKeyword(value);
+            values: [...rawValues].map((value) => {
+              return evaluateKeyword(value[0]);
             }),
             lastSeenAt: new Date()
           };
