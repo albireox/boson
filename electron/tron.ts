@@ -8,7 +8,8 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { BrowserWindow, app } from 'electron';
+import { IpcMainInvokeEvent } from 'electron/main';
+import { chunk } from 'lodash';
 import { Socket } from 'net';
 import * as os from 'os';
 
@@ -17,6 +18,7 @@ interface Callback {
 }
 
 export interface Keyword {
+  actor: string;
   key: string;
   values: any[];
   lastSeenAt: Date;
@@ -25,7 +27,7 @@ export interface Keyword {
 export interface Reply {
   date: Date;
   rawLine: string;
-  program: string | undefined;
+  commander: string;
   user: string;
   sender: string;
   commandId: number;
@@ -146,8 +148,111 @@ export class Command {
   }
 }
 
+export interface KeywordMap {
+  [key: string]: Keyword;
+}
+
+/**
+ * A class that represents the tron keyword model and emits events when a
+ * keyword is updated.
+ */
 export class TronModel {
-  keywords: { [key: string]: Keyword } = {};
+  /** A mapping of listeners to the list of keywords to which they
+   * are subscibed. Key is in the form {actor}.{key}. The listener is defined
+   * by the IpcMain event that initiated it, and a string indicating the
+   * channel to which to send the updates. */
+  private _listeners: { [key: string]: [IpcMainInvokeEvent, string][] } = {};
+
+  /** Map of key name to keyword object (includes value and last seen) */
+  keywords: KeywordMap = {};
+
+  /**
+   * Initialises the tron model.
+   * @param tron Tron connection
+   */
+  constructor(private tron: TronConnection) {}
+
+  /**
+   * Register a new listener for a key or group of keys.
+   * @param keys Key or list of keys to monitor.
+   * @param event The event from which the request to add a new listener
+   *    originates from. This is basically the window that sends the request.
+   * @param channel A string with the name of the channel on which the
+   *    renderer window will listen to.
+   * @param now Whether to report the current value of the keyword immediately.
+   * @param refresh If the value of the keyword has not been heard yet, forces
+   *    and update from tron and reports the value.
+   */
+  registerListener(
+    keys: string | string[],
+    event: IpcMainInvokeEvent,
+    channel: string,
+    now = true,
+    refresh = false
+  ) {
+    if (!Array.isArray(keys)) keys = [keys];
+    for (let key of keys) {
+      this._listeners[key]?.push([event, channel]) || (this._listeners[key] = [[event, channel]]);
+    }
+
+    if (refresh) {
+      this.refreshKeywords(keys);
+    } else if (now) {
+      for (let key of keys) this.reportKeyword(key);
+    }
+  }
+
+  /**
+   * Removes listener for a key or list of keys.
+   * @param event The event that requests to remove the listener.
+   * @param channel A string with the name of the channel on which the
+   *    renderer window was listening to.
+   */
+  removeListener(keys: string | string[], event: IpcMainInvokeEvent, channel: string) {
+    if (!Array.isArray(keys)) keys = [keys];
+    for (let key of keys) {
+      for (let nn of this._listeners[key].keys()) {
+        let listener = this._listeners[key][nn];
+        if (listener[0].sender.id === event.sender.id && listener[1] === channel) {
+          this._listeners[key].splice(nn);
+        }
+      }
+    }
+  }
+
+  /**
+   * Updates the keyword mapping.
+   * @param kw The new keyword.
+   */
+  updateKeyword(kw: Keyword) {
+    let fullKey = `${kw.actor}.${kw.key}`;
+    this.keywords[fullKey] = kw;
+    if (fullKey in this._listeners) this.reportKeyword(fullKey);
+  }
+
+  /**
+   * Reports a keyword to all subscribed callbacks.
+   * @param key Key to report (format {actor}.{key}).
+   */
+  reportKeyword(key: string) {
+    this._listeners[key]?.forEach(([event, channel]) => {
+      event.sender.send(channel, { [key]: this.keywords[key] });
+    });
+  }
+
+  refreshKeywords(keys: string[], maxChunk = 10) {
+    let actors = new Set(keys.map((k) => k.split('.')[0]));
+    for (let actor of actors) {
+      let actorKeys = keys.filter((k) => k.includes(`${actor}.`));
+      if (actorKeys.length > maxChunk) {
+        for (let ak of chunk(actorKeys, maxChunk)) this.refreshKeywords(ak, maxChunk);
+      } else {
+        let keyNames = actorKeys.map((ak) => ak.split('.')[1]);
+        let cmd = `keys getFor=${actor} ${keyNames.join(' ')}`;
+        this.tron.sendCommand(cmd);
+      }
+    }
+  }
 }
 
 export class TronConnection {
@@ -159,7 +264,7 @@ export class TronConnection {
 
   stateCallbacks: Callback[] = [];
 
-  model = new TronModel();
+  model: TronModel;
   replies: Reply[] = [];
   commands: { [commandId: number]: Command } = {};
 
@@ -168,6 +273,7 @@ export class TronConnection {
     this.client.on('error', () => (this.status = ConnectionStatus.Failed));
     this.client.on('end', () => (this.status = ConnectionStatus.Disconnected));
     this.client.on('data', (buffer: Buffer) => this.parseData(buffer.toString()));
+    this.model = new TronModel(this);
   }
 
   public static getInstance(): TronConnection {
@@ -269,7 +375,7 @@ export class TronConnection {
   }
 
   parseData(data: string) {
-    const newLines = data.split(/\r?\n/);
+    const newLines = data.trim().split(/\r/);
 
     for (let line of newLines) {
       let keywords: Keyword[] = [];
@@ -280,39 +386,41 @@ export class TronConnection {
       const matched = line.match(
         /(?<program>\w+)?.(?<user>\w+)\s+(?<commandId>\d+)\s+(?<sender>\w+)\s+(?<code>[d|i|w|f|e|:|>])\s*(?<keywords>.+)\s*/
       );
-      if (!matched || !matched.groups) continue;
-
-      if (matched.groups.keywords) {
-        keywords = matched.groups.keywords.split(/\s*;\s*/).map((kw: string) => {
+      if (!lineMatched || !lineMatched.groups) continue;
+      if (lineMatched.groups.keywords) {
+        let sender = lineMatched.groups.sender;
+        let actor: string = sender.includes('_') ? sender.split('_').slice(-1)[0] : sender;
+        keywords = lineMatched.groups.keywords.split(/\s*;\s*/).map((kw: string) => {
           let key: string, values: string;
-          let matched = kw.trim().match(/(?<key>\w+)=(?<values>.+)/);
-          if (!matched) {
+          let kwMatched = kw.trim().match(/(?<key>\w+)=(?<values>.+)/);
+          if (!kwMatched) {
             // Case where the keyword does not have a value (e.g. loggedIn).
             key = kw;
-            values = 'T';
+            values = '';
           } else {
-            key = matched.groups!.key;
-            values = matched.groups!.values;
+            key = kwMatched.groups!.key;
+            values = kwMatched.groups!.values;
           }
           let keyword: Keyword = {
+            actor: actor,
             key: key,
             values: values.split(/\s*,\s*/).map((value: string) => {
               return evaluateKeyword(value);
             }),
             lastSeenAt: new Date()
           };
-          this.model.keywords[key] = keyword;
+          this.model.updateKeyword(keyword);
           return keyword;
         });
       }
       let reply: Reply = {
         date: new Date(),
         rawLine: line,
-        program: matched.groups.program,
-        user: matched.groups.user,
-        commandId: parseInt(matched.groups.commandId),
-        sender: matched.groups.sender,
-        code: matched.groups.code as any,
+        commander: lineMatched.groups.commander,
+        user: lineMatched.groups.user,
+        commandId: parseInt(lineMatched.groups.commandId),
+        sender: lineMatched.groups.sender,
+        code: lineMatched.groups.code.toLowerCase() as any,
         keywords: Object.fromEntries(keywords.map((kw) => [kw.key, kw])) as any
       };
 

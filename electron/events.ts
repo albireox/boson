@@ -81,6 +81,20 @@ export default function loadEvents() {
     };
   });
 
+  ipcMain.handle(
+    'tron-register-model-listener',
+    async (event, keys: string[], listenOn = 'tron-model-updated') => {
+      tron.model.registerListener(keys, event, listenOn);
+    }
+  );
+
+  ipcMain.handle(
+    'tron-remove-model-listener',
+    async (event, keys: string[], listenOn = 'tron-model-updated') => {
+      tron.model.removeListener(keys, event, listenOn);
+    }
+  );
+
   // Handle connect/disconnect from tron.
   function handleTronEvents(event: ConnectionStatus) {
     const menu = Menu.getApplicationMenu();
