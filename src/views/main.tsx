@@ -14,6 +14,7 @@ import { Button, Container, makeStyles, Snackbar, Tab, Tabs } from '@material-ui
 import { Brightness7, Highlight } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import React, { BaseSyntheticEvent } from 'react';
+import TCCView from './tcc';
 
 let ConnectionStatus = window.api.tron.ConnectionStatus;
 
@@ -96,7 +97,7 @@ async function getTabView(tab: ValidTabs) {
 
   let TabView: React.FunctionComponent;
   if (tab === 'tcc') {
-    TabView = require('./tcc').default;
+    TabView = TCCView;
   } else {
     TabView = () => <div />;
   }

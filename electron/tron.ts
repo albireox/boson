@@ -8,12 +8,13 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import { createHash } from 'crypto';
 import { app, BrowserWindow } from 'electron';
 import log from 'electron-log';
 import { IpcMainInvokeEvent } from 'electron/main';
-import { chunk } from 'lodash';
+import { chunk as _chunk, pull as _pull } from 'lodash';
 import { Socket } from 'net';
-import * as os from 'os';
+import { arch, platform, release } from 'os';
 
 interface Callback {
   (event: ConnectionStatus): void;
@@ -247,7 +248,7 @@ export class TronModel {
     for (let actor of actors) {
       let actorKeys = keys.filter((k) => k.includes(`${actor}.`));
       if (actorKeys.length > maxChunk) {
-        for (let ak of chunk(actorKeys, maxChunk)) this.refreshKeywords(ak, maxChunk);
+        for (let ak of _chunk(actorKeys, maxChunk)) this.refreshKeywords(ak, maxChunk);
       } else {
         let keyNames = actorKeys.map((ak) => ak.split('.')[1]);
         let cmd = `keys getFor=${actor} ${keyNames.join(' ')}`;
@@ -354,8 +355,7 @@ export class TronConnection {
     let nonce: string = kkCommand.replies[0].keywords['nonce'].values[0];
     log.debug(`Nonce received: ${nonce}`);
 
-    let crypto = require('crypto');
-    let shasum = crypto.createHash('sha1');
+    let shasum = createHash('sha1');
     shasum.update(nonce + credentials.password);
     let authPassword = shasum.digest('hex');
 
@@ -364,7 +364,7 @@ export class TronConnection {
       `username="${credentials.user}" ` +
       `program="${credentials.program.toUpperCase()}" ` +
       `type=boson version=${app.getVersion()} ` +
-      `platform="${os.platform()}-${os.release()}-${os.arch()}"`;
+      `platform="${platform()}-${release()}-${arch()}"`;
 
     let loginCommand = await this.sendCommand(authCommand);
     if (loginCommand.didFail()) {
@@ -393,6 +393,10 @@ export class TronConnection {
 
   addStreamerWindow(windowId: number): void {
     if (!this._subscribedWindows.includes(windowId)) this._subscribedWindows.push(windowId);
+  }
+
+  removeStreamerWindow(windowId: number): void {
+    if (this._subscribedWindows.includes(windowId)) _pull(this._subscribedWindows, windowId);
   }
 
   parseData(data: string) {
