@@ -27,23 +27,24 @@ export function useKeywords(keys: string[], channel = 'tron-model-updated'): Key
     setKeywords({ ...keywords, ...tronKeywords });
   };
 
-  const removeListener = () => {
-    window.api.invoke('tron-remove-model-listener', keys);
-  };
-
   // Event needs to go here because we need to bind the channel to updateKeywords
   // every time the component refreshes.
   window.api.on(channel, updatekeywords);
-
-  // Remove listener when the window closes. This may not be general enough
-  // (for example, we may want to do this when the component is destroyed,
-  // but not every time it renders). For now it's ok.
-  window.addEventListener('beforeunload', removeListener);
 
   useEffect(() => {
     // We do this inside a useEffect because we only want to register the
     // listener once.
     window.api.invoke('tron-register-model-listener', keys);
+
+    const removeListener = () => {
+      window.api.invoke('tron-remove-model-listener', keys);
+    };
+
+    // Remove listener when the window closes. This may not be general enough
+    // (for example, we may want to do this when the component is destroyed,
+    // but not every time it renders). For now it's ok.
+    window.addEventListener('beforeunload', removeListener);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
