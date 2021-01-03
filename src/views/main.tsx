@@ -22,7 +22,6 @@ type ValidTabs = 'tcc' | 'apogee' | 'boss';
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
-    flexGrow: 1,
     padding: 0,
     margin: 0,
     flexDirection: 'row'
@@ -32,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
   tab: {
     minWidth: '50px'
+  },
+  tabContainer: {
+    padding: theme.spacing(0, 3, 3, 2),
+    width: '100%'
   }
 }));
 
@@ -91,13 +94,14 @@ async function getTabView(tab: ValidTabs) {
 
   window.api.invoke('window-set-size', 'main', width + 100, height + 50, true);
 
-  let tabView: JSX.Element | null;
-
+  let TabView: React.FunctionComponent;
   if (tab === 'tcc') {
-    tabView = require('./tcc').tccView;
+    TabView = require('./tcc').default;
   } else {
-    tabView = null;
+    TabView = () => <div />;
   }
+  return React.createElement(TabView, {});
+}
 
 function ConnectSnackbar(): JSX.Element {
   // Show a reconnect snackbar
@@ -180,7 +184,7 @@ export default function MainView() {
         <MainTab icon={<Highlight fontSize='large' />} value='apogee' label='APOGEE' />
         <MainTab icon={<Brightness7 fontSize='large' />} value='boss' label='BOSS' />
       </Tabs>
-      {tabView}
+      <div className={classes.tabContainer}>{tabView}</div>
       <ConnectSnackbar />
     </Container>
   );
