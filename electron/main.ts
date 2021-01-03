@@ -8,13 +8,12 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { app, BrowserWindow, Menu, screen, nativeTheme } from 'electron';
-import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+import { app, BrowserWindow, Menu, nativeTheme, screen } from 'electron';
+import log from 'electron-log';
 import * as path from 'path';
 import loadEvents from './events';
 import menu from './menu';
 import store from './store';
-import log from 'electron-log';
 
 log.transports.console.level = false;
 
@@ -129,11 +128,16 @@ export function createWindow(name: string = 'main'): BrowserWindow {
       });
 
       // DevTools
-      installExtension(REACT_DEVELOPER_TOOLS)
-        .then((name) => console.log(`Added Extension: ${name}`))
-        .catch((err) => console.log('An error occurred: ', err));
+      // const {
+      //   default: installExtension,
+      //   REACT_DEVELOPER_TOOLS
+      // } = require('electron-devtools-installer');
 
-      win.webContents.openDevTools();
+      // installExtension(REACT_DEVELOPER_TOOLS)
+      //   .then((name: string) => console.log(`Added Extension: ${name}`))
+      //   .catch((err: Error) => console.log('An error occurred: ', err));
+
+      // win.webContents.openDevTools();
     }
 
     loadEvents();
