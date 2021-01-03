@@ -318,7 +318,10 @@ export class TronConnection {
 
     let elapsedTime = 0.0;
     while (elapsedTime < 5) {
+      if (this.status !== ConnectionStatus.Connecting) {
         log.info('Connection finished with status', ConnectionStatus[this.status]);
+        return this.status;
+      }
       await new Promise((r) => setTimeout(r, 50));
     }
     this.status = ConnectionStatus.TimedOut;
@@ -336,10 +339,15 @@ export class TronConnection {
       return [false, 'Not connected'];
     }
 
+    let initialStatus = this.status;
     this.status = ConnectionStatus.Authorising;
+
     let kkCommand = await this.sendCommand('auth knockKnock');
     if (kkCommand.didFail()) {
+      let reason = kkCommand.replies[0].keywords['why'].values[0];
       log.error(`Failed getting nonce: ${reason}.`);
+      this.status = initialStatus;
+      return [false, `Failed: ${reason}`];
     }
 
     let nonce: string = kkCommand.replies[0].keywords['nonce'].values[0];
@@ -359,7 +367,10 @@ export class TronConnection {
 
     let loginCommand = await this.sendCommand(authCommand);
     if (loginCommand.didFail()) {
+      let reason = loginCommand.replies[0].keywords['why'].values[0];
       log.error(`Failed to log in: ${reason}.`);
+      this.status = initialStatus;
+      return [false, `Failed: ${reason}`];
     } else {
       log.info('Logging in complete.');
       this.status = ConnectionStatus.Authorised;

@@ -56,7 +56,14 @@ async function autoconnect() {
   if (!password) return [false, false];
 
   const connResult = await window.api.invoke('tron-connect', host, port);
-  if (!connResult === window.api.tron.ConnectionStatus.Connected) return [false, true];
+  switch (connResult) {
+    case window.api.tron.ConnectionStatus.Connected:
+      break;
+    case window.api.tron.ConnectionStatus.Authorised:
+      return [true, true];
+    default:
+      return [false, true];
+  }
 
   const authResult = await window.api.invoke('tron-authorise', { program, user, password });
   if (!authResult[0] === true) return [false, true];
