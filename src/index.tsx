@@ -8,9 +8,16 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Container, createMuiTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
+import {
+  Container,
+  createMuiTheme,
+  CssBaseline,
+  makeStyles,
+  ThemeProvider
+} from '@material-ui/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.css';
 import ViewManager from './viewManager';
 
 // Add the contextBridge element to the window.
@@ -33,7 +40,18 @@ function getBosonTheme(theme: string): {} {
   return muiTheme;
 }
 
+const useStyles = makeStyles({
+  container: {
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  }
+});
+
 function BosonView() {
+  const classes = useStyles();
+
   // Initially set theme to dark, but it will be really set in the effect.
   const [theme, setTheme] = React.useState<string>('dark');
 
@@ -54,7 +72,7 @@ function BosonView() {
 
   return (
     <React.Fragment>
-      <Container component='main' style={{ padding: 0 }}>
+      <Container component='div' className={classes.container}>
         <ThemeProvider theme={createMuiTheme(getBosonTheme(theme))}>
           <CssBaseline />
           <ViewManager />
