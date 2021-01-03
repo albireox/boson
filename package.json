@@ -71,7 +71,7 @@
     "@types/react-dom": "17.0.0",
     "@types/react-router-dom": "^5.1.6",
     "concurrently": "^5.3.0",
-    "electron": "^11.0.3",
+    "electron": "@beta",
     "electron-builder": "^22.9.1",
     "electron-reload": "^1.5.0",
     "react-scripts": "^4.0.1",
