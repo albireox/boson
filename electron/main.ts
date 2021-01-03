@@ -148,7 +148,6 @@ export function createWindow(name: string = 'main'): BrowserWindow {
 }
 
 app.on('ready', () => {
-  console.log(store.get('user.defaultWindows'));
   for (let name of store.get('user.defaultWindows')) {
     let win = createWindow(name);
     if (name === 'main') mainWindow = win;
