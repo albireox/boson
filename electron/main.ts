@@ -14,6 +14,9 @@ import * as path from 'path';
 import loadEvents from './events';
 import menu from './menu';
 import store from './store';
+import log from 'electron-log';
+
+log.transports.console.level = false;
 
 require('v8-compile-cache'); // https://bit.ly/3mSfdBM
 

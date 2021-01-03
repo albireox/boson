@@ -8,6 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import log from 'electron-log';
 import { IpcMainInvokeEvent } from 'electron/main';
 import { chunk } from 'lodash';
 import { Socket } from 'net';
@@ -300,6 +301,7 @@ export class TronConnection {
   }
 
   async connect(host: string, port: number): Promise<ConnectionStatus> {
+    log.info('User trying to connect to ', host, port);
     if (
       [
         ConnectionStatus.Connected,
@@ -307,6 +309,7 @@ export class TronConnection {
         ConnectionStatus.Authorised
       ].includes(this.status)
     ) {
+      log.info(`Already connected (${ConnectionStatus[this.status]})`);
       return this.status;
     }
 
@@ -315,27 +318,32 @@ export class TronConnection {
 
     let elapsedTime = 0.0;
     while (elapsedTime < 5) {
-      if (this.status !== ConnectionStatus.Connecting) return this.status;
+        log.info('Connection finished with status', ConnectionStatus[this.status]);
       await new Promise((r) => setTimeout(r, 50));
     }
     this.status = ConnectionStatus.TimedOut;
+    log.info('Connection finished with status', ConnectionStatus[this.status]);
     return this.status;
   }
 
   async authorise(credentials: Credentials) {
+    log.info(`Trying to authorise user ${credentials.program.toUpperCase()}.${credentials.user}`);
     if (this.status === ConnectionStatus.Authorised) {
+      log.info('Already authorised');
       return [true, null];
     } else if (this.status !== ConnectionStatus.Connected) {
+      log.error('Not connected');
       return [false, 'Not connected'];
     }
 
     this.status = ConnectionStatus.Authorising;
     let kkCommand = await this.sendCommand('auth knockKnock');
     if (kkCommand.didFail()) {
-      return [false, `Failed: ${kkCommand.replies[0].keywords['why'].values[0]}`];
+      log.error(`Failed getting nonce: ${reason}.`);
     }
 
     let nonce: string = kkCommand.replies[0].keywords['nonce'].values[0];
+    log.debug(`Nonce received: ${nonce}`);
 
     let crypto = require('crypto');
     let shasum = crypto.createHash('sha1');
@@ -351,8 +359,9 @@ export class TronConnection {
 
     let loginCommand = await this.sendCommand(authCommand);
     if (loginCommand.didFail()) {
-      return [false, `Failed: ${loginCommand.replies[0].keywords['why'].values[0]}`];
+      log.error(`Failed to log in: ${reason}.`);
     } else {
+      log.info('Logging in complete.');
       this.status = ConnectionStatus.Authorised;
       return [true, null];
     }

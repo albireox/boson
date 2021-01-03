@@ -9,9 +9,12 @@
  */
 
 import { contextBridge, ipcRenderer } from 'electron';
+import log from 'electron-log';
 import { ConnectionStatus } from './tron';
 
 contextBridge.exposeInMainWorld('api', {
+  log: log.functions,
+  ipcRenderer: ipcRenderer,
   invoke: (channel: string, ...params: any) => {
     return ipcRenderer.invoke(channel, ...params);
   },
