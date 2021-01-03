@@ -115,7 +115,9 @@ function ConnectSnackbar(): JSX.Element {
 
   React.useEffect(() => {
     window.api.on('tron-status', handleTronStatus);
-    handleReconnect(false); // Initial connect
+    window.api.store.get('user.autoconnect').then((res: boolean) => {
+      if (res) handleReconnect(false); // Initial connect
+    });
   }, []);
 
   const handleReconnect = async (openConnect = true) => {

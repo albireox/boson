@@ -31,6 +31,12 @@
             "x": 100,
             "y": 100,
             "resizable": false
+        },
+        "keywords" :{
+            "width": 500,
+            "height": 700,
+            "center": true,
+            "resizable": true
         }
     },
     "user": {
@@ -43,6 +49,8 @@
             "httpPort": 8080
         },
         "windows": {
-        }
+        },
+        "defaultWindows": ["main", "keywords"],
+        "autoconnect": true
     }
 }
