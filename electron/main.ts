@@ -112,6 +112,7 @@ export function createWindow(name: string = 'main'): BrowserWindow {
   }
 
   windows.set(name, win);
+
   win.on('closed', () => {
     win = null;
     windows.delete(name);

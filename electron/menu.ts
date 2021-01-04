@@ -69,6 +69,18 @@ const template: any[] = [
         : [{ role: 'delete' }, { type: 'separator' }, { role: 'selectAll' }])
     ]
   },
+  {
+    label: 'Utilities',
+    submenu: [
+      {
+        label: 'Keyword Viewer',
+        id: 'keywords',
+        accelerator: 'CmdOrCtrl+Shift+K',
+        click: () => createWindow('keywords')
+      }
+    ]
+  },
+
   // { role: 'viewMenu' }
   {
     label: 'View',
