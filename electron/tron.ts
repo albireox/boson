@@ -161,9 +161,12 @@ export interface KeywordMap {
  */
 export class TronModel {
   /** A mapping of listeners to the list of keywords to which they
-   * are subscibed. Key is in the form {actor}.{key}. The listener is defined
-   * by the IpcMain event that initiated it, and a string indicating the
-   * channel to which to send the updates. */
+   * are subscibed. Key is in the form {actor}.{key}. Star wildcards can
+   * be used for either actor or key, which will result in all the keywords
+   * being forwarded. The listener is defined by the IpcMain event that
+   * initiated it, and a string indicating the channel to which to send
+   * the updates.
+   */
   private _listeners: { [key: string]: [IpcMainInvokeEvent, string][] } = {};
 
   /** Map of key name to keyword object (includes value and last seen) */
@@ -175,16 +178,26 @@ export class TronModel {
    */
   constructor(private tron: TronConnection) {}
 
+  private _send(event: IpcMainInvokeEvent, channel: string, data: KeywordMap) {
+    try {
+      event.sender.send(channel, data);
+    } catch (err) {
+      log.error(`Failed sending message to (${event.sender.id}, ${channel})`);
+    }
+  }
   /**
    * Register a new listener for a key or group of keys.
-   * @param keys Key or list of keys to monitor.
+   * @param keys Key or list of keys to monitor. Star wildcards can
+   *    be used for either actor or key, which will result in all the
+   *    keywords being forwarded.
    * @param event The event from which the request to add a new listener
    *    originates from. This is basically the window that sends the request.
    * @param channel A string with the name of the channel on which the
    *    renderer window will listen to.
    * @param now Whether to report the current value of the keyword immediately.
    * @param refresh If the value of the keyword has not been heard yet, forces
-   *    and update from tron and reports the value.
+   *    and update from tron and reports the value. Note that if the key
+   *    includes wildcards, this has no effect.
    */
   registerListener(
     keys: string | string[],
@@ -195,13 +208,49 @@ export class TronModel {
   ) {
     if (!Array.isArray(keys)) keys = [keys];
     for (let key of keys) {
-      this._listeners[key]?.push([event, channel]) || (this._listeners[key] = [[event, channel]]);
+      // Checks that the key is *, actor.*, or actor.key.
+      if (!key.match(/^\*|[a-z]+\.[a-z*]+$/i)) {
+        log.error(`Cannot register a listener for key ${key}`);
+        continue;
+      }
+      if (!(key in this._listeners)) {
+        this._listeners[key] = [[event, channel]];
+      } else {
+        // Check if the window and channel are already registered.
+        let alreadyRegistered = false;
+        for (let [e, c] of this._listeners[key].values()) {
+          if (e.sender.id === event.sender.id && c === channel) {
+            alreadyRegistered = true;
+            break;
+          }
+        }
+        if (!alreadyRegistered) {
+          this._listeners[key].push([event, channel]);
+          log.debug(`Registering listener for ${key} on (${event.sender.id}, ${channel})`);
+        }
+      }
     }
 
     if (refresh) {
       this.refreshKeywords(keys);
     } else if (now) {
-      for (let key of keys) this.reportKeyword(key);
+      let keysToSend: KeywordMap = {};
+      for (let key of keys) {
+        if ('*' === key) {
+          keysToSend = this.keywords;
+          break;
+        } else if (key.includes('.*')) {
+          let keyActor = key.split('.')[0];
+          for (let kk in this.keywords) {
+            let kkActor = kk.split('.')[0];
+            if (kkActor === keyActor) keysToSend[kk] = this.keywords[kk];
+          }
+        } else {
+          if (key in this.keywords) keysToSend[key] = this.keywords[key];
+        }
+      }
+      log.debug(`Sending keys to (${event.sender.id}, ${channel}) NOW.`);
+      this._send(event, channel, keysToSend);
     }
   }
 
@@ -209,15 +258,21 @@ export class TronModel {
    * Removes listener for a key or list of keys.
    * @param event The event that requests to remove the listener.
    * @param channel A string with the name of the channel on which the
-   *    renderer window was listening to.
+   *    renderer window was listening to. If not specified, this effectively
+   *    removes all the listeners for a window.
    */
-  removeListener(keys: string | string[], event: IpcMainInvokeEvent, channel: string) {
-    if (!Array.isArray(keys)) keys = [keys];
-    for (let key of keys) {
+  removeListener(event: IpcMainInvokeEvent, channel?: string) {
+    for (let key in this._listeners) {
       for (let nn of this._listeners[key].keys()) {
         let listener = this._listeners[key][nn];
-        if (listener[0].sender.id === event.sender.id && listener[1] === channel) {
-          this._listeners[key].splice(nn);
+        if (listener[0].sender.id === event.sender.id) {
+          if (channel && listener[1] !== channel) continue;
+          if (this._listeners[key].length === 1) {
+            delete this._listeners[key];
+          } else {
+            this._listeners[key].splice(nn);
+          }
+          log.debug(`Removing listener (${event.sender.id}, ${channel}).`);
         }
       }
     }
@@ -230,20 +285,38 @@ export class TronModel {
   updateKeyword(kw: Keyword) {
     let fullKey = `${kw.actor}.${kw.key}`;
     this.keywords[fullKey] = kw;
-    if (fullKey in this._listeners) this.reportKeyword(fullKey);
+    this.reportKeyword(kw.actor, kw.key);
   }
 
   /**
    * Reports a keyword to all subscribed callbacks.
-   * @param key Key to report (format {actor}.{key}).
+   * @param actor Actor to which the key belongs.
+   * @param key Key to report.
    */
-  reportKeyword(key: string) {
-    this._listeners[key]?.forEach(([event, channel]) => {
-      event.sender.send(channel, { [key]: this.keywords[key] });
+  reportKeyword(actor: string, key: string) {
+    // Get list of listened to keys, including wildcards, that match this key
+    // and actor.
+    let fullKey = `${actor}.${key}`;
+    let validKeys = Object.keys(this._listeners).filter(
+      (k) => k === '*' || k === fullKey || k === `${actor}.*`
+    );
+    // Report keyword to the selected listeners.
+    validKeys.forEach((k) => {
+      this._listeners[k].forEach(([event, channel]) => {
+        this._send(event, channel, { [fullKey]: this.keywords[fullKey] });
+      });
     });
   }
 
+  /**
+   * Asks tron to send the current values of a list of keys.
+   * @param keys Keys to refresh.
+   * @param maxChunk Maximum number of keys to ask for to tron at once.
+   */
   refreshKeywords(keys: string[], maxChunk = 10) {
+    // Remove keys that contain a wildcard. We cannot refresh them because
+    // we don't have a full datamodel of the actor keys.
+    keys = keys.filter((key) => !key.includes('*'));
     let actors = new Set(keys.map((k) => k.split('.')[0]));
     for (let actor of actors) {
       let actorKeys = keys.filter((k) => k.includes(`${actor}.`));
