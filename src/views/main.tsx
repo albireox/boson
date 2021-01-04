@@ -10,7 +10,7 @@
 
 import telescope from '@iconify/icons-mdi/telescope';
 import { Icon } from '@iconify/react';
-import { Button, Container, makeStyles, Snackbar, Tab, Tabs } from '@material-ui/core';
+import { Button, Container, makeStyles, Snackbar, Tab, Tabs, Typography } from '@material-ui/core';
 import { Brightness7, Highlight } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import React, { BaseSyntheticEvent } from 'react';
@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     padding: 0,
     margin: 0,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    height: '100%'
   },
   tabs: {
     minWidth: '80px'
@@ -99,7 +100,11 @@ async function getTabView(tab: ValidTabs) {
   if (tab === 'tcc') {
     TabView = TCCView;
   } else {
-    TabView = () => <div />;
+    TabView = () => (
+      <Typography variant='h2' style={{ textAlign: 'center', top: '40%' }}>
+        {tab.toUpperCase()}
+      </Typography>
+    );
   }
   return React.createElement(TabView, {});
 }
