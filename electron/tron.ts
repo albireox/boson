@@ -63,18 +63,22 @@ export enum CommandStatus {
 }
 
 function evaluateKeyword(value: string) {
-  try {
-    // eslint-disable-next-line
-    return eval(value);
-  } catch (err) {
-    switch (value) {
-      case 'f' || 'F':
-        return false;
-      case 't' || 'T':
-        return true;
-      default:
-        return value;
+  switch (value) {
+    case 'f' || 'F':
+      return false;
+    case 't' || 'T':
+      return true;
+    default:
+      break;
+  }
+  if (!Number.isNaN(Number(value))) {
+    return Number(value);
+  } else {
+    let match = value.match(/^["]+(.+?)["]+$|^(?!")(.+?)(?<!")$/);
+    if (match) {
+      return match[1] || match[2];
     }
+    return value;
   }
 }
 
