@@ -34,10 +34,10 @@ export function useKeywords(keys: string[], channel = 'tron-model-updated'): Key
   useEffect(() => {
     // We do this inside a useEffect because we only want to register the
     // listener once.
-    window.api.invoke('tron-register-model-listener', keys);
+    window.api.invoke('tron-register-model-listener', keys, channel);
 
     const removeListener = () => {
-      window.api.invoke('tron-remove-model-listener', keys);
+      window.api.invoke('tron-remove-model-listener', channel);
     };
 
     // Remove listener when the window closes. This may not be general enough
