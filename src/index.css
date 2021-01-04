@@ -14,3 +14,17 @@ html, body, main#root {
   display: flex;
   flex-direction: column;
 }
+
+
+/* Make Material-UI Data Grid cells scrollable but with hidden scrollbars */
+.MuiDataGrid-cell {
+  overflow: auto;
+  -ms-overflow-style: none;
+}
+
+.MuiDataGrid-cell > div {
+  overflow: auto;
+}
+.MuiDataGrid-cell > div::-webkit-scrollbar {
+  display: none;
+}
