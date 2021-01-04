@@ -12,6 +12,9 @@ import { contextBridge, ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { ConnectionStatus } from './tron';
 
+// TODO: According to https://bit.ly/38aeKXB, we should to expose the ipcRenderer
+// directly. Instead, we should expose the channels from events.ts here.
+
 contextBridge.exposeInMainWorld('api', {
   log: log.functions,
   ipcRenderer: ipcRenderer,
