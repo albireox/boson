@@ -11,7 +11,7 @@
 import { Container, makeStyles, TextField, Typography } from '@material-ui/core';
 import React from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { Reply } from '../../electron/tron';
+import { Reply } from '../../main/tron';
 
 const useStyles = makeStyles((theme) => ({
   container: {

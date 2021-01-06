@@ -17,8 +17,6 @@ import store from './store';
 
 log.transports.console.level = false;
 
-require('v8-compile-cache'); // https://bit.ly/3mSfdBM
-
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 type WindowType = BrowserWindow | null;
@@ -106,9 +104,9 @@ export function createWindow(name: string = 'main'): BrowserWindow {
   const isDev = require('electron-is-dev');
 
   if (isDev) {
-    win.loadURL(`http://localhost:3000/index.html?${name}`);
+    win.loadURL(`http://127.0.0.1:3000/index.html?${name}`);
   } else {
-    win.loadURL(`file://${__dirname}/../index.html?${name}`);
+    win.loadURL(`file://${__dirname}/../../index.html?${name}`);
   }
 
   windows.set(name, win);
@@ -123,7 +121,7 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     if (isDev) {
       // 'node_modules/.bin/electronPath'
       require('electron-reload')(__dirname, {
-        electron: path.join(__dirname, '..', '..', 'node_modules', '.bin', 'electron'),
+        electron: path.join(__dirname, '..', '..', '..', 'node_modules', '.bin', 'electron'),
         forceHardReset: true,
         hardResetMethod: 'exit'
       });

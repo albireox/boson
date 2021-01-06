@@ -7,7 +7,7 @@
   "homepage": "https://github.com/albireox/boson",
   "bugs": "https://github.com/albireox/boson/issues",
   "license": "BSD-3-Clause",
-  "main": "build/electron/main.js",
+  "main": "build/src/main/main.js",
   "private": true,
   "dependencies": {
     "@iconify/icons-mdi": "^1.1.2",
@@ -16,22 +16,20 @@
     "@material-ui/data-grid": "^4.0.0-alpha.14",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
-    "electron-devtools-installer": "^3.1.1",
     "electron-is-dev": "^1.2.0",
     "electron-log": "^4.3.1",
     "electron-store": "^6.0.1",
+    "gps-time": "^1.0.7",
     "keytar": "^7.3.0",
     "lodash": "^4.17.20",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^16.0.0",
+    "react-dom": "^17.0.0",
     "react-router-dom": "^5.2.0",
-    "react-scroll-to-bottom": "^4.0.0",
-    "source-map-explorer": "^2.5.1",
-    "v8-compile-cache": "^2.2.0"
+    "react-scroll-to-bottom": "^4.0.0"
   },
   "scripts": {
-    "start": "concurrently \"BROWSER=none react-scripts start\" \"wait-on http://localhost:3000 && tsc -p electron -w\" \"wait-on http://localhost:3000 && tsc -p electron && electron .\"",
-    "build": "PUBLIC_URL=./ react-scripts build && tsc -p electron && electron-builder",
+    "start": "concurrently \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://localhost:3000 && tsc -p src/main && electron .\"",
+    "build": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder",
     "test": "react-scripts test",
     "postinstall": "electron-builder install-app-deps",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
@@ -39,7 +37,9 @@
   },
   "build": {
     "extends": null,
-    "asar": false,
+    "mac": {
+      "target": ["zip"]
+    },
     "files": [
       "build/**/*"
     ],
@@ -73,10 +73,15 @@
     "concurrently": "^5.3.0",
     "electron": "@beta",
     "electron-builder": "^22.9.1",
+    "electron-devtools-installer": "^3.1.1",
     "electron-reload": "^1.5.0",
     "react-scripts": "^4.0.1",
+    "source-map-explorer": "^2.5.1",
     "source-map-support": "^0.5.19",
     "typescript": "4.1.2",
     "wait-on": "^5.2.0"
+  },
+  "resolutions": {
+    "react-scripts/eslint-webpack-plugin": "2.3.0"
   }
 }
