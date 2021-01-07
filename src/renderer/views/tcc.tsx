@@ -8,96 +8,177 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, LinearProgress, LinearProgressProps, Typography } from '@material-ui/core';
+import { darken, fade, lighten, styled } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import React from 'react';
+import React, { Fragment } from 'react';
+import { degToDMS } from '../../utils/utils';
+import { useKeywords } from '../hooks';
 
-const TAX_RATE = 0.07;
+interface CoordState {
+  [key: string]: null | string;
+}
 
-const useStyles = makeStyles({
-  table: {
-    // minWidth: 700
+const TCCRule = styled('hr')(({ theme }) => ({
+  border: 'none',
+  height: '1px',
+  backgroundColor:
+    theme.palette.type === 'light'
+      ? lighten(fade(theme.palette.divider, 1), 0.88)
+      : darken(fade(theme.palette.divider, 1), 0.68),
+  color:
+    theme.palette.type === 'light'
+      ? lighten(fade(theme.palette.divider, 1), 0.88)
+      : darken(fade(theme.palette.divider, 1), 0.68)
+}));
+
+const TCCTable = styled(Table)({
+  margin: '4px 0px',
+  width: '100%',
+  '& > * > * > td': {
+    fontSize: '13px',
+    border: 'hidden',
+    padding: '4px 4px'
+  },
+  '& > thead': {
+    visibility: 'collapse'
   }
 });
 
-function ccyFormat(num: number) {
-  return `${num.toFixed(2)}`;
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+  return (
+    <Box display='flex' alignItems='center'>
+      <Box width='100%' mr={1}>
+        <LinearProgress variant='determinate' {...props} />
+      </Box>
+      <Box minWidth={35}>
+        <Typography variant='body2' color='textSecondary'>{`${Math.round(
+          props.value
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
 }
 
-function priceRow(qty: number, unit: number) {
-  return qty * unit;
-}
+const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
+  let keywords = useKeywords(
+    ['tcc.objnetpos', 'tcc.objsys', 'tcc.rotpos', 'tcc.rottype'],
+    'tcc-netpos-keywords'
+  );
+  let [coordState, setCoordState] = React.useState<CoordState>({
+    axis1label: null,
+    axis1value: null,
+    axis1units: null,
+    axis2label: null,
+    axis2value: null,
+    axis2units: null
+  });
+  const [progress, setProgress] = React.useState(10);
 
-function createRow(desc: string, qty: number, unit: number) {
-  const price = priceRow(qty, unit);
-  return { desc, qty, unit, price };
-}
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
+    }, 800);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
-function subtotal(items: { price: number }[]) {
-  return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
-}
+  React.useEffect(() => {
+    let cSysObj = keywords['tcc.objsys']?.values[0] || 'unknown';
+    console.log(keywords['tcc.objsys']);
+    let axis1value = keywords['tcc.objnetpos']?.values[0];
+    let newCoordState: CoordState = {};
 
-const rows = [
-  createRow('Paperclips (Box)', 100, 1.15),
-  createRow('Paper (Case)', 10, 45.99),
-  createRow('Waste Basket', 2, 17.99)
-];
+    if (['ICRS', 'FK4', 'FK5'].includes(cSysObj)) {
+      newCoordState.axis1label = 'RA';
+      newCoordState.axis2label = 'Dec';
+      newCoordState.axis1units = 'h m s';
+      newCoordState.axis2units = '\u00b0 \' "';
+      axis1value /= 15; // Convert to hours
+    } else if (cSysObj === 'Mount') {
+      newCoordState.axis1label = 'Az';
+      newCoordState.axis2label = 'Alt';
+      newCoordState.axis1units = '\u00b0 \' "';
+      newCoordState.axis2units = '\u00b0 \' "';
+    } else {
+      newCoordState.axis1label = '?';
+      newCoordState.axis2label = '?';
+      newCoordState.axis1units = '?';
+      newCoordState.axis2units = '?';
+    }
 
-const invoiceSubtotal = subtotal(rows);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+    newCoordState.axis1value = degToDMS(axis1value, { precision: 2 });
+    newCoordState.axis2value = degToDMS(keywords['tcc.objnetpos']?.values[3], {
+      precision: 2,
+      sign: true
+    });
 
-export default function TCCView() {
-  const classes = useStyles();
+    setCoordState(newCoordState);
+  }, [keywords]);
+
+  const getRot = (rotPos: number | undefined) => {
+    if (rotPos === undefined || rotPos === null) {
+      return null;
+    }
+    return rotPos.toFixed(2) + ' \u00b0';
+  };
 
   return (
-    <TableContainer style={{ overflow: 'hidden' }}>
-      <Table className={classes.table} aria-label='spanning table'>
+    <TableContainer style={{ overflow: 'hidden', verticalAlign: 'top' }}>
+      <TCCTable style={props.style}>
         <TableHead>
           <TableRow>
-            <TableCell align='center' colSpan={3}>
-              Details
-            </TableCell>
-            <TableCell align='right'>Price</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Desc</TableCell>
-            <TableCell align='right'>Qty.</TableCell>
-            <TableCell align='right'>Unit</TableCell>
-            <TableCell align='right'>Sum</TableCell>
+            <TableCell width='20px' />
+            <TableCell width='80px' />
+            <TableCell width='40px' />
+            <TableCell width='300px' />
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.desc}>
-              <TableCell>{row.desc}</TableCell>
-              <TableCell align='right'>{row.qty}</TableCell>
-              <TableCell align='right'>{row.unit}</TableCell>
-              <TableCell align='right'>{ccyFormat(row.price)}</TableCell>
-            </TableRow>
-          ))}
-
           <TableRow>
-            <TableCell rowSpan={3} />
-            <TableCell colSpan={2}>Subtotal</TableCell>
-            <TableCell align='right'>{ccyFormat(invoiceSubtotal)}</TableCell>
+            <TableCell align='right'>{coordState.axis1label}</TableCell>
+            <TableCell align='right'>{coordState.axis1value}</TableCell>
+            <TableCell align='left' colSpan={2}>
+              {coordState.axis1units}
+            </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Tax</TableCell>
-            <TableCell align='right'>{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-            <TableCell align='right'>{ccyFormat(invoiceTaxes)}</TableCell>
+            <TableCell align='right'>{coordState.axis2label}</TableCell>
+            <TableCell align='right'>{coordState.axis2value}</TableCell>
+            <TableCell align='left'>{coordState.axis2units}</TableCell>
+            <TableCell align='center' rowSpan={2} style={{ padding: '0px 32px' }}>
+              <LinearProgressWithLabel value={progress} />
+            </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell colSpan={2}>Total</TableCell>
-            <TableCell align='right'>{ccyFormat(invoiceTotal)}</TableCell>
+            <TableCell align='right'>CSys</TableCell>
+            <TableCell align='right'>{keywords['tcc.objsys']?.values[0]}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell align='right'>Rot</TableCell>
+            <TableCell align='right'>{getRot(keywords['tcc.rotpos']?.values[0])}</TableCell>
+            <TableCell align='left' colSpan={2}>
+              {keywords['tcc.rottype']?.values[0]}
+            </TableCell>
           </TableRow>
         </TableBody>
-      </Table>
+      </TCCTable>
     </TableContainer>
+  );
+};
+
+export default function TCCView() {
+  return (
+    <Fragment>
+      <TCCRule />
+      <NetPosTable />
+      <TCCRule />
+    </Fragment>
   );
 }

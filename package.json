@@ -25,7 +25,8 @@
     "react": "^16.0.0",
     "react-dom": "^17.0.0",
     "react-router-dom": "^5.2.0",
-    "react-scroll-to-bottom": "^4.0.0"
+    "react-scroll-to-bottom": "^4.0.0",
+    "sprintf-js": "^1.1.2"
   },
   "scripts": {
     "start": "concurrently \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://localhost:3000 && tsc -p src/main && electron .\"",
@@ -38,7 +39,9 @@
   "build": {
     "extends": null,
     "mac": {
-      "target": ["zip"]
+      "target": [
+        "zip"
+      ]
     },
     "files": [
       "build/**/*"
@@ -70,6 +73,7 @@
     "@types/react": "17.0.0",
     "@types/react-dom": "17.0.0",
     "@types/react-router-dom": "^5.1.6",
+    "@types/sprintf-js": "^1.1.2",
     "concurrently": "^5.3.0",
     "electron": "@beta",
     "electron-builder": "^22.9.1",
