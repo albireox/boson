@@ -74,7 +74,7 @@ function evaluateKeyword(value: string) {
   if (!Number.isNaN(Number(value))) {
     return Number(value);
   } else {
-    let match = value.match(/^["]+(.+?)["]+$|^(?!")(.+?)(?<!")$/);
+    let match = value.match(/^["]+(.*?)["]+$|^(?!")(.+?)(?<!")$/);
     if (match) {
       return match[1] || match[2];
     }
@@ -106,9 +106,13 @@ export class Command {
   public readonly date = new Date();
 
   constructor(public rawCommand: string) {
-    let chunks = rawCommand.trim().split(/\s+/);
+    let chunks = rawCommand
+      .trim()
+      .match(/(.+?)\s(.+)/)!
+      .slice(1, 3);
 
     [this.actor, this.command] = chunks;
+    console.log(rawCommand, 'a', this.actor, 'c', this.command);
     Command.commandIdCounter += 1;
     this.commandId = Command.commandIdCounter;
 
@@ -208,10 +212,11 @@ export class TronModel {
     event: IpcMainInvokeEvent,
     channel: string,
     now = true,
-    refresh = false
+    refresh = true
   ) {
     if (!Array.isArray(keys)) keys = [keys];
     for (let key of keys) {
+      key = key.toLowerCase();
       // Checks that the key is *, actor.*, or actor.key.
       if (!key.match(/^\*|[a-z]+\.[a-z*]+$/i)) {
         log.error(`Cannot register a listener for key ${key}`);
@@ -267,6 +272,7 @@ export class TronModel {
    */
   removeListener(event: IpcMainInvokeEvent, channel?: string) {
     for (let key in this._listeners) {
+      key = key.toLowerCase();
       for (let nn of this._listeners[key].keys()) {
         let listener = this._listeners[key][nn];
         if (listener[0].sender.id === event.sender.id) {
@@ -287,7 +293,7 @@ export class TronModel {
    * @param kw The new keyword.
    */
   updateKeyword(kw: Keyword) {
-    let fullKey = `${kw.actor}.${kw.key}`;
+    let fullKey = `${kw.actor.toLowerCase()}.${kw.key.toLowerCase()}`;
     this.keywords[fullKey] = kw;
     this.reportKeyword(kw.actor, kw.key);
   }
@@ -300,10 +306,14 @@ export class TronModel {
   reportKeyword(actor: string, key: string) {
     // Get list of listened to keys, including wildcards, that match this key
     // and actor.
+    actor = actor.toLowerCase();
+    key = key.toLowerCase();
     let fullKey = `${actor}.${key}`;
+
     let validKeys = Object.keys(this._listeners).filter(
       (k) => k === '*' || k === fullKey || k === `${actor}.*`
     );
+
     // Report keyword to the selected listeners.
     validKeys.forEach((k) => {
       this._listeners[k].forEach(([event, channel]) => {
@@ -314,10 +324,12 @@ export class TronModel {
 
   /**
    * Asks tron to send the current values of a list of keys.
-   * @param keys Keys to refresh.
+   * @param keys Keys to refresh. If not provided, refreshes all the keywords
+   *    that are currently being listened to.
    * @param maxChunk Maximum number of keys to ask for to tron at once.
    */
-  refreshKeywords(keys: string[], maxChunk = 10) {
+  refreshKeywords(keys?: string[], maxChunk = 10) {
+    keys = keys || Object.keys(this._listeners);
     // Remove keys that contain a wildcard. We cannot refresh them because
     // we don't have a full datamodel of the actor keys.
     keys = keys.filter((key) => !key.includes('*'));
@@ -452,8 +464,10 @@ export class TronConnection {
     } else {
       log.info('Logging in complete.');
       this.status = ConnectionStatus.Authorised;
-      return [true, null];
     }
+    // Refresh keywords for all registered listeners.
+    this.model.refreshKeywords();
+    return [true, null];
   }
 
   disconnect() {
@@ -531,8 +545,6 @@ export class TronConnection {
       if (reply.commandId in this.commands) {
         this.commands[reply.commandId].addReply(reply);
       }
-
-      this.replies.push(reply);
 
       this._subscribedWindows.forEach((id) => {
         const webContents: any = BrowserWindow.fromId(id)?.webContents;
