@@ -91,7 +91,6 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
 
   React.useEffect(() => {
     let cSysObj = keywords['tcc.objsys']?.values[0] || 'unknown';
-    console.log(keywords['tcc.objsys']);
     let axis1value = keywords['tcc.objnetpos']?.values[0];
     let newCoordState: CoordState = {};
 
