@@ -50,7 +50,7 @@
         },
         "windows": {
         },
-        "defaultWindows": ["main", "keywords"],
+        "defaultWindows": ["main"],
         "autoconnect": true
     }
 }
