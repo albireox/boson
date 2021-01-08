@@ -14,7 +14,7 @@ import { Button, Container, makeStyles, Snackbar, Tab, Tabs, Typography } from '
 import { Brightness7, Highlight } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import React, { BaseSyntheticEvent } from 'react';
-import TCCView from './tcc';
+import TCCView from './TCC';
 
 let ConnectionStatus = window.api.tron.ConnectionStatus;
 

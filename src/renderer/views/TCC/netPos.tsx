@@ -3,60 +3,35 @@
  *  -*- coding: utf-8 -*-
  *
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
- *  @Date: 2021-01-01
- *  @Filename: tcc.tsx
+ *  @Date: 2021-01-07
+ *  @Filename: netPos.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
 import { Box, LinearProgress, LinearProgressProps, Typography } from '@material-ui/core';
-import { darken, fade, lighten, styled } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import React, { Fragment } from 'react';
-import { degToDMS } from '../../utils/utils';
-import { useKeywords } from '../hooks';
+import React from 'react';
+import { useKeywords } from 'renderer/hooks';
+import { degToDMS } from 'utils';
+import { TCCTable } from './index';
 
 interface CoordState {
   [key: string]: null | string;
 }
 
-const TCCRule = styled('hr')(({ theme }) => ({
-  border: 'none',
-  height: '1px',
-  backgroundColor:
-    theme.palette.type === 'light'
-      ? lighten(fade(theme.palette.divider, 1), 0.88)
-      : darken(fade(theme.palette.divider, 1), 0.68),
-  color:
-    theme.palette.type === 'light'
-      ? lighten(fade(theme.palette.divider, 1), 0.88)
-      : darken(fade(theme.palette.divider, 1), 0.68)
-}));
-
-const TCCTable = styled(Table)({
-  margin: '4px 0px',
-  width: '100%',
-  '& > * > * > td': {
-    fontSize: '13px',
-    border: 'hidden',
-    padding: '4px 4px'
-  },
-  '& > thead': {
-    visibility: 'collapse'
-  }
-});
-
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+function LinearProgressWithLabel(
+  props: LinearProgressProps & { value: number; hidden?: boolean }
+) {
   return (
-    <Box display='flex' alignItems='center'>
+    <Box display='flex' alignItems='center' hidden={props.hidden || false}>
       <Box width='100%' mr={1}>
         <LinearProgress variant='determinate' {...props} />
       </Box>
-      <Box minWidth={35}>
+      <Box minWidth={35} hidden={props.hidden || false}>
         <Typography variant='body2' color='textSecondary'>{`${Math.round(
           props.value
         )}%`}</Typography>
@@ -65,7 +40,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
   );
 }
 
-const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
+export const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
   let keywords = useKeywords(
     ['tcc.objnetpos', 'tcc.objsys', 'tcc.rotpos', 'tcc.rottype'],
     'tcc-netpos-keywords'
@@ -97,7 +72,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
     if (['ICRS', 'FK4', 'FK5'].includes(cSysObj)) {
       newCoordState.axis1label = 'RA';
       newCoordState.axis2label = 'Dec';
-      newCoordState.axis1units = 'h m s';
+      newCoordState.axis1units = 'hms';
       newCoordState.axis2units = '\u00b0 \' "';
       axis1value /= 15; // Convert to hours
     } else if (cSysObj === 'Mount') {
@@ -152,7 +127,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
             <TableCell align='right'>{coordState.axis2value}</TableCell>
             <TableCell align='left'>{coordState.axis2units}</TableCell>
             <TableCell align='center' rowSpan={2} style={{ padding: '0px 32px' }}>
-              <LinearProgressWithLabel value={progress} />
+              <LinearProgressWithLabel value={progress} hidden />
             </TableCell>
           </TableRow>
           <TableRow>
@@ -171,13 +146,3 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
     </TableContainer>
   );
 };
-
-export default function TCCView() {
-  return (
-    <Fragment>
-      <TCCRule />
-      <NetPosTable />
-      <TCCRule />
-    </Fragment>
-  );
-}
