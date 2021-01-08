@@ -40,13 +40,15 @@ function LinearProgressWithLabel(
 
 function DMG() {
   return (
-    <Typography variant='h6' style={{ padding: '2px 0px', lineHeight: '1.0' }}>
+    <span
+      style={{ fontSize: '16px', padding: '4px 0px 0px 0px', lineHeight: 0, display: 'block' }}
+    >
       {'\u00b0 \' "'}
-    </Typography>
+    </span>
   );
 }
 
-export const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
+const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
   let keywords = useKeywords(
     ['tcc.objnetpos', 'tcc.objsys', 'tcc.rotpos', 'tcc.rottype'],
     'tcc-netpos-keywords'
@@ -132,7 +134,7 @@ export const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props)
             <TableCell align='right'>{coordState.axis2value}</TableCell>
             <TableCell align='left'>{coordState.axis2units}</TableCell>
             <TableCell align='center' rowSpan={2} style={{ padding: '0px 32px 0px 64px' }}>
-              <LinearProgressWithLabel value={progress} hidden={false} />
+              <LinearProgressWithLabel value={progress} hidden={true} />
             </TableCell>
           </TableRow>
           <TableRow>
@@ -151,3 +153,5 @@ export const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props)
     </TableContainer>
   );
 };
+
+export default NetPosTable;

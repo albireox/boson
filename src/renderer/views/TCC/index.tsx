@@ -11,9 +11,11 @@
 import { darken, fade, lighten, styled } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import React, { Fragment } from 'react';
-import { NetPosTable } from './netPos';
+import MiscTable from './misc';
+import NetPosTable from './netPos';
 
 const TCCRule = styled('hr')(({ theme }) => ({
+  margin: '4px 0px',
   border: 'none',
   height: '1px',
   backgroundColor:
@@ -30,7 +32,7 @@ export const TCCTable = styled(Table)({
   margin: '4px 0px',
   width: '100%',
   '& > * > * > td': {
-    fontSize: '14px',
+    fontSize: '13px',
     border: 'hidden',
     padding: '2px 4px',
     fontWeight: 400
@@ -43,8 +45,10 @@ export const TCCTable = styled(Table)({
 export default function TCCView() {
   return (
     <Fragment>
-      <TCCRule />
+      <TCCRule style={{ marginTop: '-2px' }} />
       <NetPosTable />
+      <TCCRule />
+      <MiscTable />
       <TCCRule />
     </Fragment>
   );
