@@ -10,7 +10,7 @@
 
 import { useEffect, useState } from 'react';
 import { KeywordMap } from '../main/tron';
-import { getTAITime } from '../utils/utils';
+import { getTAITime } from '../utils';
 
 /**
  * Hook that returns a state with a mapping of keys to keywords. They keys are
@@ -59,9 +59,9 @@ export function useTAI(): Date {
   const [date, setDate] = useState<Date>(getTAITime());
 
   useEffect(() => {
-    let sleep = new Promise((r) => setInterval(r, 1000));
-    sleep.then((r) => setDate(getTAITime()));
-  });
+    let interval = setInterval(() => setDate(getTAITime()), 1000);
+    return () => clearInterval(interval);
+  }, [date]);
 
   return date;
 }
