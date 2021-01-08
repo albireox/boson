@@ -8,12 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import gpsTime from 'gps-time';
 import { sprintf } from 'sprintf-js';
-
-export function getTAITime() {
-  return new Date(gpsTime.toGPSMS(new Date()) + 19000);
-}
 
 export function degToDMS(
   deg: number | undefined | null,
