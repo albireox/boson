@@ -223,6 +223,7 @@ export class TronModel {
       }
       if (!(key in this._listeners)) {
         this._listeners[key] = [[event, channel]];
+        log.debug(`Registering listener for ${key} on (${event.sender.id}, ${channel})`);
       } else {
         // Check if the window and channel are already registered.
         let alreadyRegistered = false;
