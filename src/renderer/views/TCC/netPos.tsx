@@ -89,8 +89,7 @@ export const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props)
 
     newCoordState.axis1value = degToDMS(axis1value, { precision: 2 });
     newCoordState.axis2value = degToDMS(keywords['tcc.objnetpos']?.values[3], {
-      precision: 2,
-      sign: true
+      precision: 2
     });
 
     setCoordState(newCoordState);
