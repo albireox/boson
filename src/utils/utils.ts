@@ -12,15 +12,27 @@ import { sprintf } from 'sprintf-js';
 
 export function degToDMS(
   deg: number | undefined | null,
-  options?: { precision?: number; separator?: string; sign?: boolean }
+  options?: { precision?: number; separator?: string; sign?: boolean; hours?: boolean }
 ): string | null {
   if (!deg && deg !== 0) return null;
-  let precision = options?.precision || 2;
-  let d = Math.floor(deg);
-  let m = Math.floor((deg - d) * 60);
-  let s = Math.floor(((deg - d) * 60 - m) * 60);
+  if (options?.hours) {
+    deg /= 15;
+  }
+  let precision = options?.precision !== undefined ? options.precision : 2;
+  let sign = options?.sign ? '+' : '';
+
+  if (deg < 0) {
+    sign = '-';
+    deg = -deg;
+  }
+
+  let d = Math.trunc(deg);
+  let m = Math.trunc((deg - d) * 60);
+  let s = ((deg - d) * 60 - m) * 60;
+
   return sprintf(
-    `${options?.sign ? '+' : ''}%d%s%02d%s%0${precision + 3}.${precision}f`,
+    `%s%d%s%02d%s%0${precision === 0 ? 2 : precision + 3}.${precision}f`,
+    sign,
     d,
     options?.separator || ':',
     m,
