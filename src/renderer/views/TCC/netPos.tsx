@@ -20,7 +20,7 @@ import { degToDMS } from 'utils';
 import { TCCTable } from './index';
 
 interface CoordState {
-  [key: string]: null | string;
+  [key: string]: null | string | JSX.Element;
 }
 
 function LinearProgressWithLabel(
@@ -29,14 +29,20 @@ function LinearProgressWithLabel(
   return (
     <Box display='flex' alignItems='center' hidden={props.hidden || false}>
       <Box width='100%' mr={1}>
-        <LinearProgress variant='determinate' {...props} />
+        <LinearProgress color='secondary' variant='determinate' {...props} />
       </Box>
       <Box minWidth={35} hidden={props.hidden || false}>
-        <Typography variant='body2' color='textSecondary'>{`${Math.round(
-          props.value
-        )}%`}</Typography>
+        <Typography variant='body1'>{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
+  );
+}
+
+function DMG() {
+  return (
+    <Typography variant='h6' style={{ padding: '2px 0px', lineHeight: '1.0' }}>
+      {'\u00b0 \' "'}
+    </Typography>
   );
 }
 
@@ -73,7 +79,7 @@ export const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props)
       newCoordState.axis1label = 'RA';
       newCoordState.axis2label = 'Dec';
       newCoordState.axis1units = 'hms';
-      newCoordState.axis2units = '\u00b0 \' "';
+      newCoordState.axis2units = <DMG />;
       axis1value /= 15; // Convert to hours
     } else if (cSysObj === 'Mount') {
       newCoordState.axis1label = 'Az';
@@ -107,10 +113,10 @@ export const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props)
       <TCCTable style={props.style}>
         <TableHead>
           <TableRow>
-            <TableCell width='20px' />
-            <TableCell width='80px' />
-            <TableCell width='40px' />
-            <TableCell width='300px' />
+            <TableCell width='50px' />
+            <TableCell width='120px' />
+            <TableCell width='50px' />
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -125,8 +131,8 @@ export const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props)
             <TableCell align='right'>{coordState.axis2label}</TableCell>
             <TableCell align='right'>{coordState.axis2value}</TableCell>
             <TableCell align='left'>{coordState.axis2units}</TableCell>
-            <TableCell align='center' rowSpan={2} style={{ padding: '0px 32px' }}>
-              <LinearProgressWithLabel value={progress} hidden />
+            <TableCell align='center' rowSpan={2} style={{ padding: '0px 32px 0px 64px' }}>
+              <LinearProgressWithLabel value={progress} hidden={false} />
             </TableCell>
           </TableRow>
           <TableRow>

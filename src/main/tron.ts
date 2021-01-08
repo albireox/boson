@@ -112,7 +112,6 @@ export class Command {
       .slice(1, 3);
 
     [this.actor, this.command] = chunks;
-    console.log(rawCommand, 'a', this.actor, 'c', this.command);
     Command.commandIdCounter += 1;
     this.commandId = Command.commandIdCounter;
 

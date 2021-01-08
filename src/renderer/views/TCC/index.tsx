@@ -30,9 +30,10 @@ export const TCCTable = styled(Table)({
   margin: '4px 0px',
   width: '100%',
   '& > * > * > td': {
-    fontSize: '13px',
+    fontSize: '14px',
     border: 'hidden',
-    padding: '4px 4px'
+    padding: '2px 4px',
+    fontWeight: 400
   },
   '& > thead': {
     visibility: 'collapse'
