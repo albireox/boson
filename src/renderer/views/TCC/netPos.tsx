@@ -8,7 +8,12 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, LinearProgress, LinearProgressProps, Typography } from '@material-ui/core';
+import {
+  Box,
+  LinearProgress,
+  LinearProgressProps,
+  Typography
+} from '@material-ui/core';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -32,7 +37,9 @@ function LinearProgressWithLabel(
         <LinearProgress color='secondary' variant='determinate' {...props} />
       </Box>
       <Box minWidth={35} hidden={props.hidden || false}>
-        <Typography variant='body1'>{`${Math.round(props.value)}%`}</Typography>
+        <Typography variant='body1'>{`${Math.round(
+          props.value
+        )}%`}</Typography>
       </Box>
     </Box>
   );
@@ -41,7 +48,12 @@ function LinearProgressWithLabel(
 function DMG() {
   return (
     <span
-      style={{ fontSize: '16px', padding: '4px 0px 0px 0px', lineHeight: 0, display: 'block' }}
+      style={{
+        fontSize: '16px',
+        padding: '4px 0px 0px 0px',
+        lineHeight: 0,
+        display: 'block'
+      }}
     >
       {'\u00b0 \' "'}
     </span>
@@ -65,7 +77,9 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
+      setProgress((prevProgress) =>
+        prevProgress >= 100 ? 10 : prevProgress + 10
+      );
     }, 800);
     return () => {
       clearInterval(timer);
@@ -86,8 +100,8 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
     } else if (cSysObj === 'Mount') {
       newCoordState.axis1label = 'Az';
       newCoordState.axis2label = 'Alt';
-      newCoordState.axis1units = '\u00b0 \' "';
-      newCoordState.axis2units = '\u00b0 \' "';
+      newCoordState.axis1units = <DMG />;
+      newCoordState.axis2units = <DMG />;
     } else {
       newCoordState.axis1label = '?';
       newCoordState.axis2label = '?';
@@ -133,17 +147,25 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
             <TableCell align='right'>{coordState.axis2label}</TableCell>
             <TableCell align='right'>{coordState.axis2value}</TableCell>
             <TableCell align='left'>{coordState.axis2units}</TableCell>
-            <TableCell align='center' rowSpan={2} style={{ padding: '0px 32px 0px 64px' }}>
+            <TableCell
+              align='center'
+              rowSpan={2}
+              style={{ padding: '0px 32px 0px 64px' }}
+            >
               <LinearProgressWithLabel value={progress} hidden={true} />
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell align='right'>CSys</TableCell>
-            <TableCell align='right'>{keywords['tcc.objsys']?.values[0]}</TableCell>
+            <TableCell align='right'>
+              {keywords['tcc.objsys']?.values[0]}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell align='right'>Rot</TableCell>
-            <TableCell align='right'>{getRot(keywords['tcc.rotpos']?.values[0])}</TableCell>
+            <TableCell align='right'>
+              {getRot(keywords['tcc.rotpos']?.values[0])}
+            </TableCell>
             <TableCell align='left' colSpan={2}>
               {keywords['tcc.rottype']?.values[0]}
             </TableCell>

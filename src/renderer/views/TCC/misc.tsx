@@ -52,7 +52,8 @@ const MiscTable: React.FC<TableProps> = (props) => {
     'tcc-misc-keywords'
   );
 
-  const getScaleFactor = () => ((keywords['tcc.scalefac']?.values[0] - 1) * 1e6)?.toFixed(1);
+  const getScaleFactor = () =>
+    ((keywords['tcc.scalefac']?.values[0] - 1) * 1e6)?.toFixed(1);
 
   React.useEffect(() => {
     let interval = setInterval(() => {
@@ -66,9 +67,14 @@ const MiscTable: React.FC<TableProps> = (props) => {
     const [az, alt] = keywords['tcc.axepos']?.values.slice(0, 2) || [0, 0];
     let HA = AltAzToHADec(alt, az)[0];
     let DesignHA = keywords['platedb.pointinginfo']?.values[5];
-    let desCurrHA = DesignHA ? HA - DesignHA : null;
+    let desCurrHA = DesignHA !== undefined ? HA - DesignHA : null;
     let z = 90 - alt;
-    setHA({ HA: HA, desCurrHA: desCurrHA, z: z, airmass: 1 / Math.cos((z * Math.PI) / 180) });
+    setHA({
+      HA: HA,
+      desCurrHA: desCurrHA,
+      z: z,
+      airmass: 1 / Math.cos((z * Math.PI) / 180)
+    });
   }, [keywords]);
 
   return (
@@ -79,6 +85,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
             <TableCell width='90px' />
             <TableCell width='100px' />
             <TableCell width='10px' />
+            {/*  */}
             <TableCell width='150px' />
             <TableCell width='80px' />
             <TableCell width='50px' />
@@ -88,8 +95,11 @@ const MiscTable: React.FC<TableProps> = (props) => {
         <TableBody>
           <TableRow>
             <TableCell align='right'>HA</TableCell>
-            <TableCell align='right'>{degToDMS(HA.HA, { precision: 0, hours: true })}</TableCell>
+            <TableCell align='right'>
+              {degToDMS(HA.HA, { precision: 0, hours: true })}
+            </TableCell>
             <TableCell align='left'>hms</TableCell>
+            {/*  */}
             <TableCell align='right'>Airmass</TableCell>
             <TableCell align='right'>{HA.airmass?.toFixed(3)}</TableCell>
             <TableCell align='left'></TableCell>
@@ -103,6 +113,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
               })}
             </TableCell>
             <TableCell align='left'>hms</TableCell>
+            {/*  */}
             <TableCell align='right'>ZD</TableCell>
             <TableCell align='right'>{HA.z?.toFixed(1)}</TableCell>
             <TableCell align='left'>
@@ -124,8 +135,11 @@ const MiscTable: React.FC<TableProps> = (props) => {
               {degToDMS(HA.desCurrHA, { precision: 0, hours: true })}
             </TableCell>
             <TableCell align='left'>hms</TableCell>
+            {/*  */}
             <TableCell align='right'>LMST</TableCell>
-            <TableCell align='right'>{degToDMS(LMST, { precision: 0 })}</TableCell>
+            <TableCell align='right'>
+              {degToDMS(LMST, { precision: 0 })}
+            </TableCell>
             <TableCell align='left'>hms</TableCell>
           </TableRow>
           <TableRow>
@@ -133,6 +147,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
             <TableCell align='right' colSpan={2}>
               {formatTAI(tai)}
             </TableCell>
+            {/*  */}
             <TableCell align='right'>SJD</TableCell>
             <TableCell align='right'>{SJD}</TableCell>
             <TableCell />
@@ -143,6 +158,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
               {Math.round(keywords['tcc.secfocus']?.values[0]) || null}
             </TableCell>
             <TableCell align='left'>{'\u03bcm'}</TableCell>
+            {/*  */}
             <TableCell align='right'>Scale</TableCell>
             <TableCell align='right'>{getScaleFactor()}</TableCell>
             <TableCell align='left'>1e6</TableCell>
