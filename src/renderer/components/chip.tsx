@@ -25,7 +25,7 @@ export enum Severity {
   Success = 'success'
 }
 
-type AlertChipProps = ChipProps & { severity: Severity };
+type AlertChipProps = ChipProps & { severity: Severity | string };
 
 export function AlertChip(props: AlertChipProps) {
   const selectColour = (theme: Theme, severity?: Severity) => {
@@ -43,9 +43,10 @@ export function AlertChip(props: AlertChipProps) {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      color: (props: AlertChipProps) => selectColour(theme, props.severity),
+      color: (props: AlertChipProps) =>
+        selectColour(theme, props.severity as Severity),
       borderColor: (props: AlertChipProps) =>
-        selectColour(theme, props.severity)
+        selectColour(theme, props.severity as Severity)
     }
   }));
 
@@ -58,9 +59,14 @@ export function AlertChip(props: AlertChipProps) {
   // We need to use the first child of the reference because Chip creates a
   // <span /> with the text as the first element.
   const compareSize = () => {
-    const compare =
-      chipElementRef.current!.children[0].scrollWidth >
-      chipElementRef.current!.children[0].clientWidth;
+    let compare: boolean;
+    if (chipElementRef.current) {
+      compare =
+        chipElementRef.current.children[0].scrollWidth >
+        chipElementRef.current.children[0].clientWidth;
+    } else {
+      compare = false;
+    }
     setHover(compare);
   };
 
@@ -81,7 +87,7 @@ export function AlertChip(props: AlertChipProps) {
   return (
     <Tooltip
       arrow
-      title={props.label as string}
+      title={props.label ? props.label : ''}
       interactive
       disableHoverListener={!hoverStatus}
     >

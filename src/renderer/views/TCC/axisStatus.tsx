@@ -64,7 +64,14 @@ const SmallAlertChip: React.FC<any> = (props) => {
     }
     delete updatedProps.hidden;
   }
-  return <AlertChip variant='outlined' size='small' {...updatedProps} />;
+  return (
+    <AlertChip
+      variant='outlined'
+      size='small'
+      style={{ height: '20px' }}
+      {...updatedProps}
+    />
+  );
 };
 
 const AxisStatus: React.FC<TableProps> = (props) => {
@@ -164,7 +171,7 @@ const AxisStatus: React.FC<TableProps> = (props) => {
             </TableCell>
             <TableCell align='left'>
               <SmallAlertChip
-                style={{ maxWidth: '150px' }}
+                style={{ maxWidth: '150px', height: '20px' }}
                 {...getAxisStat(keywords['tcc.azStat'])}
               />
             </TableCell>
@@ -185,7 +192,7 @@ const AxisStatus: React.FC<TableProps> = (props) => {
             </TableCell>
             <TableCell align='left'>
               <SmallAlertChip
-                style={{ maxWidth: '150px' }}
+                style={{ maxWidth: '150px', height: '20px' }}
                 {...getAxisStat(keywords['tcc.altStat'])}
               />
             </TableCell>
@@ -206,7 +213,7 @@ const AxisStatus: React.FC<TableProps> = (props) => {
             </TableCell>
             <TableCell align='left'>
               <SmallAlertChip
-                style={{ maxWidth: '150px' }}
+                style={{ maxWidth: '150px', height: '20px' }}
                 {...getAxisStat(keywords['tcc.rotStat'])}
               />
             </TableCell>

@@ -20,9 +20,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import React from 'react';
+import { AlertChip } from 'renderer/components/chip';
 import { useKeywords } from 'renderer/hooks';
 import { degToDMS } from 'utils';
-import { Deg, TCCTable } from './index';
+import { Deg, DMG, TCCTable } from './index';
 
 interface CoordState {
   [key: string]: null | string | JSX.Element;
@@ -45,24 +46,9 @@ function LinearProgressWithLabel(
   );
 }
 
-function DMG() {
-  return (
-    <span
-      style={{
-        fontSize: '16px',
-        padding: '4px 0px 0px 0px',
-        lineHeight: 0,
-        display: 'block'
-      }}
-    >
-      {'\u00b0 \' "'}
-    </span>
-  );
-}
-
 const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
   let keywords = useKeywords(
-    ['tcc.objnetpos', 'tcc.objsys', 'tcc.rotpos', 'tcc.rottype'],
+    ['tcc.objNetPos', 'tcc.objSys', 'tcc.rotPos', 'tcc.rotType'],
     'tcc-netpos-keywords'
   );
   let [coordState, setCoordState] = React.useState<CoordState>({
@@ -87,8 +73,8 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
   }, []);
 
   React.useEffect(() => {
-    let cSysObj = keywords['tcc.objsys']?.values[0] || 'unknown';
-    let axis1value = keywords['tcc.objnetpos']?.values[0];
+    let cSysObj = keywords['tcc.objSys']?.values[0] || 'unknown';
+    let axis1value = keywords['tcc.objNetPos']?.values[0];
     let newCoordState: CoordState = {};
 
     if (['ICRS', 'FK4', 'FK5'].includes(cSysObj)) {
@@ -110,7 +96,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
     }
 
     newCoordState.axis1value = degToDMS(axis1value, { precision: 2 });
-    newCoordState.axis2value = degToDMS(keywords['tcc.objnetpos']?.values[3], {
+    newCoordState.axis2value = degToDMS(keywords['tcc.objNetPos']?.values[3], {
       precision: 2
     });
 
@@ -158,19 +144,31 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
           <TableRow>
             <TableCell align='right'>CSys</TableCell>
             <TableCell align='right'>
-              {keywords['tcc.objsys']?.values[0]}
+              <AlertChip
+                label={keywords['tcc.objSys']?.values[0]}
+                severity='info'
+                variant='outlined'
+                size='small'
+                style={{ height: '18px' }}
+              />
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell align='right'>Rot</TableCell>
             <TableCell align='right'>
-              {getRot(keywords['tcc.rotpos']?.values[0])}
+              {getRot(keywords['tcc.rotPos']?.values[0])}
             </TableCell>
             <TableCell align='left'>
-              {keywords['tcc.rotpos'] ? <Deg /> : null}
+              {keywords['tcc.rotPos'] ? <Deg /> : null}
             </TableCell>
             <TableCell align='left'>
-              <span>{keywords['tcc.rottype']?.values[0]}</span>
+              <AlertChip
+                label={keywords['tcc.rotType']?.values[0]}
+                severity='info'
+                variant='outlined'
+                size='small'
+                style={{ height: '18px' }}
+              />
             </TableCell>
           </TableRow>
         </TableBody>
