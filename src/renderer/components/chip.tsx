@@ -18,12 +18,17 @@ import {
 import { Palette } from '@material-ui/icons';
 import React from 'react';
 
-type AlertChipProps = ChipProps & {
-  severity: 'warning' | 'error' | 'info' | 'success';
-};
+export enum Severity {
+  Warning = 'warning',
+  Error = 'error',
+  Info = 'info',
+  Success = 'success'
+}
+
+type AlertChipProps = ChipProps & { severity: Severity };
 
 export function AlertChip(props: AlertChipProps) {
-  const selectColour = (theme: Theme, severity?: string) => {
+  const selectColour = (theme: Theme, severity?: Severity) => {
     let type: string;
     if (theme.palette.type === 'dark') {
       type = 'dark';
@@ -32,7 +37,8 @@ export function AlertChip(props: AlertChipProps) {
     } else {
       type = 'main';
     }
-    return theme.palette[(severity || 'info') as keyof typeof Palette][type];
+    let sevPalette = (severity || Severity.Info) as keyof typeof Palette;
+    return theme.palette[sevPalette][type];
   };
 
   const useStyles = makeStyles((theme) => ({

@@ -17,19 +17,17 @@ import {
   TableRow
 } from '@material-ui/core';
 import { Keyword } from 'main/tron';
-import { AlertChip } from 'renderer/components/chip';
+import { AlertChip, Severity } from 'renderer/components/chip';
 import { useKeywords } from 'renderer/hooks';
 import { TCCTable } from '.';
 
-type Severity = 'warning' | 'error' | 'info' | 'success';
-
 let AxisCmdStateSeverity = new Map<string, Severity>([
-  ['Drifting', 'warning'],
-  ['Halted', 'error'],
-  ['Halting', 'error'],
-  ['Slewing', 'warning'],
-  ['Tracking', 'info'],
-  ['NotAvailable', 'info']
+  ['Drifting', Severity.Warning],
+  ['Halted', Severity.Error],
+  ['Halting', Severity.Error],
+  ['Slewing', Severity.Warning],
+  ['Tracking', Severity.Info],
+  ['NotAvailable', Severity.Info]
 ]);
 
 // Here the order matters. The first error/warning found will be the one
@@ -37,23 +35,23 @@ let AxisCmdStateSeverity = new Map<string, Severity>([
 // TODO: On the screen we can show only one, but the tooltip could include
 // all the errors.
 let ErrorBits: [number, [string, Severity]][] = [
-  [6, ['Reverse limit switch', 'error']],
-  [7, ['Forward limit switch', 'error']],
-  [13, ['Stop button', 'error']],
-  [2, ['Reverse software limit', 'error']],
-  [3, ['Forward software limit', 'error']],
-  [11, ['Out of closed loop', 'error']],
-  [12, ['Amplifier disabled', 'error']],
-  [24, ['Fiducial error too large', 'error']],
-  [18, ['Clock not set', 'error']],
-  [16, ['1 Hz clock signal lost', 'error']],
-  [0, ['Motor control buffer empty', 'warning']],
-  [1, ['Position update late', 'warning']],
-  [14, ['Semaphore owned by somebody else', 'warning']],
-  [29, ['Windscreen touch down or cw', 'warning']],
-  [30, ['Windscreen touch up or ccw', 'warning']],
-  [4, ['Velocity limited', 'warning']],
-  [5, ['Acceleration limited', 'warning']]
+  [6, ['Reverse limit switch', Severity.Error]],
+  [7, ['Forward limit switch', Severity.Error]],
+  [13, ['Stop button', Severity.Error]],
+  [2, ['Reverse software limit', Severity.Error]],
+  [3, ['Forward software limit', Severity.Error]],
+  [11, ['Out of closed loop', Severity.Error]],
+  [12, ['Amplifier disabled', Severity.Error]],
+  [24, ['Fiducial error too large', Severity.Error]],
+  [18, ['Clock not set', Severity.Error]],
+  [16, ['1 Hz clock signal lost', Severity.Error]],
+  [0, ['Motor control buffer empty', Severity.Warning]],
+  [1, ['Position update late', Severity.Warning]],
+  [14, ['Semaphore owned by somebody else', Severity.Warning]],
+  [29, ['Windscreen touch down or cw', Severity.Warning]],
+  [30, ['Windscreen touch up or ccw', Severity.Warning]],
+  [4, ['Velocity limited', Severity.Warning]],
+  [5, ['Acceleration limited', Severity.Warning]]
 ];
 
 const SmallAlertChip: React.FC<any> = (props) => {
@@ -94,11 +92,11 @@ const AxisStatus: React.FC<TableProps> = (props) => {
     }
   };
 
-  const getAxisCmdSeverity = (
+  const getAxisCmdState = (
     axisCmdState: Keyword | undefined,
     axis: number
   ): { label: string; severity: Severity } => {
-    if (!axisCmdState) return { label: 'N/A', severity: 'error' };
+    if (!axisCmdState) return { label: 'N/A', severity: Severity.Error };
     let value = axisCmdState.values[axis];
     return {
       label: value,
@@ -106,22 +104,22 @@ const AxisStatus: React.FC<TableProps> = (props) => {
     };
   };
 
-  const getAxisErrorCodeSeverity = (
+  const getAxisErrCode = (
     axisErrCode: Keyword | undefined,
     axis: number
   ): { label: string; severity: Severity } => {
-    if (!axisErrCode) return { label: 'N/A', severity: 'error' };
+    if (!axisErrCode) return { label: 'N/A', severity: Severity.Error };
     let value = axisErrCode.values[axis];
     return {
       label: value,
-      severity: value === 'OK' ? 'success' : 'error'
+      severity: value === 'OK' ? Severity.Success : Severity.Error
     };
   };
 
-  const getAxisErrorBitsSeverity = (
+  const getAxisStat = (
     axisErrBits: Keyword | undefined
   ): { label: string; severity: Severity; hidden?: boolean } => {
-    if (!axisErrBits) return { label: 'N/A', severity: 'error' };
+    if (!axisErrBits) return { label: 'N/A', severity: Severity.Error };
     let code = parseInt(axisErrBits.values[3]);
     let bits: number[] = [];
     for (let bit = 0; bit < 32; bit++) {
@@ -133,7 +131,7 @@ const AxisStatus: React.FC<TableProps> = (props) => {
           return { label: bitInfo[1][0], severity: bitInfo[1][1] };
       }
     }
-    return { hidden: true, label: 'OK', severity: 'info' };
+    return { hidden: true, label: 'OK', severity: Severity.Info };
   };
 
   return (
@@ -156,19 +154,18 @@ const AxisStatus: React.FC<TableProps> = (props) => {
             <TableCell align='right'>{getAxisPos('tcc.tccPos', 0)}</TableCell>
             <TableCell align='right'>
               <SmallAlertChip
-                {...getAxisCmdSeverity(keywords['tcc.axisCmdState'], 0)}
+                {...getAxisCmdState(keywords['tcc.axisCmdState'], 0)}
               />
             </TableCell>
             <TableCell align='left' style={{ paddingLeft: '4px' }}>
               <SmallAlertChip
-                {...getAxisErrorCodeSeverity(keywords['tcc.axisErrCode'], 0)}
-                // label='ControllerError'
+                {...getAxisErrCode(keywords['tcc.axisErrCode'], 0)}
               />
             </TableCell>
             <TableCell align='left'>
               <SmallAlertChip
                 style={{ maxWidth: '150px' }}
-                {...getAxisErrorBitsSeverity(keywords['tcc.azStat'])}
+                {...getAxisStat(keywords['tcc.azStat'])}
               />
             </TableCell>
           </TableRow>
@@ -178,18 +175,18 @@ const AxisStatus: React.FC<TableProps> = (props) => {
             <TableCell align='right'>{getAxisPos('tcc.tccPos', 1)}</TableCell>
             <TableCell align='right'>
               <SmallAlertChip
-                {...getAxisCmdSeverity(keywords['tcc.axisCmdState'], 1)}
+                {...getAxisCmdState(keywords['tcc.axisCmdState'], 1)}
               />
             </TableCell>
             <TableCell align='left' style={{ paddingLeft: '4px' }}>
               <SmallAlertChip
-                {...getAxisErrorCodeSeverity(keywords['tcc.axisErrCode'], 1)}
+                {...getAxisErrCode(keywords['tcc.axisErrCode'], 1)}
               />
             </TableCell>
             <TableCell align='left'>
               <SmallAlertChip
                 style={{ maxWidth: '150px' }}
-                {...getAxisErrorBitsSeverity(keywords['tcc.altStat'])}
+                {...getAxisStat(keywords['tcc.altStat'])}
               />
             </TableCell>
           </TableRow>
@@ -199,18 +196,18 @@ const AxisStatus: React.FC<TableProps> = (props) => {
             <TableCell align='right'>{getAxisPos('tcc.tccPos', 2)}</TableCell>
             <TableCell align='right'>
               <SmallAlertChip
-                {...getAxisCmdSeverity(keywords['tcc.axisCmdState'], 2)}
+                {...getAxisCmdState(keywords['tcc.axisCmdState'], 2)}
               />
             </TableCell>
             <TableCell align='left' style={{ paddingLeft: '4px' }}>
               <SmallAlertChip
-                {...getAxisErrorCodeSeverity(keywords['tcc.axisErrCode'], 2)}
+                {...getAxisErrCode(keywords['tcc.axisErrCode'], 2)}
               />
             </TableCell>
             <TableCell align='left'>
               <SmallAlertChip
                 style={{ maxWidth: '150px' }}
-                {...getAxisErrorBitsSeverity(keywords['tcc.rotStat'])}
+                {...getAxisStat(keywords['tcc.rotStat'])}
               />
             </TableCell>
           </TableRow>
