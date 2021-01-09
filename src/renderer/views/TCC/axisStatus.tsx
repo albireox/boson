@@ -138,10 +138,10 @@ const AxisStatus: React.FC<TableProps> = (props) => {
         <TableHead>
           <TableRow>
             <TableCell width='30px' />
-            <TableCell width='50px' />
-            <TableCell width='50px' />
+            <TableCell width='55px' />
+            <TableCell width='55px' />
             <TableCell width='80px' />
-            <TableCell width='80px' />
+            <TableCell width='100px' />
             <TableCell width='160px' />
           </TableRow>
         </TableHead>
@@ -155,9 +155,10 @@ const AxisStatus: React.FC<TableProps> = (props) => {
                 {...getAxisCmdSeverity(keywords['tcc.axisCmdState'], 0)}
               />
             </TableCell>
-            <TableCell align='left' style={{ paddingLeft: '16px' }}>
+            <TableCell align='left' style={{ paddingLeft: '4px' }}>
               <SmallAlertChip
                 {...getAxisErrorCodeSeverity(keywords['tcc.axisErrCode'], 0)}
+                // label='ControllerError'
               />
             </TableCell>
             <TableCell align='left'>
@@ -176,7 +177,7 @@ const AxisStatus: React.FC<TableProps> = (props) => {
                 {...getAxisCmdSeverity(keywords['tcc.axisCmdState'], 1)}
               />
             </TableCell>
-            <TableCell align='left' style={{ paddingLeft: '16px' }}>
+            <TableCell align='left' style={{ paddingLeft: '4px' }}>
               <SmallAlertChip
                 {...getAxisErrorCodeSeverity(keywords['tcc.axisErrCode'], 1)}
               />
@@ -197,7 +198,7 @@ const AxisStatus: React.FC<TableProps> = (props) => {
                 {...getAxisCmdSeverity(keywords['tcc.axisCmdState'], 2)}
               />
             </TableCell>
-            <TableCell align='left' style={{ paddingLeft: '16px' }}>
+            <TableCell align='left' style={{ paddingLeft: '4px' }}>
               <SmallAlertChip
                 {...getAxisErrorCodeSeverity(keywords['tcc.axisErrCode'], 2)}
               />

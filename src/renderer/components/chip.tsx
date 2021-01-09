@@ -8,8 +8,15 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Chip, ChipProps, makeStyles, Theme } from '@material-ui/core';
+import {
+  Chip,
+  ChipProps,
+  makeStyles,
+  Theme,
+  Tooltip
+} from '@material-ui/core';
 import { Palette } from '@material-ui/icons';
+import React from 'react';
 
 type AlertChipProps = ChipProps & {
   severity: 'warning' | 'error' | 'info' | 'success';
@@ -37,6 +44,44 @@ export function AlertChip(props: AlertChipProps) {
   }));
 
   const classes = useStyles(props);
+  const chipElementRef = React.useRef<HTMLInputElement>(null);
+  const [hoverStatus, setHover] = React.useState(false);
 
-  return <Chip className={classes.root} {...props} />;
+  // Enable the tooltip but only in cases in which the chip contains ellipses
+  // (the text is longer that the allowed width). See https://bit.ly/35o4w3L
+  // We need to use the first child of the reference because Chip creates a
+  // <span /> with the text as the first element.
+  const compareSize = () => {
+    const compare =
+      chipElementRef.current!.children[0].scrollWidth >
+      chipElementRef.current!.children[0].clientWidth;
+    setHover(compare);
+  };
+
+  // Compare once and add resize listener on "componentDidMount"
+  React.useEffect(() => {
+    compareSize();
+    window.addEventListener('resize', compareSize);
+  }, []);
+
+  // Remove resize listener again on "componentWillUnmount"
+  React.useEffect(
+    () => () => {
+      window.removeEventListener('resize', compareSize);
+    },
+    []
+  );
+
+  return (
+    <Tooltip
+      arrow
+      title={props.label as string}
+      interactive
+      disableHoverListener={!hoverStatus}
+    >
+      <div>
+        <Chip ref={chipElementRef} className={classes.root} {...props} />
+      </div>
+    </Tooltip>
+  );
 }

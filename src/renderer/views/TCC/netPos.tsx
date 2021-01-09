@@ -22,7 +22,7 @@ import TableRow from '@material-ui/core/TableRow';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
 import { degToDMS } from 'utils';
-import { TCCTable } from './index';
+import { Deg, TCCTable } from './index';
 
 interface CoordState {
   [key: string]: null | string | JSX.Element;
@@ -121,7 +121,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
     if (rotPos === undefined || rotPos === null) {
       return null;
     }
-    return rotPos.toFixed(2) + ' \u00b0';
+    return rotPos.toFixed(2);
   };
 
   return (
@@ -131,7 +131,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
           <TableRow>
             <TableCell width='50px' />
             <TableCell width='120px' />
-            <TableCell width='50px' />
+            <TableCell width='30px' />
             <TableCell />
           </TableRow>
         </TableHead>
@@ -166,8 +166,11 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
             <TableCell align='right'>
               {getRot(keywords['tcc.rotpos']?.values[0])}
             </TableCell>
-            <TableCell align='left' colSpan={2}>
-              {keywords['tcc.rottype']?.values[0]}
+            <TableCell align='left'>
+              {keywords['tcc.rotpos'] ? <Deg /> : null}
+            </TableCell>
+            <TableCell align='left'>
+              <span>{keywords['tcc.rottype']?.values[0]}</span>
             </TableCell>
           </TableRow>
         </TableBody>

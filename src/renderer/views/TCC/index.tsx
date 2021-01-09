@@ -15,6 +15,21 @@ import AxisStatus from './axisStatus';
 import MiscTable from './misc';
 import NetPosTable from './netPos';
 
+export function Deg() {
+  return (
+    <span
+      style={{
+        fontSize: '16px',
+        padding: '4px 0px 0px 0px',
+        lineHeight: 0,
+        display: 'block'
+      }}
+    >
+      {'\u00b0'}
+    </span>
+  );
+}
+
 const TCCRule = styled('hr')(({ theme }) => ({
   margin: '4px 0px',
   border: 'none',
