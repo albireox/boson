@@ -32,6 +32,10 @@ let AxisCmdStateSeverity = new Map<string, Severity>([
   ['NotAvailable', 'info']
 ]);
 
+// Here the order matters. The first error/warning found will be the one
+// shown, even if there are several.
+// TODO: On the screen we can show only one, but the tooltip could include
+// all the errors.
 let ErrorBits: [number, [string, Severity]][] = [
   [6, ['Reverse limit switch', 'error']],
   [7, ['Forward limit switch', 'error']],
@@ -123,8 +127,8 @@ const AxisStatus: React.FC<TableProps> = (props) => {
     for (let bit = 0; bit < 32; bit++) {
       if (Math.pow(2, bit) & code) bits.push(bit);
     }
-    for (let bit of bits) {
-      for (let bitInfo of ErrorBits) {
+    for (let bitInfo of ErrorBits) {
+      for (let bit of bits) {
         if (bit === bitInfo[0])
           return { label: bitInfo[1][0], severity: bitInfo[1][1] };
       }
