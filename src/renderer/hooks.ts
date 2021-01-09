@@ -21,11 +21,23 @@ import { getTAITime } from '../utils';
  * @param channel The channel on which to listen for the messages from the
  *    tron model.
  */
-export function useKeywords(keys: string[], channel = 'tron-model-updated'): KeywordMap {
+export function useKeywords(
+  keys: string[],
+  channel = 'tron-model-updated'
+): KeywordMap {
   const [keywords, setKeywords] = useState<KeywordMap>({});
 
+  // Convert keys to lower-case, but keep the original. We'll revert when
+  // the keywords get updated.
+  const lowerKeys = new Map(keys.map((value) => [value.toLowerCase(), value]));
+
   const updatekeywords = (tronKeywords: KeywordMap) => {
-    setKeywords({ ...keywords, ...tronKeywords });
+    // Revert tronKeywords (all keys lowercase) to the original capitalisation.
+    let newKeys: KeywordMap = {};
+    for (let key in tronKeywords) {
+      newKeys[lowerKeys.get(key) as string] = tronKeywords[key];
+    }
+    setKeywords({ ...keywords, ...newKeys });
   };
 
   // Event needs to go here because we need to bind the channel to updateKeywords
@@ -35,7 +47,11 @@ export function useKeywords(keys: string[], channel = 'tron-model-updated'): Key
   useEffect(() => {
     // We do this inside a useEffect because we only want to register the
     // listener once.
-    window.api.invoke('tron-register-model-listener', keys, channel);
+    window.api.invoke(
+      'tron-register-model-listener',
+      Array.from(lowerKeys.keys()),
+      channel
+    );
 
     const removeListener = () => {
       window.api.invoke('tron-remove-model-listener', channel);
