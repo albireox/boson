@@ -30,6 +30,21 @@ export function Deg() {
   );
 }
 
+export function DMG() {
+  return (
+    <span
+      style={{
+        fontSize: '16px',
+        padding: '4px 0px 0px 0px',
+        lineHeight: 0,
+        display: 'block'
+      }}
+    >
+      {'\u00b0 \' "'}
+    </span>
+  );
+}
+
 const TCCRule = styled('hr')(({ theme }) => ({
   margin: '4px 0px',
   border: 'none',

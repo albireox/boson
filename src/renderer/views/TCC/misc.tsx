@@ -20,24 +20,24 @@ import React from 'react';
 import { useKeywords, useTAI } from 'renderer/hooks';
 import { sprintf } from 'sprintf-js';
 import { AltAzToHADec, degToDMS, getLMST, getMJD } from 'utils';
-import { TCCTable } from '.';
+import { Deg, TCCTable } from '.';
 
-function formatTAI(tai: Date): string {
-  let taiStr = sprintf(
+function formatTAI(TAI: Date): string {
+  let TAIstr = sprintf(
     '%04d-%02d-%02d %02d:%02d:%02d',
-    tai.getUTCFullYear(),
-    tai.getUTCMonth() + 1,
-    tai.getUTCDate(),
-    tai.getUTCHours(),
-    tai.getUTCMinutes(),
-    tai.getUTCSeconds()
+    TAI.getUTCFullYear(),
+    TAI.getUTCMonth() + 1,
+    TAI.getUTCDate(),
+    TAI.getUTCHours(),
+    TAI.getUTCMinutes(),
+    TAI.getUTCSeconds()
   );
 
-  return taiStr;
+  return TAIstr;
 }
 
 const MiscTable: React.FC<TableProps> = (props) => {
-  const tai = useTAI();
+  const TAI = useTAI();
   const [SJD, setSJD] = React.useState(0);
   const [LMST, setLMST] = React.useState(0);
   const [HA, setHA] = React.useState<{ [key: string]: number | null }>({
@@ -46,14 +46,13 @@ const MiscTable: React.FC<TableProps> = (props) => {
     z: null,
     airmass: null
   });
-
   const keywords = useKeywords(
-    ['platedb.pointinginfo', 'tcc.axepos', 'tcc.secfocus', 'tcc.scalefac'],
+    ['platedb.pointingInfo', 'tcc.axePos', 'tcc.secFocus', 'tcc.scaleFac'],
     'tcc-misc-keywords'
   );
 
   const getScaleFactor = () =>
-    ((keywords['tcc.scalefac']?.values[0] - 1) * 1e6)?.toFixed(1);
+    ((keywords['tcc.scaleFac']?.values[0] - 1) * 1e6)?.toFixed(1);
 
   React.useEffect(() => {
     let interval = setInterval(() => {
@@ -64,9 +63,9 @@ const MiscTable: React.FC<TableProps> = (props) => {
   }, [SJD, LMST]);
 
   React.useEffect(() => {
-    const [az, alt] = keywords['tcc.axepos']?.values.slice(0, 2) || [0, 0];
+    const [az, alt] = keywords['tcc.axePos']?.values.slice(0, 2) || [0, 0];
     let HA = AltAzToHADec(alt, az)[0];
-    let DesignHA = keywords['platedb.pointinginfo']?.values[5];
+    let DesignHA = keywords['platedb.pointingInfo']?.values[5];
     let desCurrHA = DesignHA !== undefined ? HA - DesignHA : null;
     let z = 90 - alt;
     setHA({
@@ -107,7 +106,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
           <TableRow>
             <TableCell align='right'>Design HA</TableCell>
             <TableCell align='right'>
-              {degToDMS(keywords['platedb.pointinginfo']?.values[5], {
+              {degToDMS(keywords['platedb.pointingInfo']?.values[5], {
                 precision: 0,
                 hours: true
               })}
@@ -117,16 +116,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
             <TableCell align='right'>ZD</TableCell>
             <TableCell align='right'>{HA.z?.toFixed(1)}</TableCell>
             <TableCell align='left'>
-              <span
-                style={{
-                  fontSize: '16px',
-                  padding: '4px 0px 0px 0px',
-                  lineHeight: 0,
-                  display: 'block'
-                }}
-              >
-                {'\u00b0'}
-              </span>
+              <Deg />
             </TableCell>
           </TableRow>
           <TableRow>
@@ -145,7 +135,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
           <TableRow>
             <TableCell align='right'>TAI</TableCell>
             <TableCell align='right' colSpan={2}>
-              {formatTAI(tai)}
+              {formatTAI(TAI)}
             </TableCell>
             {/*  */}
             <TableCell align='right'>SJD</TableCell>
@@ -155,7 +145,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
           <TableRow>
             <TableCell align='right'>Focus</TableCell>
             <TableCell align='right'>
-              {Math.round(keywords['tcc.secfocus']?.values[0]) || null}
+              {Math.round(keywords['tcc.secFocus']?.values[0]) || null}
             </TableCell>
             <TableCell align='left'>{'\u03bcm'}</TableCell>
             {/*  */}
