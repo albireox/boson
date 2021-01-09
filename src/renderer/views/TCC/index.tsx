@@ -10,7 +10,7 @@
 
 import { darken, fade, lighten, styled } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
-import React, { Fragment } from 'react';
+import React from 'react';
 import AxisStatus from './axisStatus';
 import MiscTable from './misc';
 import NetPosTable from './netPos';
