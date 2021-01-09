@@ -6,16 +6,16 @@
             "center": true
         },
         "main": {
-            "width": 650,
-            "height": 450,
+            "width": 500,
+            "height": 350,
             "x": 0,
             "y": 0,
             "closable": false,
             "resizable": false
         },
         "tcc": {
-            "width": 650,
-            "height": 450
+            "width": 550,
+            "height": 350
         },
         "boss": {
             "width": 400,

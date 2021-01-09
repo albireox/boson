@@ -11,6 +11,7 @@
 import { darken, fade, lighten, styled } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import React, { Fragment } from 'react';
+import AxisStatus from './axisStatus';
 import MiscTable from './misc';
 import NetPosTable from './netPos';
 
@@ -44,12 +45,14 @@ export const TCCTable = styled(Table)({
 
 export default function TCCView() {
   return (
-    <Fragment>
+    <div style={{ marginTop: '4px' }}>
       <TCCRule style={{ marginTop: '-2px' }} />
       <NetPosTable />
       <TCCRule />
       <MiscTable />
       <TCCRule />
-    </Fragment>
+      <AxisStatus />
+      <TCCRule />
+    </div>
   );
 }
