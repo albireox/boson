@@ -9,7 +9,12 @@
  */
 
 import { makeStyles } from '@material-ui/core';
-import { ColDef, DataGrid, RowsProp, ValueFormatterParams } from '@material-ui/data-grid';
+import {
+  ColDef,
+  DataGrid,
+  RowsProp,
+  ValueFormatterParams
+} from '@material-ui/data-grid';
 import { KeywordMap } from '../../main/tron';
 import { useKeywords } from '../hooks';
 

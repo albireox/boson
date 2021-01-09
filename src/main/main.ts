@@ -77,7 +77,10 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     windowConfig['y'] = (windowConfig['y'] || 0) + currentScreen.bounds.y;
   } else {
     let mainPosition = mainWindow!.getPosition();
-    let mainScreen = screen.getDisplayNearestPoint({ x: mainPosition[0], y: mainPosition[1] });
+    let mainScreen = screen.getDisplayNearestPoint({
+      x: mainPosition[0],
+      y: mainPosition[1]
+    });
     windowConfig['x'] = (windowConfig['x'] || 0) + mainScreen.bounds.x;
     windowConfig['y'] = (windowConfig['y'] || 0) + mainScreen.bounds.y;
   }
@@ -121,7 +124,15 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     if (isDev) {
       // 'node_modules/.bin/electronPath'
       require('electron-reload')(__dirname, {
-        electron: path.join(__dirname, '..', '..', '..', 'node_modules', '.bin', 'electron'),
+        electron: path.join(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          'node_modules',
+          '.bin',
+          'electron'
+        ),
         forceHardReset: true,
         hardResetMethod: 'exit'
       });

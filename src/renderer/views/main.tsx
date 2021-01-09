@@ -10,7 +10,15 @@
 
 import telescope from '@iconify/icons-mdi/telescope';
 import { Icon } from '@iconify/react';
-import { Button, Container, makeStyles, Snackbar, Tab, Tabs, Typography } from '@material-ui/core';
+import {
+  Button,
+  Container,
+  makeStyles,
+  Snackbar,
+  Tab,
+  Tabs,
+  Typography
+} from '@material-ui/core';
 import { Brightness7, Highlight } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import React, { BaseSyntheticEvent } from 'react';
@@ -70,13 +78,23 @@ async function autoconnect() {
       return [false, true];
   }
 
-  const authResult = await window.api.invoke('tron-authorise', { program, user, password });
+  const authResult = await window.api.invoke('tron-authorise', {
+    program,
+    user,
+    password
+  });
   if (!authResult[0] === true) return [false, true];
 
   return [true, true];
 }
 
-function MainTab({ icon, ...rest }: { icon: JSX.Element; [key: string]: any }) {
+function MainTab({
+  icon,
+  ...rest
+}: {
+  icon: JSX.Element;
+  [key: string]: any;
+}) {
   const classes = useStyles();
   return <Tab className={classes.tab} icon={icon} {...rest} />;
 }
@@ -141,11 +159,20 @@ function ConnectSnackbar(): JSX.Element {
   };
 
   return (
-    <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={open}>
+    <Snackbar
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      open={open}
+    >
       <React.Fragment>
         <Alert severity='warning'>
-          <span style={{ padding: '0px 24px 0px 0px' }}>STUI is disconnected</span>
-          <Button color='secondary' size='small' onClick={() => handleReconnect(true)}>
+          <span style={{ padding: '0px 24px 0px 0px' }}>
+            STUI is disconnected
+          </span>
+          <Button
+            color='secondary'
+            size='small'
+            onClick={() => handleReconnect(true)}
+          >
             RECONNECT
           </Button>
         </Alert>
@@ -187,8 +214,16 @@ export default function MainView() {
           value='tcc'
           label='TCC'
         />
-        <MainTab icon={<Highlight fontSize='large' />} value='apogee' label='APOGEE' />
-        <MainTab icon={<Brightness7 fontSize='large' />} value='boss' label='BOSS' />
+        <MainTab
+          icon={<Highlight fontSize='large' />}
+          value='apogee'
+          label='APOGEE'
+        />
+        <MainTab
+          icon={<Brightness7 fontSize='large' />}
+          value='boss'
+          label='BOSS'
+        />
       </Tabs>
       <div className={classes.tabContainer}>{tabView}</div>
       <ConnectSnackbar />

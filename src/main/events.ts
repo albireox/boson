@@ -34,10 +34,13 @@ export default function loadEvents() {
     return win.getSize();
   });
 
-  ipcMain.handle('window-set-size', async (event, name, width, height, animate = false) => {
-    let win = windows.get(name);
-    if (win !== undefined) win.setSize(width, height, animate);
-  });
+  ipcMain.handle(
+    'window-set-size',
+    async (event, name, width, height, animate = false) => {
+      let win = windows.get(name);
+      if (win !== undefined) win.setSize(width, height, animate);
+    }
+  );
 
   // Store
   ipcMain.handle('get-from-store', async (event, key) => {
@@ -92,9 +95,12 @@ export default function loadEvents() {
     }
   );
 
-  ipcMain.handle('tron-remove-model-listener', async (event, listenOn = 'tron-model-updated') => {
-    tron.model.removeListener(event, listenOn);
-  });
+  ipcMain.handle(
+    'tron-remove-model-listener',
+    async (event, listenOn = 'tron-model-updated') => {
+      tron.model.removeListener(event, listenOn);
+    }
+  );
 
   ipcMain.handle('tron-model-getall', async (event) => {
     return tron.model.keywords;

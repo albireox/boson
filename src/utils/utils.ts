@@ -12,7 +12,12 @@ import { sprintf } from 'sprintf-js';
 
 export function degToDMS(
   deg: number | undefined | null,
-  options?: { precision?: number; separator?: string; sign?: boolean; hours?: boolean }
+  options?: {
+    precision?: number;
+    separator?: string;
+    sign?: boolean;
+    hours?: boolean;
+  }
 ): string | null {
   if (!deg && deg !== 0) return null;
   if (options?.hours) {

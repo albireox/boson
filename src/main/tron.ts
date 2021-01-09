@@ -119,7 +119,10 @@ export class Command {
   }
 
   isDone() {
-    if (this.status === CommandStatus.Done || this.status === CommandStatus.Failed) {
+    if (
+      this.status === CommandStatus.Done ||
+      this.status === CommandStatus.Failed
+    ) {
       return true;
     }
     return false;
@@ -223,7 +226,9 @@ export class TronModel {
       }
       if (!(key in this._listeners)) {
         this._listeners[key] = [[event, channel]];
-        log.debug(`Registering listener for ${key} on (${event.sender.id}, ${channel})`);
+        log.debug(
+          `Registering listener for ${key} on (${event.sender.id}, ${channel})`
+        );
       } else {
         // Check if the window and channel are already registered.
         let alreadyRegistered = false;
@@ -235,7 +240,9 @@ export class TronModel {
         }
         if (!alreadyRegistered) {
           this._listeners[key].push([event, channel]);
-          log.debug(`Registering listener for ${key} on (${event.sender.id}, ${channel})`);
+          log.debug(
+            `Registering listener for ${key} on (${event.sender.id}, ${channel})`
+          );
         }
       }
     }
@@ -337,7 +344,8 @@ export class TronModel {
     for (let actor of actors) {
       let actorKeys = keys.filter((k) => k.includes(`${actor}.`));
       if (actorKeys.length > maxChunk) {
-        for (let ak of _chunk(actorKeys, maxChunk)) this.refreshKeywords(ak, maxChunk);
+        for (let ak of _chunk(actorKeys, maxChunk))
+          this.refreshKeywords(ak, maxChunk);
       } else {
         let keyNames = actorKeys.map((ak) => ak.split('.')[1]);
         let cmd = `keys getFor=${actor} ${keyNames.join(' ')}`;
@@ -361,10 +369,15 @@ export class TronConnection {
   commands: { [commandId: number]: Command } = {};
 
   constructor() {
-    this.client.on('connect', () => (this.status = ConnectionStatus.Connected));
+    this.client.on(
+      'connect',
+      () => (this.status = ConnectionStatus.Connected)
+    );
     this.client.on('error', () => (this.status = ConnectionStatus.Failed));
     this.client.on('end', () => (this.status = ConnectionStatus.Disconnected));
-    this.client.on('data', (buffer: Buffer) => this.parseData(buffer.toString()));
+    this.client.on('data', (buffer: Buffer) =>
+      this.parseData(buffer.toString())
+    );
     this.model = new TronModel(this);
   }
 
@@ -410,7 +423,10 @@ export class TronConnection {
     let elapsedTime = 0.0;
     while (elapsedTime < 5) {
       if (this.status !== ConnectionStatus.Connecting) {
-        log.info('Connection finished with status', ConnectionStatus[this.status]);
+        log.info(
+          'Connection finished with status',
+          ConnectionStatus[this.status]
+        );
         return this.status;
       }
       await new Promise((r) => setTimeout(r, 50));
@@ -421,7 +437,11 @@ export class TronConnection {
   }
 
   async authorise(credentials: Credentials) {
-    log.info(`Trying to authorise user ${credentials.program.toUpperCase()}.${credentials.user}`);
+    log.info(
+      `Trying to authorise user ${credentials.program.toUpperCase()}.${
+        credentials.user
+      }`
+    );
     if (this.status === ConnectionStatus.Authorised) {
       log.info('Already authorised');
       return [true, null];
@@ -483,11 +503,13 @@ export class TronConnection {
   }
 
   addStreamerWindow(windowId: number): void {
-    if (!this._subscribedWindows.includes(windowId)) this._subscribedWindows.push(windowId);
+    if (!this._subscribedWindows.includes(windowId))
+      this._subscribedWindows.push(windowId);
   }
 
   removeStreamerWindow(windowId: number): void {
-    if (this._subscribedWindows.includes(windowId)) _pull(this._subscribedWindows, windowId);
+    if (this._subscribedWindows.includes(windowId))
+      _pull(this._subscribedWindows, windowId);
   }
 
   parseData(data: string) {
@@ -505,31 +527,35 @@ export class TronConnection {
       if (!lineMatched || !lineMatched.groups) continue;
       if (lineMatched.groups.keywords) {
         let sender = lineMatched.groups.sender;
-        let actor: string = sender.includes('_') ? sender.split('_').slice(-1)[0] : sender;
-        keywords = lineMatched.groups.keywords.split(/\s*;\s*/).map((kw: string) => {
-          let key: string, values: string;
-          let kwMatched = kw.trim().match(/(?<key>\w+)=(?<values>.+)/);
-          if (!kwMatched) {
-            // Case where the keyword does not have a value (e.g. loggedIn).
-            key = kw;
-            values = '';
-          } else {
-            key = kwMatched.groups!.key;
-            values = kwMatched.groups!.values;
-          }
-          // Select all groups split by , except when the comma is inside quotes.
-          let rawValues = values.matchAll(/[^,"']+|"([^"]*)"|'([^']*)'/g);
-          let keyword: Keyword = {
-            actor: actor,
-            key: key,
-            values: [...rawValues].map((value) => {
-              return evaluateKeyword(value[0]);
-            }),
-            lastSeenAt: new Date()
-          };
-          this.model.updateKeyword(keyword);
-          return keyword;
-        });
+        let actor: string = sender.includes('_')
+          ? sender.split('_').slice(-1)[0]
+          : sender;
+        keywords = lineMatched.groups.keywords
+          .split(/\s*;\s*/)
+          .map((kw: string) => {
+            let key: string, values: string;
+            let kwMatched = kw.trim().match(/(?<key>\w+)=(?<values>.+)/);
+            if (!kwMatched) {
+              // Case where the keyword does not have a value (e.g. loggedIn).
+              key = kw;
+              values = '';
+            } else {
+              key = kwMatched.groups!.key;
+              values = kwMatched.groups!.values;
+            }
+            // Select all groups split by , except when the comma is inside quotes.
+            let rawValues = values.matchAll(/[^,"']+|"([^"]*)"|'([^']*)'/g);
+            let keyword: Keyword = {
+              actor: actor,
+              key: key,
+              values: [...rawValues].map((value) => {
+                return evaluateKeyword(value[0]);
+              }),
+              lastSeenAt: new Date()
+            };
+            this.model.updateKeyword(keyword);
+            return keyword;
+          });
       }
       let reply: Reply = {
         date: new Date(),

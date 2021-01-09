@@ -8,7 +8,12 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Container, makeStyles, TextField, Typography } from '@material-ui/core';
+import {
+  Container,
+  makeStyles,
+  TextField,
+  Typography
+} from '@material-ui/core';
 import React from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { Reply } from '../../main/tron';

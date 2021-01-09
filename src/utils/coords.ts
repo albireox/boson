@@ -8,7 +8,11 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-export function AltAzToHADec(alt: number, az: number, lat = 32.780361): [number, number] {
+export function AltAzToHADec(
+  alt: number,
+  az: number,
+  lat = 32.780361
+): [number, number] {
   let altRad = (alt * Math.PI) / 180;
   let azRad = ((-az + 180) * Math.PI) / 180;
   let latRad = (lat * Math.PI) / 180;

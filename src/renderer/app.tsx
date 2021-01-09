@@ -51,7 +51,8 @@ export default function BosonApp() {
     // Listen to the toggle-theme event and switch the theme
     const updateTheme = async (useDarkTheme?: boolean) => {
       // If useDarkTheme is undefined, asks main.
-      if (useDarkTheme === undefined) useDarkTheme = await window.api.invoke('theme-use-dark');
+      if (useDarkTheme === undefined)
+        useDarkTheme = await window.api.invoke('theme-use-dark');
       if (useDarkTheme) {
         setTheme('dark');
       } else {
