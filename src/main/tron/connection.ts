@@ -9,9 +9,8 @@
  */
 
 import { createHash } from 'crypto';
-import { app, BrowserWindow } from 'electron';
+import { app } from 'electron';
 import log from 'electron-log';
-import { pull as _pull } from 'lodash';
 import { Socket } from 'net';
 import { arch, platform, release } from 'os';
 import Command from './command';
@@ -123,7 +122,7 @@ function getMessageCode(code: string) {
 export default class TronConnection {
   private static _instance: TronConnection;
   private _connectionStatus: ConnectionStatus = ConnectionStatus.Disconnected;
-  private _subscribedWindows: number[] = []; // window ids to which to send received lines
+  private _subscribedWindows: Map<number, any> = new Map();
   private _replyCounter: number = 1;
 
   client = new Socket();
@@ -272,14 +271,31 @@ export default class TronConnection {
     return command;
   }
 
-  addStreamerWindow(windowId: number): void {
-    if (!this._subscribedWindows.includes(windowId))
-      this._subscribedWindows.push(windowId);
+  addStreamerWindow(windowId: number, sender: any, sendAll = false): void {
+    if (!this._subscribedWindows.has(windowId)) {
+      this._subscribedWindows.set(windowId, sender);
+      log.debug('Added listener', windowId);
+      if (sendAll) this.sendReplyToListeners(this.replies, windowId);
+    }
   }
 
   removeStreamerWindow(windowId: number): void {
-    if (this._subscribedWindows.includes(windowId))
-      _pull(this._subscribedWindows, windowId);
+    if (this._subscribedWindows.has(windowId)) {
+      log.debug('Removed listener', windowId);
+      this._subscribedWindows.delete(windowId);
+    }
+  }
+
+  sendReplyToListeners(reply: Reply | Reply[], windowId?: number): void {
+    this._subscribedWindows.forEach((webContents, id) => {
+      if (!windowId || windowId === id) {
+        try {
+          webContents.send('tron-model-received-reply', reply);
+        } catch {
+          log.debug('Failed sending message to listener', id);
+        }
+      }
+    });
   }
 
   parseData(data: string) {
@@ -312,10 +328,8 @@ export default class TronConnection {
         this.commands[reply.commandId].addReply(reply);
       }
 
-      this._subscribedWindows.forEach((id) => {
-        const webContents: any = BrowserWindow.fromId(id)?.webContents;
-        webContents.send('tron-model-received-reply', reply);
-      });
+      this.replies.push(reply);
+      this.sendReplyToListeners(reply);
 
       this._replyCounter++;
     }

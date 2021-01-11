@@ -71,9 +71,12 @@ export default function loadEvents() {
     return await tron.authorise(credentials);
   });
 
-  ipcMain.handle('tron-add-streamer-window', async (event) => {
-    tron.addStreamerWindow(event.sender.id);
-  });
+  ipcMain.handle(
+    'tron-add-streamer-window',
+    async (event, sendAll = false) => {
+      tron.addStreamerWindow(event.sender.id, event.sender, sendAll);
+    }
+  );
 
   ipcMain.handle('tron-remove-streamer-window', async (event) => {
     tron.removeStreamerWindow(event.sender.id);
