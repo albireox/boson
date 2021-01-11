@@ -8,7 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { KeywordMap } from 'main/tron';
+import { KeywordMap, Reply } from 'main/tron';
 import { useEffect, useState } from 'react';
 import { getTAITime } from '../utils';
 
@@ -66,6 +66,30 @@ export function useKeywords(
   }, []);
 
   return keywords;
+}
+
+/**
+ * Creates a subscription to the Tron stream for the current window.
+ * @param onReceived The function to call when a new reply is received. The
+ * function is called with a Reply object as the only argument.
+ * @param sendAll Whether to send all the cumulated replies at the time of
+ * the subscription.
+ */
+export function useListener(
+  onReceived: (reply: Reply | Reply[]) => any,
+  sendAll = true
+) {
+  window.api.on('tron-model-received-reply', onReceived);
+
+  const removeListener = () => {
+    window.api.invoke('tron-remove-streamer-window');
+  };
+
+  useEffect(() => {
+    window.api.invoke('tron-add-streamer-window', sendAll);
+    window.addEventListener('beforeunload', removeListener);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }
 
 /**
