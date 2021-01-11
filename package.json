@@ -25,7 +25,7 @@
     "react": "^16.0.0",
     "react-dom": "^17.0.0",
     "react-router-dom": "^5.2.0",
-    "react-scroll-to-bottom": "^4.0.0",
+    "react-scroll-to-bottom": "~4.0.0",
     "sprintf-js": "^1.1.2"
   },
   "scripts": {

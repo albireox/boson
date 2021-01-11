@@ -10315,10 +10315,10 @@ react-scripts@^4.0.1:
   optionalDependencies:
     fsevents "^2.1.3"
 
-react-scroll-to-bottom@^4.0.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/react-scroll-to-bottom/-/react-scroll-to-bottom-4.1.0.tgz#e39955aeaea27e36adb601de552b91a58f7be662"
-  integrity sha512-atWRfdhLFCG2dK4kAsCDCYvl327DDEi5BMO0kIU4D12u2o2UX+GmlKO8m7sPW86Vb3MlqL3+Gawv/79VQ90tXQ==
+react-scroll-to-bottom@~4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-scroll-to-bottom/-/react-scroll-to-bottom-4.0.0.tgz#427cc054a3011269538cf89db5fb6348018f313c"
+  integrity sha512-7lOy14XbBdweO+8LMRp7F9nP0xWtf0mAt+I5rm1hbNZq5JcXJRn0dsZjz9ySDLleH+zMlyhPwinqFDmEEUdHtA==
   dependencies:
     classnames "2.2.6"
     create-emotion "10.0.27"
