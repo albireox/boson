@@ -1,6 +1,6 @@
 import { app, Menu, shell } from 'electron';
 import { createWindow, saveWindowPositions } from './main';
-import { TronConnection } from './tron';
+import TronConnection from './tron/connection';
 
 const tron = TronConnection.getInstance();
 const isMac = process.platform === 'darwin';

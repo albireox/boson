@@ -12,7 +12,8 @@ import { ipcMain, Menu, nativeTheme } from 'electron';
 import * as keytar from 'keytar';
 import { createWindow, windows } from './main';
 import store from './store';
-import { ConnectionStatus, TronConnection } from './tron';
+import { ConnectionStatus } from './tron';
+import TronConnection from './tron/connection';
 
 let tron = TronConnection.getInstance();
 

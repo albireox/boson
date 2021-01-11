@@ -15,7 +15,7 @@ import {
   RowsProp,
   ValueFormatterParams
 } from '@material-ui/data-grid';
-import { KeywordMap } from '../../main/tron';
+import { KeywordMap } from 'main/tron';
 import { useKeywords } from '../hooks';
 
 function Sep(props: any) {

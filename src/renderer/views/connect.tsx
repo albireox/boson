@@ -19,6 +19,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { ConnectionStatus } from 'main/tron';
 import React, { SyntheticEvent, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
@@ -172,7 +173,7 @@ export default function ConnectView() {
     );
 
     switch (connectionResult) {
-      case window.api.tron.ConnectionStatus.Connected:
+      case ConnectionStatus.Connected:
         const [result, err]: [
           boolean,
           string | null
@@ -189,10 +190,10 @@ export default function ConnectView() {
           setError(err!);
         }
         break;
-      case window.api.tron.ConnectionStatus.Failed:
+      case ConnectionStatus.Failed:
         setError('Connection failed');
         break;
-      case window.api.tron.ConnectionStatus.TimedOut:
+      case ConnectionStatus.TimedOut:
         setError('Connection timed out');
         break;
       default:

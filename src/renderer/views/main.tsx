@@ -21,10 +21,9 @@ import {
 } from '@material-ui/core';
 import { Brightness7, Highlight } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
+import { ConnectionStatus } from 'main/tron';
 import React, { BaseSyntheticEvent } from 'react';
 import TCCView from './TCC';
-
-let ConnectionStatus = window.api.tron.ConnectionStatus;
 
 type ValidTabs = 'tcc' | 'apogee' | 'boss';
 
@@ -70,9 +69,9 @@ async function autoconnect() {
 
   const connResult = await window.api.invoke('tron-connect', host, port);
   switch (connResult) {
-    case window.api.tron.ConnectionStatus.Connected:
+    case ConnectionStatus.Connected:
       break;
-    case window.api.tron.ConnectionStatus.Authorised:
+    case ConnectionStatus.Authorised:
       return [true, true];
     default:
       return [false, true];
@@ -132,7 +131,7 @@ function ConnectSnackbar(): JSX.Element {
 
   const [open, setOpen] = React.useState<boolean>(false);
 
-  const handleTronStatus = (status: typeof ConnectionStatus) => {
+  const handleTronStatus = (status: ConnectionStatus) => {
     // Handle tron status changes. Show the snackbar if disconnected.
     if (status === ConnectionStatus.Authorised) {
       setOpen(false);
