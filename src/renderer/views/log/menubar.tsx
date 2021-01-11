@@ -28,7 +28,7 @@ import {
   ToggleButtonProps
 } from '@material-ui/lab';
 import React from 'react';
-import { ConfigState } from './index';
+import { ConfigContext, ConfigState } from './index';
 
 type MessageLevelButtonsProps = ToggleButtonProps & {
   onConfigUpdate: (newConfig: ConfigState) => void;
@@ -38,17 +38,13 @@ const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
   onConfigUpdate,
   ...props
 }) => {
-  const [levels, setLevels] = React.useState(['info', 'warning', 'error']);
+  const config = React.useContext(ConfigContext);
+  const [levels, setLevels] = React.useState(config.levels);
 
   const updateLevels = (newLevels: string[]) => {
     setLevels(newLevels);
     onConfigUpdate({ levels: newLevels });
   };
-
-  React.useEffect(() => {
-    updateLevels(levels);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <ToggleButtonGroup
@@ -88,7 +84,8 @@ const SelectNumberMessages: React.FC<SelectNumberMessagesProps> = ({
   onConfigUpdate,
   ...props
 }) => {
-  const [nMessages, setNMessages] = React.useState(10000);
+  const config = React.useContext(ConfigContext);
+  const [nMessages, setNMessages] = React.useState(config.nMessages);
 
   const updateNMessages = (
     event: React.ChangeEvent<{ name?: string; value: unknown }>
@@ -96,11 +93,6 @@ const SelectNumberMessages: React.FC<SelectNumberMessagesProps> = ({
     setNMessages(event.target.value as number);
     onConfigUpdate({ nMessages: parseInt(event.target.value as string) });
   };
-
-  React.useEffect(() => {
-    onConfigUpdate({ nMessages: nMessages });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <Tooltip title='Number of messages'>

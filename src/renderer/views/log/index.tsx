@@ -29,7 +29,11 @@ export const ConfigContext = React.createContext<ConfigState>({});
 
 export function LogView() {
   const classes = useStyles();
-  const [config, setConfig] = React.useState<ConfigState>({});
+
+  const [config, setConfig] = React.useState<ConfigState>({
+    levels: ['info', 'warning', 'error'],
+    nMessages: 10000
+  });
 
   const onConfigUpdate = (newConfig: ConfigState) => {
     setConfig({ ...config, ...newConfig });
@@ -37,8 +41,8 @@ export function LogView() {
 
   return (
     <Fragment>
-      <MenuBar className={classes.menubar} onConfigUpdate={onConfigUpdate} />
       <ConfigContext.Provider value={config}>
+        <MenuBar className={classes.menubar} onConfigUpdate={onConfigUpdate} />
         <Messages />
       </ConfigContext.Provider>
       <CommandInput />
