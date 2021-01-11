@@ -29,6 +29,13 @@ const template: any[] = [
             },
             { type: 'separator' },
             {
+              label: 'New Log Window',
+              id: 'log',
+              accelerator: 'Cmd+N',
+              click: () => createWindow('log')
+            },
+            { type: 'separator' },
+            {
               label: 'Save Window Positions',
               id: 'save-window-positions',
               click: () => saveWindowPositions()

@@ -56,8 +56,16 @@ export function saveWindowPositions() {
 export function createWindow(name: string = 'main'): BrowserWindow {
   // Create or show a new window
 
-  if (name in windows.keys()) {
+  if (name in windows.keys() && name !== 'log') {
     windows.get(name)!.show();
+  }
+
+  if (name === 'log') {
+    let nLog = 0;
+    for (let wName in windows) {
+      if (wName.startsWith('log')) nLog++;
+    }
+    name = name + (nLog + 1).toString();
   }
 
   let windowConfig: WindowConfig = store.get(`windows.${name}`);

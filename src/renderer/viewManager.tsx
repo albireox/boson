@@ -29,7 +29,12 @@ class ViewManager extends Component<{}, {}> {
 
   static View(props: { location: { search: string } }) {
     let name = props.location.search.slice(1); // Remove the ? at the beginning.
-    let view = ViewManager.Views()[name];
+    let view: any;
+    if (name.includes('log')) {
+      view = <LogView />;
+    } else {
+      view = ViewManager.Views()[name];
+    }
     if (view == null) throw new Error(`View ${name} is undefined.`);
     return view;
   }

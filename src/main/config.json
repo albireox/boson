@@ -37,7 +37,14 @@
             "height": 700,
             "center": true,
             "resizable": true
+        },
+        "log" :{
+            "width": 800,
+            "height": 700,
+            "center": true,
+            "resizable": true
         }
+
     },
     "user": {
         "connection": {
