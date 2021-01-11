@@ -6,8 +6,8 @@
             "center": true
         },
         "main": {
-            "width": 500,
-            "height": 350,
+            "width": 550,
+            "height": 335,
             "x": 0,
             "y": 0,
             "closable": false,
@@ -15,7 +15,7 @@
         },
         "tcc": {
             "width": 550,
-            "height": 350
+            "height": 335
         },
         "boss": {
             "width": 400,
