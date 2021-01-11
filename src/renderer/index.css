@@ -16,6 +16,14 @@ html, body, main#root {
   overflow: auto;
 }
 
+.titlebar {
+  -webkit-app-region: drag;
+  width: 100vw;
+  height: 30px;
+}
+.titlebar else {
+  -webkit-app-region: no-drag;
+}
 
 /* Make Material-UI Data Grid cells scrollable but with hidden scrollbars */
 .MuiDataGrid-cell {

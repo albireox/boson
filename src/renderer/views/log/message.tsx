@@ -125,17 +125,21 @@ const Messages = () => {
         ...prevReplies,
         ...(newReplies as Reply[])
       ]);
+
       let newMessages = newReplies
         .map((r) => getMessageMemo(r))
         .filter((x) => x !== null);
 
       setMessages((prevMessages: MessageReturnType[]) => [
-        ...prevMessages,
+        ...prevMessages.slice(-config.nMessages!),
         ...newMessages
       ]);
     } else {
       setMessages(
-        replies.map((r) => getMessageMemo(r)).filter((x) => x !== null)
+        replies
+          .map((r) => getMessageMemo(r))
+          .filter((x) => x !== null)
+          .slice(-config.nMessages!)
       );
     }
   };

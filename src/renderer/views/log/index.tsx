@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 export interface ConfigState {
   levels?: string[];
+  nMessages?: number;
 }
 
 export const ConfigContext = React.createContext<ConfigState>({});
