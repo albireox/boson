@@ -89,8 +89,8 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
       newCoordState.axis1units = <DMG />;
       newCoordState.axis2units = <DMG />;
     } else {
-      newCoordState.axis1label = '?';
-      newCoordState.axis2label = '?';
+      newCoordState.axis1label = 'Az';
+      newCoordState.axis2label = 'Alt';
       newCoordState.axis1units = '?';
       newCoordState.axis2units = '?';
     }
@@ -145,7 +145,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
             <TableCell align='right'>CSys</TableCell>
             <TableCell align='right'>
               <AlertChip
-                label={keywords['tcc.objSys']?.values[0]}
+                label={keywords['tcc.objSys']?.values[0] || 'N/A'}
                 severity='info'
                 variant='outlined'
                 size='small'
@@ -163,7 +163,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
             </TableCell>
             <TableCell align='left'>
               <AlertChip
-                label={keywords['tcc.rotType']?.values[0]}
+                label={keywords['tcc.rotType']?.values[0] || 'N/A'}
                 severity='info'
                 variant='outlined'
                 size='small'

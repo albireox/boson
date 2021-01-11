@@ -67,12 +67,12 @@ const MiscTable: React.FC<TableProps> = (props) => {
     let HA = AltAzToHADec(alt, az)[0];
     let DesignHA = keywords['platedb.pointingInfo']?.values[5];
     let desCurrHA = DesignHA !== undefined ? HA - DesignHA : null;
-    let z = 90 - alt;
+    let z = alt ? 90 - alt : -999;
     setHA({
       HA: HA,
       desCurrHA: desCurrHA,
       z: z,
-      airmass: 1 / Math.cos((z * Math.PI) / 180)
+      airmass: alt ? 1 / Math.cos((z * Math.PI) / 180) : -999
     });
   }, [keywords]);
 

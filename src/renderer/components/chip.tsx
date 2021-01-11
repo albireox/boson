@@ -84,16 +84,20 @@ export function AlertChip(props: AlertChipProps) {
     []
   );
 
-  return (
-    <Tooltip
-      arrow
-      title={props.label ? props.label : ''}
-      interactive
-      disableHoverListener={!hoverStatus}
-    >
-      <div>
-        <Chip ref={chipElementRef} className={classes.root} {...props} />
-      </div>
-    </Tooltip>
-  );
+  if (props.label === undefined || props.label === null) {
+    return <span />;
+  } else {
+    return (
+      <Tooltip
+        arrow
+        title={props.label ? props.label : ''}
+        interactive
+        disableHoverListener={!hoverStatus}
+      >
+        <div>
+          <Chip ref={chipElementRef} className={classes.root} {...props} />
+        </div>
+      </Tooltip>
+    );
+  }
 }
