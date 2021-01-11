@@ -60,25 +60,29 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     windows.get(name)!.show();
   }
 
+  let configName: string;
   if (name === 'log') {
     let nLog = 0;
     for (let wName in windows) {
       if (wName.startsWith('log')) nLog++;
     }
+    configName = name;
     name = name + (nLog + 1).toString();
+  } else {
+    configName = name;
   }
 
-  let windowConfig: WindowConfig = store.get(`windows.${name}`);
+  let windowConfig: WindowConfig = store.get(`windows.${configName}`);
   windowConfig = windowConfig ? windowConfig : store.get(`windows.default`);
 
   // Checks if there are saved positions and, if so, overrides the config
-  let customConfig: WindowConfig = store.get(`user.windows.${name}`);
+  let customConfig: WindowConfig = store.get(`user.windows.${configName}`);
   if (customConfig) windowConfig = { ...windowConfig, ...customConfig };
 
   // Selects the screen to use (defaults to where the cursor is when the
   // app is launched). Otherwise uses the screen in which the main window
   // currently is.
-  if (name === 'main') {
+  if (configName === 'main') {
     let cursor = screen.getCursorScreenPoint();
     let currentScreen = screen.getDisplayNearestPoint(cursor);
     windowConfig['x'] = (windowConfig['x'] || 0) + currentScreen.bounds.x;
