@@ -300,6 +300,7 @@ export default class TronConnection {
 
   parseData(data: string) {
     const newLines = data.trim().split(/\r/);
+    const instantReplies: Reply[] = [];
 
     for (let line of newLines) {
       let [lineMatched, keywords] = parseLine(line);
@@ -329,9 +330,14 @@ export default class TronConnection {
       }
 
       this.replies.push(reply);
-      this.sendReplyToListeners(reply);
+      instantReplies.push(reply);
 
       this._replyCounter++;
     }
+
+    // Instead of sending the replies to the listeners one by one, we send
+    // all the ones from this chunk of data at once. This seems to reduce
+    // re-renders and improve performance a bit.
+    this.sendReplyToListeners(instantReplies);
   }
 }
