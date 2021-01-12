@@ -23,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
 export interface ConfigState {
   levels?: string[];
   nMessages?: number;
+  seenActors?: string[];
+  selectedActors?: string[];
 }
 
 export const ConfigContext = React.createContext<ConfigState>({});
@@ -32,7 +34,9 @@ export function LogView() {
 
   const [config, setConfig] = React.useState<ConfigState>({
     levels: ['info', 'warning', 'error'],
-    nMessages: 10000
+    nMessages: 10000,
+    seenActors: ['sop', 'tcc'],
+    selectedActors: []
   });
 
   const onConfigUpdate = (newConfig: ConfigState) => {
@@ -43,7 +47,7 @@ export function LogView() {
     <Fragment>
       <ConfigContext.Provider value={config}>
         <MenuBar className={classes.menubar} onConfigUpdate={onConfigUpdate} />
-        <Messages />
+        <Messages onConfigUpdate={onConfigUpdate} />
       </ConfigContext.Provider>
       <CommandInput />
     </Fragment>

@@ -105,8 +105,9 @@ const Message: React.FC<MessageProps> = ({ reply, ...props }) => {
 };
 
 type MessageReturnType = ReturnType<typeof Message>;
+type MessagesProps = { onConfigUpdate: (newConfig: ConfigState) => void };
 
-const Messages = () => {
+const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   const classes = useStyles();
 
   const [messages, setMessages] = React.useState<MessageReturnType[]>([]);
@@ -123,6 +124,16 @@ const Messages = () => {
     [config]
   );
 
+  const filterReplies = (replies: Reply[]) =>
+    replies
+      .filter(
+        (x) =>
+          config.selectedActors?.length === 0 ||
+          config.selectedActors?.includes(x.sender)
+      )
+      .map((r) => getMessageMemo(r))
+      .filter((x) => x !== null);
+
   const parseReply = (newReplies?: Reply | Reply[]) => {
     if (newReplies !== undefined) {
       if (!Array.isArray(newReplies)) newReplies = [newReplies];
@@ -132,23 +143,25 @@ const Messages = () => {
         ...(newReplies as Reply[])
       ]);
 
-      let newMessages = newReplies
-        .map((r) => getMessageMemo(r))
-        .filter((x) => x !== null);
+      newReplies.forEach((reply) => {
+        if (config.seenActors && !config.seenActors.includes(reply.sender)) {
+          onConfigUpdate({
+            seenActors: [...config.seenActors, reply.sender].sort()
+          });
+        }
+      });
+
+      let newMessages = filterReplies(newReplies);
 
       setMessages((prevMessages: MessageReturnType[]) => [
         ...prevMessages.slice(-config.nMessages!),
         ...newMessages
       ]);
     } else {
-      setMessages(
-        replies
-          .map((r) => getMessageMemo(r))
-          .filter((x) => x !== null)
-          .slice(-config.nMessages!)
-      );
+      setMessages(filterReplies(replies).slice(-config.nMessages!));
     }
   };
+
   useListener(parseReply);
 
   // Called when the div scrolls. It is also called when we do an automatic
