@@ -108,10 +108,16 @@ type MessageReturnType = ReturnType<typeof Message>;
 
 const Messages = () => {
   const classes = useStyles();
+
   const [messages, setMessages] = React.useState<MessageReturnType[]>([]);
   const [replies, setReplies] = React.useState<Reply[]>([]);
+  const [atBottom, setAtBottom] = React.useState(true);
+  const [autoScroll, setAutoScroll] = React.useState(true);
+
   const config = React.useContext(ConfigContext);
+
   const virtuosoRef = React.useRef<VirtuosoHandle>(null);
+
   const getMessageMemo = React.useCallback(
     (reply: Reply) => getMessage(reply, config),
     [config]
@@ -145,6 +151,23 @@ const Messages = () => {
   };
   useListener(parseReply);
 
+  // Called when the div scrolls. It is also called when we do an automatic
+  // scroll to bottom. If the scroll was automatic, autoScroll = true, in that
+  // case we just set it to false. If it's false, we check the scroll position
+  // compared with the bottom of the div and if the difference is < 50 (to
+  // give it some margin in case of bounce), we say we are at the bottom.
+  const handleScroll = (event: React.UIEvent<HTMLElement>) => {
+    if (!autoScroll) {
+      const currentTarget = event.currentTarget;
+      const scrollHeight =
+        currentTarget.scrollHeight - currentTarget.scrollTop;
+      const bottom = scrollHeight - currentTarget.clientHeight < 50;
+      setAtBottom(bottom);
+    } else {
+      setAutoScroll(false);
+    }
+  };
+
   React.useEffect(() => {
     // Call parseReply without arguments forces a full re-render.
     parseReply();
@@ -152,18 +175,24 @@ const Messages = () => {
   }, [config]);
 
   React.useEffect(() => {
-    if (virtuosoRef && virtuosoRef.current) {
-      virtuosoRef.current.scrollToIndex({
-        index: messages.length - 1,
-        align: 'end',
-        behavior: 'auto'
-      });
+    // Manually force scroll to bottom, only if we are already at bottom.
+    if (atBottom) {
+      // Indicate the following scroll was not done by the user.
+      setAutoScroll(true);
+      if (virtuosoRef && virtuosoRef.current) {
+        virtuosoRef.current.scrollToIndex({
+          index: messages.length - 1,
+          align: 'end',
+          behavior: 'auto'
+        });
+      }
     }
-  }, [messages]);
+  }, [messages, atBottom]);
 
   return (
     <div className={classes.logBox}>
       <Virtuoso
+        onScroll={handleScroll}
         ref={virtuosoRef}
         data={messages}
         itemContent={(index, message) => message}
