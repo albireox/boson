@@ -11,12 +11,16 @@
 import {
   Box,
   BoxProps,
+  Divider,
   FormControl,
   FormControlProps,
   IconButton,
   InputAdornment,
+  InputBase,
   makeStyles,
   MenuItem,
+  Paper,
+  PaperProps,
   Select,
   TextField,
   TextFieldProps,
@@ -24,6 +28,7 @@ import {
   Tooltip,
   useTheme
 } from '@material-ui/core';
+import { SearchIcon } from '@material-ui/data-grid';
 import {
   BookOutlined,
   ErrorOutlineOutlined,
@@ -37,7 +42,12 @@ import {
   ToggleButtonProps
 } from '@material-ui/lab';
 import React from 'react';
-import { ConfigContext, ConfigState } from './index';
+import {
+  ConfigContext,
+  ConfigState,
+  SearchContext,
+  SearchState
+} from './index';
 
 // Message level
 type MessageLevelButtonsProps = ToggleButtonProps & {
@@ -228,15 +238,81 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiSelect-select': {
       background: 'transparent' // Disable selected background
     }
+  },
+  paper: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 250,
+    height: 38,
+    marginLeft: 'auto'
+  },
+  searchInput: {
+    marginLeft: theme.spacing(1),
+    flex: 1
+  },
+  searchButton: {
+    padding: 10
+  },
+  divider: {
+    height: 22,
+    margin: 4
   }
 }));
+
+// Search field
+type SearchBarProps = PaperProps & {
+  onSearchUpdate: (newSearch: SearchState) => void;
+};
+
+const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
+  const classes = useStyles();
+  const search = React.useContext(SearchContext);
+
+  const [searchButtonColor, setSearchColorButton] = React.useState<any>(
+    'default'
+  );
+
+  const handleSearch = () => {
+    if (!search.limit) {
+      onSearchUpdate({ limit: true });
+    } else {
+      onSearchUpdate({ limit: false });
+    }
+  };
+
+  React.useEffect(() => {
+    setSearchColorButton(search.limit ? 'secondary' : 'default');
+  }, [search]);
+
+  return (
+    <Paper component='form' {...props}>
+      <InputBase className={classes.searchInput} placeholder='Search' />
+      <Divider className={classes.divider} orientation='vertical' />
+      <IconButton
+        size='small'
+        className={classes.searchButton}
+        color={searchButtonColor}
+        onClick={handleSearch}
+        style={{ background: 'transparent' }} // For some reason needs to be a style
+      >
+        <SearchIcon />
+      </IconButton>
+    </Paper>
+  );
+};
 
 // Menu bar
 type MenuBarProps = BoxProps & {
   onConfigUpdate: (newConfig: ConfigState) => void;
+  onSearchUpdate: (newSearch: SearchState) => void;
 };
 
-const MenuBar: React.FC<MenuBarProps> = ({ onConfigUpdate, ...props }) => {
+const MenuBar: React.FC<MenuBarProps> = ({
+  onConfigUpdate,
+  onSearchUpdate,
+  ...props
+}) => {
   const classes = useStyles();
 
   return (
@@ -247,9 +323,11 @@ const MenuBar: React.FC<MenuBarProps> = ({ onConfigUpdate, ...props }) => {
         className={classes.selectActors}
       />
       <SelectNumberMessages
+        id='selectNumberMessages'
         onConfigUpdate={onConfigUpdate}
         className={classes.selectNumber}
       />
+      <SearchBar onSearchUpdate={onSearchUpdate} className={classes.paper} />
     </Box>
   );
 };

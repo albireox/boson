@@ -37,3 +37,10 @@ html, body, main#root {
 .MuiDataGrid-cell > div::-webkit-scrollbar {
   display: none;
 }
+
+/* Hide select for the number of message if width of the log window <650 px */
+@media only screen and (max-width: 650px) {
+  #selectNumberMessages {
+      display: none;
+  }
+}
