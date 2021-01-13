@@ -120,13 +120,14 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
     }
   };
 
-  const filterReplies = (replies: Reply[]) =>
+  const filterReplies = (replies: Reply[], keepMessages = 0) =>
     replies
       .filter(
         (x) =>
           config.selectedActors.length === 0 ||
           config.selectedActors.includes(x.sender)
       )
+      .slice(-keepMessages)
       .map((r) => getMessageMemo(r))
       .filter((x) => x !== null);
 
@@ -138,7 +139,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
       let joinedMessages: any[];
 
       if (nMessages > 0 && newReplies.length >= nMessages) {
-        let newMessages = filterReplies(newReplies).slice(-nMessages);
+        let newMessages = filterReplies(newReplies, nMessages);
         joinedMessages = newMessages;
       } else {
         let newMessages = filterReplies(newReplies);
@@ -152,7 +153,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
       setMessages(joinedMessages);
       updateSeenActors(newReplies);
     } else {
-      setMessages(filterReplies(replies).slice(-config.nMessages));
+      setMessages(filterReplies(replies, config.nMessages));
       updateSeenActors(replies.slice(-config.nMessages));
     }
   };
