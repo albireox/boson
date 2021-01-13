@@ -30,12 +30,20 @@ export function useKeywords(
   // Convert keys to lower-case, but keep the original. We'll revert when
   // the keywords get updated.
   const lowerKeys = new Map(keys.map((value) => [value.toLowerCase(), value]));
+  const actors = keys
+    .filter((k) => k.includes('.*'))
+    .map((a) => a.split('.')[0]);
+  const all = keys.includes('*');
 
   const updatekeywords = (tronKeywords: KeywordMap) => {
     // Revert tronKeywords (all keys lowercase) to the original capitalisation.
     let newKeys: KeywordMap = {};
     for (let key in tronKeywords) {
-      newKeys[lowerKeys.get(key) as string] = tronKeywords[key];
+      if (all || actors.includes(tronKeywords[key].actor)) {
+        newKeys[key] = tronKeywords[key];
+      } else {
+        newKeys[lowerKeys.get(key) as string] = tronKeywords[key];
+      }
     }
     setKeywords({ ...keywords, ...newKeys });
   };
@@ -76,10 +84,14 @@ export function useKeywords(
  * the subscription.
  */
 export function useListener(
-  onReceived: (reply: Reply | Reply[]) => any,
+  onReceived: (reply: Reply[]) => any,
   sendAll = true
 ) {
-  window.api.on('tron-model-received-reply', onReceived);
+  const parseReplies = (replies: string[]) => {
+    // Deserialise the replies. Each item in the list is a stringified reply.
+    onReceived(replies.map((r) => JSON.parse(r)));
+  };
+  window.api.on('tron-model-received-reply', parseReplies);
 
   const removeListener = () => {
     window.api.invoke('tron-remove-streamer-window');

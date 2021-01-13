@@ -21,8 +21,8 @@ import {
   Credentials,
   Keyword,
   KeywordMap,
-  MessageCode,
-  Reply
+  Reply,
+  ReplyCodeReverseMap
 } from './types';
 
 function evaluateKeyword(value: string) {
@@ -96,29 +96,6 @@ function parseLine(line: string): [RegExpMatchArray | null, Keyword[]] {
   return [lineMatched, keywords];
 }
 
-function getMessageCode(code: string) {
-  code = code.toLowerCase();
-
-  switch (code) {
-    case 'i':
-      return MessageCode.Info;
-    case 'w':
-      return MessageCode.Warning;
-    case 'd':
-      return MessageCode.Debug;
-    case 'f':
-      return MessageCode.Failed;
-    case 'e':
-      return MessageCode.Error;
-    case '>':
-      return MessageCode.Running;
-    case ':':
-      return MessageCode.Done;
-    default:
-      return MessageCode.Info;
-  }
-}
-
 export default class TronConnection {
   private static _instance: TronConnection;
   private _connectionStatus: ConnectionStatus = ConnectionStatus.Disconnected;
@@ -131,6 +108,7 @@ export default class TronConnection {
 
   model: TronModel;
   replies: Reply[] = [];
+  jsonReplies: string[] = [];
   commands: { [commandId: number]: Command } = {};
 
   constructor() {
@@ -275,7 +253,13 @@ export default class TronConnection {
     if (!this._subscribedWindows.has(windowId)) {
       this._subscribedWindows.set(windowId, sender);
       log.debug('Added listener', windowId);
-      if (sendAll) this.sendReplyToListeners(this.replies, windowId);
+      if (sendAll) {
+        log.debug(
+          `Sending ${this.jsonReplies.length} stored ` +
+            `replies to listener ${windowId}`
+        );
+        this.sendReplyToListeners(this.jsonReplies, windowId);
+      }
     }
   }
 
@@ -286,13 +270,15 @@ export default class TronConnection {
     }
   }
 
-  sendReplyToListeners(reply: Reply | Reply[], windowId?: number): void {
+  sendReplyToListeners(reply: string[], windowId?: number): void {
     this._subscribedWindows.forEach((webContents, id) => {
       if (!windowId || windowId === id) {
         try {
           webContents.send('tron-model-received-reply', reply);
         } catch {
           log.debug('Failed sending message to listener', id);
+          log.debug('Purging listener', id);
+          this.removeStreamerWindow(id);
         }
       }
     });
@@ -300,22 +286,24 @@ export default class TronConnection {
 
   parseData(data: string) {
     const newLines = data.trim().split(/\r/);
-    const instantReplies: Reply[] = [];
+    const instantJSONReplies: string[] = [];
 
     for (let line of newLines) {
       let [lineMatched, keywords] = parseLine(line);
 
       if (!lineMatched || !lineMatched.groups) continue;
 
+      let groups = lineMatched.groups;
+
       let reply: Reply = {
         id: this._replyCounter,
-        date: new Date(),
+        date: new Date().toUTCString(),
         rawLine: line,
-        commander: lineMatched.groups.commander,
-        user: lineMatched.groups.user,
-        commandId: parseInt(lineMatched.groups.commandId),
-        sender: lineMatched.groups.sender,
-        code: getMessageCode(lineMatched.groups.code),
+        commander: groups.commander,
+        user: groups.user,
+        commandId: parseInt(groups.commandId),
+        sender: groups.sender,
+        code: ReplyCodeReverseMap.get(groups.code.toLowerCase())!,
         keywords: Object.fromEntries(
           keywords.map((kw: Keyword) => [kw.key, kw])
         ) as KeywordMap
@@ -330,7 +318,15 @@ export default class TronConnection {
       }
 
       this.replies.push(reply);
-      instantReplies.push(reply);
+
+      // We convert to JSON now and store a list of JSON replies. That way,
+      // when we open a new log window and have to send hundreds of thousands
+      // of replies all at once, most of the serialisarion is already done and
+      // the window doesn't hang waiting for main to serialise the replies.
+      // Still, this is not ideal and we need a better solution.
+      let jsonReply = JSON.stringify(reply);
+      this.jsonReplies.push(jsonReply);
+      instantJSONReplies.push(jsonReply);
 
       this._replyCounter++;
     }
@@ -338,6 +334,6 @@ export default class TronConnection {
     // Instead of sending the replies to the listeners one by one, we send
     // all the ones from this chunk of data at once. This seems to reduce
     // re-renders and improve performance a bit.
-    this.sendReplyToListeners(instantReplies);
+    this.sendReplyToListeners(instantJSONReplies);
   }
 }

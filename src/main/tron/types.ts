@@ -27,13 +27,13 @@ export interface KeywordMap {
 
 export interface Reply {
   id: number;
-  date: Date;
+  date: string;
   rawLine: string;
   commander: string;
   user: string;
   sender: string;
   commandId: number;
-  code: MessageCode;
+  code: ReplyCode;
   keywords: KeywordMap;
   command?: Command | undefined;
 }
@@ -61,12 +61,33 @@ export enum CommandStatus {
   Done
 }
 
-export enum MessageCode {
-  Info = 'i',
-  Error = 'e',
-  Warning = 'w',
-  Debug = 'd',
-  Failed = 'f',
-  Done = ':',
-  Running = '>'
+export enum ReplyCode {
+  Info,
+  Error,
+  Warning,
+  Debug,
+  Failed,
+  Done,
+  Running,
+  Unknown
 }
+
+export const ReplyCodeMap = new Map<ReplyCode, string>([
+  [ReplyCode.Info, 'i'],
+  [ReplyCode.Error, 'e'],
+  [ReplyCode.Warning, 'w'],
+  [ReplyCode.Debug, 'd'],
+  [ReplyCode.Failed, 'f'],
+  [ReplyCode.Done, ':'],
+  [ReplyCode.Running, '>']
+]);
+
+export const ReplyCodeReverseMap = new Map<string, ReplyCode>([
+  ['i', ReplyCode.Info],
+  ['e', ReplyCode.Error],
+  ['w', ReplyCode.Warning],
+  ['d', ReplyCode.Debug],
+  ['f', ReplyCode.Failed],
+  [':', ReplyCode.Done],
+  ['>', ReplyCode.Running]
+]);

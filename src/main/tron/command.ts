@@ -9,7 +9,7 @@
  */
 
 import { AsyncLock } from '../../utils/async';
-import { CommandStatus, Reply } from './types';
+import { CommandStatus, Reply, ReplyCode } from './types';
 
 export default class Command {
   private static commandIdCounter = 0;
@@ -60,13 +60,13 @@ export default class Command {
   addReply(reply: Reply) {
     this.replies.push(reply);
     switch (reply.code) {
-      case 'f':
+      case ReplyCode.Failed:
         this.status = CommandStatus.Failed;
         break;
-      case 'e':
+      case ReplyCode.Error:
         this.status = CommandStatus.Failed;
         break;
-      case ':':
+      case ReplyCode.Done:
         this.status = CommandStatus.Done;
         break;
       default:

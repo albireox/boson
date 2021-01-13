@@ -15,7 +15,7 @@ import {
   TypographyProps
 } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
-import { MessageCode, Reply } from 'main/tron';
+import { Reply, ReplyCode } from 'main/tron';
 import React from 'react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { useListener } from 'renderer/hooks';
@@ -31,65 +31,48 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function formatDate(date: Date) {
-  return date.toUTCString().split(' ')[4];
+function formatDate(date: string) {
+  return date.split(' ')[4];
 }
 
-function getMessageColour(theme: Theme, code: MessageCode) {
+function getMessageColour(theme: Theme, code: ReplyCode) {
   let accent = theme.palette.type || 'main';
 
   switch (code) {
-    case MessageCode.Error:
+    case ReplyCode.Error:
       return theme.palette.error[accent];
-    case MessageCode.Failed:
+    case ReplyCode.Failed:
       return theme.palette.error[accent];
-    case MessageCode.Warning:
+    case ReplyCode.Warning:
       return theme.palette.warning[accent];
-    case MessageCode.Debug:
+    case ReplyCode.Debug:
       return theme.palette.text.disabled;
     default:
       return undefined;
   }
 }
 
-function isVisible(code: MessageCode, config: ConfigState) {
-  let levels = config.levels;
-  if (!levels) return true;
-
-  switch (code) {
-    case MessageCode.Info:
-      if (levels.includes('info')) return true;
-      break;
-    case MessageCode.Debug:
-      if (levels.includes('debug')) return true;
-      break;
-    case MessageCode.Warning:
-      if (levels.includes('warning')) return true;
-      break;
-    case MessageCode.Error:
-      if (levels.includes('error')) return true;
-      break;
-    case MessageCode.Failed:
-      if (levels.includes('error')) return true;
-      break;
-    default:
-      if (levels.includes('debug')) return true;
-      break;
-  }
+function isVisible(code: ReplyCode, levels: ReplyCode[]) {
+  if (levels.includes(code)) return true;
   return false;
 }
 
-export function getMessage(reply: Reply, config: ConfigState) {
-  if (!isVisible(reply.code, config)) return null;
+export function getMessage(reply: Reply, levels: ReplyCode[]) {
+  if (!isVisible(reply.code, levels)) return null;
   return <Message reply={reply} key={reply.id} />;
 }
 
 type MessageProps = TypographyProps & { reply: Reply };
 
 const Message: React.FC<MessageProps> = ({ reply, ...props }) => {
-  const theme = useTheme();
+  const theme: Theme = useTheme();
 
-  let messageColour = getMessageColour(theme as Theme, reply.code);
+  const getMessageColourMemo = React.useCallback(
+    (code) => getMessageColour(theme as Theme, code),
+    [theme]
+  );
+
+  let messageColour = getMessageColourMemo(reply.code);
 
   return (
     <Typography
@@ -105,7 +88,9 @@ const Message: React.FC<MessageProps> = ({ reply, ...props }) => {
 };
 
 type MessageReturnType = ReturnType<typeof Message>;
-type MessagesProps = { onConfigUpdate: (newConfig: ConfigState) => void };
+type MessagesProps = {
+  onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
+};
 
 const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   const classes = useStyles();
@@ -120,45 +105,51 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   const virtuosoRef = React.useRef<VirtuosoHandle>(null);
 
   const getMessageMemo = React.useCallback(
-    (reply: Reply) => getMessage(reply, config),
-    [config]
+    (reply: Reply) => getMessage(reply, config.levels),
+    [config.levels]
   );
+
+  const updateSeenActors = async (replies: Reply[]) => {
+    let actors = new Set(replies.map((r) => r.sender));
+    let newSeenActors: string[] = [];
+    actors.forEach((a) => {
+      if (!config.seenActors.includes(a)) newSeenActors.push(a);
+    });
+    if (newSeenActors.length > 0) {
+      onConfigUpdate({ seenActors: [...config.seenActors, ...newSeenActors] });
+    }
+  };
 
   const filterReplies = (replies: Reply[]) =>
     replies
       .filter(
         (x) =>
-          config.selectedActors?.length === 0 ||
-          config.selectedActors?.includes(x.sender)
+          config.selectedActors.length === 0 ||
+          config.selectedActors.includes(x.sender)
       )
       .map((r) => getMessageMemo(r))
       .filter((x) => x !== null);
 
-  const parseReply = (newReplies?: Reply | Reply[]) => {
+  const parseReply = (newReplies?: Reply[]) => {
     if (newReplies !== undefined) {
-      if (!Array.isArray(newReplies)) newReplies = [newReplies];
+      setReplies((prevReplies) => [...prevReplies, ...newReplies]);
 
-      setReplies((prevReplies) => [
-        ...prevReplies,
-        ...(newReplies as Reply[])
-      ]);
+      let nMessages = config.nMessages;
+      let joinedMessages: any[];
 
-      newReplies.forEach((reply) => {
-        if (config.seenActors && !config.seenActors.includes(reply.sender)) {
-          onConfigUpdate({
-            seenActors: [...config.seenActors, reply.sender].sort()
-          });
-        }
-      });
+      if (config.nMessages > 0 && newReplies.length >= nMessages) {
+        let newMessages = filterReplies(newReplies.slice(-nMessages));
+        joinedMessages = newMessages;
+      } else {
+        let newMessages = filterReplies(newReplies);
+        joinedMessages = [...messages.slice(-nMessages), ...newMessages];
+      }
 
-      let newMessages = filterReplies(newReplies);
-
-      setMessages((prevMessages: MessageReturnType[]) => [
-        ...prevMessages.slice(-config.nMessages!),
-        ...newMessages
-      ]);
+      setMessages(joinedMessages);
+      updateSeenActors(newReplies);
     } else {
-      setMessages(filterReplies(replies).slice(-config.nMessages!));
+      setMessages(filterReplies(replies.slice(-config.nMessages)));
+      updateSeenActors(replies.slice(-config.nMessages));
     }
   };
 
@@ -185,7 +176,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
     // Call parseReply without arguments forces a full re-render.
     parseReply();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config]);
+  }, [config.levels, config.selectedActors, config.nMessages]);
 
   React.useEffect(() => {
     // Manually force scroll to bottom, only if we are already at bottom.
