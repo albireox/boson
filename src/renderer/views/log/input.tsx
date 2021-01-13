@@ -33,16 +33,19 @@ const useStyles = makeStyles((theme) => ({
 const CommandInput: React.FC<TextFieldProps> = (props) => {
   const classes = useStyles();
   const commandRef = React.useRef<any>(null);
+  const [error, setError] = React.useState(false);
 
   const handleCommand = (event: SyntheticEvent) => {
     event.preventDefault();
 
-    window.api.invoke(
-      'tron-send-command',
-      commandRef.current.firstChild.value
-    );
+    let value = commandRef.current.firstChild.value.trim();
 
-    commandRef.current.firstChild.value = '';
+    if (value.length > 0) {
+      window.api.invoke('tron-send-command', value);
+      commandRef.current.firstChild.value = '';
+    } else {
+      setError(true);
+    }
   };
 
   return (
@@ -50,9 +53,12 @@ const CommandInput: React.FC<TextFieldProps> = (props) => {
       <form
         onSubmit={handleCommand}
         autoComplete='off'
+        noValidate
         style={{ width: '100%' }}
       >
         <OutlinedInput
+          error={error}
+          onChange={() => setError(false)}
           className={classes.commandInput}
           ref={commandRef}
           fullWidth
