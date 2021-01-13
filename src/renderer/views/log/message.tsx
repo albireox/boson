@@ -137,11 +137,16 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
       let nMessages = config.nMessages;
       let joinedMessages: any[];
 
+      if (nMessages > 0 && newReplies.length >= nMessages) {
         let newMessages = filterReplies(newReplies).slice(-nMessages);
         joinedMessages = newMessages;
       } else {
         let newMessages = filterReplies(newReplies);
-        joinedMessages = [...messages.slice(-nMessages), ...newMessages];
+        let sliceN =
+          messages.length + newMessages.length < nMessages
+            ? 0
+            : messages.length - newMessages.length;
+        joinedMessages = [...messages.slice(-sliceN), ...newMessages];
       }
 
       setMessages(joinedMessages);
