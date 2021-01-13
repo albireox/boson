@@ -1228,6 +1228,11 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
+"@iconify-icons/file-icons@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@iconify-icons/file-icons/-/file-icons-1.1.2.tgz#d61a423c2c128aab5bebcb3cd086f02a75100586"
+  integrity sha512-E4IPylLhvHEZ9fQZdGFCzjUM3ziV8r77EsMx8lb3lUNzhLlh10snsOAvIKf01xR/Hw5SF+SiwUNevi/TZB1Q8g==
+
 "@iconify/icons-mdi@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@iconify/icons-mdi/-/icons-mdi-1.1.2.tgz#3326f4a56d69280976756c657cb0c80e416956ca"

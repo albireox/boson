@@ -8,6 +8,8 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import regexIcon from '@iconify-icons/file-icons/regex';
+import { InlineIcon } from '@iconify/react';
 import {
   Box,
   BoxProps,
@@ -28,19 +30,20 @@ import {
   Tooltip,
   useTheme
 } from '@material-ui/core';
-import { SearchIcon } from '@material-ui/data-grid';
 import {
   BookOutlined,
   ErrorOutlineOutlined,
   InfoOutlined,
   Refresh,
-  ReportProblemOutlined
+  ReportProblemOutlined,
+  Search
 } from '@material-ui/icons';
 import {
   ToggleButton,
   ToggleButtonGroup,
   ToggleButtonProps
 } from '@material-ui/lab';
+import { ReplyCode, ReplyCodeMap, ReplyCodeReverseMap } from 'main/tron';
 import React from 'react';
 import {
   ConfigContext,
@@ -51,7 +54,7 @@ import {
 
 // Message level
 type MessageLevelButtonsProps = ToggleButtonProps & {
-  onConfigUpdate: (newConfig: ConfigState) => void;
+  onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
 };
 
 const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
@@ -59,11 +62,29 @@ const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
   ...props
 }) => {
   const config = React.useContext(ConfigContext);
-  const [levels, setLevels] = React.useState(config.levels);
+
+  const allowedLevels = ['d', 'i', 'w', 'e'];
+  const [levels, setLevels] = React.useState<string[]>(
+    config.levels
+      .map((l) => ReplyCodeMap.get(l)!)
+      .filter((x) => allowedLevels.includes(x))
+  );
 
   const updateLevels = (newLevels: string[]) => {
     setLevels(newLevels);
-    onConfigUpdate({ levels: newLevels });
+    let codes: ReplyCode[] = [];
+    for (let l of newLevels) {
+      if (l === 'e') {
+        codes.push.apply(codes, [ReplyCode.Error, ReplyCode.Failed]);
+      } else if (l === 'i') {
+        codes.push.apply(codes, [ReplyCode.Info, ReplyCode.Done]);
+      } else if (l === 'd') {
+        codes.push.apply(codes, [ReplyCode.Debug, ReplyCode.Running]);
+      } else {
+        codes.push(ReplyCodeReverseMap.get(l)!);
+      }
+    }
+    onConfigUpdate({ levels: codes });
   };
 
   return (
@@ -72,22 +93,22 @@ const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
       value={levels}
       onChange={(event, newLevels: string[]) => updateLevels(newLevels)}
     >
-      <ToggleButton value='debug'>
+      <ToggleButton value='d'>
         <Tooltip title='Debug'>
           <BookOutlined />
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value='info'>
+      <ToggleButton value='i'>
         <Tooltip title='Info'>
           <InfoOutlined />
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value='warning'>
+      <ToggleButton value='w'>
         <Tooltip title='Warning'>
           <ReportProblemOutlined />
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value='error'>
+      <ToggleButton value='e'>
         <Tooltip title='Error'>
           <ErrorOutlineOutlined />
         </Tooltip>
@@ -98,7 +119,7 @@ const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
 
 // Selected actors
 type SelectActorsProps = TextFieldProps & {
-  onConfigUpdate: (newConfig: ConfigState) => void;
+  onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
 };
 
 const SelectActors: React.FC<SelectActorsProps> = ({
@@ -175,7 +196,7 @@ const SelectActors: React.FC<SelectActorsProps> = ({
           All
         </MenuItem>
       }
-      {config.seenActors?.map((actor) => (
+      {[...config.seenActors].sort().map((actor) => (
         <MenuItem
           key={actor}
           value={actor}
@@ -190,7 +211,7 @@ const SelectActors: React.FC<SelectActorsProps> = ({
 
 // Number of messages
 type SelectNumberMessagesProps = FormControlProps & {
-  onConfigUpdate: (newConfig: ConfigState) => void;
+  onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
 };
 
 const SelectNumberMessages: React.FC<SelectNumberMessagesProps> = ({
@@ -255,48 +276,72 @@ const useStyles = makeStyles((theme) => ({
     padding: 10
   },
   divider: {
-    height: 22,
-    margin: 4
+    height: 22
   }
 }));
 
 // Search field
 type SearchBarProps = PaperProps & {
-  onSearchUpdate: (newSearch: SearchState) => void;
+  onSearchUpdate: (newSearch: Partial<SearchState>) => void;
 };
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
   const classes = useStyles();
   const search = React.useContext(SearchContext);
 
-  const [searchButtonColor, setSearchColorButton] = React.useState<any>(
-    'default'
-  );
+  const [searchColor, setSearchColor] = React.useState<any>('default');
+  const [regExColor, setRegExColor] = React.useState<any>('default');
 
-  const handleSearch = () => {
-    if (!search.limit) {
-      onSearchUpdate({ limit: true });
-    } else {
-      onSearchUpdate({ limit: false });
-    }
+  const handleLimit = (event: React.MouseEvent) => {
+    event.preventDefault();
+    search.limit
+      ? onSearchUpdate({ limit: false })
+      : onSearchUpdate({ limit: true });
+  };
+
+  const handleRegEx = (event: React.MouseEvent) => {
+    event.preventDefault();
+    search.regExp
+      ? onSearchUpdate({ regExp: false })
+      : onSearchUpdate({ regExp: true });
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    let value = event.currentTarget.value;
+    value.length < 3
+      ? onSearchUpdate({ searchOn: false, searchExpr: undefined })
+      : onSearchUpdate({ searchOn: true, searchExpr: value });
   };
 
   React.useEffect(() => {
-    setSearchColorButton(search.limit ? 'secondary' : 'default');
+    setSearchColor(search.limit ? 'secondary' : 'default');
+    setRegExColor(search.regExp ? 'secondary' : 'default');
   }, [search]);
 
   return (
     <Paper component='form' {...props}>
-      <InputBase className={classes.searchInput} placeholder='Search' />
-      <Divider className={classes.divider} orientation='vertical' />
+      <InputBase
+        className={classes.searchInput}
+        placeholder='Search'
+        onChange={handleChange}
+      />
       <IconButton
         size='small'
         className={classes.searchButton}
-        color={searchButtonColor}
-        onClick={handleSearch}
+        color={searchColor}
+        onClick={handleLimit}
         style={{ background: 'transparent' }} // For some reason needs to be a style
       >
-        <SearchIcon />
+        <Search />
+      </IconButton>
+      <Divider className={classes.divider} orientation='vertical' />
+      <IconButton
+        style={{ background: 'transparent' }}
+        onClick={handleRegEx}
+        color={regExColor}
+      >
+        <InlineIcon icon={regexIcon} style={{ fontSize: '14px' }} />
       </IconButton>
     </Paper>
   );
@@ -304,8 +349,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
 
 // Menu bar
 type MenuBarProps = BoxProps & {
-  onConfigUpdate: (newConfig: ConfigState) => void;
-  onSearchUpdate: (newSearch: SearchState) => void;
+  onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
+  onSearchUpdate: (newSearch: Partial<SearchState>) => void;
 };
 
 const MenuBar: React.FC<MenuBarProps> = ({

@@ -66,6 +66,7 @@
     ]
   },
   "devDependencies": {
+    "@iconify-icons/file-icons": "^1.1.2",
     "@types/electron-devtools-installer": "^2.2.0",
     "@types/jest": "26.0.15",
     "@types/lodash": "^4.14.167",

@@ -9,6 +9,7 @@
  */
 
 import { makeStyles } from '@material-ui/core';
+import { ReplyCode } from 'main/tron';
 import React, { Fragment } from 'react';
 import CommandInput from './input';
 import MenuBar from './menubar';
@@ -23,21 +24,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface ConfigState {
-  levels?: string[];
-  nMessages?: number;
-  seenActors?: string[];
-  selectedActors?: string[];
+  levels: ReplyCode[];
+  nMessages: number;
+  seenActors: string[];
+  selectedActors: string[];
 }
 
 export interface SearchState {
-  searchOn?: boolean;
-  searchExpr?: string | undefined;
-  limit?: boolean;
-  regExp?: boolean;
+  searchOn: boolean;
+  searchExpr: string | undefined;
+  limit: boolean;
+  regExp: boolean;
 }
 
 const IConfigState = {
-  levels: ['info', 'warning', 'error'],
+  levels: [
+    ReplyCode.Info,
+    ReplyCode.Warning,
+    ReplyCode.Error,
+    ReplyCode.Failed,
+    ReplyCode.Done
+  ],
   nMessages: 10000,
   seenActors: [],
   selectedActors: []
@@ -59,13 +66,12 @@ export function LogView() {
   const [config, setConfig] = React.useState<ConfigState>(IConfigState);
   const [search, setSearch] = React.useState<SearchState>(ISearchState);
 
-  const onConfigUpdate = (newConfig: ConfigState) => {
+  const onConfigUpdate = (newConfig: Partial<ConfigState>) => {
     setConfig({ ...config, ...newConfig });
   };
 
-  const onSearchUpdate = (newSearch: SearchState) => {
-    console.log(newSearch);
-    setSearch(newSearch);
+  const onSearchUpdate = (newSearch: Partial<SearchState>) => {
+    setSearch({ ...search, ...newSearch });
   };
 
   return (
