@@ -137,8 +137,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
       let nMessages = config.nMessages;
       let joinedMessages: any[];
 
-      if (config.nMessages > 0 && newReplies.length >= nMessages) {
-        let newMessages = filterReplies(newReplies.slice(-nMessages));
+        let newMessages = filterReplies(newReplies).slice(-nMessages);
         joinedMessages = newMessages;
       } else {
         let newMessages = filterReplies(newReplies);
@@ -148,7 +147,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
       setMessages(joinedMessages);
       updateSeenActors(newReplies);
     } else {
-      setMessages(filterReplies(replies.slice(-config.nMessages)));
+      setMessages(filterReplies(replies).slice(-config.nMessages));
       updateSeenActors(replies.slice(-config.nMessages));
     }
   };
