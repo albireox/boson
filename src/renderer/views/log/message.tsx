@@ -8,28 +8,15 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  makeStyles,
-  Theme,
-  Typography,
-  TypographyProps
-} from '@material-ui/core';
+import { Theme, Typography, TypographyProps } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import { Reply, ReplyCode } from 'main/tron';
 import React from 'react';
-import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import FollowScroll, {
+  FollowScrollHandle
+} from 'renderer/components/followScroll';
 import { useListener } from 'renderer/hooks';
 import { ConfigContext, ConfigState } from './index';
-
-const useStyles = makeStyles((theme) => ({
-  logBox: {
-    flexGrow: 1,
-    height: '80%',
-    width: '100vw',
-    overflowY: 'scroll',
-    padding: '2px 8px 4px'
-  }
-}));
 
 function formatDate(date: string) {
   return date.split(' ')[4];
@@ -87,28 +74,16 @@ const Message: React.FC<MessageProps> = ({ reply, ...props }) => {
   );
 };
 
-type MessageReturnType = ReturnType<typeof Message>;
 type MessagesProps = {
   onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
 };
 
 const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
-  const USE_VIRTUOSO = false;
-
-  const classes = useStyles();
-
-  const [messages, setMessages] = React.useState<MessageReturnType[]>([]);
   const [replies, setReplies] = React.useState<Reply[]>([]);
-  const [firstRender, setFirstRender] = React.useState(true);
-
-  const [atBottom, setAtBottom] = React.useState(true);
-  const [autoScroll, setAutoScroll] = React.useState(true);
-
-  const virtuosoRef = React.useRef<VirtuosoHandle>(null);
-
-  let scrollTimer: any = null;
 
   const config = React.useContext(ConfigContext);
+
+  const ref = React.useRef<FollowScrollHandle>(null);
 
   const getMessageMemo = React.useCallback(
     (reply: Reply) => getMessage(reply, config.levels),
@@ -139,129 +114,25 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
 
   const parseReply = (newReplies?: Reply[]) => {
     if (newReplies !== undefined) {
-      // if (newReplies.length < 10000) return;
       setReplies((prevReplies) => [...prevReplies, ...newReplies]);
-
-      // If we are not at bottom, do not add messages to the window. This
-      // prevents the feed scrolling up when we actually want it to be static.
-      // Once we are back at bottom, we'll refresh all the messages.
-      if (!atBottom) return;
-
       let nMessages = config.nMessages;
-      let joinedMessages: any[];
-
-      if (nMessages > 0 && newReplies.length >= nMessages) {
-        let newMessages = filterReplies(newReplies, nMessages);
-        joinedMessages = newMessages;
-      } else {
-        let newMessages = filterReplies(newReplies);
-        let sliceN =
-          messages.length + newMessages.length < nMessages
-            ? 0
-            : messages.length - newMessages.length;
-        joinedMessages = [...messages.slice(-sliceN), ...newMessages];
-      }
-
-      setMessages(joinedMessages);
+      let newMessages = filterReplies(newReplies, nMessages);
+      ref.current?.update(newMessages);
       updateSeenActors(newReplies);
     } else {
-      setMessages(filterReplies(replies, config.nMessages));
+      ref.current?.reset(filterReplies(replies, config.nMessages));
       updateSeenActors(replies.slice(-config.nMessages));
     }
-    scrollToBottom();
   };
 
   useListener(parseReply);
-
-  // Called when the div scrolls. It is also called when we do an automatic
-  // scroll to bottom. If the scroll was automatic, autoScroll = true, in that
-  // case we just set it to false. If it's false, we check the scroll position
-  // compared with the bottom of the div and if the difference is < 50 (to
-  // give it some margin in case of bounce), we say we are at the bottom.
-  // We do this with a delay so that we don't do this check while we are
-  // actually scrolling. See https://bit.ly/3nICFBE.
-  const handleScroll = (): any => {
-    if (scrollTimer !== null) {
-      clearTimeout(scrollTimer);
-    }
-    scrollTimer = setTimeout(() => {
-      if (!autoScroll) {
-        // At this point event is not really current, so we manually get the
-        // element to check.
-        const currentTarget = USE_VIRTUOSO
-          ? document.getElementById('virtuoso')
-          : document.getElementById('logBox');
-        if (currentTarget) {
-          const scrollHeight =
-            currentTarget.scrollHeight - currentTarget.scrollTop;
-          const bottom = scrollHeight - currentTarget.clientHeight < 50;
-
-          // If we are at the bottom, refresh all the messages since we
-          // haven't been updating them while scrolled up.
-          if (bottom) parseReply();
-          setAtBottom(bottom);
-        }
-      } else {
-        setAutoScroll(false);
-      }
-    }, 15);
-  };
 
   React.useEffect(() => {
     parseReply(); // Call parseReply without arguments forces a full re-render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.levels, config.selectedActors, config.nMessages]);
 
-  const scrollToBottom = () => {
-    // Manually force scroll to bottom, only if we are already at bottom.
-    if (atBottom || firstRender) {
-      // Indicate the following scroll was not done by the user.
-      setAutoScroll(true);
-      if (!USE_VIRTUOSO) {
-        document.getElementById('scrollAnchor')?.scrollIntoView();
-      } else {
-        if (virtuosoRef && virtuosoRef.current) {
-          virtuosoRef!.current!.scrollToIndex({
-            index: messages.length - 1,
-            align: 'end',
-            behavior: 'auto'
-          });
-        }
-      }
-      if (firstRender) setFirstRender(false);
-    }
-  };
-
-  const getMessageViewer = () => {
-    if (USE_VIRTUOSO) {
-      return (
-        <Virtuoso
-          id='virtuoso'
-          onScroll={handleScroll}
-          ref={virtuosoRef}
-          data={messages}
-          itemContent={(index, message) => message}
-        />
-      );
-    } else {
-      return (
-        <div>
-          {messages}
-          <div id='scrollAnchor'></div>
-        </div>
-      );
-    }
-  };
-
-  return (
-    <div
-      className={classes.logBox}
-      id='logBox'
-      onScroll={USE_VIRTUOSO ? undefined : handleScroll}
-    >
-      {getMessageViewer()}
-    </div>
-  );
+  return <FollowScroll virtuoso maxCount={config.nMessages} ref={ref} />;
 };
 
 export default Messages;
