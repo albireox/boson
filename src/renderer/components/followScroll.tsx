@@ -138,7 +138,7 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
           setFBColour('default');
         }
         setAtBottom(bottom);
-      }, 500);
+      }, 100);
     };
 
     const scrollToBottom = () => {
