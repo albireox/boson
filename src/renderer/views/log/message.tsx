@@ -74,12 +74,14 @@ const Message: React.FC<MessageProps> = ({ reply, ...props }) => {
   );
 };
 
+type MessageReturnType = ReturnType<typeof Message>;
 type MessagesProps = {
   onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
 };
 
 const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   const [replies, setReplies] = React.useState<Reply[]>([]);
+  const [messages, setMessages] = React.useState<MessageReturnType[]>([]);
 
   const config = React.useContext(ConfigContext);
 
@@ -101,8 +103,8 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
     }
   };
 
-  const filterReplies = (replies: Reply[], keepMessages = 0) =>
-    replies
+  const filterReplies = (replies: Reply[], keepMessages = 0) => {
+    return replies
       .filter(
         (x) =>
           config.selectedActors.length === 0 ||
@@ -111,7 +113,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
       .slice(-keepMessages)
       .map((r) => getMessageMemo(r))
       .filter((x) => x !== null);
-
+  };
   const parseReply = (newReplies?: Reply[]) => {
     if (newReplies !== undefined) {
       setReplies((prevReplies) => [...prevReplies, ...newReplies]);
@@ -120,7 +122,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
       ref.current?.update(newMessages);
       updateSeenActors(newReplies);
     } else {
-      ref.current?.reset(filterReplies(replies, config.nMessages));
+      setMessages(filterReplies(replies, config.nMessages));
       updateSeenActors(replies.slice(-config.nMessages));
     }
   };
@@ -128,11 +130,18 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   useListener(parseReply);
 
   React.useEffect(() => {
-    parseReply(); // Call parseReply without arguments forces a full re-render
+    parseReply(); // Call parseReply without arguments forces a full filtering.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.levels, config.selectedActors, config.nMessages]);
 
-  return <FollowScroll virtuoso maxCount={config.nMessages} ref={ref} />;
+  return (
+    <FollowScroll
+      virtuoso
+      maxCount={config.nMessages}
+      ref={ref}
+      data={messages}
+    />
+  );
 };
 
 export default Messages;
