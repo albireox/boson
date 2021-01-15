@@ -367,11 +367,11 @@ const MenuBar: React.FC<MenuBarProps> = ({
         onConfigUpdate={onConfigUpdate}
         className={classes.selectActors}
       />
-      <SelectNumberMessages
+      {/* <SelectNumberMessages
         id='selectNumberMessages'
         onConfigUpdate={onConfigUpdate}
         className={classes.selectNumber}
-      />
+      /> */}
       <SearchBar onSearchUpdate={onSearchUpdate} className={classes.paper} />
     </Box>
   );

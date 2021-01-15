@@ -45,7 +45,7 @@ const IConfigState = {
     ReplyCode.Failed,
     ReplyCode.Done
   ],
-  nMessages: 10000,
+  nMessages: 0, // Not in use
   seenActors: [],
   selectedActors: []
 };
