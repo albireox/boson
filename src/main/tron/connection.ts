@@ -241,6 +241,11 @@ export default class TronConnection {
     this.client.end();
   }
 
+  clear() {
+    this.replies = [];
+    this.jsonReplies = [];
+  }
+
   async sendCommand(commandString: string) {
     let command = new Command(commandString);
     this.commands[command.commandId] = command;

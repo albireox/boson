@@ -1,4 +1,4 @@
-import { app, Menu, shell } from 'electron';
+import { app, BrowserWindow, dialog, Menu, shell } from 'electron';
 import { createWindow, saveWindowPositions } from './main';
 import TronConnection from './tron/connection';
 
@@ -33,6 +33,26 @@ const template: any[] = [
               id: 'log',
               accelerator: 'Cmd+N',
               click: () => createWindow('log')
+            },
+            {
+              label: 'Clear Logs',
+              id: 'clear-logs',
+              click: () => {
+                dialog
+                  .showMessageBox({
+                    type: 'question',
+                    message: 'Remove log messages?',
+                    buttons: ['Yes', 'No']
+                  })
+                  .then((response) => {
+                    if (response.response === 0) {
+                      BrowserWindow.getAllWindows().forEach((win) => {
+                        win.webContents.send('clear-logs');
+                        tron.clear();
+                      });
+                    }
+                  });
+              }
             },
             { type: 'separator' },
             {
