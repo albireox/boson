@@ -79,69 +79,94 @@ type MessagesProps = {
   onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
 };
 
+const filterReplies = (
+  replies: Reply[],
+  config: ConfigState,
+  keepMessages = 0
+) => {
+  return replies
+    .filter(
+      (x) =>
+        config.selectedActors.length === 0 ||
+        config.selectedActors.includes(x.sender)
+    )
+    .slice(-keepMessages)
+    .map((r) => getMessage(r, config.levels))
+    .filter((x) => x !== null);
+};
+
+interface ReducerState {
+  replies: Reply[];
+  messages: MessageReturnType[];
+}
+
+const initialState: ReducerState = {
+  replies: [] as Reply[],
+  messages: [] as MessageReturnType[]
+};
+
+const reducer = (
+  state: ReducerState,
+  action: { type: string; config?: ConfigState; data?: Reply[] }
+) => {
+  if (action.type === 'append') {
+    return {
+      replies: [...state.replies, ...action.data!],
+      messages: [
+        ...state.messages,
+        ...filterReplies(action.data!, action.config!)
+      ]
+    };
+  } else if (action.type === 'refresh') {
+    return {
+      messages: filterReplies(state.replies, action.config!),
+      replies: state.replies
+    };
+  } else if (action.type === 'clear') {
+    return initialState;
+  }
+  return { messages: state.messages, replies: state.replies };
+};
+
 const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
-  const [replies, setReplies] = React.useState<Reply[]>([]);
-  const [messages, setMessages] = React.useState<MessageReturnType[]>([]);
+  const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const config = React.useContext(ConfigContext);
-
   const ref = React.useRef<FollowScrollHandle>(null);
 
-  const getMessageMemo = React.useCallback(
-    (reply: Reply) => getMessage(reply, config.levels),
-    [config.levels]
+  const updateSeenActors = React.useCallback(
+    (replies: Reply[]) => {
+      let actors = new Set(replies.map((r) => r.sender));
+      let newSeenActors: string[] = [];
+      actors.forEach((a) => {
+        if (!config.seenActors.includes(a) && !a.startsWith('keys_'))
+          newSeenActors.push(a);
+      });
+      if (newSeenActors.length > 0) {
+        onConfigUpdate({
+          seenActors: [...config.seenActors, ...newSeenActors]
+        });
+      }
+    },
+    [config.seenActors, onConfigUpdate]
   );
-
-  const updateSeenActors = async (replies: Reply[]) => {
-    let actors = new Set(replies.map((r) => r.sender));
-    let newSeenActors: string[] = [];
-    actors.forEach((a) => {
-      if (!config.seenActors.includes(a)) newSeenActors.push(a);
-    });
-    if (newSeenActors.length > 0) {
-      onConfigUpdate({ seenActors: [...config.seenActors, ...newSeenActors] });
-    }
-  };
-
-  const filterReplies = (replies: Reply[], keepMessages = 0) => {
-    return replies
-      .filter(
-        (x) =>
-          config.selectedActors.length === 0 ||
-          config.selectedActors.includes(x.sender)
-      )
-      .slice(-keepMessages)
-      .map((r) => getMessageMemo(r))
-      .filter((x) => x !== null);
-  };
-  const parseReply = (newReplies?: Reply[]) => {
-    if (newReplies !== undefined) {
-      setReplies((prevReplies) => [...prevReplies, ...newReplies]);
-      let nMessages = config.nMessages;
-      let newMessages = filterReplies(newReplies, nMessages);
-      ref.current?.update(newMessages);
-      updateSeenActors(newReplies);
-    } else {
-      setMessages(filterReplies(replies, config.nMessages));
-      updateSeenActors(replies.slice(-config.nMessages));
-    }
-  };
-
-  useListener(parseReply);
 
   React.useEffect(() => {
-    parseReply(); // Call parseReply without arguments forces a full filtering.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config.levels, config.selectedActors, config.nMessages]);
+    // Not in use for now, but this allows to clear all the logs from the
+    // menu or main.
+    window.api.on('clear-logs', () => dispatch({ type: 'clear' }));
+  }, []);
 
-  return (
-    <FollowScroll
-      virtuoso
-      maxCount={config.nMessages}
-      ref={ref}
-      data={messages}
-    />
-  );
+  React.useEffect(() => {
+    dispatch({ type: 'refresh', config: config });
+  }, [config]);
+
+  useListener((replies: Reply[]) => {
+    dispatch({ type: 'append', data: replies, config: config });
+    updateSeenActors(replies);
+  });
+
+  return <FollowScroll virtuoso ref={ref} messages={state.messages} sticky />;
 };
 
 export default Messages;
