@@ -70,8 +70,12 @@ export function useKeywords(keys: string[], channel: string) {
       channel
     );
 
+    const unload = () =>
+      window.api.invoke('tron-remove-model-listener', channel);
+    window.addEventListener('unload', unload);
+
     // Unsubscribe when component unmounts.
-    return () => window.api.invoke('tron-remove-model-listener', channel);
+    return () => unload();
   }, [updateKeywords]);
 
   return keywords;
@@ -88,21 +92,22 @@ export function useListener(
   onReceived: (reply: Reply[]) => any,
   sendAll = true
 ) {
-  const parseReplies = (replies: string[]) => {
-    // Deserialise the replies. Each item in the list is a stringified reply.
-    onReceived(replies.map((r) => JSON.parse(r)));
-  };
-  window.api.on('tron-model-received-reply', parseReplies);
+  const params = useRef({ onReceived, sendAll });
 
-  const removeListener = () => {
-    window.api.invoke('tron-remove-streamer-window');
-  };
+  const parseReplies = useCallback((replies: string[]) => {
+    // Deserialise the replies. Each item in the list is a stringified reply.
+    params.current.onReceived(replies.map((r) => JSON.parse(r)));
+  }, []);
 
   useEffect(() => {
-    window.api.invoke('tron-add-streamer-window', sendAll);
-    window.addEventListener('beforeunload', removeListener);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    window.api.on('tron-model-received-reply', parseReplies);
+    window.api.invoke('tron-add-streamer-window', params.current.sendAll);
+
+    const unload = () => window.api.invoke('tron-remove-streamer-window');
+    window.addEventListener('unload', unload);
+
+    return () => unload();
+  }, [parseReplies]);
 }
 
 /**
