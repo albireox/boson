@@ -44,7 +44,7 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
     const virtuosoRef = React.useRef<VirtuosoHandle>(null);
 
     const [atBottom, setAtBottom] = React.useState<null | boolean>(null);
-    const [autoscroll, setAutoscroll] = React.useState(false);
+    const [autoscrolling, setAutoscrolling] = React.useState(false);
 
     const prevCountRef = React.useRef(0);
     const prevCount = prevCountRef.current;
@@ -68,23 +68,26 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
         const scrollHeight =
           currentTarget!.scrollHeight - currentTarget!.scrollTop;
         const bottom = scrollHeight - currentTarget!.clientHeight < 200;
-        if (bottom && autoscroll) setAutoscroll(false);
-        if (isAtBottom !== undefined) isAtBottom(bottom);
-        setAtBottom(bottom);
+        if (bottom && autoscrolling) setAutoscrolling(false);
+        if (!autoscrolling) {
+          if (isAtBottom !== undefined) isAtBottom(bottom);
+          setAtBottom(bottom);
+        } else {
+          setAtBottom(true);
+          if (isAtBottom !== undefined) isAtBottom(true);
+        }
       }, 50);
-    }, [isAtBottom, autoscroll]);
+    }, [isAtBottom, autoscrolling]);
 
     const triggerScroll = React.useCallback(() => {
-      // Scroll only if we are sticky or already at the bottom and there has
-      // been a change in the number of messages.
-      let diff = Math.abs(children.length - prevCount);
-      if ((stick || atBottom) && diff > 0) {
+      // Only scroll if we are already at bottom or is sticky.
+      if (stick || atBottom) {
         prevCountRef.current = children.length;
         const target = document.getElementById('virtuoso');
         if (!target) return;
         const scrollHeight = target.scrollHeight - target.scrollTop;
 
-        setAutoscroll(true);
+        setAutoscrolling(true);
         virtuosoRef.current?.scrollToIndex({
           index: children.length - 1,
           align: 'end',
@@ -92,18 +95,9 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
         });
         return;
       }
-    }, [stick, atBottom, children.length, prevCount]);
+    }, [stick, atBottom, children.length]);
 
-    React.useEffect(() => {
-      // This seems to work a bit better than triggering a scroll every time
-      // the messages change because there's sometimes a delay between the
-      // effect being triggered and the viewport changing. This also limits
-      // the number of scrolls a bit.
-      let timeout = setTimeout(triggerScroll, 500);
-      return () => clearTimeout(timeout);
-    }, [triggerScroll]);
-
-    // React.useEffect(() => triggerScroll(), [stick, triggerScroll]);
+    React.useEffect(() => triggerScroll(), [stick, triggerScroll]);
 
     if (virtuoso) {
       // We force a full re-render instead of having Virtuoso recalculate
