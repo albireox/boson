@@ -88,7 +88,6 @@ export default function ConnectView() {
   const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
 
   let updateHeight = () => {
-    console.log('here');
     window.api.invoke(
       'window-set-size',
       NAME,
