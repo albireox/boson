@@ -64,7 +64,7 @@ const useStyles = makeStyles({
 
 export default function KeywordsView() {
   const classes = useStyles();
-  const keywords = useKeywords(['*']);
+  const keywords = useKeywords(['*'], 'keyword-viewer');
 
   const formatRows = (kws: KeywordMap): RowsProp => {
     let result: RowsProp = [];
