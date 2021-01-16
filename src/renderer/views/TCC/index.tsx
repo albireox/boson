@@ -60,7 +60,7 @@ const TCCRule = styled('hr')(({ theme }) => ({
 }));
 
 export const TCCTable = styled(Table)({
-  margin: '4px 0px',
+  margin: 0,
   width: '100%',
   '& > * > * > td': {
     fontSize: '13px',
@@ -75,8 +75,8 @@ export const TCCTable = styled(Table)({
 
 export default function TCCView() {
   return (
-    <div style={{ marginTop: '4px' }}>
-      <TCCRule style={{ marginTop: '-2px' }} />
+    <div>
+      <TCCRule style={{ marginTop: '0px' }} />
       <NetPosTable />
       <TCCRule />
       <MiscTable />

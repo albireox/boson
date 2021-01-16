@@ -88,11 +88,12 @@ export default function ConnectView() {
   const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
 
   let updateHeight = () => {
+    console.log('here');
     window.api.invoke(
       'window-set-size',
       NAME,
-      document.getElementById('root')?.scrollWidth as number,
-      (document.getElementById('root')?.scrollHeight as number) + 32,
+      document.getElementById('container')?.scrollWidth as number,
+      (document.getElementById('container')?.scrollHeight as number) + 32,
       true
     );
   };
@@ -106,7 +107,6 @@ export default function ConnectView() {
   }, [error]);
 
   React.useEffect(() => {
-    updateHeight();
     window.api.store
       .get([
         'user.connection.program',
@@ -125,17 +125,18 @@ export default function ConnectView() {
         return [...res, ''];
       })
       .then((res: any) => {
-        setConnectForm({
-          ...connectForm,
-          program: res[0] || '',
-          user: res[1] || '',
-          host: res[2] || '',
-          httpHost: res[3] || '',
-          httpPort: res[4] || '',
-          password: res[5] || ''
+        setConnectForm((prev) => {
+          return {
+            ...prev,
+            program: res[0] || '',
+            user: res[1] || '',
+            host: res[2] || '',
+            httpHost: res[3] || '',
+            httpPort: res[4] || '',
+            password: res[5] || ''
+          };
         });
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   let storeCredentials = () => {
@@ -218,6 +219,7 @@ export default function ConnectView() {
         <LinearProgress className={classes.progress} color='secondary' />
       ) : null}
       <Container
+        id='container'
         component='div'
         maxWidth='xs'
         style={{ padding: '0px 24px 24px 24px' }}

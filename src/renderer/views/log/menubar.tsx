@@ -254,6 +254,7 @@ const useStyles = makeStyles((theme) => ({
   },
   selectActors: {
     marginLeft: '8px',
+    minHeight: '38px',
     minWidth: '100px',
     maxWidth: '200px',
     '& .MuiSelect-select': {

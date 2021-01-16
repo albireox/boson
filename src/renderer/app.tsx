@@ -25,7 +25,7 @@ function getBosonTheme(theme: string): {} {
       type: theme
     },
     typography: {
-      fontSize: 13
+      fontSize: 12
     }
   };
 
