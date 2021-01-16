@@ -85,7 +85,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
             <TableCell width='110px' />
             <TableCell width='10px' />
             {/*  */}
-            <TableCell width='100px' />
+            <TableCell width='120px' />
             <TableCell width='70px' />
             <TableCell width='50px' />
             <TableCell />

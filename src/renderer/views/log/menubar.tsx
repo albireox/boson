@@ -14,8 +14,6 @@ import {
   Box,
   BoxProps,
   Divider,
-  FormControl,
-  FormControlProps,
   IconButton,
   InputAdornment,
   InputBase,
@@ -23,7 +21,6 @@ import {
   MenuItem,
   Paper,
   PaperProps,
-  Select,
   TextField,
   TextFieldProps,
   Theme,
@@ -210,42 +207,42 @@ const SelectActors: React.FC<SelectActorsProps> = ({
 };
 
 // Number of messages
-type SelectNumberMessagesProps = FormControlProps & {
-  onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
-};
+// type SelectNumberMessagesProps = FormControlProps & {
+//   onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
+// };
 
-const SelectNumberMessages: React.FC<SelectNumberMessagesProps> = ({
-  onConfigUpdate,
-  ...props
-}) => {
-  const config = React.useContext(ConfigContext);
-  const [nMessages, setNMessages] = React.useState(config.nMessages);
+// const SelectNumberMessages: React.FC<SelectNumberMessagesProps> = ({
+//   onConfigUpdate,
+//   ...props
+// }) => {
+//   const config = React.useContext(ConfigContext);
+//   const [nMessages, setNMessages] = React.useState(config.nMessages);
 
-  const updateNMessages = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
-    setNMessages(event.target.value as number);
-    onConfigUpdate({ nMessages: parseInt(event.target.value as string) });
-  };
+//   const updateNMessages = (
+//     event: React.ChangeEvent<{ name?: string; value: unknown }>
+//   ) => {
+//     setNMessages(event.target.value as number);
+//     onConfigUpdate({ nMessages: parseInt(event.target.value as string) });
+//   };
 
-  return (
-    <Tooltip title='Number of messages'>
-      <FormControl variant='outlined' size='small' {...props}>
-        <Select
-          native
-          value={nMessages}
-          onChange={updateNMessages}
-          labelWidth={0}
-        >
-          <option value={1000}>1,000</option>
-          <option value={10000}>10,000</option>
-          <option value={100000}>100,000</option>
-          <option value={0}>Unlimited</option>
-        </Select>
-      </FormControl>
-    </Tooltip>
-  );
-};
+//   return (
+//     <Tooltip title='Number of messages'>
+//       <FormControl variant='outlined' size='small' {...props}>
+//         <Select
+//           native
+//           value={nMessages}
+//           onChange={updateNMessages}
+//           labelWidth={0}
+//         >
+//           <option value={1000}>1,000</option>
+//           <option value={10000}>10,000</option>
+//           <option value={100000}>100,000</option>
+//           <option value={0}>Unlimited</option>
+//         </Select>
+//       </FormControl>
+//     </Tooltip>
+//   );
+// };
 
 const useStyles = makeStyles((theme) => ({
   selectNumber: {
