@@ -46,9 +46,6 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
     const [atBottom, setAtBottom] = React.useState<null | boolean>(null);
     const [autoscrolling, setAutoscrolling] = React.useState(false);
 
-    const prevCountRef = React.useRef(0);
-    const prevCount = prevCountRef.current;
-
     const handleScroll = React.useCallback(() => {
       // Called when the div scrolls. It is also called when we do an automatic
       // scroll to bottom. If the scroll was automatic, autoScroll = true, in
@@ -82,7 +79,6 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
     const triggerScroll = React.useCallback(() => {
       // Only scroll if we are already at bottom or is sticky.
       if (stick || atBottom) {
-        prevCountRef.current = children.length;
         const target = document.getElementById('virtuoso');
         if (!target) return;
         const scrollHeight = target.scrollHeight - target.scrollTop;
