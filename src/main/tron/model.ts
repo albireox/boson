@@ -39,9 +39,15 @@ export default class TronModel {
 
   private _send(event: IpcMainInvokeEvent, channel: string, data: KeywordMap) {
     try {
+      // If the window has been closed
+      if (event.sender.isDestroyed()) {
+        this.removeListener(channel);
+        return;
+      }
       event.sender.send(channel, data);
     } catch (err) {
-      log.error(`Failed sending message to (${event.sender.id}, ${channel})`);
+      let id = event.sender.isDestroyed() ? 'destroyed' : event.sender.id;
+      log.error(`Failed sending message to (${id}, ${channel}): ${err}`);
     }
   }
   /**
@@ -120,25 +126,19 @@ export default class TronModel {
   }
 
   /**
-   * Removes listener for a key or list of keys.
-   * @param event The event that requests to remove the listener.
+   * Removes a listener.
    * @param channel A string with the name of the channel on which the
-   *    renderer window was listening to. If not specified, this effectively
-   *    removes all the listeners for a window.
+   *    renderer window was listening to. All associated keys will be removed.
    */
-  removeListener(event: IpcMainInvokeEvent, channel?: string) {
+  removeListener(channel: string) {
     for (let key in this._listeners) {
       key = key.toLowerCase();
       for (let nn of this._listeners[key].keys()) {
-        let listener = this._listeners[key][nn];
-        if (listener[0].sender.id === event.sender.id) {
-          if (channel && listener[1] !== channel) continue;
-          if (this._listeners[key].length === 1) {
-            delete this._listeners[key];
-          } else {
-            this._listeners[key].splice(nn);
-          }
-          log.debug(`Removing listener (${event.sender.id}, ${channel}).`);
+        if (this._listeners[key][nn][1] === channel) {
+          let event = this._listeners[key][nn][0];
+          let id = event.sender.isDestroyed() ? 'destroyed' : event.sender.id;
+          log.debug(`Removing listener (${id}, ${channel}).`);
+          this._listeners[key].splice(nn);
         }
       }
     }

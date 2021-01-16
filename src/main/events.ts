@@ -94,17 +94,14 @@ export default function loadEvents() {
 
   ipcMain.handle(
     'tron-register-model-listener',
-    async (event, keys: string[], listenOn = 'tron-model-updated') => {
+    async (event, keys: string[], listenOn) => {
       tron.model.registerListener(keys, event, listenOn);
     }
   );
 
-  ipcMain.handle(
-    'tron-remove-model-listener',
-    async (event, listenOn = 'tron-model-updated') => {
-      tron.model.removeListener(event, listenOn);
-    }
-  );
+  ipcMain.handle('tron-remove-model-listener', async (event, listenOn) => {
+    tron.model.removeListener(listenOn);
+  });
 
   ipcMain.handle('tron-model-getall', async (event) => {
     return tron.model.keywords;
