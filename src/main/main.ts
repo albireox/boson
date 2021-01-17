@@ -37,8 +37,6 @@ export function saveWindowPositions() {
   // to the primary or current screen.
 
   for (let [name, win] of windows) {
-    // let win = windows.get(name);
-
     let winScreen = screen.getDisplayMatching(win.getBounds());
     let position = win.getPosition();
 
@@ -134,7 +132,6 @@ export function createWindow(name: string = 'main'): BrowserWindow {
   // Hot Reloading
   if (name === 'main') {
     if (isDev) {
-      // 'node_modules/.bin/electronPath'
       require('electron-reload')(__dirname, {
         electron: path.join(
           __dirname,
@@ -150,14 +147,14 @@ export function createWindow(name: string = 'main'): BrowserWindow {
       });
 
       // DevTools
-      const {
-        default: installExtension,
-        REACT_DEVELOPER_TOOLS
-      } = require('electron-devtools-installer');
+      // const {
+      //   default: installExtension,
+      //   REACT_DEVELOPER_TOOLS
+      // } = require('electron-devtools-installer');
 
-      installExtension(REACT_DEVELOPER_TOOLS)
-        .then((name: string) => console.log(`Added Extension: ${name}`))
-        .catch((err: Error) => console.log('An error occurred: ', err));
+      // installExtension(REACT_DEVELOPER_TOOLS)
+      //   .then((name: string) => console.log(`Added Extension: ${name}`))
+      //   .catch((err: Error) => console.log('An error occurred: ', err));
 
       // win.webContents.openDevTools();
     }
