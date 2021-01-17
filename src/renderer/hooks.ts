@@ -92,22 +92,28 @@ export function useListener(
   onReceived: (reply: Reply[]) => any,
   sendAll = true
 ) {
-  const params = useRef({ onReceived, sendAll });
+  const params = useRef({ sendAll });
 
-  const parseReplies = useCallback((replies: string[]) => {
-    // Deserialise the replies. Each item in the list is a stringified reply.
-    params.current.onReceived(replies.map((r) => JSON.parse(r)));
-  }, []);
+  const parseReplies = useCallback(
+    (replies: string[]) => {
+      // Deserialise the replies. Each item in the list is a stringified reply.
+      onReceived(replies.map((r) => JSON.parse(r)));
+    },
+    [onReceived]
+  );
 
   useEffect(() => {
     window.api.on('tron-model-received-reply', parseReplies);
+  }, [parseReplies]);
+
+  useEffect(() => {
     window.api.invoke('tron-add-streamer-window', params.current.sendAll);
 
     const unload = () => window.api.invoke('tron-remove-streamer-window');
     window.addEventListener('unload', unload);
 
     return () => unload();
-  }, [parseReplies]);
+  }, []);
 }
 
 /**
