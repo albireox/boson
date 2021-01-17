@@ -79,19 +79,28 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
     const triggerScroll = React.useCallback(() => {
       // Only scroll if we are already at bottom or is sticky.
       if (stick || atBottom) {
-        const target = document.getElementById('virtuoso');
+        const target = document.getElementById(
+          virtuoso ? 'virtuoso' : 'messages-container'
+        );
         if (!target) return;
         const scrollHeight = target.scrollHeight - target.scrollTop;
+        const behavior = scrollHeight > 1000 ? 'auto' : 'smooth';
 
-        setAutoscrolling(true);
-        virtuosoRef.current?.scrollToIndex({
-          index: children.length - 1,
-          align: 'end',
-          behavior: scrollHeight > 1000 ? 'auto' : 'smooth'
-        });
-        return;
+        // setAutoscrolling(true);
+        if (virtuoso) {
+          virtuosoRef.current?.scrollToIndex({
+            index: children.length - 1,
+            align: 'end',
+            behavior: behavior
+          });
+        } else {
+          document.getElementById('scrollAnchor')?.scrollIntoView({
+            block: 'end',
+            behavor: behavior
+          } as ScrollIntoViewOptions);
+        }
       }
-    }, [stick, atBottom, children.length]);
+    }, [stick, atBottom, children.length, virtuoso]);
 
     React.useEffect(() => triggerScroll(), [stick, triggerScroll]);
 
@@ -111,8 +120,24 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
           overscan={300}
         />
       );
+    } else {
+      return (
+        <>
+          <div
+            id='messages-container'
+            style={{
+              height: '100%',
+              position: 'relative',
+              overflowY: stick ? 'hidden' : 'scroll'
+            }}
+            onScroll={handleScroll}
+          >
+            {children}
+            <div id='scrollAnchor' />
+          </div>
+        </>
+      );
     }
-    return <div />; // Not implemented
   }
 );
 
