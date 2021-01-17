@@ -12,11 +12,17 @@ import { Theme, Typography, TypographyProps } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import { Reply, ReplyCode } from 'main/tron';
 import React from 'react';
+import Highlighter, { HighlighterProps } from 'react-highlight-words';
 import FollowScroll, {
   FollowScrollHandle
 } from 'renderer/components/followScroll';
 import { useListener } from 'renderer/hooks';
-import { ConfigContext, ConfigState } from './index';
+import {
+  ConfigContext,
+  ConfigState,
+  SearchContext,
+  SearchState
+} from './index';
 
 function formatDate(date: string) {
   return date.split(' ')[4];
@@ -39,19 +45,56 @@ function getMessageColour(theme: Theme, code: ReplyCode) {
   }
 }
 
+function escapeRegExp(string: string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function isVisible(code: ReplyCode, levels: ReplyCode[]) {
   if (levels.includes(code)) return true;
   return false;
 }
 
-export function getMessage(reply: Reply, levels: ReplyCode[]) {
+export function getMessage(
+  reply: Reply,
+  levels: ReplyCode[],
+  search: SearchState
+) {
   if (!isVisible(reply.code, levels)) return null;
-  return <Message reply={reply} key={reply.id} />;
+
+  const highlighterProps: Partial<HighlighterProps> = { searchWords: [] };
+
+  if (search.searchExpr !== '') {
+    if (search.limit) {
+      let message = formatDate(reply.date) + ' ' + reply.rawLine;
+      let regExp = RegExp(
+        search.regExp ? search.searchExpr : escapeRegExp(search.searchExpr),
+        'i'
+      );
+      if (!message.match(regExp)) return null;
+    }
+    highlighterProps.searchWords = [search.searchExpr];
+    highlighterProps.autoEscape = !search.regExp;
+  }
+
+  return (
+    <Message
+      reply={reply}
+      key={reply.id}
+      HighlighterProps={highlighterProps}
+    />
+  );
 }
 
-type MessageProps = TypographyProps & { reply: Reply };
+type MessageProps = TypographyProps & {
+  reply: Reply;
+  HighlighterProps: Partial<HighlighterProps>;
+};
 
-const Message: React.FC<MessageProps> = ({ reply, ...props }) => {
+const Message: React.FC<MessageProps> = ({
+  reply,
+  HighlighterProps,
+  ...props
+}) => {
   const theme: Theme = useTheme();
 
   const getMessageColourMemo = React.useCallback(
@@ -60,16 +103,28 @@ const Message: React.FC<MessageProps> = ({ reply, ...props }) => {
   );
 
   let messageColour = getMessageColourMemo(reply.code);
+  let data: string | JSX.Element =
+    formatDate(reply.date) + ' ' + reply.rawLine;
+
+  if (HighlighterProps.searchWords) {
+    data = (
+      <Highlighter
+        {...(HighlighterProps as HighlighterProps)}
+        textToHighlight={data}
+      />
+    );
+  }
 
   return (
     <Typography
       style={{
         color: messageColour,
-        overflow: 'auto'
+        margin: 0,
+        padding: 0
       }}
       {...props}
     >
-      {formatDate(reply.date) + ' ' + reply.rawLine}
+      {data}
     </Typography>
   );
 };
@@ -82,18 +137,18 @@ type MessagesProps = {
 const filterReplies = (
   replies: Reply[],
   config: ConfigState,
+  search: SearchState,
   keepMessages = 0
-) => {
-  return replies
+) =>
+  replies
     .filter(
       (x) =>
         config.selectedActors.length === 0 ||
         config.selectedActors.includes(x.sender)
     )
     .slice(-keepMessages)
-    .map((r) => getMessage(r, config.levels))
+    .map((r) => getMessage(r, config.levels, search))
     .filter((x) => x !== null);
-};
 
 interface ReducerState {
   replies: Reply[];
@@ -107,19 +162,24 @@ const initialState: ReducerState = {
 
 const reducer = (
   state: ReducerState,
-  action: { type: string; config?: ConfigState; data?: Reply[] }
+  action: {
+    type: string;
+    config?: ConfigState;
+    search?: SearchState;
+    data?: Reply[];
+  }
 ) => {
   if (action.type === 'append') {
     return {
       replies: [...state.replies, ...action.data!],
       messages: [
         ...state.messages,
-        ...filterReplies(action.data!, action.config!)
+        ...filterReplies(action.data!, action.config!, action.search!)
       ]
     };
   } else if (action.type === 'refresh') {
     return {
-      messages: filterReplies(state.replies, action.config!),
+      messages: filterReplies(state.replies, action.config!, action.search!),
       replies: state.replies
     };
   } else if (action.type === 'clear') {
@@ -132,6 +192,8 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const config = React.useContext(ConfigContext);
+  const search = React.useContext(SearchContext);
+
   const ref = React.useRef<FollowScrollHandle>(null);
 
   const updateSeenActors = React.useCallback(
@@ -158,13 +220,23 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   }, []);
 
   React.useEffect(() => {
-    dispatch({ type: 'refresh', config: config });
-  }, [config]);
+    dispatch({ type: 'refresh', config: config, search: search });
+  }, [config, search]);
 
-  useListener((replies: Reply[]) => {
-    dispatch({ type: 'append', data: replies, config: config });
-    updateSeenActors(replies);
-  });
+  const parse = React.useCallback(
+    (replies: Reply[]) => {
+      dispatch({
+        type: 'append',
+        data: replies,
+        config: config,
+        search: search
+      });
+      updateSeenActors(replies);
+    },
+    [config, search, dispatch, updateSeenActors]
+  );
+
+  useListener(parse);
 
   return <FollowScroll virtuoso ref={ref} messages={state.messages} sticky />;
 };

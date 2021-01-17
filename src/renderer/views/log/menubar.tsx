@@ -308,7 +308,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
     event.preventDefault();
     let value = event.currentTarget.value;
     value.length < 3
-      ? onSearchUpdate({ searchOn: false, searchExpr: undefined })
+      ? onSearchUpdate({ searchOn: false, searchExpr: '' })
       : onSearchUpdate({ searchOn: true, searchExpr: value });
   };
 

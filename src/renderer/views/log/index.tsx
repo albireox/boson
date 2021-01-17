@@ -32,7 +32,7 @@ export interface ConfigState {
 
 export interface SearchState {
   searchOn: boolean;
-  searchExpr: string | undefined;
+  searchExpr: string;
   limit: boolean;
   regExp: boolean;
 }
@@ -52,7 +52,7 @@ const IConfigState = {
 
 const ISearchState = {
   searchOn: false,
-  searchExpr: undefined,
+  searchExpr: '',
   limit: false,
   regExp: false
 };
