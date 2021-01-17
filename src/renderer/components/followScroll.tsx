@@ -108,7 +108,7 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
           style={{ overflowY: stick ? 'hidden' : 'scroll' }}
           itemContent={(index, message) => message}
           onScroll={handleScroll}
-          {...props}
+          overscan={300}
         />
       );
     }
