@@ -236,9 +236,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
     [config, search, dispatch, updateSeenActors]
   );
 
-  useListener(parse);
-
-  return <FollowScroll virtuoso ref={ref} messages={state.messages} sticky />;
+  return <FollowScroll virtuoso ref={ref} messages={state.messages} />;
 };
 
 export default Messages;
