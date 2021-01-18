@@ -8,7 +8,12 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Theme, Typography, TypographyProps } from '@material-ui/core';
+import {
+  makeStyles,
+  Theme,
+  Typography,
+  TypographyProps
+} from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import { Reply, ReplyCode } from 'main/tron';
 import React from 'react';
@@ -23,6 +28,13 @@ import {
   SearchContext,
   SearchState
 } from './index';
+
+const useStyles = makeStyles(() => ({
+  messages: {
+    margin: 0,
+    padding: 0
+  }
+}));
 
 function formatDate(date: string) {
   return date.split(' ')[4];
@@ -96,6 +108,7 @@ const Message: React.FC<MessageProps> = ({
   ...props
 }) => {
   const theme: Theme = useTheme();
+  const classes = useStyles();
 
   const getMessageColourMemo = React.useCallback(
     (code) => getMessageColour(theme as Theme, code),
@@ -117,11 +130,8 @@ const Message: React.FC<MessageProps> = ({
 
   return (
     <Typography
-      style={{
-        color: messageColour,
-        margin: 0,
-        padding: 0
-      }}
+      className={classes.messages}
+      style={{ color: messageColour }}
       {...props}
     >
       {data}
@@ -190,6 +200,7 @@ const reducer = (
 
 const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  const [buffer, setBuffer] = React.useState<Reply[]>([]);
 
   const config = React.useContext(ConfigContext);
   const search = React.useContext(SearchContext);
@@ -223,17 +234,22 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
     dispatch({ type: 'refresh', config: config, search: search });
   }, [config, search]);
 
-  const parse = React.useCallback(
-    (replies: Reply[]) => {
+  React.useEffect(() => {
+    let timer = setInterval(() => {
       dispatch({
         type: 'append',
-        data: replies,
+        data: buffer,
         config: config,
         search: search
       });
-      updateSeenActors(replies);
-    },
-    [config, search, dispatch, updateSeenActors]
+      updateSeenActors(buffer);
+      setBuffer([]);
+    }, 250);
+    return () => clearInterval(timer);
+  }, [buffer, config, search, dispatch, updateSeenActors]);
+
+  useListener((replies: Reply[]) =>
+    setBuffer((prev) => [...prev, ...replies])
   );
 
   return <FollowScroll virtuoso ref={ref} messages={state.messages} />;
