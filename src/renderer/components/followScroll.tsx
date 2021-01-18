@@ -44,63 +44,95 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
     const virtuosoRef = React.useRef<VirtuosoHandle>(null);
 
     const [atBottom, setAtBottom] = React.useState<null | boolean>(null);
-    const [autoscrolling, setAutoscrolling] = React.useState(false);
+    const [scrolling, setScrolling] = React.useState(false);
+    const [manuallyScrolled, setManuallyScrolled] = React.useState(false);
 
-    const handleScroll = React.useCallback(() => {
+    const handleScroll = () => {
       // Called when the div scrolls. It is also called when we do an automatic
-      // scroll to bottom. If the scroll was automatic, autoScroll = true, in
-      // that case we just set it to false. If it's false, we check the scroll
-      // position compared with the bottom of the div and if the difference
-      // is < 200 (to give it some margin in case of bounce), we say we are at
-      // the bottom. We do this with a delay so that we don't do this check
-      // while we are actually scrolling. See https://bit.ly/3nICFBE.
+      // scroll to bottom. We check the scroll position compared with the
+      // bottom of the div and if the difference is < 50 (to give it some
+      // margin in case of bounce), we say we are at the bottom. We do this
+      // with a delay so that we don't do this check while we are actually
+      // scrolling. See https://bit.ly/3nICFBE.
+      const currentTarget = document.getElementById(
+        virtuoso ? 'virtuoso' : 'messages-container'
+      );
+      const scrollHeight =
+        currentTarget!.scrollHeight - currentTarget!.scrollTop;
+      const bottom = scrollHeight - currentTarget!.clientHeight < 50;
 
-      let scrollTimer: any = null;
-      if (scrollTimer !== null) clearTimeout(scrollTimer);
+      // Report if we are at bottom to parent. In this case, if we aren't
+      // manually scrolled then we are by definition at bottom so we report
+      // that. This prevents the at-bottom button to briefly change to white
+      // while autoscrolling.
+      if (isAtBottom !== undefined) isAtBottom(bottom || !manuallyScrolled);
 
-      scrollTimer = setTimeout(() => {
-        // At this point event is not really current, so we manually get the
-        // element to check.
-        const currentTarget = document.getElementById('virtuoso');
-        const scrollHeight =
-          currentTarget!.scrollHeight - currentTarget!.scrollTop;
-        const bottom = scrollHeight - currentTarget!.clientHeight < 200;
-        if (bottom && autoscrolling) setAutoscrolling(false);
-        if (!autoscrolling) {
-          if (isAtBottom !== undefined) isAtBottom(bottom);
-          setAtBottom(bottom);
-        } else {
-          setAtBottom(true);
-          if (isAtBottom !== undefined) isAtBottom(true);
-        }
-      }, 50);
-    }, [isAtBottom, autoscrolling]);
+      // This is the internal status to determine if we are at bottom. We
+      // report this without modifications because handleWheel depends on it.
+      setAtBottom(bottom);
+    };
 
-    const triggerScroll = React.useCallback(() => {
-      // Only scroll if we are already at bottom or is sticky.
-      if (stick || atBottom) {
-        const target = document.getElementById(
-          virtuoso ? 'virtuoso' : 'messages-container'
-        );
-        if (!target) return;
-        const scrollHeight = target.scrollHeight - target.scrollTop;
-        const behavior = scrollHeight > 1000 ? 'auto' : 'smooth';
-
-        // setAutoscrolling(true);
-        if (virtuoso) {
-          virtuosoRef.current?.scrollToIndex({
-            index: children.length - 1,
-            align: 'end',
-            behavior: behavior
-          });
-        } else {
-          document.getElementById('scrollAnchor')?.scrollIntoView({
-            block: 'end',
-            behavor: behavior
-          } as ScrollIntoViewOptions);
-        }
+    const handleWheel = () => {
+      // Fired when we manually scroll with the mouse. Check if we are away
+      // from the bottom; in that case we have manually scrolled away and don't
+      // want to continue autoscrolling.
+      if (atBottom) {
+        setManuallyScrolled(false);
+      } else {
+        setManuallyScrolled(true);
       }
-    }, [stick, atBottom, children.length, virtuoso]);
+    };
+
+    const handleMouseUp = (event: React.MouseEvent<'div'>) => {
+      // Fired when the mouse button is released. We check if the position of
+      // the click on the area where the scrollbar is. If so, we call
+      // handleWheel because the logic is the same. For no the expected width
+      // of the scrollbar is hardcoded but ths may require some tweaking for
+      // different OS's or screen resolutions.
+      const onScrollBar =
+        event.clientX >= document.documentElement.offsetWidth - 25;
+      if (onScrollBar) handleWheel();
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<'div'>) => {
+      // Fired when a key is pressed when focused on the log viewport. If
+      // the key pressed is an arrow up or down, call the same logic as in
+      // handleWheel.
+      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') handleWheel();
+    };
+
+    const triggerScroll = React.useCallback(
+      (behavior: string = 'calculate') => {
+        // Only scroll if we sticky or if we haven't manually scrolled away.
+        // Avoid scrolling if we are already scrolling.
+        if (!scrolling && (!manuallyScrolled || stick)) {
+          const target = document.getElementById(
+            virtuoso ? 'virtuoso' : 'messages-container'
+          );
+          if (!target) return;
+
+          if (behavior === 'calculate') {
+            const scrollHeight = target.scrollHeight - target.scrollTop;
+            behavior = scrollHeight > 1000 ? 'auto' : 'smooth';
+          }
+
+          if (virtuoso) {
+            virtuosoRef.current?.scrollToIndex({
+              index: children.length - 1,
+              align: 'end',
+              behavior: behavior as 'auto' | 'smooth'
+            });
+          } else {
+            document.getElementById('scrollAnchor')?.scrollIntoView({
+              block: 'end',
+              behavior: behavior as 'auto' | 'smooth'
+            } as ScrollIntoViewOptions);
+          }
+        }
+      },
+      [manuallyScrolled, stick, virtuoso, children.length, scrolling]
+    );
+
 
     React.useEffect(() => triggerScroll(), [stick, triggerScroll]);
 
@@ -116,7 +148,11 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
           ref={virtuosoRef}
           style={{ overflowY: stick ? 'hidden' : 'scroll' }}
           itemContent={(index, message) => message}
+          isScrolling={(status) => setScrolling(status)}
           onScroll={handleScroll}
+          onWheel={handleWheel}
+          onMouseUp={handleMouseUp}
+          onKeyDown={handleKeyDown}
           overscan={300}
         />
       );
