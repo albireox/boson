@@ -59,6 +59,7 @@ const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
   ...props
 }) => {
   const config = React.useContext(ConfigContext);
+  const classes = useStyles();
 
   const allowedLevels = ['d', 'i', 'w', 'e'];
   const [levels, setLevels] = React.useState<string[]>(
@@ -87,6 +88,7 @@ const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
   return (
     <ToggleButtonGroup
       size='small'
+      className={classes.selectLevels}
       value={levels}
       onChange={(event, newLevels: string[]) => updateLevels(newLevels)}
     >
@@ -248,6 +250,9 @@ const useStyles = makeStyles((theme) => ({
   selectNumber: {
     marginLeft: '16px',
     maxWidth: '110px'
+  },
+  selectLevels: {
+    maxHeight: 37
   },
   selectActors: {
     marginLeft: '8px',
