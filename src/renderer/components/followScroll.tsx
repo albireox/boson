@@ -133,8 +133,30 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
       [manuallyScrolled, stick, virtuoso, children.length, scrolling]
     );
 
+    // Try to autoscroll when the messages change. This works well but has the
+    // problem that when the messages are loaded when the log window opens,
+    // they are not scrolled to the bottom until the first new message appears.
+    // I think this happens because during the first few renders it doesn't
+    // receive messages. There is probably some way around it. Also, it
+    // probably triggers unnecessary scrolls because messages usually arrive
+    // in blocks.
+    React.useEffect(() => triggerScroll('auto'), [triggerScroll]);
 
-    React.useEffect(() => triggerScroll(), [stick, triggerScroll]);
+    // This triggers a scroll on a timer. It seems to work well, solves the
+    // issue with the initial rendering of messages, and it may actually be
+    // more efficient (especially during the night when many message arrive
+    // each second and this ensures that only a few scrolls are triggered).
+    // It may produce a bit more bounding during scrolling, but I'm not sure.
+    // The scroll interval cannot be too short or it's impossible to manually
+    // scroll away because a new autoscroll blocks you before you reach the
+    // not-bottom area of the scroll. One needs to play a bit with the interval
+    // and the height of the scroll at which point one is consider not at
+    // bottom. Best results seem to happen when the interval is the same
+    // as the rate of sending buffered messages.
+    // React.useLayoutEffect(() => {
+    //   let interval = setInterval(() => triggerScroll('smooth'), 250);
+    //   return () => clearInterval(interval);
+    // }, [triggerScroll]);
 
     if (virtuoso) {
       // We force a full re-render instead of having Virtuoso recalculate
