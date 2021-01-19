@@ -41,7 +41,8 @@
     "extends": null,
     "mac": {
       "target": [
-        "zip"
+        "zip",
+        "dmg"
       ]
     },
     "files": [
