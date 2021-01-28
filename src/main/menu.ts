@@ -108,6 +108,11 @@ const template: any[] = [
         id: 'keywords',
         accelerator: 'CmdOrCtrl+Shift+K',
         click: () => createWindow('keywords')
+      },
+      {
+        label: 'Weather',
+        id: 'weather',
+        click: () => createWindow('weather')
       }
     ]
   },

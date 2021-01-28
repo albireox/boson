@@ -14,6 +14,7 @@ import ConnectView from './views/connect';
 import KeywordsView from './views/keywords';
 import LogView from './views/log';
 import MainView from './views/main';
+import WeatherView from './views/weather';
 
 // It seems we need <{}, {}> when extending the component but then the props
 // passed to View() include the location object. Not sure why.
@@ -23,7 +24,8 @@ class ViewManager extends Component<{}, {}> {
       main: <MainView />,
       connect: <ConnectView />,
       log: <LogView />,
-      keywords: <KeywordsView />
+      keywords: <KeywordsView />,
+      weather: <WeatherView />
     };
   }
 
