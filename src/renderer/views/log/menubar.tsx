@@ -323,7 +323,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
   }, [search]);
 
   return (
-    <Paper component='form' {...props}>
+    <Paper component='form' onSubmit={(e) => e.preventDefault()} {...props}>
       <InputBase
         className={classes.searchInput}
         placeholder='Search'
