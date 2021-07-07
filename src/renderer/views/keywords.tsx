@@ -10,10 +10,10 @@
 
 import { makeStyles } from '@material-ui/core';
 import {
-  ColDef,
   DataGrid,
-  RowsProp,
-  ValueFormatterParams
+  GridCellParams,
+  GridColDef,
+  GridRowData
 } from '@material-ui/data-grid';
 import { KeywordMap } from 'main/tron';
 import { useKeywords } from '../hooks';
@@ -26,14 +26,14 @@ function Sep(props: any) {
   );
 }
 
-const columns: ColDef[] = [
-  { field: 'actor', headerName: 'Actor', width: 120, sortDirection: 'asc' },
+const columns: GridColDef[] = [
+  { field: 'actor', headerName: 'Actor', width: 120 },
   { field: 'key', headerName: 'Key', width: 150 },
   {
     field: 'value',
     headerName: 'Value',
     flex: 10,
-    renderCell: (params: ValueFormatterParams) => {
+    renderCell: (params: GridCellParams) => {
       let values = params.value as unknown[];
       let formattedValues: any[] = [];
       for (let idx = 0; idx < values.length; idx++) {
@@ -66,8 +66,8 @@ export default function KeywordsView() {
   const classes = useStyles();
   const keywords = useKeywords(['*'], 'keyword-viewer');
 
-  const formatRows = (kws: KeywordMap): RowsProp => {
-    let result: RowsProp = [];
+  const formatRows = (kws: KeywordMap): GridRowData[] => {
+    let result: GridRowData[] = [];
     for (let kw in kws) {
       let kk = kws[kw];
       result.push({
@@ -88,7 +88,6 @@ export default function KeywordsView() {
         columns={columns}
         disableSelectionOnClick={true}
         className={classes.grid}
-        showToolbar
         density='compact'
       />
     </div>
