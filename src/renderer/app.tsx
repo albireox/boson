@@ -10,7 +10,7 @@
 
 import {
   Container,
-  createMuiTheme,
+  createTheme,
   CssBaseline,
   makeStyles,
   ThemeProvider
@@ -66,7 +66,7 @@ export default function BosonApp() {
   return (
     <React.Fragment>
       <Container component='div' className={classes.container}>
-        <ThemeProvider theme={createMuiTheme(getBosonTheme(theme))}>
+        <ThemeProvider theme={createTheme(getBosonTheme(theme))}>
           <CssBaseline />
           <ViewManager />
         </ThemeProvider>

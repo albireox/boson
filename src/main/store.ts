@@ -18,7 +18,7 @@ const store = new Store();
 
 let userConfig = store.get('user', null);
 if (userConfig) {
-  store.set({ ...defaults, user: userConfig });
+  store.set({ ...defaults });
 } else {
   store.set(defaults);
 }

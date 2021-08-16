@@ -71,7 +71,6 @@
   "devDependencies": {
     "@iconify-icons/file-icons": "^1.1.2",
     "@types/electron-devtools-installer": "^2.2.0",
-    "@types/highcharts": "^7.0.0",
     "@types/jest": "26.0.15",
     "@types/lodash": "^4.14.167",
     "@types/node": "14.14.9",
@@ -81,7 +80,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/sprintf-js": "^1.1.2",
     "concurrently": "^5.3.0",
-    "electron": "14.0.0-beta.12",
+    "electron": "14.0.0-beta.22",
     "electron-builder": "^22.9.1",
     "electron-devtools-installer": "^3.1.1",
     "electron-reload": "^1.5.0",

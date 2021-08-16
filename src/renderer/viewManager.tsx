@@ -11,6 +11,7 @@
 import { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import ConnectView from './views/connect';
+import FPSView from './views/FPS';
 import KeywordsView from './views/keywords';
 import LogView from './views/log';
 import MainView from './views/main';
@@ -25,7 +26,8 @@ class ViewManager extends Component<{}, {}> {
       connect: <ConnectView />,
       log: <LogView />,
       keywords: <KeywordsView />,
-      weather: <WeatherView />
+      weather: <WeatherView />,
+      fps: <FPSView />
     };
   }
 
