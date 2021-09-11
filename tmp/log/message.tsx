@@ -12,11 +12,11 @@ import {
   makeStyles,
   Theme,
   Typography,
-  TypographyProps
-} from '@material-ui/core';
-import { useTheme } from '@material-ui/styles';
+  TypographyProps,
+  useTheme
+} from '@mui/material';
 import { Reply, ReplyCode } from 'main/tron';
-import React from 'react';
+import * as React from 'react';
 import Highlighter, { HighlighterProps } from 'react-highlight-words';
 import FollowScroll, {
   FollowScrollHandle

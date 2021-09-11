@@ -8,13 +8,13 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
 import {
   DataGrid,
   GridCellParams,
   GridColDef,
   GridRowData
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 import { KeywordMap } from 'main/tron';
 import { useKeywords } from '../hooks';
 

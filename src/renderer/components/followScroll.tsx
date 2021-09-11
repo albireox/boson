@@ -8,25 +8,11 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Fab, makeStyles } from '@material-ui/core';
-import { SettingsEthernet } from '@material-ui/icons';
-import React from 'react';
+import { css } from '@emotion/react';
+import { SettingsEthernet } from '@mui/icons-material';
+import { Fab } from '@mui/material';
+import * as React from 'react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
-
-const useStyles = makeStyles((theme) => ({
-  logBox: {
-    flexGrow: 1,
-    height: '80%',
-    width: '100vw',
-    padding: '2px 8px 4px'
-  },
-  followButton: {
-    position: 'fixed',
-    right: 15,
-    bottom: 60,
-    zIndex: 60000
-  }
-}));
 
 export interface ViewPortHandle {
   scrollToBottom(behavior?: 'auto' | 'smooth'): void;
@@ -212,8 +198,6 @@ export interface FollowScrollProps {
 
 const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
   ({ virtuoso, messages, sticky, ...props }, ref) => {
-    const classes = useStyles();
-
     const [atBottom, setAtBottom] = React.useState(true);
 
     const [stick, setStick] = React.useState<boolean>(sticky || false);
@@ -232,7 +216,15 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
     }, [stick, atBottom]);
 
     return (
-      <div className={classes.logBox} id='logBox'>
+      <div
+        css={css`
+          flexGrow: 1,
+          height: '80%',
+          width: '100vw',
+          padding: '2px 8px 4px'
+        `}
+        id='logBox'
+      >
         <ViewPort
           virtuoso={virtuoso}
           stick={stick}
@@ -242,7 +234,15 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
         >
           {messages}
         </ViewPort>
-        <div className={classes.followButton} style={{ opacity: fbOpacity }}>
+        <div
+          css={css`
+    position: 'fixed',
+    right: 15,
+    bottom: 60,
+    zIndex: 60000
+  `}
+          style={{ opacity: fbOpacity }}
+        >
           <Fab
             size='small'
             onClick={() => setStick(!stick)}

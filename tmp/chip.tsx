@@ -8,15 +8,8 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  Chip,
-  ChipProps,
-  makeStyles,
-  Theme,
-  Tooltip
-} from '@material-ui/core';
-import { Palette } from '@material-ui/icons';
-import React from 'react';
+import { Chip, ChipProps, Theme, Tooltip } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 
 export enum Severity {
   Warning = 'warning',
@@ -29,16 +22,16 @@ type AlertChipProps = ChipProps & { severity: Severity | string };
 
 export function AlertChip(props: AlertChipProps) {
   const selectColour = (theme: Theme, severity?: Severity) => {
-    let type: string;
-    if (theme.palette.type === 'dark') {
-      type = 'dark';
-    } else if (theme.palette.type === 'light') {
-      type = 'light';
+    let mode: string;
+    if (theme.palette.mode === 'dark') {
+      mode = 'dark';
+    } else if (theme.palette.mode === 'light') {
+      mode = 'light';
     } else {
-      type = 'main';
+      mode = 'main';
     }
     let sevPalette = (severity || Severity.Info) as keyof typeof Palette;
-    return theme.palette[sevPalette][type];
+    return theme.palette[sevPalette][mode];
   };
 
   const useStyles = makeStyles((theme) => ({
@@ -51,8 +44,8 @@ export function AlertChip(props: AlertChipProps) {
   }));
 
   const classes = useStyles(props);
-  const chipElementRef = React.useRef<HTMLInputElement>(null);
-  const [hoverStatus, setHover] = React.useState(false);
+  const chipElementRef = useRef<HTMLInputElement>(null);
+  const [hoverStatus, setHover] = useState(false);
 
   // Enable the tooltip but only in cases in which the chip contains ellipses
   // (the text is longer that the allowed width). See https://bit.ly/35o4w3L
@@ -71,13 +64,13 @@ export function AlertChip(props: AlertChipProps) {
   };
 
   // Compare once and add resize listener on "componentDidMount"
-  React.useEffect(() => {
+  useEffect(() => {
     compareSize();
     window.addEventListener('resize', compareSize);
   }, []);
 
   // Remove resize listener again on "componentWillUnmount"
-  React.useEffect(
+  useEffect(
     () => () => {
       window.removeEventListener('resize', compareSize);
     },
@@ -91,7 +84,6 @@ export function AlertChip(props: AlertChipProps) {
       <Tooltip
         arrow
         title={props.label ? props.label : ''}
-        interactive
         disableHoverListener={!hoverStatus}
       >
         <div>

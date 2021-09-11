@@ -15,8 +15,8 @@ import {
   TableHead,
   TableProps,
   TableRow
-} from '@material-ui/core';
-import React from 'react';
+} from '@mui/material';
+import * as React from 'react';
 import { useKeywords, useTAI } from 'renderer/hooks';
 import { sprintf } from 'sprintf-js';
 import { AltAzToHADec, degToDMS, getLMST, getMJD } from 'utils';

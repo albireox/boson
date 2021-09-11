@@ -250,6 +250,7 @@ export default class TronConnection {
     let command = new Command(commandString);
     this.commands[command.commandId] = command;
     this.client.write(`${command.commandId} ${command.rawCommand}\r\n`);
+    log.info(`${command.commandId} ${command.rawCommand}\r\n`);
     await command.waitUntilDone();
     return command;
   }
@@ -290,6 +291,7 @@ export default class TronConnection {
   }
 
   parseData(data: string) {
+    log.info(data);
     const newLines = data.trim().split(/\r/);
     const instantJSONReplies: string[] = [];
 

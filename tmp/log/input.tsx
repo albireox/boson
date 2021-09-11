@@ -8,6 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import SendIcon from '@mui/icons-material/Send';
 import {
   Box,
   IconButton,
@@ -15,9 +16,9 @@ import {
   makeStyles,
   OutlinedInput,
   TextFieldProps
-} from '@material-ui/core';
-import SendIcon from '@material-ui/icons/Send';
-import React, { SyntheticEvent } from 'react';
+} from '@mui/material';
+import { SyntheticEvent } from 'react';
+import * as React from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {

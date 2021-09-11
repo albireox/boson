@@ -11,6 +11,14 @@
 import regexIcon from '@iconify-icons/file-icons/regex';
 import { InlineIcon } from '@iconify/react';
 import {
+  BookOutlined,
+  ErrorOutlineOutlined,
+  InfoOutlined,
+  Refresh,
+  ReportProblemOutlined,
+  Search
+} from '@mui/icons-material';
+import {
   Box,
   BoxProps,
   Divider,
@@ -24,24 +32,14 @@ import {
   TextField,
   TextFieldProps,
   Theme,
-  Tooltip,
-  useTheme
-} from '@material-ui/core';
-import {
-  BookOutlined,
-  ErrorOutlineOutlined,
-  InfoOutlined,
-  Refresh,
-  ReportProblemOutlined,
-  Search
-} from '@material-ui/icons';
-import {
   ToggleButton,
   ToggleButtonGroup,
-  ToggleButtonProps
-} from '@material-ui/lab';
+  ToggleButtonProps,
+  Tooltip,
+  useTheme
+} from '@mui/material';
 import { ReplyCode, ReplyCodeMap, ReplyCodeReverseMap } from 'main/tron';
-import React from 'react';
+import * as React from 'react';
 import {
   ConfigContext,
   ConfigState,

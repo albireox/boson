@@ -8,9 +8,9 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/material';
 import { ReplyCode } from 'main/tron';
-import React, { Fragment } from 'react';
+import { createContext, useState, Fragment } from 'react';
 import CommandInput from './input';
 import MenuBar from './menubar';
 import Messages from './message';
@@ -57,14 +57,14 @@ const ISearchState = {
   regExp: false
 };
 
-export const ConfigContext = React.createContext<ConfigState>(IConfigState);
-export const SearchContext = React.createContext<SearchState>(ISearchState);
+export const ConfigContext = createContext<ConfigState>(IConfigState);
+export const SearchContext = createContext<SearchState>(ISearchState);
 
 export function LogView() {
   const classes = useStyles();
 
-  const [config, setConfig] = React.useState<ConfigState>(IConfigState);
-  const [search, setSearch] = React.useState<SearchState>(ISearchState);
+  const [config, setConfig] = useState<ConfigState>(IConfigState);
+  const [search, setSearch] = useState<SearchState>(ISearchState);
 
   const onConfigUpdate = (newConfig: Partial<ConfigState>) => {
     setConfig({ ...config, ...newConfig });

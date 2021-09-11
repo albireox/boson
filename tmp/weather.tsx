@@ -8,10 +8,10 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { makeStyles, useTheme } from '@material-ui/core';
+import { makeStyles, useTheme } from '@mui/material';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useKeywords } from 'renderer/hooks';
 
 const useStyles = makeStyles({
@@ -31,21 +31,21 @@ export default function WeatherView() {
     'weather-plot'
   );
 
-  const [temperature, setTemperature] = React.useState<
+  const [temperature, setTemperature] = useState<
     {
       x: number;
       y: number;
     }[]
   >([]);
 
-  const [humidity, setHumidity] = React.useState<
+  const [humidity, setHumidity] = useState<
     {
       x: number;
       y: number;
     }[]
   >([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (keywords['apo.airTempPT'] === undefined) return;
     if (keywords['apo.humidPT'] === undefined) return;
 

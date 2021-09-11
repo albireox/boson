@@ -8,43 +8,62 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Collapse, Fab, LinearProgress } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Container from '@material-ui/core/Container';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { ConnectionStatus } from 'main/tron';
-import React, { SyntheticEvent, useState } from 'react';
+/** @jsxImportSource @emotion/react */
 
-const useStyles = makeStyles((theme) => ({
-  progress: {
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Collapse, Fab, LinearProgress } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Container from '@mui/material/Container';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { styled } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { ConnectionStatus } from 'main/tron';
+import * as React from 'react';
+import { SyntheticEvent, useState } from 'react';
+
+const PREFIX = 'ConnectView';
+
+const classes = {
+  root: `${PREFIX}-root`,
+  progress: `${PREFIX}-progress`,
+  paper: `${PREFIX}-paper`,
+  avatar: `${PREFIX}-avatar`,
+  form: `${PREFIX}-form`,
+  submit: `${PREFIX}-submit`,
+  error: `${PREFIX}-error`,
+  dropdownIcon: `${PREFIX}-dropdownIcon`,
+  dropdownIconOpen: `${PREFIX}-dropdownIconOpen`,
+  dropdownIconClosed: `${PREFIX}-dropdownIconClosed`
+};
+
+const Root = styled('div')(({ theme }) => ({
+  [`&.${classes.root}`]: {},
+  [`& .${classes.progress}`]: {
     padding: '0px',
     height: '2px'
   },
-  paper: {
+  [`& .${classes.paper}`]: {
     paddingTop: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
   },
-  avatar: {
+  [`& .${classes.avatar}`]: {
     margin: theme.spacing(0, 1, 1, 1),
     backgroundColor: theme.palette.secondary.main
   },
-  form: {
+  [`& .${classes.form}`]: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3)
   },
-  submit: {
+  [`& .${classes.submit}`]: {
     margin: theme.spacing(2, 0, 0)
   },
-  error: {
+  [`& .${classes.error}`]: {
     backgroundColor: theme.palette.secondary.main,
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(-1),
@@ -52,23 +71,22 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     textAlign: 'center'
   },
-  dropdownIcon: {
+  [`& .${classes.dropdownIcon}`]: {
     transition: theme.transitions.create(['transform'], {
       duration: theme.transitions.duration.complex
     })
   },
-  dropdownIconOpen: {
+  [`& .${classes.dropdownIconOpen}`]: {
     transform: 'rotate(-180deg)',
     backgroundColor: theme.palette.secondary.main
   },
-  dropdownIconClosed: {
+  [`& .${classes.dropdownIconClosed}`]: {
     transform: 'rotate(0)'
   }
 }));
 
 export default function ConnectView() {
   const NAME = 'connect';
-  const classes = useStyles();
 
   const [connectForm, setConnectForm] = useState<{ [key: string]: any }>({
     program: '',
@@ -174,15 +192,13 @@ export default function ConnectView() {
 
     switch (connectionResult) {
       case ConnectionStatus.Connected:
-        const [result, err]: [
-          boolean,
-          string | null
-        ] = await window.api.invoke(
-          'tron-authorise',
-          (({ program, user, password }) => ({ program, user, password }))(
-            connectForm
-          )
-        );
+        const [result, err]: [boolean, string | null] =
+          await window.api.invoke(
+            'tron-authorise',
+            (({ program, user, password }) => ({ program, user, password }))(
+              connectForm
+            )
+          );
         if (result === true) {
           storeCredentials();
           window.api.invoke('window-close', NAME);
@@ -213,7 +229,7 @@ export default function ConnectView() {
   };
 
   return (
-    <>
+    <Root className={classes.root}>
       {showProgress ? (
         <LinearProgress className={classes.progress} color='secondary' />
       ) : null}
@@ -221,7 +237,7 @@ export default function ConnectView() {
         id='container'
         component='div'
         maxWidth='xs'
-        style={{ padding: '0px 24px 24px 24px' }}
+        sx={{ padding: '0px 24px 24px 24px' }}
       >
         <div className={classes.paper} id='paper'>
           <Avatar className={classes.avatar}>
@@ -232,7 +248,7 @@ export default function ConnectView() {
           </Typography>
           <Typography
             className={classes.error}
-            style={{ display: error === undefined ? 'none' : 'initial' }}
+            css={{ display: error === undefined ? 'none' : 'initial' }}
             component='h5'
           >
             {error}
@@ -305,7 +321,7 @@ export default function ConnectView() {
               Connect
             </Button>
             <div
-              style={{
+              css={{
                 padding: '0px 16px',
                 textAlign: 'center',
                 marginTop: '24px'
@@ -328,7 +344,7 @@ export default function ConnectView() {
                 onExited={() => updateHeight()}
               >
                 <TextField
-                  style={{ marginTop: '16px' }}
+                  css={{ marginTop: '16px' }}
                   variant='outlined'
                   margin='dense'
                   fullWidth
@@ -369,6 +385,6 @@ export default function ConnectView() {
           </form>
         </div>
       </Container>
-    </>
+    </Root>
   );
 }

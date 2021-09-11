@@ -8,9 +8,8 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { darken, fade, lighten, styled } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import React from 'react';
+import { styled } from '@mui/material';
+import Table from '@mui/material/Table';
 import AxisStatus from './axisStatus';
 import MiscTable from './misc';
 import NetPosTable from './netPos';
@@ -45,19 +44,19 @@ export function DMG() {
   );
 }
 
-const TCCRule = styled('hr')(({ theme }) => ({
-  margin: '4px 0px',
-  border: 'none',
-  height: '1px',
-  backgroundColor:
-    theme.palette.type === 'light'
-      ? lighten(fade(theme.palette.divider, 1), 0.88)
-      : darken(fade(theme.palette.divider, 1), 0.68),
-  color:
-    theme.palette.type === 'light'
-      ? lighten(fade(theme.palette.divider, 1), 0.88)
-      : darken(fade(theme.palette.divider, 1), 0.68)
-}));
+// const TCCRule = styled('hr')(({ theme }) => ({
+//   margin: '4px 0px',
+//   border: 'none',
+//   height: '1px',
+//   backgroundColor:
+//     theme.palette.type === 'light'
+//       ? lighten(fade(theme.palette.divider, 1), 0.88)
+//       : darken(fade(theme.palette.divider, 1), 0.68),
+//   color:
+//     theme.palette.type === 'light'
+//       ? lighten(fade(theme.palette.divider, 1), 0.88)
+//       : darken(fade(theme.palette.divider, 1), 0.68)
+// }));
 
 export const TCCTable = styled(Table)({
   margin: 0,
@@ -76,13 +75,13 @@ export const TCCTable = styled(Table)({
 export default function TCCView() {
   return (
     <div>
-      <TCCRule style={{ marginTop: '0px' }} />
+      {/* <TCCRule style={{ marginTop: '0px' }} /> */}
       <NetPosTable />
-      <TCCRule />
+      {/* <TCCRule /> */}
       <MiscTable />
-      <TCCRule />
+      {/* <TCCRule /> */}
       <AxisStatus />
-      <TCCRule />
+      {/* <TCCRule /> */}
     </div>
   );
 }

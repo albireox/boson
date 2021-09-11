@@ -11,11 +11,11 @@
 import { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import ConnectView from './views/connect';
-import FPSView from './views/FPS';
-import KeywordsView from './views/keywords';
-import LogView from './views/log';
+// import FPSView from './views/FPS';
+// import KeywordsView from './views/keywords';
+// import LogView from './views/log';
 import MainView from './views/main';
-import WeatherView from './views/weather';
+// import WeatherView from './views/weather';
 
 // It seems we need <{}, {}> when extending the component but then the props
 // passed to View() include the location object. Not sure why.
@@ -23,11 +23,11 @@ class ViewManager extends Component<{}, {}> {
   static Views(): { [key: string]: any } {
     return {
       main: <MainView />,
-      connect: <ConnectView />,
-      log: <LogView />,
-      keywords: <KeywordsView />,
-      weather: <WeatherView />,
-      fps: <FPSView />
+      connect: <ConnectView />
+      // log: <LogView />,
+      // keywords: <KeywordsView />,
+      // weather: <WeatherView />,
+      // fps: <FPSView />
     };
   }
 
@@ -35,7 +35,7 @@ class ViewManager extends Component<{}, {}> {
     let name = props.location.search.slice(1); // Remove the ? at the beginning.
     let view: any;
     if (name.includes('log')) {
-      view = <LogView />;
+      // view = <LogView />;
     } else {
       view = ViewManager.Views()[name];
     }
