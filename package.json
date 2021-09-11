@@ -18,12 +18,10 @@
     "@mui/material": "^5.0.0-rc.1",
     "electron-is-dev": "^1.2.0",
     "electron-log": "^4.3.1",
-    "electron-store": "^6.0.1",
+    "electron-store": "^8.0.0",
     "gps-time": "^1.0.7",
-    "highcharts": "^9.2.2",
-    "highcharts-react-official": "^3.0.0",
     "keytar": "^7.3.0",
-    "lodash": "^4.17.0",
+    "lodash": "^4.17.20",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-highlight-words": "^0.17.0",
@@ -80,7 +78,7 @@
     "@types/react-highlight-words": "^0.16.1",
     "@types/react-router-dom": "^5.1.6",
     "@types/sprintf-js": "^1.1.2",
-    "concurrently": "^6.2.0",
+    "concurrently": "^6.0.0",
     "electron": "^14.0.0",
     "electron-builder": "^22.9.1",
     "electron-devtools-installer": "^3.1.1",
@@ -95,5 +93,8 @@
   "peerDependencies": {
     "@material-ui/core": "^4.12.0 || ^5.0.0-beta.0",
     "react": "^17.0.0"
+  },
+  "resolutions": {
+    "react-scripts/eslint-webpack-plugin": "2.3.0"
   }
 }
