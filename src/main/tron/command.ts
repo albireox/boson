@@ -59,7 +59,7 @@ export default class Command {
 
   addReply(reply: Reply) {
     this.replies.push(reply);
-    console.log(reply);
+
     switch (reply.code) {
       case ReplyCode.Failed:
         this.status = CommandStatus.Failed;
