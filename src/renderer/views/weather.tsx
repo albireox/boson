@@ -8,22 +8,21 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { makeStyles, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useKeywords } from 'renderer/hooks';
 
-const useStyles = makeStyles({
+const classes = {
   root: {
     height: '100%',
     width: '100%',
     padding: '10px'
   }
-});
+};
 
 export default function WeatherView() {
-  const classes = useStyles();
   const theme = useTheme();
 
   const keywords = useKeywords(
@@ -149,7 +148,7 @@ export default function WeatherView() {
   };
 
   return (
-    <div className={classes.root}>
+    <div css={classes.root}>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );

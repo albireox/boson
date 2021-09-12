@@ -20,6 +20,8 @@
     "electron-log": "^4.3.1",
     "electron-store": "^8.0.0",
     "gps-time": "^1.0.7",
+    "highcharts": "^9.2.2",
+    "highcharts-react-official": "^3.0.0",
     "keytar": "^7.3.0",
     "lodash": "^4.17.20",
     "react": "^17.0.0",
