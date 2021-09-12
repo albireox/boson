@@ -8,13 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  makeStyles,
-  Theme,
-  Typography,
-  TypographyProps,
-  useTheme
-} from '@mui/material';
+import { Theme, Typography, TypographyProps, useTheme } from '@mui/material';
 import { Reply, ReplyCode } from 'main/tron';
 import * as React from 'react';
 import Highlighter, { HighlighterProps } from 'react-highlight-words';
@@ -29,19 +23,19 @@ import {
   SearchState
 } from './index';
 
-const useStyles = makeStyles(() => ({
+const classes = {
   messages: {
     margin: 0,
     padding: 0
   }
-}));
+} as const;
 
 function formatDate(date: string) {
   return date.split(' ')[4];
 }
 
 function getMessageColour(theme: Theme, code: ReplyCode) {
-  let accent = theme.palette.type || 'main';
+  let accent = theme.palette.mode || 'main';
 
   switch (code) {
     case ReplyCode.Error:
@@ -108,7 +102,6 @@ const Message: React.FC<MessageProps> = ({
   ...props
 }) => {
   const theme: Theme = useTheme();
-  const classes = useStyles();
 
   const getMessageColourMemo = React.useCallback(
     (code) => getMessageColour(theme as Theme, code),
@@ -130,7 +123,7 @@ const Message: React.FC<MessageProps> = ({
 
   return (
     <Typography
-      className={classes.messages}
+      sx={classes.messages}
       style={{ color: messageColour }}
       {...props}
     >

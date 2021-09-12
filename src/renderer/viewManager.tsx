@@ -13,7 +13,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import ConnectView from './views/connect';
 // import FPSView from './views/FPS';
 // import KeywordsView from './views/keywords';
-// import LogView from './views/log';
+import LogView from './views/log';
 import MainView from './views/main';
 import WeatherView from './views/weather';
 
@@ -24,7 +24,7 @@ class ViewManager extends Component<{}, {}> {
     return {
       main: <MainView />,
       connect: <ConnectView />,
-      // log: <LogView />,
+      log: <LogView />,
       // keywords: <KeywordsView />,
       weather: <WeatherView />
       // fps: <FPSView />
@@ -35,7 +35,7 @@ class ViewManager extends Component<{}, {}> {
     let name = props.location.search.slice(1); // Remove the ? at the beginning.
     let view: any;
     if (name.includes('log')) {
-      // view = <LogView />;
+      view = <LogView />;
     } else {
       view = ViewManager.Views()[name];
     }

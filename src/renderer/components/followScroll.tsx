@@ -8,7 +8,8 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { css } from '@emotion/react';
+/** @jsxImportSource @emotion/react */
+
 import { SettingsEthernet } from '@mui/icons-material';
 import { Fab } from '@mui/material';
 import * as React from 'react';
@@ -217,12 +218,12 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
 
     return (
       <div
-        css={css`
+        css={{
           flexGrow: 1,
           height: '80%',
           width: '100vw',
           padding: '2px 8px 4px'
-        `}
+        }}
         id='logBox'
       >
         <ViewPort
@@ -235,12 +236,12 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
           {messages}
         </ViewPort>
         <div
-          css={css`
-    position: 'fixed',
-    right: 15,
-    bottom: 60,
-    zIndex: 60000
-  `}
+          css={{
+            position: 'fixed',
+            right: 15,
+            bottom: 60,
+            zIndex: 60000
+          }}
           style={{ opacity: fbOpacity }}
         >
           <Fab

@@ -25,7 +25,6 @@ import {
   IconButton,
   InputAdornment,
   InputBase,
-  makeStyles,
   MenuItem,
   Paper,
   PaperProps,
@@ -57,7 +56,6 @@ const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
   ...props
 }) => {
   const config = React.useContext(ConfigContext);
-  const classes = useStyles();
 
   const allowedLevels = ['d', 'i', 'w', 'e'];
   const [levels, setLevels] = React.useState<string[]>(
@@ -86,7 +84,7 @@ const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
   return (
     <ToggleButtonGroup
       size='small'
-      className={classes.selectLevels}
+      sx={classes.selectLevels}
       value={levels}
       onChange={(event, newLevels: string[]) => updateLevels(newLevels)}
     >
@@ -244,7 +242,7 @@ const SelectActors: React.FC<SelectActorsProps> = ({
 //   );
 // };
 
-const useStyles = makeStyles((theme) => ({
+const classes = {
   selectNumber: {
     marginLeft: '16px',
     maxWidth: '110px'
@@ -270,16 +268,16 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 'auto'
   },
   searchInput: {
-    marginLeft: theme.spacing(1),
+    ml: 1,
     flex: 1
   },
   searchButton: {
-    padding: 10
+    padding: '10px'
   },
   divider: {
     height: 22
   }
-}));
+} as const;
 
 // Search field
 type SearchBarProps = PaperProps & {
@@ -287,7 +285,6 @@ type SearchBarProps = PaperProps & {
 };
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
-  const classes = useStyles();
   const search = React.useContext(SearchContext);
 
   const [searchColor, setSearchColor] = React.useState<any>('default');
@@ -321,22 +318,22 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
   }, [search]);
 
   return (
-    <Paper component='form' onSubmit={(e) => e.preventDefault()} {...props}>
+    <Paper {...props}>
       <InputBase
-        className={classes.searchInput}
+        sx={classes.searchInput}
         placeholder='Search'
         onChange={handleChange}
       />
       <IconButton
         size='small'
-        className={classes.searchButton}
+        sx={classes.searchButton}
         color={searchColor}
         onClick={handleLimit}
         style={{ background: 'transparent' }} // For some reason needs to be a style
       >
         <Search />
       </IconButton>
-      <Divider className={classes.divider} orientation='vertical' />
+      <Divider sx={classes.divider} orientation='vertical' />
       <IconButton
         style={{ background: 'transparent' }}
         onClick={handleRegEx}
@@ -359,21 +356,19 @@ const MenuBar: React.FC<MenuBarProps> = ({
   onSearchUpdate,
   ...props
 }) => {
-  const classes = useStyles();
-
   return (
-    <Box {...props}>
-      <MessageLevelButtons onConfigUpdate={onConfigUpdate} />
+    <Box component='div' {...props}>
+      <MessageLevelButtons value={null} onConfigUpdate={onConfigUpdate} />
       <SelectActors
         onConfigUpdate={onConfigUpdate}
-        className={classes.selectActors}
+        sx={classes.selectActors}
       />
       {/* <SelectNumberMessages
         id='selectNumberMessages'
         onConfigUpdate={onConfigUpdate}
         className={classes.selectNumber}
       /> */}
-      <SearchBar onSearchUpdate={onSearchUpdate} className={classes.paper} />
+      <SearchBar onSearchUpdate={onSearchUpdate} sx={classes.paper} />
     </Box>
   );
 };
