@@ -15,7 +15,7 @@ import {
   TableHead,
   TableProps,
   TableRow
-} from '@material-ui/core';
+} from '@mui/material';
 import { Keyword } from 'main/tron';
 import { AlertChip, Severity } from 'renderer/components/chip';
 import { useKeywords } from 'renderer/hooks';

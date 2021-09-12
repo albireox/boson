@@ -46,10 +46,10 @@ function evaluateKeyword(value: string) {
 }
 
 const lineRegex = new RegExp(
-  '(?<commander>(\\w*.*)*.\\w+)\\s+' +
+  '(?<commander>(?:\\.?\\w+)+)\\s+' +
     '(?<commandId>\\d+)\\s+' +
-    '(?<sender>[\\w|_]+)\\s+' +
-    '(?<code>[d|i|w|f|e|:|D|I|W|F|E>])\\s*' +
+    '(?<sender>\\w+)\\s+' +
+    '(?<code>[diwfe:DIWFE>])\\s*' +
     '(?<keywords>.+)?'
 );
 

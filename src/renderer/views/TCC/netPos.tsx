@@ -13,13 +13,13 @@ import {
   LinearProgress,
   LinearProgressProps,
   Typography
-} from '@material-ui/core';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import React from 'react';
+} from '@mui/material';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import * as React from 'react';
 import { AlertChip } from 'renderer/components/chip';
 import { useKeywords } from 'renderer/hooks';
 import { degToDMS } from 'utils';

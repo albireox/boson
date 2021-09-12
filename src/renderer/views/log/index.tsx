@@ -8,20 +8,20 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { makeStyles } from '@material-ui/core';
+import { SxProps } from '@mui/system';
 import { ReplyCode } from 'main/tron';
-import React, { Fragment } from 'react';
+import { createContext, Fragment, useState } from 'react';
 import CommandInput from './input';
 import MenuBar from './menubar';
 import Messages from './message';
 
-const useStyles = makeStyles((theme) => ({
+const styles = {
   menubar: {
-    padding: '2px 8px 8px',
+    p: '2px 8px 8px',
     display: 'flex',
     flexDirection: 'row'
-  }
-}));
+  } as SxProps
+};
 
 export interface ConfigState {
   levels: ReplyCode[];
@@ -57,14 +57,12 @@ const ISearchState = {
   regExp: false
 };
 
-export const ConfigContext = React.createContext<ConfigState>(IConfigState);
-export const SearchContext = React.createContext<SearchState>(ISearchState);
+export const ConfigContext = createContext<ConfigState>(IConfigState);
+export const SearchContext = createContext<SearchState>(ISearchState);
 
 export function LogView() {
-  const classes = useStyles();
-
-  const [config, setConfig] = React.useState<ConfigState>(IConfigState);
-  const [search, setSearch] = React.useState<SearchState>(ISearchState);
+  const [config, setConfig] = useState<ConfigState>(IConfigState);
+  const [search, setSearch] = useState<SearchState>(ISearchState);
 
   const onConfigUpdate = (newConfig: Partial<ConfigState>) => {
     setConfig({ ...config, ...newConfig });
@@ -79,7 +77,7 @@ export function LogView() {
       <ConfigContext.Provider value={config}>
         <SearchContext.Provider value={search}>
           <MenuBar
-            className={classes.menubar}
+            sx={styles.menubar}
             onConfigUpdate={onConfigUpdate}
             onSearchUpdate={onSearchUpdate}
           />

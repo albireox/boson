@@ -8,13 +8,14 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { makeStyles } from '@material-ui/core';
+/** @jsxImportSource @emotion/react */
+
 import {
   DataGrid,
   GridCellParams,
   GridColDef,
   GridRowData
-} from '@material-ui/data-grid';
+} from '@mui/x-data-grid';
 import { KeywordMap } from 'main/tron';
 import { useKeywords } from '../hooks';
 
@@ -27,12 +28,13 @@ function Sep(props: any) {
 }
 
 const columns: GridColDef[] = [
-  { field: 'actor', headerName: 'Actor', width: 120 },
-  { field: 'key', headerName: 'Key', width: 150 },
+  { field: 'actor', headerName: 'Actor', width: 120, sortable: true },
+  { field: 'key', headerName: 'Key', width: 150, sortable: true },
   {
     field: 'value',
     headerName: 'Value',
     flex: 10,
+    sortable: false,
     renderCell: (params: GridCellParams) => {
       let values = params.value as unknown[];
       let formattedValues: any[] = [];
@@ -45,25 +47,10 @@ const columns: GridColDef[] = [
       return <div>{formattedValues}</div>;
     }
   },
-  { field: 'lastSeen', headerName: 'Last Seen', width: 200 }
+  { field: 'lastSeen', headerName: 'Last Seen', width: 200, sortable: true }
 ];
 
-const useStyles = makeStyles({
-  root: {
-    height: '100%',
-    width: '100%',
-    padding: '10px'
-  },
-  grid: {
-    border: 0,
-    '& .MuiDataGrid-window': {
-      overflowX: 'hidden'
-    }
-  }
-});
-
 export default function KeywordsView() {
-  const classes = useStyles();
   const keywords = useKeywords(['*'], 'keyword-viewer');
 
   const formatRows = (kws: KeywordMap): GridRowData[] => {
@@ -82,12 +69,17 @@ export default function KeywordsView() {
   };
 
   return (
-    <div className={classes.root}>
+    <div
+      css={{
+        height: '100%',
+        width: '100%',
+        padding: '10px'
+      }}
+    >
       <DataGrid
         rows={formatRows(keywords)}
         columns={columns}
-        disableSelectionOnClick={true}
-        className={classes.grid}
+        disableSelectionOnClick
         density='compact'
       />
     </div>

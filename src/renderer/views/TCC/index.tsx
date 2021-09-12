@@ -8,9 +8,9 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { darken, fade, lighten, styled } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import React from 'react';
+import { styled } from '@mui/material';
+import { alpha, darken, lighten } from '@mui/material/styles';
+import Table from '@mui/material/Table';
 import AxisStatus from './axisStatus';
 import MiscTable from './misc';
 import NetPosTable from './netPos';
@@ -50,13 +50,13 @@ const TCCRule = styled('hr')(({ theme }) => ({
   border: 'none',
   height: '1px',
   backgroundColor:
-    theme.palette.type === 'light'
-      ? lighten(fade(theme.palette.divider, 1), 0.88)
-      : darken(fade(theme.palette.divider, 1), 0.68),
+    theme.palette.mode === 'light'
+      ? lighten(alpha(theme.palette.divider, 1), 0.88)
+      : darken(alpha(theme.palette.divider, 1), 0.68),
   color:
-    theme.palette.type === 'light'
-      ? lighten(fade(theme.palette.divider, 1), 0.88)
-      : darken(fade(theme.palette.divider, 1), 0.68)
+    theme.palette.mode === 'light'
+      ? lighten(alpha(theme.palette.divider, 1), 0.88)
+      : darken(alpha(theme.palette.divider, 1), 0.68)
 }));
 
 export const TCCTable = styled(Table)({

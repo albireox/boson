@@ -8,44 +8,26 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+/** @jsxImportSource @emotion/react */
+
 import telescope from '@iconify/icons-mdi/telescope';
 import { Icon } from '@iconify/react';
+import { Brightness7, Highlight } from '@mui/icons-material';
 import {
+  Alert,
   Button,
   Container,
-  makeStyles,
   Snackbar,
   Tab,
   Tabs,
   Typography
-} from '@material-ui/core';
-import { Brightness7, Highlight } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
+} from '@mui/material';
 import { ConnectionStatus } from 'main/tron';
-import React, { BaseSyntheticEvent } from 'react';
+import * as React from 'react';
+import { BaseSyntheticEvent } from 'react';
 import TCCView from './TCC';
 
 type ValidTabs = 'tcc' | 'apogee' | 'boss';
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    padding: 0,
-    margin: 0,
-    flexDirection: 'row',
-    height: '100%'
-  },
-  tabs: {
-    minWidth: '80px'
-  },
-  tab: {
-    minWidth: '50px'
-  },
-  tabContainer: {
-    padding: theme.spacing(0, 3, 3, 2),
-    width: '100%'
-  }
-}));
 
 async function autoconnect() {
   // Automatically connects to tron. Returns success or failure and whether
@@ -94,8 +76,15 @@ function MainTab({
   icon: JSX.Element;
   [key: string]: any;
 }) {
-  const classes = useStyles();
-  return <Tab className={classes.tab} icon={icon} {...rest} />;
+  return (
+    <Tab
+      // sx={{
+      //   minWidth: '50px'
+      // }}
+      icon={icon}
+      {...rest}
+    />
+  );
 }
 
 async function getTabView(tab: ValidTabs) {
@@ -162,28 +151,24 @@ function ConnectSnackbar(): JSX.Element {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       open={open}
     >
-      <React.Fragment>
-        <Alert severity='warning'>
-          <span style={{ padding: '0px 24px 0px 0px' }}>
-            STUI is disconnected
-          </span>
-          <Button
-            color='secondary'
-            size='small'
-            onClick={() => handleReconnect(true)}
-          >
-            RECONNECT
-          </Button>
-        </Alert>
-      </React.Fragment>
+      <Alert severity='warning'>
+        <span style={{ padding: '0px 24px 0px 0px' }}>
+          STUI is disconnected
+        </span>
+        <Button
+          color='secondary'
+          size='small'
+          onClick={() => handleReconnect(true)}
+        >
+          RECONNECT
+        </Button>
+      </Alert>
     </Snackbar>
   );
 }
 
 export default function MainView() {
   // Main view
-
-  const classes = useStyles();
 
   const [selectedTab, setSelectedTab] = React.useState<ValidTabs>('tcc');
   const [tabView, setTabView] = React.useState<JSX.Element | null>(null);
@@ -199,9 +184,23 @@ export default function MainView() {
   }, [selectedTab]);
 
   return (
-    <Container maxWidth='lg' className={classes.container}>
+    <Container
+      disableGutters
+      sx={{
+        display: 'flex',
+        padding: 0,
+        margin: 0,
+        paddingLeft: 0,
+        flexDirection: 'row',
+        height: '100%'
+      }}
+    >
       <Tabs
-        className={classes.tabs}
+        sx={{
+          minWidth: '80px',
+          padding: 0,
+          margin: 0
+        }}
         orientation='vertical'
         value={selectedTab}
         onChange={handleTabChange}
@@ -224,7 +223,14 @@ export default function MainView() {
           label='BOSS'
         />
       </Tabs>
-      <div className={classes.tabContainer}>{tabView}</div>
+      <div
+        css={{
+          width: '100%',
+          padding: '0px 24px 24px 16px'
+        }}
+      >
+        {tabView}
+      </div>
       <ConnectSnackbar />
     </Container>
   );

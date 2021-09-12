@@ -8,18 +8,18 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import SendIcon from '@mui/icons-material/Send';
 import {
   Box,
   IconButton,
   InputAdornment,
-  makeStyles,
   OutlinedInput,
   TextFieldProps
-} from '@material-ui/core';
-import SendIcon from '@material-ui/icons/Send';
-import React, { SyntheticEvent } from 'react';
+} from '@mui/material';
+import * as React from 'react';
+import { SyntheticEvent } from 'react';
 
-const useStyles = makeStyles((theme) => ({
+const styles = {
   root: {
     display: 'flex',
     flexDirection: 'row',
@@ -28,10 +28,9 @@ const useStyles = makeStyles((theme) => ({
   commandInput: {
     height: '40px'
   }
-}));
+} as const;
 
 const CommandInput: React.FC<TextFieldProps> = (props) => {
-  const classes = useStyles();
   const commandRef = React.useRef<any>(null);
   const [error, setError] = React.useState(false);
 
@@ -49,7 +48,7 @@ const CommandInput: React.FC<TextFieldProps> = (props) => {
   };
 
   return (
-    <Box className={classes.root}>
+    <Box sx={styles.root}>
       <form
         onSubmit={handleCommand}
         autoComplete='off'
@@ -59,7 +58,7 @@ const CommandInput: React.FC<TextFieldProps> = (props) => {
         <OutlinedInput
           error={error}
           onChange={() => setError(false)}
-          className={classes.commandInput}
+          sx={styles.commandInput}
           ref={commandRef}
           fullWidth
           margin='none'
