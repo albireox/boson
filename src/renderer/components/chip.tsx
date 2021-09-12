@@ -8,7 +8,14 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Chip, ChipProps, Theme, Tooltip } from '@mui/material';
+import {
+  Chip,
+  ChipProps,
+  PaletteColor,
+  styled,
+  Theme,
+  Tooltip
+} from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 export enum Severity {
@@ -22,7 +29,7 @@ type AlertChipProps = ChipProps & { severity: Severity | string };
 
 export function AlertChip(props: AlertChipProps) {
   const selectColour = (theme: Theme, severity?: Severity) => {
-    let mode: string;
+    let mode: keyof PaletteColor;
     if (theme.palette.mode === 'dark') {
       mode = 'dark';
     } else if (theme.palette.mode === 'light') {
@@ -30,20 +37,10 @@ export function AlertChip(props: AlertChipProps) {
     } else {
       mode = 'main';
     }
-    let sevPalette = (severity || Severity.Info) as keyof typeof Palette;
+    let sevPalette = severity || Severity.Info;
     return theme.palette[sevPalette][mode];
   };
 
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      color: (props: AlertChipProps) =>
-        selectColour(theme, props.severity as Severity),
-      borderColor: (props: AlertChipProps) =>
-        selectColour(theme, props.severity as Severity)
-    }
-  }));
-
-  const classes = useStyles(props);
   const chipElementRef = useRef<HTMLInputElement>(null);
   const [hoverStatus, setHover] = useState(false);
 
@@ -77,6 +74,13 @@ export function AlertChip(props: AlertChipProps) {
     []
   );
 
+  const StyledChip = styled(Chip, {
+    shouldForwardProp: (props) => true
+  })<AlertChipProps>(({ theme, severity }) => ({
+    color: selectColour(theme, severity as Severity),
+    borderColor: selectColour(theme, severity as Severity)
+  }));
+
   if (props.label === undefined || props.label === null) {
     return <span />;
   } else {
@@ -87,7 +91,7 @@ export function AlertChip(props: AlertChipProps) {
         disableHoverListener={!hoverStatus}
       >
         <div>
-          <Chip ref={chipElementRef} className={classes.root} {...props} />
+          <StyledChip ref={chipElementRef} {...props} />
         </div>
       </Tooltip>
     );

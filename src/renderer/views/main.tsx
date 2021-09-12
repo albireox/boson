@@ -25,6 +25,7 @@ import {
 import { ConnectionStatus } from 'main/tron';
 import * as React from 'react';
 import { BaseSyntheticEvent } from 'react';
+import TCCView from './TCC';
 
 type ValidTabs = 'tcc' | 'apogee' | 'boss';
 
@@ -102,11 +103,15 @@ async function getTabView(tab: ValidTabs) {
   window.api.invoke('window-set-size', 'main', width + 100, height + 50, true);
 
   let TabView: React.FunctionComponent;
-  TabView = () => (
-    <Typography variant='h2' style={{ textAlign: 'center', top: '40%' }}>
-      {tab.toUpperCase()}
-    </Typography>
-  );
+  if (tab === 'tcc') {
+    TabView = TCCView;
+  } else {
+    TabView = () => (
+      <Typography variant='h2' style={{ textAlign: 'center', top: '40%' }}>
+        {tab.toUpperCase()}
+      </Typography>
+    );
+  }
   return React.createElement(TabView, {});
 }
 

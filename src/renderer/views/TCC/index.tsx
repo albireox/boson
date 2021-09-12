@@ -9,6 +9,7 @@
  */
 
 import { styled } from '@mui/material';
+import { alpha, darken, lighten } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import AxisStatus from './axisStatus';
 import MiscTable from './misc';
@@ -44,19 +45,19 @@ export function DMG() {
   );
 }
 
-// const TCCRule = styled('hr')(({ theme }) => ({
-//   margin: '4px 0px',
-//   border: 'none',
-//   height: '1px',
-//   backgroundColor:
-//     theme.palette.type === 'light'
-//       ? lighten(fade(theme.palette.divider, 1), 0.88)
-//       : darken(fade(theme.palette.divider, 1), 0.68),
-//   color:
-//     theme.palette.type === 'light'
-//       ? lighten(fade(theme.palette.divider, 1), 0.88)
-//       : darken(fade(theme.palette.divider, 1), 0.68)
-// }));
+const TCCRule = styled('hr')(({ theme }) => ({
+  margin: '4px 0px',
+  border: 'none',
+  height: '1px',
+  backgroundColor:
+    theme.palette.mode === 'light'
+      ? lighten(alpha(theme.palette.divider, 1), 0.88)
+      : darken(alpha(theme.palette.divider, 1), 0.68),
+  color:
+    theme.palette.mode === 'light'
+      ? lighten(alpha(theme.palette.divider, 1), 0.88)
+      : darken(alpha(theme.palette.divider, 1), 0.68)
+}));
 
 export const TCCTable = styled(Table)({
   margin: 0,
@@ -75,13 +76,13 @@ export const TCCTable = styled(Table)({
 export default function TCCView() {
   return (
     <div>
-      {/* <TCCRule style={{ marginTop: '0px' }} /> */}
+      <TCCRule style={{ marginTop: '0px' }} />
       <NetPosTable />
-      {/* <TCCRule /> */}
+      <TCCRule />
       <MiscTable />
-      {/* <TCCRule /> */}
+      <TCCRule />
       <AxisStatus />
-      {/* <TCCRule /> */}
+      <TCCRule />
     </div>
   );
 }
