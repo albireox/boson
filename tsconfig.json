@@ -18,6 +18,5 @@
     "noFallthroughCasesInSwitch": true,
     "jsxImportSource": "@emotion/react"
   },
-  "include": ["src/**/*"],
-  "exclude": []
+  "include": ["src/**/*", "public/js9prefs.js"]
 }

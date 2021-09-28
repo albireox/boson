@@ -15,6 +15,7 @@ import BosonApp from './renderer/app';
 declare global {
   interface Window {
     api: any;
+    JS9: any;
   }
 }
 

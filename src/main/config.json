@@ -57,6 +57,11 @@
       "width": 800,
       "height": 600,
       "resizable": true
+    },
+    "guider": {
+      "width": 1200,
+      "height": 1400,
+      "resizable": true
     }
   },
   "user": {

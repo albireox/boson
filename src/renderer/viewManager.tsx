@@ -12,6 +12,7 @@ import { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import ConnectView from './views/connect';
 import FPSView from './views/FPS';
+import GuiderView from './views/guider';
 import KeywordsView from './views/keywords';
 import LogView from './views/log';
 import MainView from './views/main';
@@ -27,11 +28,16 @@ class ViewManager extends Component<{}, {}> {
       log: <LogView />,
       keywords: <KeywordsView />,
       weather: <WeatherView />,
-      fps: <FPSView />
+      fps: <FPSView />,
+      guider: <GuiderView />
     };
   }
 
-  static View(props: { location: { search: string } }) {
+  static View(props: { location: Location }) {
+    if (props.location.pathname === '/guider.html') {
+      return <GuiderView />;
+    }
+
     let name = props.location.search.slice(1); // Remove the ? at the beginning.
     let view: any;
     if (name.includes('log')) {
