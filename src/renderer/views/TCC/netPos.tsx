@@ -103,8 +103,13 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
     setCoordState(newCoordState);
   }, [keywords]);
 
-  const getRot = (rotPos: number | undefined) => {
-    if (rotPos === undefined || rotPos === null) {
+  const getRot = (rotPos: number | undefined | string) => {
+    if (
+      rotPos === undefined ||
+      rotPos === null ||
+      Number.isNaN(rotPos) ||
+      typeof rotPos === 'string' // For the case when returns nan
+    ) {
       return null;
     }
     return rotPos.toFixed(2);
