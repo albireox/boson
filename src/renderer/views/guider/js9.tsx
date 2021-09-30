@@ -31,6 +31,14 @@ export const JS9: React.FC<{
     if (keywords === undefined || keywords['fliswarm.filename'] === undefined)
       return;
 
+    let now = new Date();
+    if (
+      now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() >
+      5000
+    ) {
+      return;
+    }
+
     let values = keywords['fliswarm.filename'].values;
 
     if (currentImage === values[2] || values[0] !== display) {
@@ -49,7 +57,6 @@ export const JS9: React.FC<{
       window.JS9.Load(`http://localhost:8080/${values[2]}`, load_opts, {
         display: display
       });
-      console.log(display, values[2]);
       window.JS9.SetImageInherit(true, { display: display });
     }, 500);
 
