@@ -16,8 +16,5 @@ var JS9Prefs = {
   imageOpts: {
     colormap: 'grey',
     scale: 'linear'
-  },
-  fits: {
-    name: 'cfitsio'
   }
 };
