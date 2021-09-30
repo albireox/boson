@@ -21,7 +21,11 @@ import { getTAITime } from '../utils';
  * @param channel The channel on which to listen for the messages from the
  *    tron model.
  */
-export function useKeywords(keys: string[], channel: string) {
+export function useKeywords(
+  keys: string[],
+  channel: string,
+  refresh: boolean = true
+) {
   const [keywords, setKeywords] = useState<KeywordMap>({});
 
   // Store the parameters as a ref so that we can write a useEffect below
@@ -67,7 +71,8 @@ export function useKeywords(keys: string[], channel: string) {
     window.api.invoke(
       'tron-register-model-listener',
       Array.from(lowerKeys.keys()),
-      channel
+      channel,
+      refresh
     );
 
     const unload = () =>
@@ -128,4 +133,41 @@ export function useTAI(): Date {
   }, [date]);
 
   return date;
+}
+
+/*
+ * Returns window size. Taken from https://usehooks.com/useWindowSize/
+ */
+export function useWindowSize() {
+  // Initialize state with undefined width/height so server and client renders match
+  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
+
+  interface WindowSize {
+    width: undefined | number;
+    height: undefined | number;
+  }
+
+  const [windowSize, setWindowSize] = useState<WindowSize>({
+    width: undefined,
+    height: undefined
+  });
+
+  useEffect(() => {
+    // Handler to call on window resize
+    function handleResize() {
+      // Set window width/height to state
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    }
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    // Call handler right away so state gets updated with initial window size
+    handleResize();
+    // Remove event listener on cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []); // Empty array ensures that effect is only run on mount
+
+  return windowSize;
 }

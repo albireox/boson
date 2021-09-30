@@ -94,8 +94,8 @@ export default function loadEvents() {
 
   ipcMain.handle(
     'tron-register-model-listener',
-    async (event, keys: string[], listenOn) => {
-      tron.model.registerListener(keys, event, listenOn);
+    async (event, keys: string[], listenOn, refresh = true) => {
+      tron.model.registerListener(keys, event, listenOn, true, refresh);
     }
   );
 
