@@ -116,10 +116,17 @@ export function createWindow(name: string = 'main'): BrowserWindow {
 
   const isDev = require('electron-is-dev');
 
-  if (isDev) {
-    win.loadURL(`http://127.0.0.1:3000/index.html?${name}`);
+  let page: string;
+  if (name !== 'guider') {
+    page = `index.html?${name}`;
   } else {
-    win.loadURL(`file://${__dirname}/../../index.html?${name}`);
+    page = `guider.html`;
+  }
+
+  if (isDev) {
+    win.loadURL(`http://127.0.0.1:3000/${page}`);
+  } else {
+    win.loadURL(`file://${__dirname}/../../${page}`);
   }
 
   windows.set(name, win);
