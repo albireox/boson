@@ -81,7 +81,7 @@ export function useKeywords(
 
     // Unsubscribe when component unmounts.
     return () => unload();
-  }, [updateKeywords]);
+  }, [updateKeywords, refresh]);
 
   return keywords;
 }

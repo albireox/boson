@@ -22,7 +22,6 @@ export const JS9: React.FC<{
   const [currentImage, setCurrentImage] = React.useState<string | undefined>(
     undefined
   );
-
   const [first, setFirst] = React.useState(true);
 
   let display = `gfa${gid}`;
