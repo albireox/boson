@@ -7,6 +7,7 @@
 
 /** @jsxImportSource @emotion/react */
 
+import { Tooltip } from '@mui/material';
 import { KeywordMap } from 'main/tron/types';
 import React from 'react';
 import { useWindowSize } from 'renderer/hooks';
@@ -19,9 +20,7 @@ export const JS9: React.FC<{
 }> = ({ keywords, gid, opts }) => {
   let size = useWindowSize();
 
-  const [currentImage, setCurrentImage] = React.useState<string | undefined>(
-    undefined
-  );
+  const [currentImage, setCurrentImage] = React.useState<string>('');
   const [first, setFirst] = React.useState(true);
 
   let display = `gfa${gid}`;
@@ -70,7 +69,7 @@ export const JS9: React.FC<{
 
   let height = Math.round((size.height || 1400) / 4);
   return (
-    <>
+    <Tooltip title={currentImage}>
       <div
         className='JS9'
         style={{ width: height, height: height }}
@@ -80,13 +79,17 @@ export const JS9: React.FC<{
             backgroundImage: first
               ? `url(${process.env.PUBLIC_URL + '/images/SDSS-V.png'})`
               : 'none',
-            backgroundSize: 'cover'
+            backgroundSize: 'cover',
+            backgroundBlendMode: 'hard-light',
+            backgroundPosition: 'center',
+            width: height,
+            height: height
           }
         })}
         data-width={height}
         data-height={height}
         id={display}
       />
-    </>
+    </Tooltip>
   );
 };

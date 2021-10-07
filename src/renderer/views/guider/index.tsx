@@ -7,8 +7,11 @@
 
 /** @jsxImportSource @emotion/react */
 
+import { Stack } from '@mui/material';
 import * as React from 'react';
 import { useKeywords } from '../../hooks';
+import { GuideStack } from './guide';
+import { GuideTable } from './guideTable';
 import { JS9 } from './js9';
 import { MenuBar } from './menubar';
 
@@ -35,10 +38,18 @@ export default function GuiderView() {
   };
 
   window.JS9.globalOpts['mouseActions'][0] = 'none';
+  window.JS9.globalOpts['resize'] = false;
 
   return (
     <>
-      <div style={{ alignSelf: 'center' }}>
+      <Stack
+        alignContent='center'
+        direction='column'
+        height='100%'
+        sx={{
+          p: [1, 2, 2, 2]
+        }}
+      >
         <MenuBar
           style={{
             marginBottom: '4px',
@@ -47,17 +58,25 @@ export default function GuiderView() {
           }}
           onUpdate={onOptsUpdate}
         />
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
+        <Stack
+          style={{ width: '100%', display: 'flex', flexDirection: 'row' }}
+          justifyContent='center'
+        >
           <JS9 keywords={keywords} opts={opts} gid={1} />
           <JS9 keywords={keywords} opts={opts} gid={2} />
           <JS9 keywords={keywords} opts={opts} gid={3} />
-        </div>
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
+        </Stack>
+        <Stack
+          style={{ width: '100%', display: 'flex', flexDirection: 'row' }}
+          justifyContent='center'
+        >
           <JS9 keywords={keywords} opts={opts} gid={4} />
           <JS9 keywords={keywords} opts={opts} gid={5} />
           <JS9 keywords={keywords} opts={opts} gid={6} />
-        </div>
-      </div>
+        </Stack>
+        <GuideStack />
+        <GuideTable />
+      </Stack>
     </>
   );
 }
