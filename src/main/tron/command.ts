@@ -37,10 +37,7 @@ export default class Command {
   }
 
   isDone() {
-    if (
-      this.status === CommandStatus.Done ||
-      this.status === CommandStatus.Failed
-    ) {
+    if (this.status === CommandStatus.Done || this.status === CommandStatus.Failed) {
       return true;
     }
     return false;

@@ -8,14 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  Chip,
-  ChipProps,
-  PaletteColor,
-  styled,
-  Theme,
-  Tooltip
-} from '@mui/material';
+import { Chip, ChipProps, PaletteColor, styled, Theme, Tooltip } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 export enum Severity {
@@ -85,11 +78,7 @@ export function AlertChip(props: AlertChipProps) {
     return <span />;
   } else {
     return (
-      <Tooltip
-        arrow
-        title={props.label ? props.label : ''}
-        disableHoverListener={!hoverStatus}
-      >
+      <Tooltip arrow title={props.label ? props.label : ''} disableHoverListener={!hoverStatus}>
         <div>
           <StyledChip ref={chipElementRef} {...props} />
         </div>

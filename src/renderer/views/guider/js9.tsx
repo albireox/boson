@@ -26,14 +26,10 @@ export const JS9: React.FC<{
   let display = `gfa${gid}`;
 
   React.useEffect(() => {
-    if (keywords === undefined || keywords['fliswarm.filename'] === undefined)
-      return;
+    if (keywords === undefined || keywords['fliswarm.filename'] === undefined) return;
 
     let now = new Date();
-    if (
-      now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() >
-      5000
-    ) {
+    if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
       return;
     }
 

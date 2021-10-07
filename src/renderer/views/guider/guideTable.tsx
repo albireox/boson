@@ -40,11 +40,7 @@ const UserInput: React.FC<
       value={value}
       onChange={onChange}
       size='small'
-      endAdornment={
-        adornment ? (
-          <InputAdornment position='end'>{adornment}</InputAdornment>
-        ) : null
-      }
+      endAdornment={adornment ? <InputAdornment position='end'>{adornment}</InputAdornment> : null}
       sx={{ minWidth: '250px' }}
     />
   </FormControl>

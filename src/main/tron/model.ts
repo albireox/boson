@@ -81,9 +81,7 @@ export default class TronModel {
       }
       if (!(key in this._listeners)) {
         this._listeners[key] = [[event, channel]];
-        log.debug(
-          `Registering listener for ${key} on (${event.sender.id}, ${channel})`
-        );
+        log.debug(`Registering listener for ${key} on (${event.sender.id}, ${channel})`);
       } else {
         // Check if the window and channel are already registered.
         let alreadyRegistered = false;
@@ -95,9 +93,7 @@ export default class TronModel {
         }
         if (!alreadyRegistered) {
           this._listeners[key].push([event, channel]);
-          log.debug(
-            `Registering listener for ${key} on (${event.sender.id}, ${channel})`
-          );
+          log.debug(`Registering listener for ${key} on (${event.sender.id}, ${channel})`);
         }
       }
     }
@@ -193,8 +189,7 @@ export default class TronModel {
     for (let actor of actors) {
       let actorKeys = keys.filter((k) => k.includes(`${actor}.`));
       if (actorKeys.length > maxChunk) {
-        for (let ak of _chunk(actorKeys, maxChunk))
-          this.refreshKeywords(ak, maxChunk);
+        for (let ak of _chunk(actorKeys, maxChunk)) this.refreshKeywords(ak, maxChunk);
       } else {
         let keyNames = actorKeys.map((ak) => ak.split('.')[1]);
         let cmd = `keys getFor=${actor} ${keyNames.join(' ')}`;

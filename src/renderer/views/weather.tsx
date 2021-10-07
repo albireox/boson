@@ -25,10 +25,7 @@ const classes = {
 export default function WeatherView() {
   const theme = useTheme();
 
-  const keywords = useKeywords(
-    ['apo.airTempPT', 'apo.humidPT'],
-    'weather-plot'
-  );
+  const keywords = useKeywords(['apo.airTempPT', 'apo.humidPT'], 'weather-plot');
 
   const [temperature, setTemperature] = useState<
     {

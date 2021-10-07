@@ -145,12 +145,7 @@ const template: any[] = [
       { role: 'minimize' },
       { role: 'zoom' },
       ...(isMac
-        ? [
-            { type: 'separator' },
-            { role: 'front' },
-            { type: 'separator' },
-            { role: 'window' }
-          ]
+        ? [{ type: 'separator' }, { role: 'front' }, { type: 'separator' }, { role: 'window' }]
         : [{ role: 'close' }])
     ]
   },

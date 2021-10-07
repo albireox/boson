@@ -12,16 +12,9 @@ import { Theme, Typography, TypographyProps, useTheme } from '@mui/material';
 import { Reply, ReplyCode } from 'main/tron';
 import * as React from 'react';
 import Highlighter, { HighlighterProps } from 'react-highlight-words';
-import FollowScroll, {
-  FollowScrollHandle
-} from 'renderer/components/followScroll';
+import FollowScroll, { FollowScrollHandle } from 'renderer/components/followScroll';
 import { useListener } from 'renderer/hooks';
-import {
-  ConfigContext,
-  ConfigState,
-  SearchContext,
-  SearchState
-} from './index';
+import { ConfigContext, ConfigState, SearchContext, SearchState } from './index';
 
 const classes = {
   messages: {
@@ -60,11 +53,7 @@ function isVisible(code: ReplyCode, levels: ReplyCode[]) {
   return false;
 }
 
-export function getMessage(
-  reply: Reply,
-  levels: ReplyCode[],
-  search: SearchState
-) {
+export function getMessage(reply: Reply, levels: ReplyCode[], search: SearchState) {
   if (!isVisible(reply.code, levels)) return null;
 
   const highlighterProps: Partial<HighlighterProps> = { searchWords: [] };
@@ -82,13 +71,7 @@ export function getMessage(
     highlighterProps.autoEscape = !search.regExp;
   }
 
-  return (
-    <Message
-      reply={reply}
-      key={reply.id}
-      HighlighterProps={highlighterProps}
-    />
-  );
+  return <Message reply={reply} key={reply.id} HighlighterProps={highlighterProps} />;
 }
 
 type MessageProps = TypographyProps & {
@@ -96,11 +79,7 @@ type MessageProps = TypographyProps & {
   HighlighterProps: Partial<HighlighterProps>;
 };
 
-const Message: React.FC<MessageProps> = ({
-  reply,
-  HighlighterProps,
-  ...props
-}) => {
+const Message: React.FC<MessageProps> = ({ reply, HighlighterProps, ...props }) => {
   const theme: Theme = useTheme();
 
   const getMessageColourMemo = React.useCallback(
@@ -109,24 +88,14 @@ const Message: React.FC<MessageProps> = ({
   );
 
   let messageColour = getMessageColourMemo(reply.code);
-  let data: string | JSX.Element =
-    formatDate(reply.date) + ' ' + reply.rawLine;
+  let data: string | JSX.Element = formatDate(reply.date) + ' ' + reply.rawLine;
 
   if (HighlighterProps.searchWords) {
-    data = (
-      <Highlighter
-        {...(HighlighterProps as HighlighterProps)}
-        textToHighlight={data}
-      />
-    );
+    data = <Highlighter {...(HighlighterProps as HighlighterProps)} textToHighlight={data} />;
   }
 
   return (
-    <Typography
-      sx={classes.messages}
-      style={{ color: messageColour }}
-      {...props}
-    >
+    <Typography sx={classes.messages} style={{ color: messageColour }} {...props}>
       {data}
     </Typography>
   );
@@ -144,11 +113,7 @@ const filterReplies = (
   keepMessages = 0
 ) =>
   replies
-    .filter(
-      (x) =>
-        config.selectedActors.length === 0 ||
-        config.selectedActors.includes(x.sender)
-    )
+    .filter((x) => config.selectedActors.length === 0 || config.selectedActors.includes(x.sender))
     .slice(-keepMessages)
     .map((r) => getMessage(r, config.levels, search))
     .filter((x) => x !== null);
@@ -175,10 +140,7 @@ const reducer = (
   if (action.type === 'append') {
     return {
       replies: [...state.replies, ...action.data!],
-      messages: [
-        ...state.messages,
-        ...filterReplies(action.data!, action.config!, action.search!)
-      ]
+      messages: [...state.messages, ...filterReplies(action.data!, action.config!, action.search!)]
     };
   } else if (action.type === 'refresh') {
     return {
@@ -205,8 +167,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
       let actors = new Set(replies.map((r) => r.sender));
       let newSeenActors: string[] = [];
       actors.forEach((a) => {
-        if (!config.seenActors.includes(a) && !a.startsWith('keys_'))
-          newSeenActors.push(a);
+        if (!config.seenActors.includes(a) && !a.startsWith('keys_')) newSeenActors.push(a);
       });
       if (newSeenActors.length > 0) {
         onConfigUpdate({
@@ -241,9 +202,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
     return () => clearInterval(timer);
   }, [buffer, config, search, dispatch, updateSeenActors]);
 
-  useListener((replies: Reply[]) =>
-    setBuffer((prev) => [...prev, ...replies])
-  );
+  useListener((replies: Reply[]) => setBuffer((prev) => [...prev, ...replies]));
 
   return <FollowScroll virtuoso ref={ref} messages={state.messages} />;
 };

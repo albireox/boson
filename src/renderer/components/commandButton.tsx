@@ -44,11 +44,7 @@ type CommandButtonProps = ButtonProps & {
   abortCommand?: string;
 };
 
-export function CommandButton({
-  commandString,
-  abortCommand,
-  ...props
-}: CommandButtonProps) {
+export function CommandButton({ commandString, abortCommand, ...props }: CommandButtonProps) {
   const baseIcon = props.endIcon || <SendIcon />;
   const variant = props.variant || 'contained';
 
@@ -58,9 +54,7 @@ export function CommandButton({
   const [color, setColor] = React.useState<any>(undefined);
   const [alertOpen, setAlertOpen] = React.useState(false);
 
-  const [subscription, setSubscription] = React.useState<Subscription | null>(
-    null
-  );
+  const [subscription, setSubscription] = React.useState<Subscription | null>(null);
 
   function changeButtonState(newState: string) {
     setRunning(newState === 'running');

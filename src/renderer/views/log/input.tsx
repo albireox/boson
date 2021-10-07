@@ -9,13 +9,7 @@
  */
 
 import SendIcon from '@mui/icons-material/Send';
-import {
-  Box,
-  IconButton,
-  InputAdornment,
-  OutlinedInput,
-  TextFieldProps
-} from '@mui/material';
+import { Box, IconButton, InputAdornment, OutlinedInput, TextFieldProps } from '@mui/material';
 import * as React from 'react';
 import { SyntheticEvent } from 'react';
 
@@ -49,12 +43,7 @@ const CommandInput: React.FC<TextFieldProps> = (props) => {
 
   return (
     <Box sx={styles.root}>
-      <form
-        onSubmit={handleCommand}
-        autoComplete='off'
-        noValidate
-        style={{ width: '100%' }}
-      >
+      <form onSubmit={handleCommand} autoComplete='off' noValidate style={{ width: '100%' }}>
         <OutlinedInput
           error={error}
           onChange={() => setError(false)}

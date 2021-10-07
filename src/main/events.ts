@@ -42,13 +42,10 @@ export default function loadEvents() {
     return win.getSize();
   });
 
-  ipcMain.handle(
-    'window-set-size',
-    async (event, name, width, height, animate = false) => {
-      let win = windows.get(name);
-      if (win !== undefined) win.setSize(width, height, animate);
-    }
-  );
+  ipcMain.handle('window-set-size', async (event, name, width, height, animate = false) => {
+    let win = windows.get(name);
+    if (win !== undefined) win.setSize(width, height, animate);
+  });
 
   // Store
   ipcMain.handle('get-from-store', async (event, key) => {
@@ -78,12 +75,9 @@ export default function loadEvents() {
     return await tron.authorise(credentials);
   });
 
-  ipcMain.handle(
-    'tron-add-streamer-window',
-    async (event, sendAll = false) => {
-      tron.addStreamerWindow(event.sender.id, event.sender, sendAll);
-    }
-  );
+  ipcMain.handle('tron-add-streamer-window', async (event, sendAll = false) => {
+    tron.addStreamerWindow(event.sender.id, event.sender, sendAll);
+  });
 
   ipcMain.handle('tron-remove-streamer-window', async (event) => {
     tron.removeStreamerWindow(event.sender.id);

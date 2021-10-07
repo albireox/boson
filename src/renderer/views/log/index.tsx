@@ -38,13 +38,7 @@ export interface SearchState {
 }
 
 const IConfigState = {
-  levels: [
-    ReplyCode.Info,
-    ReplyCode.Warning,
-    ReplyCode.Error,
-    ReplyCode.Failed,
-    ReplyCode.Done
-  ],
+  levels: [ReplyCode.Info, ReplyCode.Warning, ReplyCode.Error, ReplyCode.Failed, ReplyCode.Done],
   nMessages: 0, // Not in use
   seenActors: [],
   selectedActors: []

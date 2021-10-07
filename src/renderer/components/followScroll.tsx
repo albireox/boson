@@ -41,11 +41,8 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
       // margin in case of bounce), we say we are at the bottom. We do this
       // with a delay so that we don't do this check while we are actually
       // scrolling. See https://bit.ly/3nICFBE.
-      const currentTarget = document.getElementById(
-        virtuoso ? 'virtuoso' : 'messages-container'
-      );
-      const scrollHeight =
-        currentTarget!.scrollHeight - currentTarget!.scrollTop;
+      const currentTarget = document.getElementById(virtuoso ? 'virtuoso' : 'messages-container');
+      const scrollHeight = currentTarget!.scrollHeight - currentTarget!.scrollTop;
       const bottom = scrollHeight - currentTarget!.clientHeight < 50;
 
       // Report if we are at bottom to parent. In this case, if we aren't
@@ -76,8 +73,7 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
       // handleWheel because the logic is the same. For no the expected width
       // of the scrollbar is hardcoded but ths may require some tweaking for
       // different OS's or screen resolutions.
-      const onScrollBar =
-        event.clientX >= document.documentElement.offsetWidth - 25;
+      const onScrollBar = event.clientX >= document.documentElement.offsetWidth - 25;
       if (onScrollBar) handleWheel();
     };
 
@@ -93,9 +89,7 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
         // Only scroll if we sticky or if we haven't manually scrolled away.
         // Avoid scrolling if we are already scrolling.
         if (!scrolling && (!manuallyScrolled || stick)) {
-          const target = document.getElementById(
-            virtuoso ? 'virtuoso' : 'messages-container'
-          );
+          const target = document.getElementById(virtuoso ? 'virtuoso' : 'messages-container');
           if (!target) return;
 
           if (behavior === 'calculate') {
@@ -244,11 +238,7 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
           }}
           style={{ opacity: fbOpacity }}
         >
-          <Fab
-            size='small'
-            onClick={() => setStick(!stick)}
-            color={fbColour as any}
-          >
+          <Fab size='small' onClick={() => setStick(!stick)} color={fbColour as any}>
             <SettingsEthernet style={{ transform: 'rotate(90deg)' }} />
           </Fab>
         </div>

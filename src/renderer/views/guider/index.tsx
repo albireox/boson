@@ -26,11 +26,7 @@ export const JS9Opts = {
 };
 
 export default function GuiderView() {
-  const keywords = useKeywords(
-    ['fliswarm.filename'],
-    'guider-filename',
-    false
-  );
+  const keywords = useKeywords(['fliswarm.filename'], 'guider-filename', false);
 
   const [opts, setOpts] = React.useState<IJS9Opts>(JS9Opts);
   const onOptsUpdate = (newOpts: Partial<IJS9Opts>) => {

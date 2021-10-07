@@ -51,8 +51,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
     'tcc-misc-keywords'
   );
 
-  const getScaleFactor = () =>
-    ((keywords['tcc.scaleFac']?.values[0] - 1) * 1e6)?.toFixed(1);
+  const getScaleFactor = () => ((keywords['tcc.scaleFac']?.values[0] - 1) * 1e6)?.toFixed(1);
 
   React.useEffect(() => {
     let interval = setInterval(() => {
@@ -94,9 +93,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
         <TableBody>
           <TableRow>
             <TableCell align='right'>HA</TableCell>
-            <TableCell align='right'>
-              {degToDMS(HA.HA, { precision: 0, hours: true })}
-            </TableCell>
+            <TableCell align='right'>{degToDMS(HA.HA, { precision: 0, hours: true })}</TableCell>
             <TableCell align='left'>hms</TableCell>
             {/*  */}
             <TableCell align='right'>Airmass</TableCell>
@@ -127,9 +124,7 @@ const MiscTable: React.FC<TableProps> = (props) => {
             <TableCell align='left'>hms</TableCell>
             {/*  */}
             <TableCell align='right'>LMST</TableCell>
-            <TableCell align='right'>
-              {degToDMS(LMST, { precision: 0 })}
-            </TableCell>
+            <TableCell align='right'>{degToDMS(LMST, { precision: 0 })}</TableCell>
             <TableCell align='left'>hms</TableCell>
           </TableRow>
           <TableRow>

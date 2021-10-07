@@ -8,12 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  Box,
-  LinearProgress,
-  LinearProgressProps,
-  Typography
-} from '@mui/material';
+import { Box, LinearProgress, LinearProgressProps, Typography } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -38,9 +33,7 @@ function LinearProgressWithLabel(
         <LinearProgress color='secondary' variant='determinate' {...props} />
       </Box>
       <Box minWidth={35} hidden={props.hidden || false}>
-        <Typography variant='body1'>{`${Math.round(
-          props.value
-        )}%`}</Typography>
+        <Typography variant='body1'>{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
   );
@@ -63,9 +56,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= 100 ? 10 : prevProgress + 10
-      );
+      setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
     }, 800);
     return () => {
       clearInterval(timer);
@@ -138,11 +129,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
             <TableCell align='right'>{coordState.axis2label}</TableCell>
             <TableCell align='right'>{coordState.axis2value}</TableCell>
             <TableCell align='left'>{coordState.axis2units}</TableCell>
-            <TableCell
-              align='center'
-              rowSpan={2}
-              style={{ padding: '0px 32px 0px 64px' }}
-            >
+            <TableCell align='center' rowSpan={2} style={{ padding: '0px 32px 0px 64px' }}>
               <LinearProgressWithLabel value={progress} hidden={true} />
             </TableCell>
           </TableRow>
@@ -160,12 +147,8 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
           </TableRow>
           <TableRow>
             <TableCell align='right'>Rot</TableCell>
-            <TableCell align='right'>
-              {getRot(keywords['tcc.rotPos']?.values[0])}
-            </TableCell>
-            <TableCell align='left'>
-              {keywords['tcc.rotPos'] ? <Deg /> : null}
-            </TableCell>
+            <TableCell align='right'>{getRot(keywords['tcc.rotPos']?.values[0])}</TableCell>
+            <TableCell align='left'>{keywords['tcc.rotPos'] ? <Deg /> : null}</TableCell>
             <TableCell align='left'>
               <AlertChip
                 label={keywords['tcc.rotType']?.values[0] || 'N/A'}

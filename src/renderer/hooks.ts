@@ -21,11 +21,7 @@ import { getTAITime } from '../utils';
  * @param channel The channel on which to listen for the messages from the
  *    tron model.
  */
-export function useKeywords(
-  keys: string[],
-  channel: string,
-  refresh: boolean = true
-) {
+export function useKeywords(keys: string[], channel: string, refresh: boolean = true) {
   const [keywords, setKeywords] = useState<KeywordMap>({});
 
   // Store the parameters as a ref so that we can write a useEffect below
@@ -35,17 +31,13 @@ export function useKeywords(
   const getLowerKeys = () => {
     // Convert keys to lower-case, but keep the original. We'll revert when
     // the keywords get updated.
-    return new Map(
-      params.current.keys.map((value) => [value.toLowerCase(), value])
-    );
+    return new Map(params.current.keys.map((value) => [value.toLowerCase(), value]));
   };
 
   const updateKeywords = useCallback((tronKeywords: KeywordMap) => {
     const keys = params.current.keys;
     const lowerKeys = getLowerKeys();
-    const actors = keys
-      .filter((k) => k.includes('.*'))
-      .map((a) => a.split('.')[0]);
+    const actors = keys.filter((k) => k.includes('.*')).map((a) => a.split('.')[0]);
     const isAll = keys.includes('*');
 
     // Revert tronKeywords (all keys lowercase) to the original capitalisation.
@@ -75,8 +67,7 @@ export function useKeywords(
       refresh
     );
 
-    const unload = () =>
-      window.api.invoke('tron-remove-model-listener', channel);
+    const unload = () => window.api.invoke('tron-remove-model-listener', channel);
     window.addEventListener('unload', unload);
 
     // Unsubscribe when component unmounts.
@@ -93,10 +84,7 @@ export function useKeywords(
  * @param sendAll Whether to send all the cumulated replies at the time of
  * the subscription.
  */
-export function useListener(
-  onReceived: (reply: Reply[]) => any,
-  sendAll = true
-) {
+export function useListener(onReceived: (reply: Reply[]) => any, sendAll = true) {
   const params = useRef({ sendAll });
 
   const parseReplies = useCallback(

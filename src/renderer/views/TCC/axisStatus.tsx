@@ -65,12 +65,7 @@ const SmallAlertChip: React.FC<any> = (props) => {
     delete updatedProps.hidden;
   }
   return (
-    <AlertChip
-      variant='outlined'
-      size='small'
-      style={{ height: '20px' }}
-      {...updatedProps}
-    />
+    <AlertChip variant='outlined' size='small' style={{ height: '20px' }} {...updatedProps} />
   );
 };
 
@@ -134,8 +129,7 @@ const AxisStatus: React.FC<TableProps> = (props) => {
     }
     for (let bitInfo of ErrorBits) {
       for (let bit of bits) {
-        if (bit === bitInfo[0])
-          return { label: bitInfo[1][0], severity: bitInfo[1][1] };
+        if (bit === bitInfo[0]) return { label: bitInfo[1][0], severity: bitInfo[1][1] };
       }
     }
     return { hidden: true, label: 'OK', severity: Severity.Info };
@@ -160,14 +154,10 @@ const AxisStatus: React.FC<TableProps> = (props) => {
             <TableCell align='right'>{getAxisPos('tcc.axePos', 0)}</TableCell>
             <TableCell align='right'>{getAxisPos('tcc.tccPos', 0)}</TableCell>
             <TableCell align='right'>
-              <SmallAlertChip
-                {...getAxisCmdState(keywords['tcc.axisCmdState'], 0)}
-              />
+              <SmallAlertChip {...getAxisCmdState(keywords['tcc.axisCmdState'], 0)} />
             </TableCell>
             <TableCell align='left' style={{ paddingLeft: '4px' }}>
-              <SmallAlertChip
-                {...getAxisErrCode(keywords['tcc.axisErrCode'], 0)}
-              />
+              <SmallAlertChip {...getAxisErrCode(keywords['tcc.axisErrCode'], 0)} />
             </TableCell>
             <TableCell align='left'>
               <SmallAlertChip
@@ -181,14 +171,10 @@ const AxisStatus: React.FC<TableProps> = (props) => {
             <TableCell align='right'>{getAxisPos('tcc.axePos', 1)}</TableCell>
             <TableCell align='right'>{getAxisPos('tcc.tccPos', 1)}</TableCell>
             <TableCell align='right'>
-              <SmallAlertChip
-                {...getAxisCmdState(keywords['tcc.axisCmdState'], 1)}
-              />
+              <SmallAlertChip {...getAxisCmdState(keywords['tcc.axisCmdState'], 1)} />
             </TableCell>
             <TableCell align='left' style={{ paddingLeft: '4px' }}>
-              <SmallAlertChip
-                {...getAxisErrCode(keywords['tcc.axisErrCode'], 1)}
-              />
+              <SmallAlertChip {...getAxisErrCode(keywords['tcc.axisErrCode'], 1)} />
             </TableCell>
             <TableCell align='left'>
               <SmallAlertChip
@@ -202,14 +188,10 @@ const AxisStatus: React.FC<TableProps> = (props) => {
             <TableCell align='right'>{getAxisPos('tcc.axePos', 2)}</TableCell>
             <TableCell align='right'>{getAxisPos('tcc.tccPos', 2)}</TableCell>
             <TableCell align='right'>
-              <SmallAlertChip
-                {...getAxisCmdState(keywords['tcc.axisCmdState'], 2)}
-              />
+              <SmallAlertChip {...getAxisCmdState(keywords['tcc.axisCmdState'], 2)} />
             </TableCell>
             <TableCell align='left' style={{ paddingLeft: '4px' }}>
-              <SmallAlertChip
-                {...getAxisErrCode(keywords['tcc.axisErrCode'], 2)}
-              />
+              <SmallAlertChip {...getAxisErrCode(keywords['tcc.axisErrCode'], 2)} />
             </TableCell>
             <TableCell align='left'>
               <SmallAlertChip

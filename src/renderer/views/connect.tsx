@@ -99,9 +99,7 @@ export default function ConnectView() {
   });
 
   const [error, setError] = useState<undefined | string>(undefined);
-  const [buttonDisabled, setButtonDisabled] = useState<undefined | boolean>(
-    false
-  );
+  const [buttonDisabled, setButtonDisabled] = useState<undefined | boolean>(false);
   const [showProgress, setShowProgress] = useState<boolean>(false);
   const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
 
@@ -134,11 +132,7 @@ export default function ConnectView() {
       ])
       .then(async (res: any) => {
         let program = res[0];
-        if (program)
-          return [
-            ...res,
-            await window.api.invoke('get-password', 'hub', program)
-          ];
+        if (program) return [...res, await window.api.invoke('get-password', 'hub', program)];
         return [...res, ''];
       })
       .then((res: any) => {
@@ -157,24 +151,13 @@ export default function ConnectView() {
   }, []);
 
   let storeCredentials = () => {
-    window.api.store.set(
-      'user.connection.program',
-      connectForm.program.toLowerCase()
-    );
+    window.api.store.set('user.connection.program', connectForm.program.toLowerCase());
     window.api.store.set('user.connection.user', connectForm.user);
     window.api.store.set('user.connection.host', connectForm.host);
     window.api.store.set('user.connection.httpHost', connectForm.httpHost);
-    window.api.store.set(
-      'user.connection.httpPort',
-      connectForm.httpPort as number
-    );
+    window.api.store.set('user.connection.httpPort', connectForm.httpPort as number);
     if (connectForm.program)
-      window.api.invoke(
-        'set-password',
-        'hub',
-        connectForm.program,
-        connectForm.password
-      );
+      window.api.invoke('set-password', 'hub', connectForm.program, connectForm.password);
   };
 
   let handleConnect = async (event: SyntheticEvent) => {
@@ -184,21 +167,14 @@ export default function ConnectView() {
 
     let port = (await window.api.store.get('connection.port')) || 9877;
 
-    const connectionResult = await window.api.invoke(
-      'tron-connect',
-      connectForm.host,
-      port
-    );
+    const connectionResult = await window.api.invoke('tron-connect', connectForm.host, port);
 
     switch (connectionResult) {
       case ConnectionStatus.Connected:
-        const [result, err]: [boolean, string | null] =
-          await window.api.invoke(
-            'tron-authorise',
-            (({ program, user, password }) => ({ program, user, password }))(
-              connectForm
-            )
-          );
+        const [result, err]: [boolean, string | null] = await window.api.invoke(
+          'tron-authorise',
+          (({ program, user, password }) => ({ program, user, password }))(connectForm)
+        );
         if (result === true) {
           storeCredentials();
           window.api.invoke('window-close', NAME);
@@ -221,18 +197,13 @@ export default function ConnectView() {
   let handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // TODO: replace with https://github.com/react-hook-form/react-hook-form
     const name = event.target.name;
-    const value =
-      event.target.type === 'checkbox'
-        ? event.target.checked
-        : event.target.value;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     setConnectForm({ ...connectForm, [name]: value });
   };
 
   return (
     <Root className={classes.root}>
-      {showProgress ? (
-        <LinearProgress className={classes.progress} color='secondary' />
-      ) : null}
+      {showProgress ? <LinearProgress className={classes.progress} color='secondary' /> : null}
       <Container
         id='container'
         component='div'
@@ -253,11 +224,7 @@ export default function ConnectView() {
           >
             {error}
           </Typography>
-          <form
-            className={classes.form}
-            onSubmit={handleConnect}
-            autoComplete='off'
-          >
+          <form className={classes.form} onSubmit={handleConnect} autoComplete='off'>
             <TextField
               variant='outlined'
               margin='dense'
@@ -302,12 +269,7 @@ export default function ConnectView() {
             <FormControlLabel
               label='Remember password'
               control={
-                <Checkbox
-                  name='remember'
-                  checked
-                  color='primary'
-                  onChange={handleChange}
-                />
+                <Checkbox name='remember' checked color='primary' onChange={handleChange} />
               }
             />
             <Button
@@ -329,11 +291,7 @@ export default function ConnectView() {
             >
               <Fab
                 size='small'
-                className={
-                  optionsExpanded
-                    ? classes.dropdownIconOpen
-                    : classes.dropdownIconClosed
-                }
+                className={optionsExpanded ? classes.dropdownIconOpen : classes.dropdownIconClosed}
                 onClick={() => setOptionsExpanded(!optionsExpanded)}
               >
                 <ExpandMoreIcon className={classes.dropdownIcon} />

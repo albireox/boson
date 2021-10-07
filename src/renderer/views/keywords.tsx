@@ -10,12 +10,7 @@
 
 /** @jsxImportSource @emotion/react */
 
-import {
-  DataGrid,
-  GridCellParams,
-  GridColDef,
-  GridRowData
-} from '@mui/x-data-grid';
+import { DataGrid, GridCellParams, GridColDef, GridRowData } from '@mui/x-data-grid';
 import { KeywordMap } from 'main/tron';
 import { useKeywords } from '../hooks';
 

@@ -64,34 +64,30 @@ function parseLine(line: string): [RegExpMatchArray | null, Keyword[]] {
 
   if (lineMatched.groups.keywords) {
     let sender = lineMatched.groups.sender;
-    let actor: string = sender.includes('_')
-      ? sender.split('_').slice(-1)[0]
-      : sender;
-    keywords = lineMatched.groups.keywords
-      .split(/\s*;\s*/)
-      .map((kw: string) => {
-        let key: string, values: string;
-        let kwMatched = kw.trim().match(/(?<key>\w+)=(?<values>.+)/);
-        if (!kwMatched) {
-          // Case where the keyword does not have a value (e.g. loggedIn).
-          key = kw;
-          values = '';
-        } else {
-          key = kwMatched.groups!.key;
-          values = kwMatched.groups!.values;
-        }
-        // Select all groups split by , except when the comma is inside quotes.
-        let rawValues = values.matchAll(/[^,"']+|"([^"]*)"|'([^']*)'/g);
-        let keyword: Keyword = {
-          actor: actor,
-          key: key,
-          values: [...rawValues].map((value) => {
-            return evaluateKeyword(value[0]);
-          }),
-          lastSeenAt: new Date()
-        };
-        return keyword;
-      });
+    let actor: string = sender.includes('_') ? sender.split('_').slice(-1)[0] : sender;
+    keywords = lineMatched.groups.keywords.split(/\s*;\s*/).map((kw: string) => {
+      let key: string, values: string;
+      let kwMatched = kw.trim().match(/(?<key>\w+)=(?<values>.+)/);
+      if (!kwMatched) {
+        // Case where the keyword does not have a value (e.g. loggedIn).
+        key = kw;
+        values = '';
+      } else {
+        key = kwMatched.groups!.key;
+        values = kwMatched.groups!.values;
+      }
+      // Select all groups split by , except when the comma is inside quotes.
+      let rawValues = values.matchAll(/[^,"']+|"([^"]*)"|'([^']*)'/g);
+      let keyword: Keyword = {
+        actor: actor,
+        key: key,
+        values: [...rawValues].map((value) => {
+          return evaluateKeyword(value[0]);
+        }),
+        lastSeenAt: new Date()
+      };
+      return keyword;
+    });
   }
   return [lineMatched, keywords];
 }
@@ -112,15 +108,10 @@ export default class TronConnection {
   commands: { [commandId: number]: Command } = {};
 
   constructor() {
-    this.client.on(
-      'connect',
-      () => (this.status = ConnectionStatus.Connected)
-    );
+    this.client.on('connect', () => (this.status = ConnectionStatus.Connected));
     this.client.on('error', () => (this.status = ConnectionStatus.Failed));
     this.client.on('end', () => (this.status = ConnectionStatus.Disconnected));
-    this.client.on('data', (buffer: Buffer) =>
-      this.parseData(buffer.toString())
-    );
+    this.client.on('data', (buffer: Buffer) => this.parseData(buffer.toString()));
     this.model = new TronModel(this);
   }
 
@@ -166,10 +157,7 @@ export default class TronConnection {
     let elapsedTime = 0.0;
     while (elapsedTime < 5) {
       if (this.status !== ConnectionStatus.Connecting) {
-        log.info(
-          'Connection finished with status',
-          ConnectionStatus[this.status]
-        );
+        log.info('Connection finished with status', ConnectionStatus[this.status]);
         return this.status;
       }
       await new Promise((r) => setTimeout(r, 50));
@@ -180,11 +168,7 @@ export default class TronConnection {
   }
 
   async authorise(credentials: Credentials) {
-    log.info(
-      `Trying to authorise user ${credentials.program.toUpperCase()}.${
-        credentials.user
-      }`
-    );
+    log.info(`Trying to authorise user ${credentials.program.toUpperCase()}.${credentials.user}`);
     if (this.status === ConnectionStatus.Authorised) {
       log.info('Already authorised');
       return [true, null];
@@ -260,8 +244,7 @@ export default class TronConnection {
       log.debug('Added listener', windowId);
       if (sendAll) {
         log.debug(
-          `Sending ${this.jsonReplies.length} stored ` +
-            `replies to listener ${windowId}`
+          `Sending ${this.jsonReplies.length} stored ` + `replies to listener ${windowId}`
         );
         this.sendReplyToListeners(this.jsonReplies, windowId);
       }
@@ -309,9 +292,7 @@ export default class TronConnection {
         commandId: parseInt(groups.commandId),
         sender: groups.sender,
         code: ReplyCodeReverseMap.get(groups.code.toLowerCase())!,
-        keywords: Object.fromEntries(
-          keywords.map((kw: Keyword) => [kw.key, kw])
-        ) as KeywordMap
+        keywords: Object.fromEntries(keywords.map((kw: Keyword) => [kw.key, kw])) as KeywordMap
       };
 
       for (let kw of keywords) {

@@ -19,9 +19,7 @@ import React from 'react';
 
 /** @jsxImportSource @emotion/react */
 
-export const ExposureTable: React.FC<{ keywords: KeywordMap }> = ({
-  keywords
-}) => {
+export const ExposureTable: React.FC<{ keywords: KeywordMap }> = ({ keywords }) => {
   const [files, setFiles] = React.useState<Keyword[]>([]);
 
   React.useEffect(() => {
@@ -48,12 +46,8 @@ export const ExposureTable: React.FC<{ keywords: KeywordMap }> = ({
               return (
                 <TableRow key={i}>
                   <TableCell>{file.values[0]}</TableCell>
-                  <TableCell>
-                    {file.values[2].split('/').reverse()[0]}
-                  </TableCell>
-                  <TableCell>
-                    {file.lastSeenAt.toUTCString().split(' ')[4]}
-                  </TableCell>
+                  <TableCell>{file.values[2].split('/').reverse()[0]}</TableCell>
+                  <TableCell>{file.lastSeenAt.toUTCString().split(' ')[4]}</TableCell>
                 </TableRow>
               );
             })}

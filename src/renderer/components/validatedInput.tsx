@@ -5,12 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  InputAdornment,
-  TextField,
-  TextFieldProps,
-  Theme
-} from '@mui/material';
+import { InputAdornment, TextField, TextFieldProps, Theme } from '@mui/material';
 import { SxProps } from '@mui/system';
 import React from 'react';
 

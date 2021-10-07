@@ -13,15 +13,7 @@
 import telescope from '@iconify/icons-mdi/telescope';
 import { Icon } from '@iconify/react';
 import { Brightness7, Highlight } from '@mui/icons-material';
-import {
-  Alert,
-  Button,
-  Container,
-  Snackbar,
-  Tab,
-  Tabs,
-  Typography
-} from '@mui/material';
+import { Alert, Button, Container, Snackbar, Tab, Tabs, Typography } from '@mui/material';
 import { ConnectionStatus } from 'main/tron';
 import * as React from 'react';
 import { BaseSyntheticEvent } from 'react';
@@ -69,13 +61,7 @@ async function autoconnect() {
   return [true, true];
 }
 
-function MainTab({
-  icon,
-  ...rest
-}: {
-  icon: JSX.Element;
-  [key: string]: any;
-}) {
+function MainTab({ icon, ...rest }: { icon: JSX.Element; [key: string]: any }) {
   return (
     <Tab
       // sx={{
@@ -147,19 +133,10 @@ function ConnectSnackbar(): JSX.Element {
   };
 
   return (
-    <Snackbar
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      open={open}
-    >
+    <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} open={open}>
       <Alert severity='warning'>
-        <span style={{ padding: '0px 24px 0px 0px' }}>
-          STUI is disconnected
-        </span>
-        <Button
-          color='secondary'
-          size='small'
-          onClick={() => handleReconnect(true)}
-        >
+        <span style={{ padding: '0px 24px 0px 0px' }}>STUI is disconnected</span>
+        <Button color='secondary' size='small' onClick={() => handleReconnect(true)}>
           RECONNECT
         </Button>
       </Alert>
@@ -212,16 +189,8 @@ export default function MainView() {
           value='tcc'
           label='TCC'
         />
-        <MainTab
-          icon={<Highlight fontSize='large' />}
-          value='apogee'
-          label='APOGEE'
-        />
-        <MainTab
-          icon={<Brightness7 fontSize='large' />}
-          value='boss'
-          label='BOSS'
-        />
+        <MainTab icon={<Highlight fontSize='large' />} value='apogee' label='APOGEE' />
+        <MainTab icon={<Brightness7 fontSize='large' />} value='boss' label='BOSS' />
       </Tabs>
       <div
         css={{

@@ -7,14 +7,7 @@
 
 /** @jsxImportSource @emotion/react */
 
-import {
-  Button,
-  ButtonGroup,
-  FormControl,
-  MenuItem,
-  Select,
-  Stack
-} from '@mui/material';
+import { Button, ButtonGroup, FormControl, MenuItem, Select, Stack } from '@mui/material';
 import React from 'react';
 import { IJS9Opts, JS9Opts } from '.';
 
@@ -23,16 +16,7 @@ export const MenuBar: React.FC<
     onUpdate: (newOpts: Partial<IJS9Opts>) => void;
   }
 > = ({ onUpdate, ...props }) => {
-  const cmaps = [
-    'Grey',
-    'Heat',
-    'Cool',
-    'Viridis',
-    'Magma',
-    'Red',
-    'Green',
-    'Blue'
-  ];
+  const cmaps = ['Grey', 'Heat', 'Cool', 'Viridis', 'Magma', 'Red', 'Green', 'Blue'];
 
   const scales = [
     'linear',
@@ -116,11 +100,7 @@ export const MenuBar: React.FC<
           </Button>
         </FormControl>
         <FormControl>
-          <Button
-            variant='outlined'
-            size='medium'
-            onClick={(e) => applyZoom('toFit')}
-          >
+          <Button variant='outlined' size='medium' onClick={(e) => applyZoom('toFit')}>
             Fit
           </Button>
         </FormControl>

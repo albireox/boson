@@ -39,29 +39,19 @@ import {
 } from '@mui/material';
 import { ReplyCode, ReplyCodeMap, ReplyCodeReverseMap } from 'main/tron';
 import * as React from 'react';
-import {
-  ConfigContext,
-  ConfigState,
-  SearchContext,
-  SearchState
-} from './index';
+import { ConfigContext, ConfigState, SearchContext, SearchState } from './index';
 
 // Message level
 type MessageLevelButtonsProps = ToggleButtonProps & {
   onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
 };
 
-const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({
-  onConfigUpdate,
-  ...props
-}) => {
+const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({ onConfigUpdate, ...props }) => {
   const config = React.useContext(ConfigContext);
 
   const allowedLevels = ['d', 'i', 'w', 'e'];
   const [levels, setLevels] = React.useState<string[]>(
-    config.levels
-      .map((l) => ReplyCodeMap.get(l)!)
-      .filter((x) => allowedLevels.includes(x))
+    config.levels.map((l) => ReplyCodeMap.get(l)!).filter((x) => allowedLevels.includes(x))
   );
 
   const updateLevels = (newLevels: string[]) => {
@@ -117,17 +107,12 @@ type SelectActorsProps = TextFieldProps & {
   onConfigUpdate: (newConfig: Partial<ConfigState>) => void;
 };
 
-const SelectActors: React.FC<SelectActorsProps> = ({
-  onConfigUpdate,
-  ...props
-}) => {
+const SelectActors: React.FC<SelectActorsProps> = ({ onConfigUpdate, ...props }) => {
   const config = React.useContext(ConfigContext);
   const theme = useTheme();
 
   const [actors, setActors] = React.useState(
-    config.selectedActors && config.selectedActors.length > 0
-      ? config.selectedActors
-      : ['all']
+    config.selectedActors && config.selectedActors.length > 0 ? config.selectedActors : ['all']
   );
 
   const updateActors = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -154,9 +139,7 @@ const SelectActors: React.FC<SelectActorsProps> = ({
           ? theme.typography.fontWeightRegular
           : theme.typography.fontWeightMedium,
       color:
-        actors.indexOf(name) === -1
-          ? theme.palette.text.primary
-          : theme.palette.secondary.main,
+        actors.indexOf(name) === -1 ? theme.palette.text.primary : theme.palette.secondary.main,
       backgroundColor: 'transparent'
     };
   };
@@ -192,11 +175,7 @@ const SelectActors: React.FC<SelectActorsProps> = ({
         </MenuItem>
       }
       {[...config.seenActors].sort().map((actor) => (
-        <MenuItem
-          key={actor}
-          value={actor}
-          style={getStyles(actor, actors, theme)}
-        >
+        <MenuItem key={actor} value={actor} style={getStyles(actor, actors, theme)}>
           {actor}
         </MenuItem>
       ))}
@@ -292,16 +271,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
 
   const handleLimit = (event: React.MouseEvent) => {
     event.preventDefault();
-    search.limit
-      ? onSearchUpdate({ limit: false })
-      : onSearchUpdate({ limit: true });
+    search.limit ? onSearchUpdate({ limit: false }) : onSearchUpdate({ limit: true });
   };
 
   const handleRegEx = (event: React.MouseEvent) => {
     event.preventDefault();
-    search.regExp
-      ? onSearchUpdate({ regExp: false })
-      : onSearchUpdate({ regExp: true });
+    search.regExp ? onSearchUpdate({ regExp: false }) : onSearchUpdate({ regExp: true });
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -319,11 +294,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
 
   return (
     <Paper {...props}>
-      <InputBase
-        sx={classes.searchInput}
-        placeholder='Search'
-        onChange={handleChange}
-      />
+      <InputBase sx={classes.searchInput} placeholder='Search' onChange={handleChange} />
       <IconButton
         size='small'
         sx={classes.searchButton}
@@ -334,11 +305,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchUpdate, ...props }) => {
         <Search />
       </IconButton>
       <Divider sx={classes.divider} orientation='vertical' />
-      <IconButton
-        style={{ background: 'transparent' }}
-        onClick={handleRegEx}
-        color={regExColor}
-      >
+      <IconButton style={{ background: 'transparent' }} onClick={handleRegEx} color={regExColor}>
         <InlineIcon icon={regexIcon} style={{ fontSize: '14px' }} />
       </IconButton>
     </Paper>
@@ -351,18 +318,11 @@ type MenuBarProps = BoxProps & {
   onSearchUpdate: (newSearch: Partial<SearchState>) => void;
 };
 
-const MenuBar: React.FC<MenuBarProps> = ({
-  onConfigUpdate,
-  onSearchUpdate,
-  ...props
-}) => {
+const MenuBar: React.FC<MenuBarProps> = ({ onConfigUpdate, onSearchUpdate, ...props }) => {
   return (
     <Box component='div' {...props}>
       <MessageLevelButtons value={null} onConfigUpdate={onConfigUpdate} />
-      <SelectActors
-        onConfigUpdate={onConfigUpdate}
-        sx={classes.selectActors}
-      />
+      <SelectActors onConfigUpdate={onConfigUpdate} sx={classes.selectActors} />
       {/* <SelectNumberMessages
         id='selectNumberMessages'
         onConfigUpdate={onConfigUpdate}

@@ -28,9 +28,7 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on(channel, (event, ...args) => listener(...args));
   },
   store: {
-    get: async (key: string) =>
-      await ipcRenderer.invoke('get-from-store', key),
-    set: async (key: string, value: any) =>
-      await ipcRenderer.invoke('set-in-store', key, value)
+    get: async (key: string) => await ipcRenderer.invoke('get-from-store', key),
+    set: async (key: string, value: any) => await ipcRenderer.invoke('set-in-store', key, value)
   }
 });

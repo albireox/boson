@@ -133,15 +133,7 @@ export function createWindow(name: string = 'main'): BrowserWindow {
   if (name === 'main') {
     if (isDev) {
       require('electron-reload')(__dirname, {
-        electron: path.join(
-          __dirname,
-          '..',
-          '..',
-          '..',
-          'node_modules',
-          '.bin',
-          'electron'
-        ),
+        electron: path.join(__dirname, '..', '..', '..', 'node_modules', '.bin', 'electron'),
         forceHardReset: true,
         hardResetMethod: 'exit'
       });
