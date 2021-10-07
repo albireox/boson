@@ -7,12 +7,32 @@
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
-import { Stack } from '@mui/material';
+import { Stack, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps } from '@mui/material';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
 import { ValidatedNumberInput } from '../../components/validatedInput';
 
 /** @jsxImportSource @emotion/react */
+
+function CameraGroup(props: ToggleButtonGroupProps) {
+  const [cameraSelected, setCameraSelected] = React.useState([1, 2, 3, 4, 5, 6]);
+
+  return (
+    <ToggleButtonGroup
+      value={cameraSelected}
+      onChange={(e, newCameras: number[]) => {
+        setCameraSelected(newCameras);
+      }}
+      {...props}
+    >
+      {[1, 2, 3, 4, 5, 6].map((camID: number) => (
+        <ToggleButton value={camID} key={camID}>
+          <div css={{ paddingLeft: 8, paddingRight: 8 }}>{camID}</div>
+        </ToggleButton>
+      ))}
+    </ToggleButtonGroup>
+  );
+}
 
 export const GuideStack = () => {
   const [expTime, setExpTime] = React.useState<number | undefined>(undefined);
@@ -24,7 +44,7 @@ export const GuideStack = () => {
       <ValidatedNumberInput
         label='Exposure Time'
         value={expTime}
-        onChange={(value) => setExpTime(value)}
+        onChange={(e, value) => setExpTime(value)}
         startAdornment={<AccessTimeIcon />}
         endAdornment='s'
         sx={{ maxWidth: '150px' }}
@@ -32,12 +52,15 @@ export const GuideStack = () => {
       <ValidatedNumberInput
         label='Stack'
         value={stack}
-        onChange={(value) => setStack(value)}
+        onChange={(e, value) => setStack(value)}
         startAdornment={<AutoAwesomeMotionIcon />}
         sx={{ maxWidth: '150px' }}
       />
+      <CameraGroup size='small' />
       <div css={{ flexGrow: 1 }} />
-      <CommandButton commandString='hub actors'>Guide</CommandButton>
+      <CommandButton commandString='hub actors' size='small'>
+        Guide
+      </CommandButton>
     </Stack>
   );
 };
