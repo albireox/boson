@@ -116,17 +116,10 @@ export function createWindow(name: string = 'main'): BrowserWindow {
 
   const isDev = require('electron-is-dev');
 
-  let page: string;
-  if (name !== 'guider') {
-    page = `index.html?${name}`;
-  } else {
-    page = `guider.html`;
-  }
-
   if (isDev) {
-    win.loadURL(`http://127.0.0.1:3000/${page}`);
+    win.loadURL(`http://127.0.0.1:3000/index.html?${name}`);
   } else {
-    win.loadURL(`file://${__dirname}/../../${page}`);
+    win.loadURL(`file://${__dirname}/../../index.html?${name}`);
   }
 
   windows.set(name, win);
@@ -168,6 +161,13 @@ export function createWindow(name: string = 'main'): BrowserWindow {
 
     loadEvents();
     log.info('Main window created.');
+  } else {
+    win.webContents.on('before-input-event', (event, input) => {
+      if (input.meta && input.key.toLowerCase() === 'w') {
+        win?.close();
+        event.preventDefault();
+      }
+    });
   }
 
   return win;
