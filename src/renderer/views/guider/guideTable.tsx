@@ -10,10 +10,6 @@ import { Icon } from '@iconify/react';
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
-  FormControl,
-  FormControlProps,
-  InputAdornment,
-  OutlinedInput,
   Paper,
   Stack,
   Table,
@@ -22,29 +18,13 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
+import { styled } from '@mui/system';
 import React from 'react';
+import { ValidatedNumberInput } from 'renderer/components/validatedInput';
 
 /** @jsxImportSource @emotion/react */
 
-const UserInput: React.FC<
-  FormControlProps & {
-    name: string;
-    value: string;
-    onChange: (e: any) => void;
-    adornment?: string;
-  }
-> = ({ name, value, onChange, adornment, ...props }) => (
-  <FormControl>
-    <OutlinedInput
-      name={name}
-      value={value}
-      onChange={onChange}
-      size='small'
-      endAdornment={adornment ? <InputAdornment position='end'>{adornment}</InputAdornment> : null}
-      sx={{ minWidth: '250px' }}
-    />
-  </FormControl>
-);
+const OffsetInput = styled(ValidatedNumberInput)({ minWidth: '250px' });
 
 export const GuideTable = () => {
   const nullInput = {
@@ -58,7 +38,7 @@ export const GuideTable = () => {
   const [userInput, setUserInput] = React.useState(nullInput);
   const [applying, setApplying] = React.useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const name = e.target.name.split('-')[1];
     setUserInput({ ...userInput, [name]: e.target.value });
   };
@@ -92,11 +72,11 @@ export const GuideTable = () => {
             <TableCell />
             <TableCell />
             <TableCell align='right'>
-              <UserInput
+              <OffsetInput
                 name='user-ra'
                 value={userInput.ra}
                 onChange={handleInputChange}
-                adornment='arcsec'
+                endAdornment='arcsec'
               />
             </TableCell>
           </TableRow>
@@ -107,11 +87,11 @@ export const GuideTable = () => {
             <TableCell />
             <TableCell />
             <TableCell align='right'>
-              <UserInput
+              <OffsetInput
                 name='user-dec'
                 value={userInput.dec}
                 onChange={handleInputChange}
-                adornment='arcsec'
+                endAdornment='arcsec'
               />
             </TableCell>
           </TableRow>
@@ -122,11 +102,11 @@ export const GuideTable = () => {
             <TableCell />
             <TableCell />
             <TableCell align='right'>
-              <UserInput
+              <OffsetInput
                 name='user-rot'
                 value={userInput.rot}
                 onChange={handleInputChange}
-                adornment='arcsec'
+                endAdornment='arcsec'
               />
             </TableCell>
           </TableRow>
@@ -137,11 +117,11 @@ export const GuideTable = () => {
             <TableCell />
             <TableCell />
             <TableCell align='right'>
-              <UserInput
+              <OffsetInput
                 name='user-focus'
                 value={userInput.focus}
                 onChange={handleInputChange}
-                adornment='&micro;m'
+                endAdornment='&micro;m'
               />
             </TableCell>
           </TableRow>
@@ -152,11 +132,11 @@ export const GuideTable = () => {
             <TableCell />
             <TableCell />
             <TableCell align='right'>
-              <UserInput
+              <OffsetInput
                 name='user-scale'
                 value={userInput.scale}
                 onChange={handleInputChange}
-                adornment='1e6'
+                endAdornment='1e6'
               />
             </TableCell>
           </TableRow>
