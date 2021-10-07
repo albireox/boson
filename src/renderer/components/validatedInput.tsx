@@ -12,7 +12,10 @@ import React from 'react';
 /** @jsxImportSource @emotion/react */
 
 type ValidatedNumberInputProps = Omit<TextFieldProps, 'onChange'> & {
-  onChange?: (arg0: number | undefined) => any;
+  onChange?: (
+    arg0: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    arg1: number | undefined
+  ) => any;
   startAdornment?: string | React.ReactNode;
   endAdornment?: string | React.ReactNode;
 };
@@ -26,7 +29,8 @@ export const ValidatedNumberInput: React.FC<ValidatedNumberInputProps> = ({
 }) => {
   const [error, setError] = React.useState(false);
 
-  const validateChange = (value: string) => {
+  const validateChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const value = e.target.value;
     const test: Number = Number(value);
 
     if (Number.isNaN(test)) {
@@ -37,9 +41,9 @@ export const ValidatedNumberInput: React.FC<ValidatedNumberInputProps> = ({
 
     if (onChange) {
       if (value === '' || Number.isNaN(test)) {
-        onChange(undefined);
+        onChange(e, undefined);
       } else {
-        onChange(test.valueOf());
+        onChange(e, test.valueOf());
       }
     }
   };
@@ -53,9 +57,7 @@ export const ValidatedNumberInput: React.FC<ValidatedNumberInputProps> = ({
   return (
     <TextField
       error={error}
-      onChange={(e) => {
-        validateChange(e.target.value);
-      }}
+      onChange={validateChange}
       size={props.size || 'small'}
       InputProps={{
         startAdornment: startAdornment ? (
