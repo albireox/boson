@@ -12,10 +12,17 @@ import { ipcMain, Menu, nativeTheme } from 'electron';
 import * as keytar from 'keytar';
 import { createWindow, windows } from './main';
 import store from './store';
-import { ConnectionStatus } from './tron';
+import { CommandStatus, ConnectionStatus, Reply } from './tron';
 import TronConnection from './tron/connection';
 
 let tron = TronConnection.getInstance();
+
+export interface TronEventReplyIFace {
+  rawCommand: string;
+  commandId: number;
+  status: CommandStatus;
+  replies: Reply[];
+}
 
 export default function loadEvents() {
   // Add events to ipcMain
