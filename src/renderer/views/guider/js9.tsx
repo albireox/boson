@@ -63,12 +63,14 @@ export const JS9: React.FC<{
     window.JS9.SetScale(opts.scale, { display: display });
   }, [opts, display]);
 
-  let height = Math.round((size.height || 1400) / 4);
+  let js9_size = Math.round((size.height || 800) / 4);
+  if (js9_size > (size.width || 700) / 3) js9_size = (size.width || 700) / 3;
+
   return (
     <Tooltip title={currentImage}>
       <div
         className='JS9'
-        style={{ width: height, height: height }}
+        style={{ width: js9_size, height: js9_size }}
         css={(theme: any) => ({
           'div.JS9Container > canvas.JS9Image': {
             backgroundColor: theme.palette.background.default,
@@ -78,12 +80,12 @@ export const JS9: React.FC<{
             backgroundSize: 'cover',
             backgroundBlendMode: 'hard-light',
             backgroundPosition: 'center',
-            width: height,
-            height: height
+            width: js9_size,
+            height: js9_size
           }
         })}
-        data-width={height}
-        data-height={height}
+        data-width={js9_size}
+        data-height={js9_size}
         id={display}
       />
     </Tooltip>

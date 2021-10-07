@@ -60,7 +60,7 @@
     },
     "guider": {
       "width": 700,
-      "height": 1400,
+      "height": 800,
       "resizable": true,
       "minWidth": 700,
       "minHeight": 800
