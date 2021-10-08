@@ -142,10 +142,7 @@ export function JS9Frame() {
         }}
         onUpdate={onOptsUpdate}
       />
-      <Stack
-        style={{ width: '100%', display: 'flex', flexDirection: 'row' }}
-        justifyContent='center'
-      >
+      <Stack width='100%' display='flex' flexDirection='row' justifyContent='center'>
         {[1, 2, 3].map((gid: number) => (
           <JS9
             key={`gfa${gid}`}
@@ -158,10 +155,7 @@ export function JS9Frame() {
           />
         ))}
       </Stack>
-      <Stack
-        style={{ width: '100%', display: 'flex', flexDirection: 'row' }}
-        justifyContent='center'
-      >
+      <Stack width='100%' display='flex' flexDirection='row' justifyContent='center'>
         {[4, 5, 6].map((gid: number) => (
           <JS9
             key={`gfa${gid}`}

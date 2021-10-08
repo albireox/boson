@@ -8,6 +8,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { Stack } from '@mui/material';
+import { Box } from '@mui/system';
 import * as React from 'react';
 import { GuideStack } from './guide';
 import { GuideTable } from './guideTable';
@@ -34,7 +35,9 @@ export default function GuiderView() {
           p: [1, 2, 2, 2]
         }}
       >
-        <JS9Frame />
+        <Box sx={{ mb: 1 }}>
+          <JS9Frame />
+        </Box>
         <GuideStack />
         <GuideTable />
       </Stack>
