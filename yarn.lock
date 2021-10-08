@@ -1760,7 +1760,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron/get@npm:^1.0.1":
+"@electron/get@npm:^1.13.0":
   version: 1.13.0
   resolution: "@electron/get@npm:1.13.0"
   dependencies:
@@ -4853,7 +4853,7 @@ __metadata:
     "@types/react-router-dom": ^5.1.6
     "@types/sprintf-js": ^1.1.2
     concurrently: ^6.0.0
-    electron: ^12.0.0
+    electron: ^15.0.0
     electron-builder: ^22.9.1
     electron-devtools-installer: ^3.1.1
     electron-is-dev: ^1.2.0
@@ -7277,16 +7277,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^12.0.0":
-  version: 12.1.0
-  resolution: "electron@npm:12.1.0"
+"electron@npm:^15.0.0":
+  version: 15.1.2
+  resolution: "electron@npm:15.1.2"
   dependencies:
-    "@electron/get": ^1.0.1
+    "@electron/get": ^1.13.0
     "@types/node": ^14.6.2
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 4861ca0e09b7e68757d88c8a04ebcaa5c84104afea6964a9a0852ca12d231cabd7b1733e3e120e6a6380dc20cdc0c3a191f70e96da68cbe41ad1c066415fdd77
+  checksum: 0a429f4b64f1118522869089f580f38ef423fe9bd42ec3ed4eb1907575278efbd3f7209cd210e51f136cd8a0f87c9a27a273283e036f4e87ddccc25cc17b8b0b
   languageName: node
   linkType: hard
 
