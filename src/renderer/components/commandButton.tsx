@@ -14,7 +14,8 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  IconButton
 } from '@mui/material';
 import { TronEventReplyIFace } from 'main/events';
 import { CommandStatus } from 'main/tron';
@@ -42,25 +43,32 @@ function createCommandObservable(command: string) {
 type CommandButtonProps = ButtonProps & {
   commandString: string;
   abortCommand?: string;
+  onEvent?: (event: string) => void;
 };
 
-export function CommandButton({ commandString, abortCommand, ...props }: CommandButtonProps) {
+export function CommandButton({
+  commandString,
+  abortCommand,
+  onEvent,
+  ...props
+}: CommandButtonProps) {
   const baseIcon = props.endIcon || <SendIcon />;
   const variant = props.variant || 'contained';
 
   const [running, setRunning] = React.useState(false);
   const [endIcon, setEndIcon] = React.useState(baseIcon);
   const [sx, setSx] = React.useState(props.sx);
-  const [color, setColor] = React.useState<any>(undefined);
+  const [color, setColor] = React.useState<any>('primary');
   const [alertOpen, setAlertOpen] = React.useState(false);
 
   const [subscription, setSubscription] = React.useState<Subscription | null>(null);
 
   function changeButtonState(newState: string) {
     setRunning(newState === 'running');
+    if (onEvent) onEvent(newState);
     if (newState === 'running') {
       setEndIcon(<CircularProgress size={20} color='inherit' />);
-      setColor(undefined);
+      setColor('primary');
       setSx({
         backgroundColor: (theme) => theme.palette.action.disabledBackground,
         color: (theme) => theme.palette.action.disabled,
@@ -106,8 +114,12 @@ export function CommandButton({ commandString, abortCommand, ...props }: Command
     }
   }
 
-  return (
-    <>
+  props.size = props.size || 'small';
+
+  let button: React.ReactNode;
+
+  if (props.children !== undefined) {
+    button = (
       <Button
         sx={sx}
         {...props}
@@ -116,6 +128,18 @@ export function CommandButton({ commandString, abortCommand, ...props }: Command
         onClick={() => handleClick()}
         endIcon={endIcon}
       />
+    );
+  } else {
+    button = (
+      <IconButton color={color} onClick={() => handleClick()} sx={sx}>
+        {endIcon}
+      </IconButton>
+    );
+  }
+
+  return (
+    <>
+      {button}
       <Dialog open={alertOpen}>
         <DialogTitle>{'Cancel command?'}</DialogTitle>
         <DialogContent>
