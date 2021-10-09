@@ -18,7 +18,7 @@ import {
   IconButton
 } from '@mui/material';
 import { TronEventReplyIFace } from 'main/events';
-import { CommandStatus } from 'main/tron';
+import { CommandStatus } from 'main/tron/types';
 import React from 'react';
 import { Observable, Subscription } from 'rxjs';
 
@@ -29,14 +29,15 @@ function createCommandObservable(command: string) {
     window.api
       .invoke('tron-send-command', command)
       .then((reply: TronEventReplyIFace) => {
-        subscriber.next(reply);
         if (reply.status === CommandStatus.Done) {
           subscriber.complete();
         } else {
           subscriber.error();
         }
       })
-      .catch(subscriber.error());
+      .catch(() => {
+        subscriber.error();
+      });
   });
 }
 
@@ -88,12 +89,9 @@ export function CommandButton({
 
   function handleClick() {
     if (!running) {
-      const observable = createCommandObservable(commandString);
+      changeButtonState('running');
       setSubscription(
-        observable.subscribe({
-          next(x) {
-            console.log(x);
-          },
+        createCommandObservable(commandString).subscribe({
           complete() {
             changeButtonState('idle');
           },
@@ -102,7 +100,6 @@ export function CommandButton({
           }
         })
       );
-      changeButtonState('running');
     } else {
       if (subscription) {
         setAlertOpen(true);
@@ -153,6 +150,7 @@ export function CommandButton({
           <Button
             onClick={() => {
               subscription?.unsubscribe();
+              setSubscription(null);
               changeButtonState('idle');
               setAlertOpen(false);
             }}
