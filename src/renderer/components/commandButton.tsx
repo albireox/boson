@@ -104,8 +104,7 @@ export function CommandButton({
       if (subscription) {
         setAlertOpen(true);
       } else {
-        // This should never happen, except if somehow the command
-        // has become zombie.
+        // This should never happen, except if somehow the command has become zombie.
         changeButtonState('idle');
       }
     }
