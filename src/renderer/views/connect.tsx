@@ -10,9 +10,8 @@
 
 /** @jsxImportSource @emotion/react */
 
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Collapse, Fab, LinearProgress } from '@mui/material';
+import { LinearProgress } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -70,18 +69,6 @@ const Root = styled('div')(({ theme }) => ({
     padding: theme.spacing(1),
     width: '100%',
     textAlign: 'center'
-  },
-  [`& .${classes.dropdownIcon}`]: {
-    transition: theme.transitions.create(['transform'], {
-      duration: theme.transitions.duration.complex
-    })
-  },
-  [`& .${classes.dropdownIconOpen}`]: {
-    transform: 'rotate(-180deg)',
-    backgroundColor: theme.palette.secondary.main
-  },
-  [`& .${classes.dropdownIconClosed}`]: {
-    transform: 'rotate(0)'
   }
 }));
 
@@ -92,44 +79,22 @@ export default function ConnectView() {
     program: '',
     user: '',
     password: '',
-    remember: true,
-    host: '',
-    httpHost: '',
-    httpPort: ''
+    remember: true
   });
 
   const [error, setError] = useState<undefined | string>(undefined);
   const [buttonDisabled, setButtonDisabled] = useState<undefined | boolean>(false);
   const [showProgress, setShowProgress] = useState<boolean>(false);
-  const [optionsExpanded, setOptionsExpanded] = useState<boolean>(false);
-
-  let updateHeight = () => {
-    window.api.invoke(
-      'window-set-size',
-      NAME,
-      document.getElementById('container')?.scrollWidth as number,
-      (document.getElementById('container')?.scrollHeight as number) + 32,
-      true
-    );
-  };
 
   React.useEffect(() => {
     if (error !== undefined) {
-      setButtonDisabled(false);
       setShowProgress(false);
-      updateHeight();
     }
   }, [error]);
 
   React.useEffect(() => {
     window.api.store
-      .get([
-        'user.connection.program',
-        'user.connection.user',
-        'user.connection.host',
-        'user.connection.httpHost',
-        'user.connection.httpPort'
-      ])
+      .get(['user.connection.program', 'user.connection.user', 'user.connection.host'])
       .then(async (res: any) => {
         let program = res[0];
         if (program) return [...res, await window.api.invoke('get-password', 'hub', program)];
@@ -141,10 +106,7 @@ export default function ConnectView() {
             ...prev,
             program: res[0] || '',
             user: res[1] || '',
-            host: res[2] || '',
-            httpHost: res[3] || '',
-            httpPort: res[4] || '',
-            password: res[5] || ''
+            host: res[2] || ''
           };
         });
       });
@@ -153,9 +115,6 @@ export default function ConnectView() {
   let storeCredentials = () => {
     window.api.store.set('user.connection.program', connectForm.program.toLowerCase());
     window.api.store.set('user.connection.user', connectForm.user);
-    window.api.store.set('user.connection.host', connectForm.host);
-    window.api.store.set('user.connection.httpHost', connectForm.httpHost);
-    window.api.store.set('user.connection.httpPort', connectForm.httpPort as number);
     if (connectForm.program)
       window.api.invoke('set-password', 'hub', connectForm.program, connectForm.password);
   };
@@ -282,64 +241,6 @@ export default function ConnectView() {
             >
               Connect
             </Button>
-            <div
-              css={{
-                padding: '0px 16px',
-                textAlign: 'center',
-                marginTop: '24px'
-              }}
-            >
-              <Fab
-                size='small'
-                className={optionsExpanded ? classes.dropdownIconOpen : classes.dropdownIconClosed}
-                onClick={() => setOptionsExpanded(!optionsExpanded)}
-              >
-                <ExpandMoreIcon className={classes.dropdownIcon} />
-              </Fab>
-              <Collapse
-                in={optionsExpanded}
-                onEntered={() => updateHeight()}
-                onExited={() => updateHeight()}
-              >
-                <TextField
-                  css={{ marginTop: '16px' }}
-                  variant='outlined'
-                  margin='dense'
-                  fullWidth
-                  id='host'
-                  label='Host'
-                  name='host'
-                  onChange={handleChange}
-                  value={connectForm.host}
-                  autoFocus
-                  size='small'
-                />
-                <TextField
-                  variant='outlined'
-                  margin='dense'
-                  fullWidth
-                  name='httpHost'
-                  label='HTTP Host'
-                  id='httpHost'
-                  onChange={handleChange}
-                  value={connectForm.httpHost}
-                  size='small'
-                  InputLabelProps={{ required: false }}
-                />
-                <TextField
-                  variant='outlined'
-                  margin='dense'
-                  fullWidth
-                  name='httpPort'
-                  label='HTTP Port'
-                  id='httpPort'
-                  onChange={handleChange}
-                  value={connectForm.httpPort}
-                  size='small'
-                  InputLabelProps={{ required: false }}
-                />
-              </Collapse>
-            </div>
           </form>
         </div>
       </Container>
