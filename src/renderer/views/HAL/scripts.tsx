@@ -33,16 +33,29 @@ export default function HALScripts({ keywords }: IHALScripts): JSX.Element | nul
   const available_scripts = keywords['hal.available_scripts'];
   const scripts: string[] = !available_scripts ? [] : available_scripts.values;
 
+  const script_step = keywords['hal.script_step'];
+
   const [progress, setProgress] = React.useState(0);
+  const [selectorDisabled, setSelectorDisabled] = React.useState(false);
   const [selectedScript, setSelectedScript] = React.useState<string>('');
   const [steps, setSteps] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     if (available_scripts && selectedScript === '') {
-      setSelectedScript(available_scripts.values[0]);
-      handleScriptChange(available_scripts.values[0]);
+      const sortedScripts = available_scripts.values.sort();
+      setSelectedScript(sortedScripts[0]);
+      handleScriptChange(sortedScripts[0]);
     }
   }, [available_scripts, selectedScript]);
+
+  React.useEffect(() => {
+    if (!script_step) return;
+
+    const values = script_step.values as [string, string, number, number];
+    if (values[0] !== selectedScript) return;
+
+    setProgress(values[2]);
+  }, [script_step, selectedScript]);
 
   const handleScriptChange = (newScript: string) => {
     setSelectedScript(newScript);
@@ -55,6 +68,7 @@ export default function HALScripts({ keywords }: IHALScripts): JSX.Element | nul
           }
         }
         setSteps(stepsTmp);
+        setProgress(0);
       }
     });
   };
@@ -63,8 +77,13 @@ export default function HALScripts({ keywords }: IHALScripts): JSX.Element | nul
     let command = await window.api.tron.send('hal script running');
     let running_commands = command.replies.reverse()[0].keywords['running_scripts'].values;
     if (running_commands.includes(selectedScript)) return false;
+    setProgress(0);
     return true;
   }
+
+  const handleScriptEvent = (event: string) => {
+    event === 'running' ? setSelectorDisabled(true) : setSelectorDisabled(false);
+  };
 
   return (
     <Paper variant='outlined'>
@@ -74,6 +93,7 @@ export default function HALScripts({ keywords }: IHALScripts): JSX.Element | nul
           size='small'
           value={selectedScript}
           onChange={(e) => handleScriptChange(e.target.value)}
+          disabled={selectorDisabled}
         >
           {scripts.map((script: string) => (
             <MenuItem key={script} value={script}>
@@ -82,10 +102,22 @@ export default function HALScripts({ keywords }: IHALScripts): JSX.Element | nul
           ))}
         </Select>
         <Box flex={1} display='flex' alignItems='center' flexDirection='row'>
-          <BorderLinearProgress variant='determinate' value={progress} sx={{ flexGrow: 1 }} />
-          <Typography pl={1}>0 / {steps.length}</Typography>
+          <BorderLinearProgress
+            variant='determinate'
+            value={(progress / steps.length) * 100}
+            sx={{ flexGrow: 1 }}
+          />
+          <Typography pl={1}>
+            {progress} / {steps.length}
+          </Typography>
         </Box>
-        <CommandButton commandString='hal status' size='medium' beforeCallback={checkRunning}>
+        <CommandButton
+          commandString={`hal script run ${selectedScript}`}
+          abortCommand={`hal script cancel ${selectedScript}`}
+          size='medium'
+          beforeCallback={checkRunning}
+          onEvent={handleScriptEvent}
+        >
           Run
         </CommandButton>
       </Stack>
