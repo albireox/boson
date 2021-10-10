@@ -10,7 +10,7 @@ import React from 'react';
 import ConnectionPreferences from './connection';
 import OtherPreferences from './other';
 
-export function PreferencesView() {
+export default function PreferencesView() {
   const [value, setValue] = React.useState('connection');
   const containerRef = React.useRef<HTMLDivElement>(null);
 

@@ -16,7 +16,7 @@ import GuiderView from './views/guider';
 import KeywordsView from './views/keywords';
 import LogView from './views/log';
 import MainView from './views/main';
-import { PreferencesView } from './views/preferences';
+import PreferencesView from './views/preferences';
 import WeatherView from './views/weather';
 
 // It seems we need <{}, {}> when extending the component but then the props
