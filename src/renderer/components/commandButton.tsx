@@ -151,8 +151,8 @@ export function CommandButton({
         <DialogTitle>{'Cancel command?'}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Do you want to cancel the currently running command &ldquo;
-            {commandString}&rdquo;.
+            Do you want to cancel the currently running command <strong>{commandString}</strong>.
+            {abortCommand ? ` This command will be cancelled with ${abortCommand}.` : ''}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -161,6 +161,7 @@ export function CommandButton({
             onClick={() => {
               subscription?.unsubscribe();
               setSubscription(null);
+              if (abortCommand) window.api.tron.send(abortCommand);
               changeButtonState('idle');
               setAlertOpen(false);
             }}
