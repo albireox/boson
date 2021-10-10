@@ -45,12 +45,14 @@ type CommandButtonProps = ButtonProps & {
   commandString: string;
   abortCommand?: string;
   onEvent?: (event: string) => void;
+  beforeCallback?: () => boolean | Promise<boolean>;
 };
 
 export function CommandButton({
   commandString,
   abortCommand,
   onEvent,
+  beforeCallback,
   ...props
 }: CommandButtonProps) {
   const baseIcon = props.endIcon || <SendIcon />;
@@ -87,9 +89,18 @@ export function CommandButton({
     }
   }
 
-  function handleClick() {
+  async function handleClick() {
     if (!running) {
       changeButtonState('running');
+
+      if (beforeCallback) {
+        const result = await beforeCallback();
+        if (!result) {
+          changeButtonState('error');
+          return;
+        }
+      }
+
       setSubscription(
         createCommandObservable(commandString).subscribe({
           complete() {
