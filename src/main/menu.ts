@@ -16,6 +16,13 @@ const template: any[] = [
             { role: 'about' },
             { type: 'separator' },
             {
+              label: 'Preferences ...',
+              id: 'preferences',
+              accelerator: 'CmdOrCtrl+,',
+              click: () => createWindow('preferences')
+            },
+            { type: 'separator' },
+            {
               label: 'Connect ...',
               id: 'connect',
               accelerator: 'CmdOrCtrl+Shift+C',

@@ -64,7 +64,12 @@
       "resizable": true,
       "minWidth": 700,
       "minHeight": 800
-
+    },
+    "preferences": {
+      "width": 400,
+      "height": 500,
+      "center": true,
+      "resizable": false
     }
   },
   "user": {
