@@ -13,6 +13,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import ConnectView from './views/connect';
 import FPSView from './views/FPS';
 import GuiderView from './views/guider';
+import HALView from './views/HAL';
 import KeywordsView from './views/keywords';
 import LogView from './views/log';
 import MainView from './views/main';
@@ -31,7 +32,8 @@ class ViewManager extends Component<{}, {}> {
       weather: <WeatherView />,
       fps: <FPSView />,
       guider: <GuiderView />,
-      preferences: <PreferencesView />
+      preferences: <PreferencesView />,
+      hal: <HALView />
     };
   }
 

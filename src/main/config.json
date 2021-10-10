@@ -65,6 +65,13 @@
       "minWidth": 700,
       "minHeight": 800
     },
+    "hal": {
+      "width": 600,
+      "height": 800,
+      "resizable": true,
+      "minWidth": 600,
+      "minHeight": 800
+    },
     "preferences": {
       "width": 400,
       "height": 500,

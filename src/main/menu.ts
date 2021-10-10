@@ -108,13 +108,19 @@ const template: any[] = [
     ]
   },
   {
-    label: 'Utilities',
+    label: 'Tools',
     submenu: [
       {
         label: 'Guider',
         id: 'guider',
         accelerator: 'CmdOrCtrl+Shift+G',
         click: () => createWindow('guider')
+      },
+      {
+        label: 'HAL',
+        id: 'hal',
+        accelerator: 'CmdOrCtrl+Shift+H',
+        click: () => createWindow('hal')
       },
       {
         label: 'Keyword Viewer',
