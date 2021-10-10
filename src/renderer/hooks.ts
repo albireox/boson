@@ -71,7 +71,9 @@ export function useKeywords(keys: string[], channel: string, refresh: boolean = 
     window.addEventListener('unload', unload);
 
     // Unsubscribe when component unmounts.
-    return () => unload();
+    return () => {
+      unload();
+    };
   }, [updateKeywords, refresh]);
 
   return keywords;
@@ -105,7 +107,9 @@ export function useListener(onReceived: (reply: Reply[]) => any, sendAll = true)
     const unload = () => window.api.invoke('tron-remove-streamer-window');
     window.addEventListener('unload', unload);
 
-    return () => unload();
+    return () => {
+      unload();
+    };
   }, []);
 }
 
