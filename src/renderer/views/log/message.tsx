@@ -19,7 +19,10 @@ import { ConfigContext, ConfigState, SearchContext, SearchState } from './index'
 const classes = {
   messages: {
     margin: 0,
-    padding: 0
+    padding: 0,
+    fontFamily: 'Source Code Pro',
+    fontWeight: 700,
+    whiteSpace: 'pre-wrap'
   }
 } as const;
 
