@@ -243,9 +243,7 @@ export default class TronConnection {
       this._subscribedWindows.set(windowId, sender);
       log.debug('Added listener', windowId);
       if (sendAll) {
-        log.debug(
-          `Sending ${this.jsonReplies.length} stored ` + `replies to listener ${windowId}`
-        );
+        log.debug(`Sending ${this.jsonReplies.length} stored replies to listener ${windowId}`);
         this.sendReplyToListeners(this.jsonReplies, windowId);
       }
     }
