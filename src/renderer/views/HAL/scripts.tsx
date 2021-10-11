@@ -87,7 +87,7 @@ export default function HALScripts({ keywords }: IHALScripts): JSX.Element | nul
 
   return (
     <Paper variant='outlined'>
-      <Stack p={1} alignItems='center' direction='row' spacing={2}>
+      <Stack p={1} alignItems='center' direction='row' spacing={2} px={2}>
         <Typography variant='h6'>Scripts</Typography>
         <Select
           size='small'
