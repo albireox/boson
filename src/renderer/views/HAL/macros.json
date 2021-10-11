@@ -1,0 +1,6 @@
+{
+  "goto_field": {
+    "stages": ["slew", "reconfigure", "calibrations", "acquire", "guide"],
+    "concurrent": [["slew", "reconfigure"]]
+  }
+}
