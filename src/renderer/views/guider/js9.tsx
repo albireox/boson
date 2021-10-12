@@ -26,6 +26,16 @@ export const JS9: React.FC<{
   const [currentImage, setCurrentImage] = React.useState<string>('');
   const [first, setFirst] = React.useState(true);
 
+  const [hostname, setHostname] = React.useState('');
+  const [port, setPort] = React.useState('');
+
+  window.api.store.get('user.connection.httpHost').then((value) => {
+    setHostname(value);
+  });
+  window.api.store.get('user.connection.httpPort').then((value) => {
+    setPort(value);
+  });
+
   let display = `gfa${gid}`;
   const visible = zoomed === 0 || (zoomed && gid === zoomed);
 
@@ -39,9 +49,8 @@ export const JS9: React.FC<{
 
     let values = keywords['fliswarm.filename'].values;
 
-    if (currentImage === values[2] || values[0] !== `gfa${gid}`) {
-      return;
-    }
+    if (currentImage === values[2] || values[0] !== `gfa${gid}`) return;
+    if (hostname === '' || port === '') return;
 
     let load_opts = first
       ? {
@@ -52,7 +61,7 @@ export const JS9: React.FC<{
       : {};
 
     setTimeout(() => {
-      window.JS9.Load(`http://localhost:8080/${values[2]}`, load_opts, {
+      window.JS9.Load(`http://${hostname}:${port}${values[2]}`, load_opts, {
         display: display
       });
       window.JS9.SetImageInherit(true, { display: display });
@@ -62,7 +71,7 @@ export const JS9: React.FC<{
     if (first) {
       setFirst(false);
     }
-  }, [keywords, display, currentImage, first, gid]);
+  }, [keywords, display, currentImage, first, gid, hostname, port]);
 
   React.useEffect(() => {
     window.JS9.SetColormap(opts.colormap, { display: display });
