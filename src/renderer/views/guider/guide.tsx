@@ -68,7 +68,7 @@ export const GuideStack = () => {
         onEvent={disableCameraSelector}
         endIcon={<CameraAltIcon fontSize='inherit' />}
       />
-      <CommandButton commandString='hub actors' onEvent={disableCameraSelector}>
+      <CommandButton commandString='mock' onEvent={disableCameraSelector}>
         Guide
       </CommandButton>
     </Stack>

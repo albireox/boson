@@ -25,6 +25,11 @@ import { Observable, Subscription } from 'rxjs';
 /** @jsxImportSource @emotion/react */
 
 function createCommandObservable(command: string) {
+  if (command === 'mock') {
+    return new Observable((subscriber) => {
+      setTimeout(() => subscriber.complete(), 5000);
+    });
+  }
   return new Observable((subscriber) => {
     window.api
       .invoke('tron-send-command', command)
