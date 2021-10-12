@@ -88,6 +88,7 @@ export function CommandButton({
       setEndIcon(baseIcon);
       setSx({});
       setSubscription(null);
+      setAlertOpen(false);
       if (newState === 'error') {
         setColor('error');
       }
