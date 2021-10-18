@@ -4921,6 +4921,7 @@ __metadata:
     source-map-support: ^0.5.20
     sprintf-js: ^1.1.2
     typescript: ^4.4.4
+    update-electron-app: ^2.0.1
     wait-on: ^6.0.0
   languageName: unknown
   linkType: soft
@@ -7254,6 +7255,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"electron-is-dev@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "electron-is-dev@npm:0.3.0"
+  checksum: d251e3b4c9cfd515a599dd852319ffca5b6b59c52c40dc3109f74ff9921a71e288d66445fc713a7f6296d3a696f04bb8d2135fa23599af7d7f1bc74a7552646b
+  languageName: node
+  linkType: hard
+
 "electron-is-dev@npm:^2.0.0":
   version: 2.0.0
   resolution: "electron-is-dev@npm:2.0.0"
@@ -8815,6 +8823,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"github-url-to-object@npm:^4.0.4":
+  version: 4.0.6
+  resolution: "github-url-to-object@npm:4.0.6"
+  dependencies:
+    is-url: ^1.1.0
+  checksum: 5056c1197cd496e2246217bc2626ab0d10a8dd293c834cb5301181db86282c312dc91831e331933c0b02e75716c87b1c13d8d202dc314d0d23cca0c38f1afb6f
+  languageName: node
+  linkType: hard
+
 "glob-parent@npm:^3.1.0":
   version: 3.1.0
   resolution: "glob-parent@npm:3.1.0"
@@ -10270,6 +10287,13 @@ fsevents@^1.2.7:
   version: 1.0.0
   resolution: "is-typedarray@npm:1.0.0"
   checksum: 3508c6cd0a9ee2e0df2fa2e9baabcdc89e911c7bd5cf64604586697212feec525aa21050e48affb5ffc3df20f0f5d2e2cf79b08caa64e1ccc9578e251763aef7
+  languageName: node
+  linkType: hard
+
+"is-url@npm:^1.1.0, is-url@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "is-url@npm:1.2.4"
+  checksum: 100e74b3b1feab87a43ef7653736e88d997eb7bd32e71fd3ebc413e58c1cbe56269699c776aaea84244b0567f2a7d68dfaa512a062293ed2f9fdecb394148432
   languageName: node
   linkType: hard
 
@@ -17470,6 +17494,20 @@ typescript@^4.4.4:
   version: 1.2.0
   resolution: "upath@npm:1.2.0"
   checksum: 4c05c094797cb733193a0784774dbea5b1889d502fc9f0572164177e185e4a59ba7099bf0b0adf945b232e2ac60363f9bf18aac9b2206fb99cbef971a8455445
+  languageName: node
+  linkType: hard
+
+"update-electron-app@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "update-electron-app@npm:2.0.1"
+  dependencies:
+    electron-is-dev: ^0.3.0
+    github-url-to-object: ^4.0.4
+    is-url: ^1.2.4
+    ms: ^2.1.1
+  peerDependencies:
+    electron: ">= 6.0.0"
+  checksum: 14f780087d0dbddfe915433727cb71a5c42460a9dc6ad200f1b06f1576d37303f765100d714721685459b210095606350d91a850f66d4967a53eef9d2b19631e
   languageName: node
   linkType: hard
 

@@ -34,7 +34,8 @@
     "react-router-dom": "^5.3.0",
     "react-virtuoso": "^2.2.2",
     "rxjs": "^7.4.0",
-    "sprintf-js": "^1.1.2"
+    "sprintf-js": "^1.1.2",
+    "update-electron-app": "^2.0.1"
   },
   "scripts": {
     "start": "concurrently \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://localhost:3000 && tsc -p src/main && electron .\"",
