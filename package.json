@@ -1,6 +1,6 @@
 {
   "name": "boson",
-  "version": "0.0.3-dev",
+  "version": "0.0.3-alpha.1",
   "author": "José Sánchez-Gallego <gallegoj@uw.edu>",
   "description": "SDSS observer graphical user interface",
   "repository": "github:albireox/boson",
@@ -22,6 +22,7 @@
     "electron-is-dev": "^2.0.0",
     "electron-log": "^4.4.1",
     "electron-store": "^8.0.1",
+    "electron-updater": "^4.3.9",
     "gps-time": "^1.0.8",
     "highcharts": "^9.2.2",
     "highcharts-react-official": "^3.1.0",
@@ -34,8 +35,7 @@
     "react-router-dom": "^5.3.0",
     "react-virtuoso": "^2.2.2",
     "rxjs": "^7.4.0",
-    "sprintf-js": "^1.1.2",
-    "update-electron-app": "^2.0.1"
+    "sprintf-js": "^1.1.2"
   },
   "scripts": {
     "start": "concurrently \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://localhost:3000 && tsc -p src/main && electron .\"",
@@ -43,15 +43,29 @@
     "test": "react-scripts test",
     "postinstall": "electron-builder install-app-deps",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "publish": "npm run build && electron-builder --publish always"
   },
   "build": {
     "extends": null,
+    "productName": "boson",
+    "artifactName": "boson-${version}-${os}-${arch}.${ext}",
+    "generateUpdatesFilesForAllChannels": true,
+    "publish": [
+      {
+        "provider": "github",
+        "private": false,
+        "releaseType": "draft"
+      }
+    ],
     "mac": {
-      "target": [
-        "zip",
-        "dmg"
-      ]
+      "hardenedRuntime": true,
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist"
+    },
+    "afterSign": "scripts/notarize.js",
+    "dmg": {
+      "sign": false
     },
     "files": [
       "build/**/*"
@@ -90,6 +104,7 @@
     "electron": "^15.2.0",
     "electron-builder": "^22.14.5",
     "electron-devtools-installer": "^3.2.0",
+    "electron-notarize": "^1.1.1",
     "electron-reload": "^2.0.0-alpha.1",
     "prettier": "^2.4.1",
     "react-scripts": "^4.0.3",
