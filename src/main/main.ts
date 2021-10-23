@@ -50,6 +50,8 @@ export function saveWindowPositions() {
       store.set(`user.windows.${name}.height`, size[1]);
     }
   }
+
+  store.set('user.defaultWindows', Array.from(windows.keys()));
 }
 
 export function createWindow(name: string = 'main'): BrowserWindow {
@@ -186,6 +188,10 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+app.on('before-quit', (e) => {
+  saveWindowPositions();
 });
 
 // Setup auto-updater

@@ -1,5 +1,5 @@
 import { app, BrowserWindow, dialog, Menu, shell } from 'electron';
-import { createWindow, saveWindowPositions } from './main';
+import { createWindow } from './main';
 import TronConnection from './tron/connection';
 
 const tron = TronConnection.getInstance();
@@ -61,12 +61,12 @@ const template: any[] = [
                   });
               }
             },
-            { type: 'separator' },
-            {
-              label: 'Save Window Positions',
-              id: 'save-window-positions',
-              click: () => saveWindowPositions()
-            },
+            // { type: 'separator' },
+            // {
+            //   label: 'Save Window Positions',
+            //   id: 'save-window-positions',
+            //   click: () => saveWindowPositions()
+            // },
             { type: 'separator' },
             { role: 'services' },
             { type: 'separator' },
@@ -77,7 +77,10 @@ const template: any[] = [
             {
               label: 'Quit',
               accelerator: 'CmdOrCtrl+Q',
-              click: () => app.exit(0)
+              click: () => {
+                app.quit();
+                app.exit(0);
+              }
             }
           ]
         }
