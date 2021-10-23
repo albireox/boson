@@ -11,67 +11,78 @@
 import SendIcon from '@mui/icons-material/Send';
 import { Box, IconButton, InputAdornment, OutlinedInput, TextFieldProps } from '@mui/material';
 import * as React from 'react';
-import { SyntheticEvent } from 'react';
 
-const styles = {
-  root: {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: '4px 8px 8px'
-  },
-  commandInput: {
-    height: '40px'
-  }
-} as const;
-
-const CommandInput: React.FC<TextFieldProps> = (props) => {
-  const commandRef = React.useRef<any>(null);
+export default function CommandInput(props: TextFieldProps) {
+  const [value, setValue] = React.useState('');
   const [error, setError] = React.useState(false);
 
-  const handleCommand = (event: SyntheticEvent) => {
-    event.preventDefault();
+  const [historyIndex, setHistoryIndex] = React.useState(0);
+  const [history, setHistory] = React.useState<string[]>(['']);
 
-    let value = commandRef.current.firstChild.value.trim();
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+    setError(false);
+  };
 
+  const handleCommand = () => {
     if (value.length > 0) {
-      window.api.invoke('tron-send-command', value);
-      commandRef.current.firstChild.value = '';
+      if (history[1] !== value) {
+        setHistory((current) => [current[0], value, ...current.slice(1)]);
+      }
+      window.api.tron.send(value);
+      setValue('');
+      setHistoryIndex(0);
     } else {
       setError(true);
     }
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      handleCommand();
+    } else if (event.key === 'ArrowUp') {
+      const newIndex = historyIndex + 1;
+      if (history.length >= newIndex + 1) {
+        setValue(history[newIndex]);
+        setHistoryIndex(newIndex);
+      }
+    } else if (event.key === 'ArrowDown') {
+      if (historyIndex > 0) {
+        const newIndex = historyIndex - 1;
+        setValue(history[newIndex]);
+        setHistoryIndex(newIndex);
+      }
+    }
+  };
+
   return (
-    <Box sx={styles.root}>
-      <form onSubmit={handleCommand} autoComplete='off' noValidate style={{ width: '100%' }}>
-        <OutlinedInput
-          error={error}
-          onChange={() => setError(false)}
-          sx={styles.commandInput}
-          ref={commandRef}
-          fullWidth
-          margin='none'
-          id='command'
-          name='command'
-          autoFocus
-          endAdornment={
-            <InputAdornment position='end'>
-              <IconButton
-                color='primary'
-                disableFocusRipple
-                disableRipple
-                size='small'
-                onClick={handleCommand}
-                onMouseDown={handleCommand}
-              >
-                {<SendIcon />}
-              </IconButton>
-            </InputAdornment>
-          }
-        />
-      </form>
+    <Box sx={{ display: 'flex', flexDirection: 'row', padding: '4px 8px 8px' }}>
+      <OutlinedInput
+        error={error}
+        onChange={handleChange}
+        onKeyDown={handleKeyPress}
+        sx={{ height: '40px' }}
+        value={value}
+        fullWidth
+        margin='none'
+        id='command'
+        name='command'
+        autoFocus
+        endAdornment={
+          <InputAdornment position='end'>
+            <IconButton
+              color='primary'
+              disableFocusRipple
+              disableRipple
+              size='small'
+              onClick={handleCommand}
+              onMouseDown={handleCommand}
+            >
+              {<SendIcon />}
+            </IconButton>
+          </InputAdornment>
+        }
+      />
     </Box>
   );
-};
-
-export default CommandInput;
+}
