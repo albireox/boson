@@ -61,7 +61,7 @@ export function CommandButton({
   ...props
 }: CommandButtonProps) {
   const baseIcon = props.endIcon || <SendIcon />;
-  const variant = props.variant || 'contained';
+  const variant = props.variant || 'outlined';
 
   const [running, setRunning] = React.useState(false);
   const [endIcon, setEndIcon] = React.useState(baseIcon);
