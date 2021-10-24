@@ -42,6 +42,8 @@ function getMessageColour(theme: Theme, code: ReplyCode) {
       return theme.palette.warning[accent];
     case ReplyCode.Debug:
       return theme.palette.text.disabled;
+    case ReplyCode.Done:
+      return theme.palette.success[accent];
     default:
       return undefined;
   }
@@ -56,14 +58,14 @@ function isVisible(code: ReplyCode, levels: ReplyCode[]) {
   return false;
 }
 
-export function getMessage(reply: Reply, levels: ReplyCode[], search: SearchState) {
-  if (!isVisible(reply.code, levels)) return null;
-
+function getHighlighterProps(
+  message: string,
+  search: SearchState
+): Partial<HighlighterProps> | null {
   const highlighterProps: Partial<HighlighterProps> = { searchWords: [] };
 
   if (search.searchExpr !== '') {
     if (search.limit) {
-      let message = formatDate(reply.date) + ' ' + reply.rawLine;
       let regExp = RegExp(
         search.regExp ? search.searchExpr : escapeRegExp(search.searchExpr),
         'i'
@@ -74,7 +76,57 @@ export function getMessage(reply: Reply, levels: ReplyCode[], search: SearchStat
     highlighterProps.autoEscape = !search.regExp;
   }
 
-  return <Message reply={reply} key={reply.id} HighlighterProps={highlighterProps} />;
+  return highlighterProps;
+}
+
+const CmdQueuedRegex = new RegExp(
+  'CmdQueued=([0-9]+),([0-9.]+),"(.+?)",([0-9]+),"(.+?)",([0-9]+),"(.+?)"'
+);
+
+export function getMessage(
+  reply: Reply,
+  levels: ReplyCode[],
+  search: SearchState
+): JSX.Element | null {
+  // If the message contains CmdQueue this is a new command (possibly from the log window input)
+  // and we want to echo it in a different colour.
+  let cmd_queued_line: JSX.Element | null = null;
+  if (reply.rawLine.includes('CmdQueued')) {
+    let match = reply.rawLine.match(CmdQueuedRegex);
+    if (match) {
+      const queued_string =
+        formatDate(reply.date) + ' ' + match[3] + ' ' + match[4] + ' ' + match[5] + ' ' + match[7];
+      const highlighterProps = getHighlighterProps(queued_string, search);
+      if (highlighterProps !== null) {
+        cmd_queued_line = (
+          <Typography
+            sx={{ ...classes.messages, ...{ color: 'info.main' } }}
+            key={'CmdQueued' + reply.id.toString()}
+          >
+            <Highlighter
+              {...(highlighterProps as HighlighterProps)}
+              textToHighlight={queued_string}
+            />
+          </Typography>
+        );
+      }
+    }
+  }
+
+  if (!isVisible(reply.code, levels)) return cmd_queued_line;
+
+  const message = formatDate(reply.date) + ' ' + reply.rawLine;
+  const highlighterProps = getHighlighterProps(message, search);
+  if (highlighterProps === null) {
+    return cmd_queued_line;
+  }
+
+  return (
+    <>
+      {cmd_queued_line}
+      <Message reply={reply} key={reply.id} HighlighterProps={highlighterProps} />
+    </>
+  );
 }
 
 type MessageProps = TypographyProps & {
