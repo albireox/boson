@@ -156,7 +156,7 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
           onWheel={handleWheel}
           onMouseUp={handleMouseUp}
           onKeyDown={handleKeyDown}
-          overscan={300}
+          increaseViewportBy={3000}
         />
       );
     } else {
