@@ -198,9 +198,7 @@ app.on('before-quit', (e) => {
 
 const isDev = require('electron-is-dev');
 
-if (false) {
-  // Disable this for now.
-  if (!isDev) {
-    autoUpdater.checkForUpdatesAndNotify();
-  }
+if (!isDev) {
+  autoUpdater.channel = 'beta';
+  autoUpdater.checkForUpdatesAndNotify();
 }
