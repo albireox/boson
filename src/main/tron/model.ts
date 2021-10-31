@@ -75,7 +75,7 @@ export default class TronModel {
     for (let key of keys) {
       key = key.toLowerCase();
       // Checks that the key is *, actor.*, or actor.key.
-      if (!key.match(/^\*|[a-z]+\.[a-z*]+$/i)) {
+      if (!key.match(/^\*|[a-z]+\.[a-z_*]+$/i)) {
         log.error(`Cannot register a listener for key ${key}`);
         continue;
       }
