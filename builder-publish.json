@@ -1,5 +1,6 @@
 {
-  "extends": "package.json",
+  "appId": "com.boson.mac",
+  "extends": null,
   "productName": "boson",
   "artifactName": "boson-${version}-${os}-${arch}.${ext}",
   "generateUpdatesFilesForAllChannels": true,
@@ -19,5 +20,9 @@
   "afterSign": "scripts/notarize.js",
   "dmg": {
     "sign": false
+  },
+  "files": ["build/**/*"],
+  "directories": {
+    "buildResources": "assets"
   }
 }
