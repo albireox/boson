@@ -49,11 +49,14 @@
   },
   "build": {
     "appId": "com.boson.mac",
+    "extends": null,
     "productName": "boson",
     "artifactName": "boson-${version}-${os}-${arch}.${ext}",
     "generateUpdatesFilesForAllChannels": true,
     "mac": {
-      "target": ["zip"],
+      "target": [
+        "default"
+      ],
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
       "entitlementsInherit": "assets/entitlements.mac.plist"
