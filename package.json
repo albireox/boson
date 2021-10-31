@@ -1,6 +1,7 @@
 {
   "name": "boson",
-  "version": "0.0.3-beta.1",
+  "productName": "boson",
+  "version": "0.0.3-alpha.1",
   "author": "José Sánchez-Gallego <gallegoj@uw.edu>",
   "description": "SDSS observer graphical user interface",
   "repository": "github:albireox/boson",
@@ -44,9 +45,10 @@
     "postinstall": "electron-builder install-app-deps",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "eject": "react-scripts eject",
-    "publish": "npm run build && electron-builder --publish always"
+    "publish": "npm run build && electron-builder --publish always --config builder-publish.json"
   },
   "build": {
+    "appId": "com.boson.mac",
     "extends": null,
     "productName": "boson",
     "artifactName": "boson-${version}-${os}-${arch}.${ext}",
@@ -59,11 +61,11 @@
       }
     ],
     "mac": {
+      "target": ["zip"],
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
       "entitlementsInherit": "assets/entitlements.mac.plist"
     },
-    "afterSign": "scripts/notarize.js",
     "dmg": {
       "sign": false
     },

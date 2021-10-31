@@ -1,0 +1,23 @@
+{
+  "extends": "package.json",
+  "productName": "boson",
+  "artifactName": "boson-${version}-${os}-${arch}.${ext}",
+  "generateUpdatesFilesForAllChannels": true,
+  "publish": [
+    {
+      "provider": "github",
+      "private": false,
+      "releaseType": "draft"
+    }
+  ],
+  "mac": {
+    "target": ["default"],
+    "hardenedRuntime": true,
+    "entitlements": "assets/entitlements.mac.plist",
+    "entitlementsInherit": "assets/entitlements.mac.plist"
+  },
+  "afterSign": "scripts/notarize.js",
+  "dmg": {
+    "sign": false
+  }
+}

@@ -173,7 +173,20 @@ export function createWindow(name: string = 'main'): BrowserWindow {
 app.on('ready', () => {
   for (let name of store.get('user.defaultWindows')) {
     let win = createWindow(name);
-    if (name === 'main') mainWindow = win;
+    if (name === 'main') {
+      mainWindow = win;
+      const isDev = require('electron-is-dev');
+
+      if (!isDev && process.platform === 'darwin') {
+        autoUpdater.allowPrerelease = true;
+
+        const log = require('electron-log');
+        log.transports.file.level = 'debug';
+        autoUpdater.logger = log;
+
+        autoUpdater.checkForUpdatesAndNotify();
+      }
+    }
   }
   Menu.setApplicationMenu(menu);
 });
@@ -194,11 +207,24 @@ app.on('before-quit', (e) => {
   saveWindowPositions();
 });
 
-// Setup auto-updater
-
-const isDev = require('electron-is-dev');
-
-if (!isDev) {
-  autoUpdater.channel = 'beta';
-  autoUpdater.checkForUpdatesAndNotify();
-}
+autoUpdater.on('checking-for-update', () => {
+  console.log('Checking for update...');
+});
+autoUpdater.on('update-available', (info) => {
+  console.log('Update available.');
+});
+autoUpdater.on('update-not-available', (info) => {
+  console.log('Update not available.');
+});
+autoUpdater.on('error', (err) => {
+  console.log('Error in auto-updater. ' + err);
+});
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
+  console.log(log_message);
+});
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('Update downloaded');
+});
