@@ -7,11 +7,21 @@
 
 /** @jsxImportSource @emotion/react */
 
-import { FormControl, FormControlLabel, Stack, Typography } from '@mui/material';
+import UpdateIcon from '@mui/icons-material/Update';
+import {
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  OutlinedInput,
+  Stack,
+  Typography
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Switch, { SwitchProps } from '@mui/material/Switch';
 import { Box } from '@mui/system';
 import React from 'react';
+import { useKeywords } from 'renderer/hooks';
 import hal9000logo from './images/hal9009.png';
 
 const IOSSwitch = styled((props: SwitchProps) => (
@@ -62,10 +72,91 @@ const IOSSwitch = styled((props: SwitchProps) => (
   }
 }));
 
+function DesignInput() {
+  const keywords = useKeywords(['jaeger.configuration_loaded'], 'configuration-input-loaded');
+
+  let configuration_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[0];
+  let design_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[1];
+
+  const [preValue, setPreValue] = React.useState(design_id?.toString() || '<none>');
+  const [value, setValue] = React.useState(design_id?.toString() || '<none>');
+  const [error, setError] = React.useState(false);
+
+  const [focused, setFocused] = React.useState(false);
+
+  React.useEffect(() => {
+    if (design_id !== undefined) {
+      setValue(`${design_id} (conf. ${configuration_id})`);
+    } else {
+      setValue('<none>');
+    }
+    setFocused(false);
+  }, [design_id, configuration_id]);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      const new_design = Number.parseFloat(value);
+      if (Number.isInteger(new_design)) {
+        window.api.tron.send(`jaeger configuration load ${new_design}`);
+      }
+    }
+  };
+
+  return (
+    <OutlinedInput
+      error={error}
+      sx={{
+        '& input': {
+          padding: focused ? '10px 10px' : '0px',
+          marginTop: focused ? '0px' : '2px',
+          width: focused ? '80px' : null,
+          typography: 'h5',
+          color: value === '<none>' ? 'warning.main' : 'text.primary'
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+          border: focused ? 'solid' : 'hidden'
+        }
+      }}
+      endAdornment={
+        focused ? (
+          <InputAdornment position='end'>
+            <IconButton size='small'>
+              <UpdateIcon />
+            </IconButton>
+          </InputAdornment>
+        ) : null
+      }
+      value={value}
+      onKeyPress={handleKeyDown}
+      onFocus={() => {
+        setPreValue(value);
+        if (value === '<none>') {
+          setValue('');
+        } else {
+          setValue(design_id ? design_id.toString() : '');
+        }
+        setFocused(true);
+      }}
+      onBlur={() => {
+        setValue(preValue);
+        setFocused(false);
+        setError(false);
+      }}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  );
+}
+
 export default function HALHeader() {
   return (
     <Stack direction='row'>
       <img src={hal9000logo} height='100px' alt='HAL9000 logo' />
+      <Stack direction='row' alignItems='center' pl={4}>
+        <Typography sx={{ mr: 1 }} variant='h5' color='text.primary'>
+          Design
+        </Typography>
+        <DesignInput />
+      </Stack>
       <div css={{ flexGrow: 1 }} />
       <Box alignSelf='center' pr={2}>
         <FormControl>
