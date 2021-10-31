@@ -151,6 +151,7 @@ export default function ConnectView() {
         window.api.invoke('window-close', NAME);
         break;
     }
+    setButtonDisabled(false);
   };
 
   let handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
