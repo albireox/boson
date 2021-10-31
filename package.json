@@ -45,7 +45,7 @@
     "postinstall": "electron-builder install-app-deps",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "eject": "react-scripts eject",
-    "publish": "npm run build && electron-builder --publish always --config builder-publish.json"
+    "publish": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder --publish always --config builder-publish.json"
   },
   "build": {
     "appId": "com.boson.mac",
