@@ -65,7 +65,7 @@ export const JS9: React.FC<{
         display: display
       });
       window.JS9.SetImageInherit(true, { display: display });
-    }, 500);
+    }, 3000);
 
     setCurrentImage(values[2]);
     if (first) {
