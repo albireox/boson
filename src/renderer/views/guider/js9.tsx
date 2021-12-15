@@ -135,7 +135,7 @@ export function JS9Frame() {
     setOpts({ ...opts, ...newOpts });
   };
 
-  window.JS9.globalOpts['mouseActions'][0] = 'none';
+  // window.JS9.globalOpts['mouseActions'][0] = 'none';
   window.JS9.globalOpts['resize'] = false;
 
   let default_size = Math.round((win_size.height || 800) / 4);
