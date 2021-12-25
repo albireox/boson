@@ -60,12 +60,15 @@ export const JS9: React.FC<{
         }
       : {};
 
-    setTimeout(() => {
+    try {
       window.JS9.Load(`http://${hostname}:${port}${values[2]}`, load_opts, {
         display: display
       });
       window.JS9.SetImageInherit(true, { display: display });
-    }, 3000);
+    } catch (err) {
+      console.log('Error in JS9', err);
+      return;
+    }
 
     setCurrentImage(values[2]);
     if (first) {
