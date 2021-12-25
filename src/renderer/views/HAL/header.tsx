@@ -22,7 +22,7 @@ import Switch, { SwitchProps } from '@mui/material/Switch';
 import { Box } from '@mui/system';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
-import hal9000logo from './images/hal9009.png';
+import hal9000logo from './images/hal9000.png';
 
 const IOSSwitch = styled((props: SwitchProps) => (
   <Switch focusVisibleClassName='.Mui-focusVisible' disableRipple {...props} />

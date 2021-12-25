@@ -11,7 +11,7 @@ import React from 'react';
 import { useKeywords } from 'renderer/hooks';
 import GotoFieldView from './goto_field';
 import HALHeader from './header';
-import hal9000logo from './images/hal9009.png';
+import hal9000logo from './images/hal9000.png';
 import HALScripts from './scripts';
 
 /** @jsxImportSource @emotion/react */
