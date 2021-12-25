@@ -2835,7 +2835,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:*, @types/eslint@npm:^7.2.4":
+"@types/eslint@npm:*":
+  version: 8.2.1
+  resolution: "@types/eslint@npm:8.2.1"
+  dependencies:
+    "@types/estree": "*"
+    "@types/json-schema": "*"
+  checksum: f32753ba184c212056f2bb7ee16937150a36e01da7eed15e2e179b7df76d0bbcbfa49972f30e9336f22be471c7f67fd91bcc8c25ff532462598de0f489df0cd8
+  languageName: node
+  linkType: hard
+
+"@types/eslint@npm:^7.2.4":
   version: 7.29.0
   resolution: "@types/eslint@npm:7.29.0"
   dependencies:
@@ -3653,7 +3663,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"address@npm:^1.0.1, address@npm:^1.1.2":
+"address@npm:^1.0.1":
+  version: 1.0.3
+  resolution: "address@npm:1.0.3"
+  checksum: 71667d6e7ac6e2f900eef51b1e0ae7c61848f25298719312a869749f69c7e10fc49c7057ee1c68a769fcda39c7015fc38cfd4453658c89761ac36de76e975888
+  languageName: node
+  linkType: hard
+
+"address@npm:^1.1.2":
   version: 1.1.2
   resolution: "address@npm:1.1.2"
   checksum: d966deee6ab9a0f96ed1d25dc73e91a248f64479c91f9daeb15237b8e3c39a02faac4e6afe8987ef9e5aea60a1593cef5882b7456ab2e6196fc0229a93ec39c2
@@ -4509,6 +4526,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.61
     "@mui/material": ^5.2.5
     "@mui/styles": ^5.2.3
+    "@mui/system": ^5.2.5
     "@mui/x-data-grid": ^5.2.1
     "@types/electron-devtools-installer": ^2.2.1
     "@types/jest": ^27.0.3
@@ -4541,13 +4559,13 @@ __metadata:
     react-dom: ^17.0.2
     react-highlight-words: ^0.17.0
     react-scripts: ^5.0.0
-    react-virtuoso: ^2.3.1
+    react-virtuoso: ^2.3.2
     rxjs: ^7.4.0
     source-map-explorer: ^2.5.2
     source-map-support: ^0.5.21
     sprintf-js: ^1.1.2
     typescript: ^4.5.4
-    wait-on: ^6.0.0
+    wait-on: ^5.0.0
   languageName: unknown
   linkType: soft
 
@@ -9411,7 +9429,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"joi@npm:^17.4.0":
+"joi@npm:^17.3.0":
   version: 17.5.0
   resolution: "joi@npm:17.5.0"
   dependencies:
@@ -12468,15 +12486,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "react-virtuoso@npm:2.3.1"
+"react-virtuoso@npm:^2.3.2":
+  version: 2.3.3
+  resolution: "react-virtuoso@npm:2.3.3"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.12
     "@virtuoso.dev/urx": ^0.2.12
   peerDependencies:
     react: ">=16"
-  checksum: 012f35bbd4e1b0153ce350232a1294f89aa7f691efd6486120dda2c55ca484e82a92220930eff8583a6f5c4a8433d1cf63a0ae15223506f129a7ffa9dd2e5bc9
+  checksum: 8f927551e30fd8d2180abf1ab9f647faa8a67a1f8bfdd125eeebaab78e9bfcb2dad5f2b3559589e99277e2d8ae0cdd204e28d9fff69a802dab087b34c06caade
   languageName: node
   linkType: hard
 
@@ -12913,7 +12931,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.1.0, rxjs@npm:^7.4.0":
+"rxjs@npm:^7.4.0":
   version: 7.4.0
   resolution: "rxjs@npm:7.4.0"
   dependencies:
@@ -14675,18 +14693,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wait-on@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "wait-on@npm:6.0.0"
+"wait-on@npm:^5.0.0":
+  version: 5.3.0
+  resolution: "wait-on@npm:5.3.0"
   dependencies:
     axios: ^0.21.1
-    joi: ^17.4.0
+    joi: ^17.3.0
     lodash: ^4.17.21
     minimist: ^1.2.5
-    rxjs: ^7.1.0
+    rxjs: ^6.6.3
   bin:
     wait-on: bin/wait-on
-  checksum: 6ae7bd2a933715c3b2f1c49f033d97c576b2c6a0257420d4c83964d2846c3967bfce33bc9af9a1a631ef38dfa6185be03cef57d2867c8c30c523278f964ac9e3
+  checksum: b7099104b7900ff6349f1196edff759076ab557a2053c017a587819f7a59f146ec9e35c99579acd31dcda371bfa72241ef28b8ccda902f0bf3fbf2d780a00ebf
   languageName: node
   linkType: hard
 
