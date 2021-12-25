@@ -104,7 +104,7 @@ export function createWindow(name: string = 'main'): BrowserWindow {
     ...windowConfig,
     titleBarStyle: 'hidden',
     show: false,
-    backgroundColor: nativeTheme.shouldUseDarkColors ? '#303030' : '#FFFFFF',
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#121212' : '#FFFFFF',
     useContentSize: true,
     icon: path.join(__dirname, 'logo.png'),
     webPreferences: {

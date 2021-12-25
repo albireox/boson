@@ -8,8 +8,8 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material';
+import { useMemo } from 'react';
 import './index.css';
 import ConnectView from './views/connect';
 import FPSView from './views/FPS';
@@ -20,19 +20,6 @@ import LogView from './views/log';
 import MainView from './views/main';
 import PreferencesView from './views/preferences';
 import WeatherView from './views/weather';
-
-function getBosonTheme(theme: string): {} {
-  let muiTheme = {
-    palette: {
-      mode: theme
-    },
-    typography: {
-      fontSize: 12
-    }
-  };
-
-  return muiTheme;
-}
 
 function ViewManager() {
   const views: { [key: string]: JSX.Element } = {
@@ -65,26 +52,23 @@ function ViewManager() {
 }
 
 export default function BosonApp() {
-  // Initially set theme to dark, but it will be really set in the effect.
-  const [theme, setTheme] = useState<string>('dark');
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-  useEffect(() => {
-    // Listen to the toggle-theme event and switch the theme
-    const updateTheme = async (useDarkTheme?: boolean) => {
-      // If useDarkTheme is undefined, asks main.
-      if (useDarkTheme === undefined) useDarkTheme = await window.api.invoke('theme-use-dark');
-      if (useDarkTheme) {
-        setTheme('dark');
-      } else {
-        setTheme('light');
-      }
-    };
-    window.api.on('theme-updated', updateTheme);
-    updateTheme(); // Initial assignment
-  }, []);
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? 'dark' : 'light'
+        },
+        typography: {
+          fontSize: 12
+        }
+      }),
+    [prefersDarkMode]
+  );
 
   return (
-    <ThemeProvider theme={createTheme(getBosonTheme(theme))}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <ViewManager />
     </ThemeProvider>
