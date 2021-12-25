@@ -11,7 +11,15 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { useEffect, useState } from 'react';
 import './index.css';
-import ViewManager from './viewManager';
+import ConnectView from './views/connect';
+import FPSView from './views/FPS';
+import GuiderView from './views/guider';
+import HALView from './views/HAL';
+import KeywordsView from './views/keywords';
+import LogView from './views/log';
+import MainView from './views/main';
+import PreferencesView from './views/preferences';
+import WeatherView from './views/weather';
 
 function getBosonTheme(theme: string): {} {
   let muiTheme = {
@@ -24,6 +32,36 @@ function getBosonTheme(theme: string): {} {
   };
 
   return muiTheme;
+}
+
+function ViewManager() {
+  const views: { [key: string]: JSX.Element } = {
+    main: <MainView />,
+    connect: <ConnectView />,
+    log: <LogView />,
+    keywords: <KeywordsView />,
+    weather: <WeatherView />,
+    fps: <FPSView />,
+    guider: <GuiderView />,
+    preferences: <PreferencesView />,
+    hal: <HALView />
+  };
+
+  let path: string;
+
+  if (window.location.search !== '') {
+    // Production mode. The path is in the form ../index.html?<path>
+    path = window.location.search.slice(1);
+  } else {
+    // Development mode. The path is in the form /albireox/boson/<path>
+    path = window.location.pathname.split('/').reverse()[0];
+  }
+
+  if (path.startsWith('log')) {
+    return views['log']; // We can have log1, log2, log3, etc.
+  } else {
+    return views[path];
+  }
 }
 
 export default function BosonApp() {

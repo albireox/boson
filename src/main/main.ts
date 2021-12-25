@@ -122,7 +122,7 @@ export function createWindow(name: string = 'main'): BrowserWindow {
   const isDev = require('electron-is-dev');
 
   if (isDev) {
-    win.loadURL(`http://127.0.0.1:3000/index.html?${name}`);
+    win.loadURL(`http://127.0.0.1:3000/${name}`);
   } else {
     win.loadURL(`file://${__dirname}/../../index.html?${name}`);
   }
