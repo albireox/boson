@@ -15,7 +15,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton
+  IconButton,
+  SxProps,
+  Theme
 } from '@mui/material';
 import { TronEventReplyIFace } from 'main/events';
 import { CommandStatus } from 'main/tron/types';
@@ -65,7 +67,7 @@ export function CommandButton({
 
   const [running, setRunning] = React.useState(false);
   const [endIcon, setEndIcon] = React.useState(baseIcon);
-  const [sx, setSx] = React.useState(props.sx);
+  const [sx, setSx] = React.useState<SxProps<Theme>>(props.sx || {});
   const [color, setColor] = React.useState<any>('primary');
   const [alertOpen, setAlertOpen] = React.useState(false);
 
