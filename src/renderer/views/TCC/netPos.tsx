@@ -129,9 +129,7 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
             <TableCell align='right'>{coordState.axis2label}</TableCell>
             <TableCell align='right'>{coordState.axis2value}</TableCell>
             <TableCell align='left'>{coordState.axis2units}</TableCell>
-            <TableCell align='center' rowSpan={2} style={{ padding: '0px 32px 0px 64px' }}>
-              <LinearProgressWithLabel value={progress} hidden={true} />
-            </TableCell>
+            <TableCell align='center' rowSpan={2} style={{ padding: '0px 32px 0px 64px' }} />
           </TableRow>
           <TableRow>
             <TableCell align='right'>CSys</TableCell>
