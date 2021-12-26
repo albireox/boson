@@ -13,7 +13,7 @@ import { Reply, ReplyCode } from 'main/tron';
 import * as React from 'react';
 import Highlighter, { HighlighterProps } from 'react-highlight-words';
 import FollowScroll, { FollowScrollHandle } from 'renderer/components/followScroll';
-import { useListener } from 'renderer/hooks';
+import { useKeywords, useListener } from 'renderer/hooks';
 import { ConfigContext, ConfigState, SearchContext, SearchState } from './index';
 
 const classes = {
@@ -85,20 +85,35 @@ const CmdQueuedRegex = new RegExp(
 
 export function getMessage(
   reply: Reply,
-  levels: ReplyCode[],
+  config: ConfigState,
   search: SearchState
 ): JSX.Element | null {
   // If the message contains CmdQueue this is a new command (possibly from the log window input)
   // and we want to echo it in a different colour.
-  let cmd_queued_line: JSX.Element | null = null;
+  let cmd_queued_jsx: JSX.Element | null = null;
+  let message_jsx: JSX.Element | null = null;
+
+  if (
+    reply.sender === 'cmds' &&
+    !reply.rawLine.includes('CmdQueued') &&
+    config.selectedActors.length > 0 &&
+    !config.selectedActors.includes('hub')
+  ) {
+    return null;
+  }
+
   if (reply.rawLine.includes('CmdQueued')) {
     let match = reply.rawLine.match(CmdQueuedRegex);
     if (match) {
+      const to_actor = match[5];
+      if (config.selectedActors.length > 0 && !config.selectedActors.includes(to_actor)) {
+        return null;
+      }
       const queued_string =
         formatDate(reply.date) + ' ' + match[3] + ' ' + match[4] + ' ' + match[5] + ' ' + match[7];
       const highlighterProps = getHighlighterProps(queued_string, search);
       if (highlighterProps !== null) {
-        cmd_queued_line = (
+        cmd_queued_jsx = (
           <Typography
             sx={{ ...classes.messages, ...{ color: 'info.main' } }}
             key={'CmdQueued' + reply.id.toString()}
@@ -113,20 +128,25 @@ export function getMessage(
     }
   }
 
-  if (!isVisible(reply.code, levels)) return cmd_queued_line;
-
-  const message = formatDate(reply.date) + ' ' + reply.rawLine;
-  const highlighterProps = getHighlighterProps(message, search);
-  if (highlighterProps === null) {
-    return cmd_queued_line;
+  const visible = isVisible(reply.code, config.levels);
+  if (visible || cmd_queued_jsx !== null) {
+    const message = formatDate(reply.date) + ' ' + reply.rawLine;
+    const highlighterProps = getHighlighterProps(message, search);
+    if (highlighterProps === null) {
+      return cmd_queued_jsx;
+    } else {
+      if (visible) {
+        message_jsx = <Message reply={reply} key={reply.id} HighlighterProps={highlighterProps} />;
+      }
+      return (
+        <>
+          {message_jsx}
+          {cmd_queued_jsx}
+        </>
+      );
+    }
   }
-
-  return (
-    <>
-      {cmd_queued_line}
-      <Message reply={reply} key={reply.id} HighlighterProps={highlighterProps} />
-    </>
-  );
+  return null;
 }
 
 type MessageProps = TypographyProps & {
@@ -168,9 +188,14 @@ const filterReplies = (
   keepMessages = 0
 ) =>
   replies
-    .filter((x) => config.selectedActors.length === 0 || config.selectedActors.includes(x.sender))
+    .filter(
+      (x) =>
+        config.selectedActors.length === 0 ||
+        config.selectedActors.includes(x.sender) ||
+        x.sender === 'cmds'
+    )
     .slice(-keepMessages)
-    .map((r) => getMessage(r, config.levels, search))
+    .map((r) => getMessage(r, config, search))
     .filter((x) => x !== null);
 
 interface ReducerState {
