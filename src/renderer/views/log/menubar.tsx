@@ -174,11 +174,13 @@ const SelectActors: React.FC<SelectActorsProps> = ({ onConfigUpdate, ...props })
           All
         </MenuItem>
       }
-      {[...config.seenActors].sort().map((actor) => (
-        <MenuItem key={actor} value={actor} style={getStyles(actor, actors, theme)}>
-          {actor}
-        </MenuItem>
-      ))}
+      {[...config.seenActors].sort().map((actor) => {
+        return (
+          <MenuItem key={actor} value={actor} style={getStyles(actor, actors, theme)}>
+            {actor}
+          </MenuItem>
+        );
+      })}
     </TextField>
   );
 };

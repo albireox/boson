@@ -58,13 +58,13 @@ export function LogView() {
   const [config, setConfig] = useState<ConfigState>(IConfigState);
   const [search, setSearch] = useState<SearchState>(ISearchState);
 
-  const onConfigUpdate = (newConfig: Partial<ConfigState>) => {
-    setConfig({ ...config, ...newConfig });
-  };
+  const onConfigUpdate = useCallback((newConfig: Partial<ConfigState>) => {
+    setConfig((config) => ({ ...config, ...newConfig }));
+  }, []);
 
-  const onSearchUpdate = (newSearch: Partial<SearchState>) => {
-    setSearch({ ...search, ...newSearch });
-  };
+  const onSearchUpdate = useCallback((newSearch: Partial<SearchState>) => {
+    setSearch((search) => ({ ...search, ...newSearch }));
+  }, []);
 
   return (
     <Fragment>

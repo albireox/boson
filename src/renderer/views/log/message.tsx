@@ -215,27 +215,19 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   const config = React.useContext(ConfigContext);
   const search = React.useContext(SearchContext);
 
+  const actors = useKeywords(['hub.actors'], 'log-hub-actors');
+
   const ref = React.useRef<FollowScrollHandle>(null);
 
-  const updateSeenActors = React.useCallback(
-    (replies: Reply[]) => {
-      let actors = new Set(replies.map((r) => r.sender));
-      let newSeenActors: string[] = [];
-      actors.forEach((a) => {
-        if (!config.seenActors.includes(a) && !a.startsWith('keys_')) newSeenActors.push(a);
+  React.useEffect(() => {
+    if (actors['hub.actors'] !== undefined && actors['hub.actors'].values.length > 0) {
+      onConfigUpdate({
+        seenActors: actors['hub.actors'].values
       });
-      if (newSeenActors.length > 0) {
-        onConfigUpdate({
-          seenActors: [...config.seenActors, ...newSeenActors]
-        });
-      }
-    },
-    [config.seenActors, onConfigUpdate]
-  );
+    }
+  }, [actors, onConfigUpdate]);
 
   React.useEffect(() => {
-    // Not in use for now, but this allows to clear all the logs from the
-    // menu or main.
     window.api.on('clear-logs', () => dispatch({ type: 'clear' }));
   }, []);
 
@@ -251,11 +243,10 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
         config: config,
         search: search
       });
-      updateSeenActors(buffer);
       setBuffer([]);
     }, 250);
     return () => clearInterval(timer);
-  }, [buffer, config, search, dispatch, updateSeenActors]);
+  }, [buffer, config, search, dispatch]);
 
   useListener((replies: Reply[]) => setBuffer((prev) => [...prev, ...replies]));
 
