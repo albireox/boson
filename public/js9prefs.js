@@ -12,7 +12,8 @@ var JS9Prefs = {
     analysisWrappers: './analysis-wrappers',
     resize: true,
     fits2fits: 'never',
-    alerts: false
+    alerts: false,
+    waitType: 'mouse'
   },
   imageOpts: {
     colormap: 'grey',
