@@ -10,7 +10,7 @@ var JS9Prefs = {
     dataPath: '$HOME/Desktop:$HOME/Downloads',
     analysisPlugins: './analysis-plugins',
     analysisWrappers: './analysis-wrappers',
-    resize: false,
+    resize: true,
     fits2fits: 'never',
     alerts: false
   },
