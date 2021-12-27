@@ -139,7 +139,7 @@ export function JS9Frame() {
   };
 
   // window.JS9.globalOpts['mouseActions'][0] = 'none';
-  window.JS9.globalOpts['resize'] = false;
+  window.JS9.globalOpts['helperType'] = 'none';
 
   let default_size = Math.round((win_size.height || 800) / 4);
   if (default_size > (win_size.width || 700) / 3) default_size = (win_size.width || 700) / 3;
