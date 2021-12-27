@@ -139,6 +139,7 @@ export function JS9Frame() {
   };
 
   // window.JS9.globalOpts['mouseActions'][0] = 'none';
+  // window.JS9.globalOpts['resize'] = false;
   window.JS9.globalOpts['helperType'] = 'none';
   window.JS9.globalOpts.alerts = false;
 
