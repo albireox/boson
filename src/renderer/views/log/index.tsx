@@ -10,7 +10,7 @@
 
 import { SxProps } from '@mui/system';
 import { ReplyCode } from 'main/tron';
-import { createContext, Fragment, useState } from 'react';
+import { createContext, Fragment, useCallback, useState } from 'react';
 import CommandInput from './input';
 import MenuBar from './menubar';
 import Messages from './message';
