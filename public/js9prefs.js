@@ -11,7 +11,8 @@ var JS9Prefs = {
     analysisPlugins: './analysis-plugins',
     analysisWrappers: './analysis-wrappers',
     resize: false,
-    fits2fits: 'never'
+    fits2fits: 'never',
+    alerts: false
   },
   imageOpts: {
     colormap: 'grey',
