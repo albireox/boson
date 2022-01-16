@@ -39,8 +39,8 @@
     "sprintf-js": "^1.1.2"
   },
   "scripts": {
-    "start": "concurrently \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://127.0.0.1:3000 && tsc -p src/main && electron .\"",
-    "build": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder",
+    "start": "GENERATE_SOURCEMAP=false concurrently \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://127.0.0.1:3000 && tsc -p src/main && electron .\"",
+    "build": "GENERATE_SOURCEMAP=false PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder",
     "test": "react-scripts test",
     "postinstall": "electron-builder install-app-deps",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
