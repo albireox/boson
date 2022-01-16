@@ -8,7 +8,7 @@
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
-import { Button, ButtonGroup, Stack } from '@mui/material';
+import { Button, ButtonGroup, Stack, Typography } from '@mui/material';
 import { blue, grey } from '@mui/material/colors';
 import { styled } from '@mui/system';
 import React from 'react';
@@ -38,18 +38,20 @@ export default function SnapshotsView() {
   let win_size = useWindowSize();
 
   React.useEffect(() => {
-    if (!keywords['jaeger.configuration_snapshot']) return;
+    for (const kk of ['jaeger.configuration_snapshot', 'jaeger.snapshot']) {
+      if (!keywords[kk]) return;
 
-    const path = keywords['jaeger.configuration_snapshot'].values[0];
+      const path = keywords[kk].values[0];
 
-    setSnapshots((snaps) => {
-      if (snaps.includes(path)) {
-        return snaps;
-      } else {
-        setIndex(snaps.length);
-        return [...snaps, path];
-      }
-    });
+      setSnapshots((snaps) => {
+        if (snaps.includes(path)) {
+          return snaps;
+        } else {
+          setIndex(snaps.length);
+          return [...snaps, path];
+        }
+      });
+    }
   }, [keywords]);
 
   const increaseScale = () => {
