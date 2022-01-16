@@ -8,7 +8,6 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, LinearProgress, LinearProgressProps, Typography } from '@mui/material';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -24,21 +23,6 @@ interface CoordState {
   [key: string]: null | string | JSX.Element;
 }
 
-function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number; hidden?: boolean }
-) {
-  return (
-    <Box display='flex' alignItems='center' hidden={props.hidden || false}>
-      <Box width='100%' mr={1}>
-        <LinearProgress color='secondary' variant='determinate' {...props} />
-      </Box>
-      <Box minWidth={35} hidden={props.hidden || false}>
-        <Typography variant='body1'>{`${Math.round(props.value)}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
 const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
   let keywords = useKeywords(
     ['tcc.objNetPos', 'tcc.objSys', 'tcc.rotPos', 'tcc.rotType'],
@@ -52,16 +36,6 @@ const NetPosTable: React.FC<{ style?: { [key: string]: any } }> = (props) => {
     axis2value: null,
     axis2units: null
   });
-  const [progress, setProgress] = React.useState(10);
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
-    }, 800);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
 
   React.useEffect(() => {
     let cSysObj = keywords['tcc.objSys']?.values[0] || 'unknown';
