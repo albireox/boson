@@ -19,19 +19,21 @@ import KeywordsView from './views/keywords';
 import LogView from './views/log';
 import MainView from './views/main';
 import PreferencesView from './views/preferences';
+import SnapshotsView from './views/snapshots';
 import WeatherView from './views/weather';
 
 function ViewManager() {
   const views: { [key: string]: JSX.Element } = {
-    main: <MainView />,
     connect: <ConnectView />,
-    log: <LogView />,
-    keywords: <KeywordsView />,
-    weather: <WeatherView />,
     fps: <FPSView />,
     guider: <GuiderView />,
+    hal: <HALView />,
+    keywords: <KeywordsView />,
+    log: <LogView />,
+    main: <MainView />,
     preferences: <PreferencesView />,
-    hal: <HALView />
+    snapshots: <SnapshotsView />,
+    weather: <WeatherView />
   };
 
   let path: string;

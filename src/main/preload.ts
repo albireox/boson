@@ -11,6 +11,7 @@
 import { contextBridge, ipcRenderer, IpcRenderer } from 'electron';
 import log from 'electron-log';
 import { TronEventReplyIFace } from './events';
+import store from './store';
 
 // TODO: According to https://bit.ly/38aeKXB, we should to expose the ipcRenderer
 // directly. Instead, we should expose the channels from events.ts here.
@@ -24,10 +25,12 @@ export interface IElectronAPI {
   store: {
     get(key: string | string[]): Promise<any>;
     set(key: string, value: any): Promise<any>;
+    get_sync(key: string): any;
   };
   tron: {
     send(commandString: string): Promise<TronEventReplyIFace>;
   };
+  openInBrowser(path: string): void;
 }
 
 const API: IElectronAPI = {
@@ -45,10 +48,15 @@ const API: IElectronAPI = {
   },
   store: {
     get: async (key) => ipcRenderer.invoke('get-from-store', key),
-    set: async (key, value) => ipcRenderer.invoke('set-in-store', key, value)
+    set: async (key, value) => ipcRenderer.invoke('set-in-store', key, value),
+    get_sync: (key) => store.get(key)
   },
   tron: {
     send: async (commandString) => ipcRenderer.invoke('tron-send-command', commandString)
+  },
+  openInBrowser: (path) => {
+    console.log(path);
+    require('electron').shell.openExternal(path);
   }
 };
 

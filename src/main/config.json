@@ -58,6 +58,11 @@
       "height": 600,
       "resizable": true
     },
+    "snapshots": {
+      "width": 800,
+      "height": 600,
+      "resizable": true
+    },
     "guider": {
       "width": 700,
       "height": 800,

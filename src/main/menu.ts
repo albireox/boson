@@ -114,6 +114,11 @@ const template: any[] = [
     label: 'Tools',
     submenu: [
       {
+        label: 'Snapshots',
+        id: 'snapshots',
+        click: () => createWindow('snapshots')
+      },
+      {
         label: 'Guider',
         id: 'guider',
         accelerator: 'CmdOrCtrl+Shift+G',
