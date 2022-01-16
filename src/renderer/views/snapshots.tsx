@@ -135,7 +135,7 @@ export default function SnapshotsView() {
         </Stack>
         <Stack sx={{ flexGrow: 1, alignItems: 'center', alignSelf: 'center' }}>
           <Typography variant='h5' color={grey[800]}>
-            {snapshots[index].split('/').reverse()[0]}
+            {snapshots[index] ? snapshots[index].split('/').reverse()[0] : ''}
           </Typography>
         </Stack>
         <Stack direction='row' spacing={1} sx={{ alignSelf: 'right' }}>
