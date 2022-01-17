@@ -5,7 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, Stack } from '@mui/material';
+import { Box, InputAdornment, Stack, TextField } from '@mui/material';
 import { KeywordMap } from 'main/tron';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
@@ -17,6 +17,27 @@ import HALScripts from './scripts';
 /** @jsxImportSource @emotion/react */
 
 export const HALContext = React.createContext<KeywordMap>({});
+
+export type ExposureTimeInputType = {
+  label: string;
+  value: any;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+export const ExposureTimeInput = ({ label, value, onChange }: ExposureTimeInputType) => (
+  <TextField
+    label={label}
+    size='small'
+    InputProps={{ endAdornment: <InputAdornment position='end'>s</InputAdornment> }}
+    variant='standard'
+    value={value || ' '}
+    onChange={onChange}
+    sx={{
+      width: '80px',
+      '& .MuiInputBase-root': { marginTop: 1 }
+    }}
+  />
+);
 
 export default function HALView() {
   const halKeywords = useKeywords(
