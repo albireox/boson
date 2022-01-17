@@ -1,6 +1,24 @@
 {
   "goto_field": {
-    "stages": ["slew", "reconfigure", "calibrations", "acquire", "guide"],
-    "concurrent": [["slew", "reconfigure"]]
+    "stages": [
+      "prepare",
+      "slew",
+      "reconfigure",
+      "boss_hartmann",
+      "fvc",
+      "boss_arcs",
+      "boss_flat",
+      "acquire",
+      "guide"
+    ],
+    "cleanup_stages": ["cleanup"],
+    "concurrent": [["slew", "reconfigure"]],
+    "descriptions": {
+      "reconfigure": "Reconf.",
+      "boss_hartmann": "Hartmann",
+      "fvc": "FVC",
+      "boss_arcs": "Arc",
+      "boss_flat": "Flat"
+    }
   }
 }
