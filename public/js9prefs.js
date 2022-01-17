@@ -1,9 +1,9 @@
 var JS9Prefs = {
   globalOpts: {
-    helperType: 'none',
+    helperType: 'sock.io',
     helperPort: 2718,
     helperCGI: './cgi-bin/js9/js9Helper.cgi',
-    debug: 0,
+    debug: 1,
     loadProxy: false,
     workDir: './tmp',
     workDirQuota: 100,
@@ -11,7 +11,8 @@ var JS9Prefs = {
     analysisPlugins: './analysis-plugins',
     analysisWrappers: './analysis-wrappers',
     resize: true,
-    fits2fits: 'never',
+    fits2fits: 'always',
+    image: { xdim: 2048, ydim: 2048, bin: 8 },
     alerts: false,
     waitType: 'mouse'
   },
