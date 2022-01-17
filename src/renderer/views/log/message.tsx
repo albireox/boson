@@ -269,7 +269,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
         search: search
       });
       setBuffer([]);
-    }, 600);
+    }, 500);
     return () => clearInterval(timer);
   }, [buffer, config, search, dispatch]);
 
