@@ -10,6 +10,7 @@
 
 import { KeywordMap, Reply } from 'main/tron';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { getTAITime } from '../utils';
 
 /**
@@ -21,8 +22,10 @@ import { getTAITime } from '../utils';
  * @param channel The channel on which to listen for the messages from the
  *    tron model.
  */
-export function useKeywords(keys: string[], channel: string, refresh: boolean = true) {
+export function useKeywords(keys: string[], channel: any = null, refresh: boolean = true) {
   const [keywords, setKeywords] = useState<KeywordMap>({});
+
+  channel = (channel || uuidv4()) as string;
 
   // Store the parameters as a ref so that we can write a useEffect below
   // that runs only once and doesn't depend on mutable parameters.
