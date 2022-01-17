@@ -166,3 +166,41 @@ export function useWindowSize() {
 
   return windowSize;
 }
+
+/**
+ * Hook that returns true if a command is running.
+ * @param command The command string to match. If a command is running that
+ *    matches the command, the state returned will be true.
+ */
+export function useCommandWatcher(command: string) {
+  const cmdKeys = useKeywords(['cmds.CmdQueued', 'cmds.CmdDone']);
+
+  const [running, setRunning] = useState(false);
+  const [cmdID, setCmdID] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (running) {
+      if (!cmdKeys['cmds.CmdDone']) return;
+
+      // If the command is running we only care about CmdDone.
+      if (cmdKeys['cmds.CmdDone'].values[0] === cmdID) {
+        setRunning(false);
+      }
+    } else {
+      if (!cmdKeys['cmds.CmdQueued']) return;
+
+      const values = cmdKeys['cmds.CmdQueued'].values;
+
+      // Prevent infinite loop.
+      if (values[0] === cmdID) return;
+
+      let cmdStarted: string = `${values[4]} ${values[6]}`;
+      if (cmdStarted.match(command)) {
+        setCmdID(values[0]);
+        setRunning(true);
+      }
+    }
+  }, [cmdKeys, running, cmdID, command]);
+
+  return running;
+}
