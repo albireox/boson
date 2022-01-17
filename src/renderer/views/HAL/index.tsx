@@ -9,6 +9,8 @@ import { Box, InputAdornment, Stack, TextField } from '@mui/material';
 import { KeywordMap } from 'main/tron';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
+import ApogeeDomeFlatView from './apogee-dome-flat';
+import ExposeView from './expose';
 import GotoFieldView from './goto_field';
 import HALHeader from './header';
 import hal9000logo from './images/hal9000.png';
@@ -68,6 +70,8 @@ export default function HALView() {
           <HALHeader />
           <HALScripts keywords={halKeywords} />
           <GotoFieldView />
+          <ExposeView />
+          <ApogeeDomeFlatView />
         </Stack>
       </Box>
     </HALContext.Provider>

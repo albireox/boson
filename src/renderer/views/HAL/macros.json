@@ -20,8 +20,33 @@
       "boss_arcs": "Arc",
       "boss_flat": "Flat"
     },
-    "defaults":{
+    "defaults": {
       "guider_time": 15.0
     }
+  },
+  "apogee_dome_flat": {
+    "stages": ["gang_at_cart", "ffs", "open_shutter", "expose"],
+    "cleanup_stages": ["cleanup"],
+    "concurrent": [["ffs", "open_shutter"]],
+    "descriptions": {
+      "gang_at_cart": "Gang",
+      "ffs": "FFS",
+      "open_shutter": "Shutter"
+    }
+  },
+  "expose": {
+    "stages": ["prepare", "expose_boss", "expose_apogee"],
+    "cleanup_stages": ["cleanup"],
+    "concurrent": [["expose_boss", "expose_apogee"]],
+    "descriptions": {
+      "expose_boss": "BOSS",
+      "expose_apogee": "APOGEE"
+    },
+    "defaults": {
+      "apogee_exptime": "",
+      "boss_exptime": 900.0,
+      "pairs": true
+    }
+
   }
 }
