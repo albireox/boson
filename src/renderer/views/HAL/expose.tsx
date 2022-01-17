@@ -58,22 +58,26 @@ export default function ExposeView(): JSX.Element | null {
             minWidth={100}
             onStagesSelected={(stgs) => setStages(stgs)}
           />
-          <Stack direction='column' spacing={1}>
-            <Stack direction='row' spacing={1}>
-              <ExposureTimeInput
-                label='BOSS Exp Time'
-                value={bossTime}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setBossTime(e.target.value);
-                }}
-              />
-              <ExposureTimeInput
-                label='AP Exp Time'
-                value={apogeeTime}
-                onChange={(e) => setApogeeTime(e.target.value)}
-              />
-            </Stack>
+          <Stack
+            alignItems='center'
+            direction='row'
+            spacing={2}
+            flexWrap={'wrap'}
+            justifyContent={'center'}
+          >
+            <ExposureTimeInput
+              label='BOSS Exp Time'
+              value={bossTime}
+              onChange={(e) => {
+                e.preventDefault();
+                setBossTime(e.target.value);
+              }}
+            />
+            <ExposureTimeInput
+              label='AP Exp Time'
+              value={apogeeTime}
+              onChange={(e) => setApogeeTime(e.target.value)}
+            />
             <FormControlLabel
               control={
                 <Checkbox
@@ -81,7 +85,6 @@ export default function ExposeView(): JSX.Element | null {
                   disableRipple
                   onChange={(e) => setPairs(e.target.checked)}
                   size='small'
-                  sx={{ pl: 0 }}
                 />
               }
               label='Pairs'
