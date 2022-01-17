@@ -19,11 +19,10 @@ import HALScripts from './scripts';
 export const HALContext = React.createContext<KeywordMap>({});
 
 export default function HALView() {
-  const halKeywords = useKeywords(['hal.*'], 'hal-keys');
-
-  React.useEffect(() => {
-    window.api.tron.send('hal status');
-  }, []);
+  const halKeywords = useKeywords(
+    ['hal.stage_status', 'hal.stages', 'hal.available_scripts'],
+    'hal-keys'
+  );
 
   return (
     <HALContext.Provider value={halKeywords}>
