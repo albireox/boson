@@ -36,6 +36,7 @@ export interface IMacroData {
     cleanup_stages?: string[];
     concurrent?: string[][];
     descriptions?: { [key: string]: string };
+    defaults?: { [key: string]: any };
   };
 }
 
@@ -89,7 +90,7 @@ function updateStageState(
       clonedState[i].disabled = true;
     }
   }
-  console.log(clonedState);
+
   return clonedState;
 }
 

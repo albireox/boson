@@ -21,7 +21,7 @@ export default function GotoFieldView(): JSX.Element | null {
 
   const [disabled, setDisabled] = React.useState(false);
 
-  const [guiderTime, setGuiderTime] = React.useState(15);
+  const [guiderTime, setGuiderTime] = React.useState(macros.goto_field.defaults.guider_time);
   const [commandString, setCommandString] = React.useState('hal goto-field');
 
   const updateCommandString = (stages: string[]) => {
@@ -69,7 +69,7 @@ export default function GotoFieldView(): JSX.Element | null {
         <Stack alignItems='center' direction='row' spacing={2}>
           <Typography variant='h6'>Goto Field</Typography>
           <MacroStageSelect
-            stages={macros['goto_field'].stages}
+            stages={macros.goto_field.stages}
             maxWidth={200}
             minWidth={100}
             onStagesSelected={updateCommandString}
