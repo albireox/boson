@@ -187,21 +187,6 @@ app.on('ready', () => {
         autoUpdater.autoDownload = true;
         checkForUpdates();
       }
-
-      const notification = new Notification({
-        title: 'Update available',
-        body: 'An update is now available. Boson will be installed when the app quits.',
-        silent: false,
-        actions: [{ type: 'button', text: 'Restart' }]
-      });
-
-      // notification.on('action', (e, i) => {
-      //   if (i === 0) autoUpdater.quitAndInstall();
-      // });
-
-      notification.on('click', (e) => {});
-
-      notification.show();
     }
   }
   Menu.setApplicationMenu(menu);
