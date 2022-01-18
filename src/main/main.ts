@@ -8,9 +8,9 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { app, BrowserWindow, Menu, nativeTheme, screen } from 'electron';
+import { app, BrowserWindow, dialog, Menu, nativeTheme, Notification, screen } from 'electron';
 import log from 'electron-log';
-import { autoUpdater } from 'electron-updater';
+import { autoUpdater, UpdateInfo } from 'electron-updater';
 import * as path from 'path';
 import loadEvents from './events';
 import menu from './menu';
@@ -184,8 +184,24 @@ app.on('ready', () => {
         log.transports.file.level = 'debug';
         autoUpdater.logger = log;
 
-        autoUpdater.checkForUpdatesAndNotify();
+        autoUpdater.autoDownload = true;
+        checkForUpdates();
       }
+
+      const notification = new Notification({
+        title: 'Update available',
+        body: 'An update is now available. Boson will be installed when the app quits.',
+        silent: false,
+        actions: [{ type: 'button', text: 'Restart' }]
+      });
+
+      // notification.on('action', (e, i) => {
+      //   if (i === 0) autoUpdater.quitAndInstall();
+      // });
+
+      notification.on('click', (e) => {});
+
+      notification.show();
     }
   }
   Menu.setApplicationMenu(menu);
@@ -207,24 +223,35 @@ app.on('before-quit', (e) => {
   saveWindowPositions();
 });
 
-autoUpdater.on('checking-for-update', () => {
-  console.log('Checking for update...');
-});
-autoUpdater.on('update-available', (info) => {
-  console.log('Update available.');
-});
-autoUpdater.on('update-not-available', (info) => {
-  console.log('Update not available.');
-});
-autoUpdater.on('error', (err) => {
-  console.log('Error in auto-updater. ' + err);
-});
-autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
-  console.log(log_message);
-});
-autoUpdater.on('update-downloaded', (info) => {
-  console.log('Update downloaded');
+function checkForUpdates() {
+  autoUpdater.checkForUpdates();
+  setInterval(checkForUpdates, 10 * 60); // Check again after 10 minutes.
+}
+
+autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
+  const notification = new Notification({
+    title: 'Update available',
+    body: `An update is now available. Boson ${info.version} will be installed when the app quits.`,
+    silent: false,
+    actions: [{ type: 'button', text: 'Restart' }]
+  });
+
+  notification.on('action', (e, i) => {
+    if (i === 0) autoUpdater.quitAndInstall();
+  });
+
+  notification.on('click', () => {
+    dialog
+      .showMessageBox({
+        message: 'Update available',
+        type: 'question',
+        detail: 'Do you want to install this update now?',
+        buttons: ['Yes', 'Not now']
+      })
+      .then((response) => {
+        if (response.response === 0) autoUpdater.quitAndInstall();
+      });
+  });
+
+  notification.show();
 });
