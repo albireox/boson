@@ -15,7 +15,7 @@ import { ValidatedNumberInput } from '../../components/validatedInput';
 /** @jsxImportSource @emotion/react */
 
 export const GuideStack = () => {
-  const [expTime, setExpTime] = React.useState<number | undefined>(undefined);
+  const [expTime, setExpTime] = React.useState<number | undefined>(15);
 
   return (
     <Stack direction='row' pt={1} pb={1} spacing={1}>
@@ -28,8 +28,16 @@ export const GuideStack = () => {
         sx={{ maxWidth: '120px' }}
       />
       <div css={{ flexGrow: 1 }} />
-      <CommandButton commandString='hub actors' endIcon={<CameraAltIcon fontSize='inherit' />} />
-      <CommandButton commandString='mock'>Guide</CommandButton>
+      <CommandButton
+        commandString={`fliswarm talk -c gfa expose ${expTime || ''}`}
+        endIcon={<CameraAltIcon fontSize='inherit' />}
+      />
+      <CommandButton
+        commandString={`cherno acquire -c -t ${expTime || ''}`}
+        abortCommand='cherno stop'
+      >
+        Guide
+      </CommandButton>
     </Stack>
   );
 };
