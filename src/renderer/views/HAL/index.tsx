@@ -68,10 +68,10 @@ export default function HALView() {
       >
         <Stack direction='column' spacing={1} px={2} zIndex={10} position='relative'>
           <HALHeader />
-          <HALScripts keywords={halKeywords} />
           <GotoFieldView />
           <ExposeView />
           <ApogeeDomeFlatView />
+          <HALScripts keywords={halKeywords} />
         </Stack>
       </Box>
     </HALContext.Provider>
