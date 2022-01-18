@@ -18,10 +18,10 @@ const store = new Store();
 
 let userConfig = store.get('user', null);
 if (userConfig) {
-  store.set({ ...defaults, user: userConfig });
-} else {
-  store.set(defaults);
+  defaults['user'] = { ...defaults['user'], ...userConfig };
 }
+
+store.set(defaults);
 
 // This is an anti-pattern and I should replace it with a get_store() or similar.
 export default store;
