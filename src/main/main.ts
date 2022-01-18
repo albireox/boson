@@ -225,7 +225,7 @@ app.on('before-quit', (e) => {
 
 function checkForUpdates() {
   autoUpdater.checkForUpdates();
-  setInterval(checkForUpdates, 10 * 60); // Check again after 10 minutes.
+  setInterval(checkForUpdates, 10 * 60 * 1000); // Check again after 10 minutes.
 }
 
 autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
