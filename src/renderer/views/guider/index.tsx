@@ -8,10 +8,8 @@
 /** @jsxImportSource @emotion/react */
 
 import { Stack } from '@mui/material';
-import { Box } from '@mui/system';
 import * as React from 'react';
 import { GuideStack } from './guide';
-import { GuideTable } from './guideTable';
 import { JS9Frame } from './js9';
 
 export interface IJS9Opts {
@@ -26,21 +24,9 @@ export const JS9Opts = {
 
 export default function GuiderView() {
   return (
-    <>
-      <Stack
-        alignContent='center'
-        direction='column'
-        height='100%'
-        sx={{
-          p: [1, 2, 2, 2]
-        }}
-      >
-        <Box sx={{ mb: 1 }}>
-          <JS9Frame />
-        </Box>
-        <GuideStack />
-        <GuideTable />
-      </Stack>
-    </>
+    <Stack alignContent='top' direction='column' padding={2} spacing={1}>
+      <JS9Frame />
+      <GuideStack />
+    </Stack>
   );
 }

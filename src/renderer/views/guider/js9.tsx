@@ -51,10 +51,10 @@ export const JS9 = ({
 
     if (keywords === undefined || keywords['fliswarm.filename'] === undefined) return;
 
-    // let now = new Date();
-    // if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
-    //   return;
-    // }
+    let now = new Date();
+    if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
+      return;
+    }
 
     let values = keywords['fliswarm.filename'].values;
 
@@ -69,17 +69,12 @@ export const JS9 = ({
         }
       : {};
 
-    const request = new XMLHttpRequest();
-
     const fullPath: string = values[2];
     const snapPath = fullPath.replace('.fits', '-snap.fits');
 
     let url: string;
 
-    request.open('GET', `http://${hostname}:${port}${snapPath}`, false);
-    request.send();
-
-    if (request.status === 404 || useFullImage === 'true' || useFullImage === true) {
+    if (useFullImage === 'true' || useFullImage === true) {
       url = `http://${hostname}:${port}${fullPath}`;
     } else {
       url = `http://${hostname}:${port}${snapPath}`;
@@ -115,13 +110,12 @@ export const JS9 = ({
         style={{
           width: size,
           height: size,
-          display: visible ? 'inherit' : 'none'
+          display: visible ? 'block' : 'none'
         }}
         css={(theme: any) => ({
-          borderWidth: '2px',
-          borderStyle: 'solid',
-          borderColor:
-            selected === gid && zoomed !== gid ? 'darkred' : theme.palette.background.default,
+          outline:
+            'solid 1px ' +
+            (selected === gid && zoomed !== gid ? 'darkred' : theme.palette.background.default),
           'div.JS9Container > canvas.JS9Image': {
             backgroundColor: theme.palette.background.default,
             backgroundImage: first
@@ -133,6 +127,14 @@ export const JS9 = ({
             width: size,
             height: size,
             zIndex: 0
+          },
+          '.JS9Layer': {
+            width: size,
+            height: size
+          },
+          ' .canvas-container': {
+            width: size,
+            height: size
           }
         })}
         data-width={size}
@@ -179,8 +181,8 @@ export function JS9Frame() {
   window.JS9.globalOpts['resize'] = false;
   window.JS9.globalOpts.alerts = false;
 
-  let default_size = Math.round((win_size.height || 800) / 4);
-  if (default_size > (win_size.width || 700) / 3) default_size = (win_size.width || 700) / 3;
+  let default_size = Math.round((win_size.width || 800) / 3.2);
+  // if (default_size > (win_size.width || 600) / 3) default_size = (win_size.width || 600) / 3;
 
   const updateSelected = React.useCallback(
     (gid: number) => {
@@ -200,7 +202,7 @@ export function JS9Frame() {
   };
 
   return (
-    <>
+    <Stack direction='column' spacing={0.5}>
       <MenuBar
         gidSelected={selected || zoomed}
         urls={urls}
@@ -211,7 +213,7 @@ export function JS9Frame() {
           flexDirection: 'row'
         }}
       />
-      <Stack width='100%' display='flex' flexDirection='row' justifyContent='center'>
+      <Stack direction='row' justifyContent='center' spacing={0.5}>
         {[1, 2, 3].map((gid: number) => (
           <JS9
             key={`gfa${gid}`}
@@ -227,7 +229,7 @@ export function JS9Frame() {
           />
         ))}
       </Stack>
-      <Stack width='100%' display='flex' flexDirection='row' justifyContent='center'>
+      <Stack direction='row' justifyContent='center' spacing={0.5}>
         {[4, 5, 6].map((gid: number) => (
           <JS9
             key={`gfa${gid}`}
@@ -243,6 +245,6 @@ export function JS9Frame() {
           />
         ))}
       </Stack>
-    </>
+    </Stack>
   );
 }
