@@ -110,15 +110,15 @@ export const MenuBar = ({
       return;
     }
 
+    const xpaset = window.api.store.get_sync('user.guider.xpaset');
+
     for (const command of ['frame new', `url ${urls[gidSelected]}`]) {
-      window.api
-        .openInApplication(`/Users/gallegoj/.pyenv/shims/xpaset -p ds9 ${command}`)
-        .catch((err: Error) => {
-          setErrorMessage(
-            `${err.message} xpaset must be installed and DS9 open and connected. ` +
-              'Use the preferences to change the path to xpaset.'
-          );
-        });
+      window.api.openInApplication(`${xpaset} -p ds9 ${command}`).catch((err: Error) => {
+        setErrorMessage(
+          `${err.message} xpaset must be installed and DS9 open and connected. ` +
+            'Use the preferences to change the path to xpaset.'
+        );
+      });
     }
   };
 
