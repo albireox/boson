@@ -60,8 +60,24 @@ export const JS9: React.FC<{
         }
       : {};
 
+    const request = new XMLHttpRequest();
+
+    const fullPath: string = values[2];
+    const snapPath = fullPath.replace('.fits', '-snap.fits');
+
+    let url: string;
+
+    request.open('GET', `http://${hostname}:${port}${snapPath}`, false);
+    request.send();
+
+    if (request.status === 404) {
+      url = `http://${hostname}:${port}${fullPath}`;
+    } else {
+      url = `http://${hostname}:${port}${snapPath}`;
+    }
+
     try {
-      window.JS9.Load(`http://${hostname}:${port}${values[2]}`, load_opts, {
+      window.JS9.Load(url, load_opts, {
         display: display
       });
       window.JS9.SetImageInherit(true, { display: display });
@@ -70,7 +86,7 @@ export const JS9: React.FC<{
       return;
     }
 
-    setCurrentImage(values[2]);
+    setCurrentImage(fullPath);
     if (first) {
       setFirst(false);
     }
