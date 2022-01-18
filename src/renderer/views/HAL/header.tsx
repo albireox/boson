@@ -108,7 +108,6 @@ function DesignInput() {
       sx={{
         '& input': {
           padding: focused ? '10px 10px' : '0px',
-          marginTop: focused ? '0px' : '2px',
           width: focused ? '80px' : null,
           typography: 'h5',
           color: value === '<none>' ? 'warning.main' : 'text.primary'
