@@ -15,26 +15,34 @@ import { useKeywords, useWindowSize } from 'renderer/hooks';
 import { IJS9Opts, JS9Opts } from '.';
 import { MenuBar } from './menubar';
 
-export const JS9: React.FC<{
+type JS9Props = {
   keywords: KeywordMap;
   size: number;
   gid: number;
   opts: IJS9Opts;
   zoomed: number;
+  selected: number;
   setZoomed: (arg0: number) => void;
-}> = ({ keywords, gid, size, opts, zoomed, setZoomed }) => {
+  setSelected: (arg0: number) => void;
+  updateURLs: (arg0: number, arg1: string) => void;
+};
+
+export const JS9 = ({
+  keywords,
+  gid,
+  size,
+  opts,
+  zoomed,
+  selected,
+  setZoomed,
+  setSelected,
+  updateURLs
+}: JS9Props) => {
   const [currentImage, setCurrentImage] = React.useState<string>('');
   const [first, setFirst] = React.useState(true);
 
-  const [hostname, setHostname] = React.useState('');
-  const [port, setPort] = React.useState('');
-
-  window.api.store.get('user.connection.httpHost').then((value) => {
-    setHostname(value);
-  });
-  window.api.store.get('user.connection.httpPort').then((value) => {
-    setPort(value);
-  });
+  const hostname = window.api.store.get_sync('user.connection.httpHost');
+  const port = window.api.store.get_sync('user.connection.httpPort');
 
   let display = `gfa${gid}`;
   const visible = zoomed === 0 || (zoomed && gid === zoomed);
@@ -87,10 +95,12 @@ export const JS9: React.FC<{
     }
 
     setCurrentImage(fullPath);
+    updateURLs(gid, `http://${hostname}:${port}${fullPath}`);
+
     if (first) {
       setFirst(false);
     }
-  }, [keywords, display, currentImage, first, gid, hostname, port]);
+  }, [keywords, display, currentImage, first, gid, hostname, port, updateURLs, zoomed]);
 
   React.useEffect(() => {
     window.JS9.SetColormap(opts.colormap, { display: display });
@@ -107,6 +117,10 @@ export const JS9: React.FC<{
           display: visible ? 'inherit' : 'none'
         }}
         css={(theme: any) => ({
+          borderWidth: '2px',
+          borderStyle: 'solid',
+          borderColor:
+            selected === gid && zoomed !== gid ? 'darkred' : theme.palette.background.default,
           'div.JS9Container > canvas.JS9Image': {
             backgroundColor: theme.palette.background.default,
             backgroundImage: first
@@ -124,6 +138,7 @@ export const JS9: React.FC<{
         data-height={size}
         id={display}
         onDoubleClick={() => setZoomed(gid)}
+        onClick={() => setSelected(gid)}
       >
         <IconButton
           size='large'
@@ -135,7 +150,10 @@ export const JS9: React.FC<{
             visibility: zoomed === gid ? 'visible' : 'hidden',
             zIndex: 10
           }}
-          onClick={() => setZoomed(0)}
+          onClick={() => {
+            setZoomed(0);
+            setSelected(0);
+          }}
         >
           <CancelIcon fontSize='inherit' />
         </IconButton>
@@ -149,28 +167,48 @@ export function JS9Frame() {
   let win_size = useWindowSize();
 
   const [zoomed, setZoomed] = React.useState<number>(0);
+  const [selected, setSelected] = React.useState<number>(0);
+  const [urls, setUrls] = React.useState<{ [key: number]: string }>({});
+
   const [opts, setOpts] = React.useState<IJS9Opts>(JS9Opts);
   const onOptsUpdate = (newOpts: Partial<IJS9Opts>) => {
     setOpts({ ...opts, ...newOpts });
   };
 
-  // window.JS9.globalOpts['mouseActions'][0] = 'none';
-  // window.JS9.globalOpts['resize'] = false;
-  // window.JS9.globalOpts['helperType'] = 'none';
+  window.JS9.globalOpts['resize'] = false;
   window.JS9.globalOpts.alerts = false;
 
   let default_size = Math.round((win_size.height || 800) / 4);
   if (default_size > (win_size.width || 700) / 3) default_size = (win_size.width || 700) / 3;
 
+  const updateSelected = React.useCallback(
+    (gid: number) => {
+      if (gid === 0) {
+        setSelected(0);
+      } else if (gid === selected) {
+        setSelected(0);
+      } else {
+        setSelected(gid);
+      }
+    },
+    [selected]
+  );
+
+  const updateURLs = (gid: number, url: string) => {
+    setUrls((urls) => ({ ...urls, [gid]: url }));
+  };
+
   return (
     <>
       <MenuBar
+        gidSelected={selected || zoomed}
+        urls={urls}
+        onUpdate={onOptsUpdate}
         style={{
           marginBottom: '4px',
           display: 'flex',
           flexDirection: 'row'
         }}
-        onUpdate={onOptsUpdate}
       />
       <Stack width='100%' display='flex' flexDirection='row' justifyContent='center'>
         {[1, 2, 3].map((gid: number) => (
@@ -180,7 +218,10 @@ export function JS9Frame() {
             opts={opts}
             size={zoomed ? 2 * default_size : default_size}
             gid={gid}
+            selected={selected}
             setZoomed={setZoomed}
+            setSelected={updateSelected}
+            updateURLs={updateURLs}
             zoomed={zoomed}
           />
         ))}
@@ -193,7 +234,10 @@ export function JS9Frame() {
             opts={opts}
             size={zoomed ? 2 * default_size : default_size}
             gid={gid}
+            selected={selected}
+            setSelected={updateSelected}
             setZoomed={setZoomed}
+            updateURLs={updateURLs}
             zoomed={zoomed}
           />
         ))}
