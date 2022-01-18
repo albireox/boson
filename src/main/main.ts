@@ -30,6 +30,8 @@ interface WindowConfig {
 export let windows = new Map<string, BrowserWindow>();
 let mainWindow: WindowType = null;
 
+const notifications: Notification[] = [];
+
 export function saveWindowPositions() {
   // Stores the current positions and sizes of the open windows
 
@@ -238,5 +240,6 @@ autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
       });
   });
 
+  notifications.push(notification); // To prevent GC from removing it.
   notification.show();
 });
