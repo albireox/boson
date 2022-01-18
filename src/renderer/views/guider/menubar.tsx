@@ -87,11 +87,17 @@ export const MenuBar = ({
     }
   };
 
-  const reset = () => {
+  const reset = React.useCallback(() => {
     for (let i = 1; i <= 6; i++) {
       window.JS9.SetColormap('reset', { display: `gfa${i}` });
+      window.JS9.SetColormap(cmap, { display: `gfa${i}` });
+      window.JS9.SetScale(scale, { display: `gfa${i}` });
     }
-  };
+  }, [cmap, scale]);
+
+  React.useEffect(() => {
+    reset();
+  }, [reset]);
 
   const openInDS9 = () => {
     if (gidSelected === 0) {

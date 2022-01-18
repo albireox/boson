@@ -8,7 +8,7 @@
 import { Box, Tab, Tabs } from '@mui/material';
 import React from 'react';
 import ConnectionPreferences from './connection';
-import OtherPreferences from './other';
+import GuiderPreferences from './guider';
 
 export default function PreferencesView() {
   const [value, setValue] = React.useState('connection');
@@ -27,11 +27,11 @@ export default function PreferencesView() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={(e, newValue) => setValue(newValue)}>
           <Tab label='Connection' id='preferences-connection' value='connection' />
-          <Tab label='Other' id='preferences-other' value='other' />
+          <Tab label='Guider' id='preferences-guider' value='guider' />
         </Tabs>
       </Box>
       {value === 'connection' && <ConnectionPreferences />}
-      {value === 'other' && <OtherPreferences />}
+      {value === 'guider' && <GuiderPreferences />}
     </Box>
   );
 }

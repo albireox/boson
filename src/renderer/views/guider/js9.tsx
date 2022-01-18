@@ -41,19 +41,20 @@ export const JS9 = ({
   const [currentImage, setCurrentImage] = React.useState<string>('');
   const [first, setFirst] = React.useState(true);
 
-  const hostname = window.api.store.get_sync('user.connection.httpHost');
-  const port = window.api.store.get_sync('user.connection.httpPort');
-
   let display = `gfa${gid}`;
   const visible = zoomed === 0 || (zoomed && gid === zoomed);
 
   React.useEffect(() => {
+    const hostname = window.api.store.get_sync('user.connection.httpHost');
+    const port = window.api.store.get_sync('user.connection.httpPort');
+    const useFullImage = window.api.store.get_sync('user.guider.fullImage');
+
     if (keywords === undefined || keywords['fliswarm.filename'] === undefined) return;
 
-    let now = new Date();
-    if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
-      return;
-    }
+    // let now = new Date();
+    // if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
+    //   return;
+    // }
 
     let values = keywords['fliswarm.filename'].values;
 
@@ -78,7 +79,7 @@ export const JS9 = ({
     request.open('GET', `http://${hostname}:${port}${snapPath}`, false);
     request.send();
 
-    if (request.status === 404) {
+    if (request.status === 404 || useFullImage === 'true' || useFullImage === true) {
       url = `http://${hostname}:${port}${fullPath}`;
     } else {
       url = `http://${hostname}:${port}${snapPath}`;
@@ -100,7 +101,7 @@ export const JS9 = ({
     if (first) {
       setFirst(false);
     }
-  }, [keywords, display, currentImage, first, gid, hostname, port, updateURLs, zoomed]);
+  }, [keywords, display, currentImage, first, gid, updateURLs, zoomed]);
 
   React.useEffect(() => {
     window.JS9.SetColormap(opts.colormap, { display: display });

@@ -93,6 +93,12 @@
       "httpHost": "sdss5-hub.apo.nmsu.edu",
       "httpPort": 80
     },
+    "guider": {
+      "xpaset": "/usr/bin/xpaset",
+      "fullImage": false,
+      "colormap": "red",
+      "scale": "dataminmax"
+    },
     "windows": {},
     "defaultWindows": ["main"],
     "autoconnect": true

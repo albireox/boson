@@ -20,8 +20,8 @@ export interface IJS9Opts {
 }
 
 export const JS9Opts = {
-  colormap: 'grey',
-  scale: 'log'
+  colormap: window.api.store.get_sync('user.guider.colormap') || 'grey',
+  scale: window.api.store.get_sync('user.guider.scale') || 'log'
 };
 
 export default function GuiderView() {
