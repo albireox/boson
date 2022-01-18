@@ -1,4 +1,5 @@
 import { app, BrowserWindow, dialog, Menu, shell } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import { createWindow } from './main';
 import TronConnection from './tron/connection';
 
@@ -14,6 +15,11 @@ const template: any[] = [
           label: app.name,
           submenu: [
             { role: 'about' },
+            {
+              label: 'Check for updates ...',
+              id: 'check-updates',
+              click: () => autoUpdater.checkForUpdates()
+            },
             { type: 'separator' },
             {
               label: 'Preferences ...',
