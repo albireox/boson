@@ -56,6 +56,7 @@ export const ValidatedNumberInput: React.FC<ValidatedNumberInputProps> = ({
 
   return (
     <TextField
+      defaultValue={value}
       error={error}
       onChange={validateChange}
       size={props.size || 'small'}
