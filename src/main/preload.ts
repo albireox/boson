@@ -31,6 +31,7 @@ export interface IElectronAPI {
     send(commandString: string): Promise<TronEventReplyIFace>;
   };
   openInBrowser(path: string): void;
+  openInApplication(command: string): Promise<string>;
 }
 
 const API: IElectronAPI = {
@@ -55,8 +56,19 @@ const API: IElectronAPI = {
     send: async (commandString) => ipcRenderer.invoke('tron-send-command', commandString)
   },
   openInBrowser: (path) => {
-    console.log(path);
     require('electron').shell.openExternal(path);
+  },
+  openInApplication: async (command) => {
+    const util = require('util');
+    const exec = util.promisify(require('child_process').exec);
+
+    const { stdout, stderr } = await exec(command);
+
+    if (stderr) {
+      throw Error(stderr);
+    }
+
+    return stdout;
   }
 };
 
