@@ -218,6 +218,17 @@ function checkForUpdates() {
   setInterval(checkForUpdates, 10 * 60 * 1000); // Check again after 10 minutes.
 }
 
+function updateAndRestart() {
+  try {
+    setTimeout(() => {
+      app.relaunch();
+      app.exit(0);
+    }, 3000);
+  } catch (e) {
+    dialog.showErrorBox('Error', 'Failed to install updates');
+  }
+}
+
 autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
   const notification = new Notification({
     title: 'Update available',
@@ -227,7 +238,7 @@ autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
   });
 
   notification.on('action', (e, i) => {
-    if (i === 0) autoUpdater.quitAndInstall();
+    if (i === 0) updateAndRestart();
   });
 
   notification.on('click', () => {
@@ -239,7 +250,7 @@ autoUpdater.on('update-downloaded', (info: UpdateInfo) => {
         buttons: ['Yes', 'Not now']
       })
       .then((response) => {
-        if (response.response === 0) autoUpdater.quitAndInstall();
+        if (response.response === 0) updateAndRestart();
       });
   });
 
