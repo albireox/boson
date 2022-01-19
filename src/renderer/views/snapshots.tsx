@@ -32,8 +32,8 @@ export default function SnapshotsView() {
   const [index, setIndex] = React.useState<number>(1);
 
   const [scale, setScale] = React.useState<number>(1.0);
-  const [disabledPrevious, setDisabledPrevious] = React.useState(false);
-  const [disabledNext, setDisabledNext] = React.useState(false);
+  const [disabledPrevious, setDisabledPrevious] = React.useState(true);
+  const [disabledNext, setDisabledNext] = React.useState(true);
 
   let win_size = useWindowSize();
 
