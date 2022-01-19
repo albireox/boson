@@ -36,3 +36,5 @@ yarn-error.log*
 .pnp.*
 
 .env
+
+public/pdf.worker.js

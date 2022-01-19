@@ -12,7 +12,7 @@ import { Button, ButtonGroup, Stack, Typography } from '@mui/material';
 import { blue, grey } from '@mui/material/colors';
 import { styled } from '@mui/system';
 import React from 'react';
-import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
+import { Document, Page } from 'react-pdf';
 import { useKeywords, useWindowSize } from 'renderer/hooks';
 let host: string = window.api.store.get_sync('user.connection.httpHost');
 let port: number = window.api.store.get_sync('user.connection.httpPort');
