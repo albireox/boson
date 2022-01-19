@@ -8,6 +8,7 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { Chip, Stack, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
 import { useKeywords } from 'renderer/hooks';
@@ -54,20 +55,80 @@ const AxesGroup = () => {
     </ToggleButtonGroup>
   );
 };
+
+const AstrometryFitStack = () => {
+  const keywords = useKeywords(['cherno.astrometry_fit', 'cherno.guide_rms']);
+
+  const [fwhm, setFwhm] = React.useState('-');
+  const [fwhmColor, setFwhmColor] = React.useState<any>('default');
+
+  const [rms, setRms] = React.useState('-');
+  const [rmsColor, setRmsColor] = React.useState<any>('default');
+
+  React.useEffect(() => {
+    const astrometry_fit = keywords['cherno.astrometry_fit'];
+    if (astrometry_fit) {
+      const fwhm = astrometry_fit.values[4];
+      if (fwhm < 0) {
+        setFwhm('-');
+        setFwhmColor('secondary');
+      } else {
+        setFwhm(round(fwhm, 2).toString());
+        if (fwhm >= 0 && fwhm < 1.5) {
+          setFwhmColor('success');
+        } else if (fwhm >= 1.5 && fwhm < 2.5) {
+          setFwhmColor('warning');
+        } else {
+          setFwhmColor('error');
+        }
+      }
+    }
+
+    const guide_rms = keywords['cherno.guide_rms'];
+    if (guide_rms) {
+      const rms = guide_rms.values[3];
+      if (rms < 0) {
+        setRms('-');
+        setRmsColor('secondary');
+      } else {
+        setRms(round(rms, 3).toString());
+        if (rms >= 0 && rms < 0.07) {
+          setRmsColor('success');
+        } else if (rms >= 0.07 && rms < 0.1) {
+          setRmsColor('warning');
+        } else {
+          setRmsColor('error');
+        }
+      }
+    }
+  }, [keywords]);
+
+  return (
+    <Stack pl={3} spacing={1} direction='row' alignItems={'center'} justifyContent={'center'}>
+      <Chip label={`RMS ${rms} \u00b5m`} color={rmsColor} />
+      <Chip label={`FWHM ${fwhm}`} color={fwhmColor} />
+    </Stack>
+  );
+};
+
 export const GuideStack = () => {
   const [expTime, setExpTime] = React.useState<number | undefined>(15);
 
   return (
+    <Stack direction='row' pt={2} pb={0} spacing={1} alignItems={'center'}>
       <AxesGroup />
+      <AstrometryFitStack />
+
+      <div css={{ flexGrow: 1 }} />
+
       <ValidatedNumberInput
         label='Exposure Time'
         value={expTime}
         onChange={(e, value) => setExpTime(value)}
         startAdornment={<AccessTimeIcon />}
         endAdornment='s'
-        sx={{ maxWidth: '120px' }}
+        sx={{ maxWidth: '120px', pr: '10px' }}
       />
-      <div css={{ flexGrow: 1 }} />
       <CommandButton
         commandString={`fliswarm talk -c gfa expose ${expTime || ''}`}
         endIcon={<CameraAltIcon fontSize='inherit' />}
@@ -75,6 +136,7 @@ export const GuideStack = () => {
       <CommandButton
         commandString={`cherno acquire -c -t ${expTime || ''}`}
         abortCommand='cherno stop'
+        size='medium'
       >
         Guide
       </CommandButton>
