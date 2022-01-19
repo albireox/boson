@@ -61,9 +61,6 @@ export default class Command {
       case ReplyCode.Failed:
         this.status = CommandStatus.Failed;
         break;
-      case ReplyCode.Error:
-        this.status = CommandStatus.Failed;
-        break;
       case ReplyCode.Done:
         this.status = CommandStatus.Done;
         break;
