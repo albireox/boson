@@ -25,6 +25,7 @@ type WindowType = BrowserWindow | null;
 interface WindowConfig {
   x: number;
   y: number;
+  aspectRatio?: number;
 }
 
 export let windows = new Map<string, BrowserWindow>();
@@ -116,6 +117,8 @@ export function createWindow(name: string = 'main'): BrowserWindow {
       nativeWindowOpen: true
     }
   });
+
+  if (windowConfig['aspectRatio']) win.setAspectRatio(windowConfig['aspectRatio']);
 
   win.once('ready-to-show', () => {
     win?.show();

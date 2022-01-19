@@ -65,10 +65,11 @@
     },
     "guider": {
       "width": 800,
-      "height": 660,
+      "height": 675,
       "resizable": true,
       "minWidth": 800,
-      "minHeight": 660
+      "minHeight": 675,
+      "aspectRatio": 1.185
     },
     "hal": {
       "width": 600,
