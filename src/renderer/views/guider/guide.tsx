@@ -57,13 +57,19 @@ const AxesGroup = () => {
 };
 
 const AstrometryFitStack = () => {
-  const keywords = useKeywords(['cherno.astrometry_fit', 'cherno.guide_rms']);
+  const keywords = useKeywords([
+    'cherno.astrometry_fit',
+    'cherno.guide_rms',
+    'cherno.acquisition_valid'
+  ]);
 
   const [fwhm, setFwhm] = React.useState('-');
   const [fwhmColor, setFwhmColor] = React.useState<any>('default');
 
   const [rms, setRms] = React.useState('-');
   const [rmsColor, setRmsColor] = React.useState<any>('default');
+
+  const [acquired, setAcquired] = React.useState<boolean | undefined>(undefined);
 
   React.useEffect(() => {
     const astrometry_fit = keywords['cherno.astrometry_fit'];
@@ -101,12 +107,21 @@ const AstrometryFitStack = () => {
         }
       }
     }
+
+    if (keywords['cherno.acquisition_valid']) {
+      setAcquired(keywords['cherno.acquisition_valid'].values[0]);
+    }
   }, [keywords]);
 
   return (
     <Stack pl={3} spacing={1} direction='row' alignItems={'center'} justifyContent={'center'}>
       <Chip label={`RMS ${rms} \u00b5m`} color={rmsColor} />
       <Chip label={`FWHM ${fwhm}`} color={fwhmColor} />
+      <Chip
+        sx={{ display: acquired !== undefined ? undefined : 'none' }}
+        label={acquired === true ? 'Acquired' : 'Acquisition failed'}
+        color={acquired === true ? 'success' : 'error'}
+      />
     </Stack>
   );
 };
