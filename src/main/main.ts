@@ -57,11 +57,12 @@ export function saveWindowPositions() {
   store.set('user.defaultWindows', Array.from(windows.keys()));
 }
 
-export function createWindow(name: string = 'main'): BrowserWindow {
+export function createWindow(name: string = 'main'): BrowserWindow | null {
   // Create or show a new window
 
-  if (name in windows.keys() && name !== 'log') {
-    windows.get(name)!.show();
+  if (windows.has(name) && name !== 'log') {
+    windows.get(name)!.focus();
+    return null;
   }
 
   let configName: string;
@@ -178,6 +179,9 @@ export function createWindow(name: string = 'main'): BrowserWindow {
 app.on('ready', () => {
   for (let name of store.get('user.defaultWindows')) {
     let win = createWindow(name);
+    if (win === null) {
+      return;
+    }
     if (name === 'main') {
       mainWindow = win;
       const isDev = require('electron-is-dev');
