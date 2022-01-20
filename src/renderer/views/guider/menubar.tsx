@@ -184,14 +184,14 @@ export const MenuBar = ({
             </Tooltip>
           </FormControl>
           <FormControl>
-            <Button variant='outlined' size='medium' onClick={(e) => reset()}>
-              Reset
-            </Button>
-          </FormControl>
-          <FormControl>
-            <Button variant='outlined' size='medium' onClick={(e) => applyZoom('toFit')}>
-              Fit
-            </Button>
+            <ButtonGroup variant='outlined'>
+              <Button variant='outlined' size='medium' onClick={(e) => reset()}>
+                Reset
+              </Button>
+              <Button variant='outlined' size='medium' onClick={(e) => applyZoom('toFit')}>
+                Fit
+              </Button>
+            </ButtonGroup>
           </FormControl>
           <FormControl>
             <ButtonGroup variant='outlined'>
