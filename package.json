@@ -41,14 +41,14 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "yarn copy-react-pdf-worker && concurrently \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://127.0.0.1:3000 && tsc -p src/main && electron .\"",
-    "build": "PUBLIC_URL=./ yarn copy-react-pdf-worker && react-scripts build && tsc -p src/main && electron-builder",
+    "start": "concurrently \"yarn copy-deps\" \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://127.0.0.1:3000 && tsc -p src/main && electron .\"",
+    "build": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder",
     "test": "react-scripts test",
     "postinstall": "electron-builder install-app-deps",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "eject": "react-scripts eject",
-    "publish": "PUBLIC_URL=./ yarn copy-react-pdf-worker && react-scripts build && tsc -p src/main && electron-builder --publish always --config assets/builder-publish.json",
-    "copy-react-pdf-worker": "node ./scripts/copy-react-pdf-worker.js"
+    "publish": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder --publish always --config assets/builder-publish.json",
+    "copy-deps": "node ./scripts/copy-deps.js"
   },
   "build": {
     "appId": "com.boson.mac",

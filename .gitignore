@@ -38,3 +38,4 @@ yarn-error.log*
 .env
 
 public/pdf.worker.js
+public/js9

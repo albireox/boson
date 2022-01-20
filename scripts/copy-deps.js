@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 
 const pdfjsDistPath = path.join(
@@ -16,3 +16,6 @@ fs.mkdirSync(targetDir, { recursive: true });
 
 // Copy file
 fs.copyFileSync(pdfWorkerPath, targetPath);
+
+// Copy js9
+fs.copy(path.dirname(require.resolve('js9/package.json')), path.join(targetDir, 'js9'));
