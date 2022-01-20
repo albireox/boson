@@ -174,7 +174,7 @@ export default function SnapshotsView() {
 
             <Button
               variant='contained'
-              size='medium'
+              size='small'
               endIcon={<OpenInBrowserIcon />}
               onClick={openInBrowser}
             >
@@ -182,15 +182,15 @@ export default function SnapshotsView() {
             </Button>
           </Stack>
           <Stack sx={{ flexGrow: 1, alignItems: 'center', alignSelf: 'center' }}>
-            <Typography variant='h5' color={grey[800]}>
+            <Typography variant='subtitle1' color={grey[800]} sx={{ top: '-35px' }}>
               {snapshots[index] ? snapshots[index].split('/').reverse()[0] : ''}
             </Typography>
           </Stack>
           <Stack direction='row' spacing={1} sx={{ alignSelf: 'right' }}>
-            <Button variant='contained' size='medium' onClick={() => setScale(1)}>
+            <Button variant='contained' size='small' onClick={() => setScale(1)}>
               Fit
             </Button>
-            <ButtonGroup variant='contained'>
+            <ButtonGroup variant='contained' size='small'>
               <Button onClick={decreaseScale}>-</Button>
               <Button onClick={increaseScale}>+</Button>
             </ButtonGroup>
