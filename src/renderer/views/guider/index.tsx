@@ -24,7 +24,7 @@ export const JS9Opts = {
 
 export default function GuiderView() {
   return (
-    <Stack alignContent='top' direction='column' padding={2} spacing={1}>
+    <Stack alignContent='top' direction='column' px={2} py={0} spacing={1}>
       <JS9Frame />
       <GuideStack />
     </Stack>
