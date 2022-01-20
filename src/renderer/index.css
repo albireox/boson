@@ -39,6 +39,10 @@ html, body, main#root {
   display: none;
 }
 
+.react-pdf__Document {
+  display: inline-block;
+}
+
 /* Hide select for the number of message if width of the log window <650 px */
 @media only screen and (max-width: 650px) {
   #selectNumberMessages {
