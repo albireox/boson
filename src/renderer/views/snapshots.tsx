@@ -22,7 +22,7 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-import { blue, grey } from '@mui/material/colors';
+import { blue, grey, purple } from '@mui/material/colors';
 import React from 'react';
 import { Document, Page, TextLayerItemInternal } from 'react-pdf';
 import { useKeywords, useWindowSize } from 'renderer/hooks';
@@ -44,21 +44,25 @@ export default function SnapshotsView() {
 
   const [showSearch, setShowSearch] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
-  const [searchTextShow, setSearchTextShow] = React.useState('');
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const renderHighlight = React.useCallback(
     (layer: TextLayerItemInternal) => {
       if (showSearch) {
-        if (searchText.length >= 3 && layer.str.includes(searchText)) {
+        if (
+          (searchText.length >= 4 && layer.str.includes(searchText)) ||
+          (searchText.length === 3 && layer.str.includes('P0' + searchText))
+        ) {
           const size: number = 30 * layer.scale!;
-          console.log(layer);
           return (
             <div
               style={{
                 borderRadius: '50%',
                 height: `${size}px`,
                 width: `${size}px`,
-                border: '2px solid darkred',
+                border: '3px solid',
+                borderColor: purple.A700,
                 position: 'absolute',
                 left: `-${size / 2}px`,
                 top: `-${size / 2}px`
@@ -67,7 +71,6 @@ export default function SnapshotsView() {
           );
         }
       }
-
       return <span />;
     },
     [showSearch, searchText]
@@ -123,6 +126,11 @@ export default function SnapshotsView() {
 
   const openInBrowser = () => {
     window.api.openInBrowser(`${host}:${port}/${snapshots[index]}`);
+  };
+
+  const clearSearch = () => {
+    setSearchText('');
+    setShowSearch(false);
   };
 
   const updateButtons = () => {
@@ -182,7 +190,7 @@ export default function SnapshotsView() {
             </Button>
           </Stack>
           <Stack sx={{ flexGrow: 1, alignItems: 'center', alignSelf: 'center' }}>
-            <Typography variant='subtitle1' color={grey[800]} sx={{ top: '-35px' }}>
+            <Typography variant='subtitle1' color={grey[800]} sx={{ top: '-37px' }}>
               {snapshots[index] ? snapshots[index].split('/').reverse()[0] : ''}
             </Typography>
           </Stack>
@@ -198,18 +206,16 @@ export default function SnapshotsView() {
           <IconButton size='small' onClick={() => setShowSearch((s) => !s)}>
             <SearchIcon sx={{ color: blue[700] }} fontSize='medium' />
           </IconButton>
-          <Collapse in={showSearch}>
+          <Collapse in={showSearch} onEnter={() => inputRef.current && inputRef.current.focus()}>
             <OutlinedInput
               color='secondary'
               size='small'
-              value={searchTextShow}
+              value={searchText}
               onChange={(e) => {
-                setSearchTextShow(e.target.value);
-                if (e.target.value.length >= 3) {
-                  setSearchText(e.target.value);
-                }
+                setSearchText(e.target.value);
               }}
-              sx={(theme) => ({
+              onKeyDown={(e) => e.key === 'Escape' && clearSearch()}
+              sx={{
                 backgroundColor: 'white',
                 boxShadow: '2px 2px 4px black',
                 width: '100px',
@@ -217,17 +223,11 @@ export default function SnapshotsView() {
                 top: '45px',
                 right: '15px',
                 pr: 1
-              })}
+              }}
+              inputRef={inputRef}
               endAdornment={
                 <InputAdornment position='end'>
-                  <IconButton
-                    size='small'
-                    onClick={() => {
-                      setSearchText('');
-                      setSearchTextShow('');
-                      setShowSearch(false);
-                    }}
-                  >
+                  <IconButton size='small' onClick={clearSearch}>
                     <CloseIcon />
                   </IconButton>
                 </InputAdornment>
