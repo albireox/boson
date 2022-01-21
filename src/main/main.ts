@@ -227,7 +227,7 @@ function updateAndRestart() {
     setTimeout(() => {
       app.relaunch();
       app.exit(0);
-    }, 3000);
+    }, 6000);
   } catch (e) {
     dialog.showErrorBox('Error', 'Failed to install updates');
   }
