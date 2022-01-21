@@ -48,10 +48,28 @@ const AxesGroup = () => {
   };
 
   return (
-    <ToggleButtonGroup color='primary' value={enabledAxes} onChange={handleChange} size='small'>
-      <ToggleButton value='radec'>RA|Dec</ToggleButton>
-      <ToggleButton value='rot'>Rot</ToggleButton>
-      <ToggleButton value='focus'>Focus</ToggleButton>
+    <ToggleButtonGroup color='secondary' value={enabledAxes} onChange={handleChange} size='small'>
+      <ToggleButton
+        color={enabledAxes.includes('radec') ? 'primary' : 'secondary'}
+        selected={true}
+        value='radec'
+      >
+        RA|Dec
+      </ToggleButton>
+      <ToggleButton
+        color={enabledAxes.includes('rot') ? 'primary' : 'secondary'}
+        selected={true}
+        value='rot'
+      >
+        Rot
+      </ToggleButton>
+      <ToggleButton
+        color={enabledAxes.includes('focus') ? 'primary' : 'secondary'}
+        selected={true}
+        value='focus'
+      >
+        Focus
+      </ToggleButton>
     </ToggleButtonGroup>
   );
 };
