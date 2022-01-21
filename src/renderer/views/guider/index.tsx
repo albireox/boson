@@ -10,6 +10,7 @@
 import { Stack } from '@mui/material';
 import * as React from 'react';
 import { GuideStack } from './guide';
+import { GuideTable } from './guideTable';
 import { JS9Frame } from './js9';
 
 export interface IJS9Opts {
@@ -27,6 +28,7 @@ export default function GuiderView() {
     <Stack alignContent='top' direction='column' px={2} py={0} spacing={1}>
       <JS9Frame />
       <GuideStack />
+      <GuideTable />
     </Stack>
   );
 }

@@ -202,7 +202,7 @@ export function JS9Frame() {
   };
 
   return (
-    <Stack direction='column' spacing={0.5} py={1}>
+    <Stack direction='column' spacing={0.5} py={1} overflow='hidden'>
       <MenuBar
         gidSelected={selected || zoomed}
         urls={urls}

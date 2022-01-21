@@ -2331,6 +2331,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/x-data-grid-pro@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "@mui/x-data-grid-pro@npm:5.2.2"
+  dependencies:
+    "@mui/utils": ^5.2.3
+    "@mui/x-license-pro": 5.2.2
+    clsx: ^1.0.4
+    prop-types: ^15.8.0
+    reselect: ^4.1.5
+  peerDependencies:
+    "@mui/material": ^5.2.7
+    "@mui/system": ^5.2.6
+    react: ^17.0.2
+  checksum: 535599f90fb8dc5b799a3f9083215422126efa9f0b3c180a2c4d6e6ab0c3f9553ca23abaaf2d3c6a950c0b8c4ce7e8f742806e26a6c10d8ae19649345a30711c
+  languageName: node
+  linkType: hard
+
 "@mui/x-data-grid@npm:^5.2.2":
   version: 5.2.2
   resolution: "@mui/x-data-grid@npm:5.2.2"
@@ -2344,6 +2361,21 @@ __metadata:
     "@mui/system": ^5.2.6
     react: ^17.0.2
   checksum: 955440b7c545b3ade71008a47870d4ac8f4db7365dd23cf287273802fe5f4b999f3f2f57765777f88808618220f123b5b8e473ed98e53e40858dc2b03aea6d3f
+  languageName: node
+  linkType: hard
+
+"@mui/x-license-pro@npm:5.2.2":
+  version: 5.2.2
+  resolution: "@mui/x-license-pro@npm:5.2.2"
+  dependencies:
+    "@mui/utils": ^5.2.3
+    esm: ^3.2.25
+    yargs: ^17.3.1
+  peerDependencies:
+    react: ^17.0.2
+  bin:
+    licensegen: bin/license-gen-script.js
+  checksum: 6c971e1a379f6fb3a7e6d4dcb21f66a27ca84e40cd8cdddb1dbd8e19eb6810cf4147536e83ccf671423d1c28f0c89afc4b57ea090a69855620d9a68a585c5c87
   languageName: node
   linkType: hard
 
@@ -4583,6 +4615,7 @@ __metadata:
     "@mui/styles": ^5.3.0
     "@mui/system": ^5.3.0
     "@mui/x-data-grid": ^5.2.2
+    "@mui/x-data-grid-pro": ^5.2.2
     "@types/electron-devtools-installer": ^2.2.1
     "@types/jest": ^27.4.0
     "@types/lodash": ^4.14.178
@@ -5099,7 +5132,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:^1.1.1":
+"clsx@npm:^1.0.4, clsx@npm:^1.1.1":
   version: 1.1.1
   resolution: "clsx@npm:1.1.1"
   checksum: ff052650329773b9b245177305fc4c4dc3129f7b2be84af4f58dc5defa99538c61d4207be7419405a5f8f3d92007c954f4daba5a7b74e563d5de71c28c830063
@@ -7088,6 +7121,13 @@ __metadata:
   bin:
     eslint: bin/eslint.js
   checksum: c1a9e26070520a308cc30b62ba0d37d5b115ed23987a93219819537bdea9398e6ebe57c27d97be36ecc83b5162c72e82ecb0a9e5b44b7992980f9be90eb5c4b3
+  languageName: node
+  linkType: hard
+
+"esm@npm:^3.2.25":
+  version: 3.2.25
+  resolution: "esm@npm:3.2.25"
+  checksum: 978aabe2de83541c105605a6d60a26ed8e627ef6bb0a7605fe15a95bbdea6b8348bd045255cb22219c054dd09a81a94823df00843d9e97f42419c92015ce3a64
   languageName: node
   linkType: hard
 
@@ -15541,7 +15581,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.0.1":
+"yargs@npm:^17.0.1, yargs@npm:^17.3.1":
   version: 17.3.1
   resolution: "yargs@npm:17.3.1"
   dependencies:

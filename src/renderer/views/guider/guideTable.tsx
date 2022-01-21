@@ -5,157 +5,103 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import telescope from '@iconify/icons-mdi/telescope';
-import { Icon } from '@iconify/react';
-import { LoadingButton } from '@mui/lab';
-import {
-  Button,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
-} from '@mui/material';
-import { styled } from '@mui/system';
+import { Send } from '@mui/icons-material';
+import { IconButton, OutlinedInput } from '@mui/material';
+import { Box } from '@mui/system';
+import { DataGridPro, GridColDef, LicenseInfo } from '@mui/x-data-grid-pro';
 import React from 'react';
-import { ValidatedNumberInput } from 'renderer/components/validatedInput';
 
 /** @jsxImportSource @emotion/react */
 
-const OffsetInput = styled(ValidatedNumberInput)({ minWidth: '250px' });
+LicenseInfo.setLicenseKey(
+  '4a02c3ec30f1345b19d444a2c24c94beT1JERVI6MzYyNzgsRVhQSVJZPTE2NzQyMzE0NDgwMDAsS0VZVkVSU0lPTj0x'
+);
 
-export const GuideTable = () => {
-  const nullInput = {
-    ra: '',
-    dec: '',
-    rot: '',
-    focus: '',
-    scale: ''
-  };
-
-  const [userInput, setUserInput] = React.useState(nullInput);
-  const [applying, setApplying] = React.useState(false);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const name = e.target.name.split('-')[1];
-    setUserInput({ ...userInput, [name]: e.target.value });
-  };
-
-  const clearInput = (e: React.MouseEvent) => {
-    setUserInput(nullInput);
-    setApplying(false);
-  };
-
-  const handleApply = (e: React.MouseEvent) => {
-    setApplying(true);
-  };
+const AxisOffsetInput = (params: { axis: string }) => {
+  const { axis } = params;
 
   return (
-    <Paper variant='outlined' sx={{ width: '100%' }}>
-      <Table size='small' sx={{ width: '100%' }}>
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell align='right'>Net Off</TableCell>
-            <TableCell align='right'>Meas Err</TableCell>
-            <TableCell align='right'>Corr</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {/* RA */}
-          <TableRow>
-            <TableCell>RA</TableCell>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell align='right'>
-              <OffsetInput
-                name='user-ra'
-                value={userInput.ra}
-                onChange={handleInputChange}
-                endAdornment='arcsec'
-              />
-            </TableCell>
-          </TableRow>
-          {/* Dec */}
-          <TableRow>
-            <TableCell>Dec</TableCell>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell align='right'>
-              <OffsetInput
-                name='user-dec'
-                value={userInput.dec}
-                onChange={handleInputChange}
-                endAdornment='arcsec'
-              />
-            </TableCell>
-          </TableRow>
-          {/* Rot */}
-          <TableRow>
-            <TableCell>Rot</TableCell>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell align='right'>
-              <OffsetInput
-                name='user-rot'
-                value={userInput.rot}
-                onChange={handleInputChange}
-                endAdornment='arcsec'
-              />
-            </TableCell>
-          </TableRow>
-          {/* Focus */}
-          <TableRow>
-            <TableCell>Focus</TableCell>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell align='right'>
-              <OffsetInput
-                name='user-focus'
-                value={userInput.focus}
-                onChange={handleInputChange}
-                endAdornment='&micro;m'
-              />
-            </TableCell>
-          </TableRow>
-          {/* Scale */}
-          <TableRow>
-            <TableCell>Scale</TableCell>
-            <TableCell />
-            <TableCell />
-            <TableCell />
-            <TableCell align='right'>
-              <OffsetInput
-                name='user-scale'
-                value={userInput.scale}
-                onChange={handleInputChange}
-                endAdornment='1e6'
-              />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      <Stack direction='row-reverse' spacing={1} p={1}>
-        <LoadingButton
-          onClick={handleApply}
-          endIcon={<Icon icon={telescope} />}
-          loading={applying}
-          loadingPosition='end'
-          variant='contained'
-        >
-          Apply
-        </LoadingButton>
-        <Button variant='outlined' onClick={clearInput}>
-          Clear
-        </Button>
-      </Stack>
-    </Paper>
+    <OutlinedInput
+      size='small'
+      sx={{ minWidth: '150px', pr: '5px' }}
+      endAdornment={
+        <IconButton size='small' sx={{ opacity: 0.3 }} disableFocusRipple>
+          <Send fontSize='small' />
+        </IconButton>
+      }
+    />
+  );
+};
+
+export const GuideTable = () => {
+  const columns: GridColDef[] = [
+    {
+      field: 'axis',
+      headerName: 'Axis',
+      flex: 0.1
+    },
+    {
+      field: 'measured',
+      headerName: 'Measured',
+      description: 'Raw value measured from the guider fit',
+      type: 'number',
+      flex: 0.2
+    },
+    {
+      field: 'applied',
+      headerName: 'Applied',
+      description: 'Correction applied in the last iteration, including the PID scaling',
+      type: 'number',
+      flex: 0.2
+    },
+    {
+      field: 'pid',
+      headerName: 'PID',
+      description: 'PID parameters for the axis [Kp]',
+      sortable: false,
+      flex: 0.1
+    },
+    {
+      field: 'offset',
+      headerName: 'Offset',
+      description: 'Manual offset to send to the axis, in arcsec except for focus which are mm',
+      headerAlign: 'right',
+      sortable: false,
+      flex: 0.3,
+      align: 'right',
+      renderCell: (params) => {
+        return <AxisOffsetInput axis={params.row.axis} />;
+      }
+    }
+  ];
+
+  const rows = [
+    { id: 1, axis: 'RA', measured: 0.0, applied: 0.0 },
+    { id: 2, axis: 'Declination', measured: 0.0, applied: 0.0 },
+    { id: 3, axis: 'Rotator', measured: 0.0, applied: 0.0 },
+    { id: 4, axis: 'Scale', measured: 0.0, applied: '' },
+    { id: 5, axis: 'Focus', measured: 0.0, applied: 0.0 }
+  ];
+  return (
+    <Box width='100%' py={2}>
+      <DataGridPro
+        autoHeight
+        rows={rows}
+        columns={columns}
+        pagination={false}
+        hideFooter
+        disableSelectionOnClick
+        sx={{
+          '& .MuiDataGrid-cell': {
+            ':focus': {
+              outline: 'unset'
+            },
+            ':focus-within': {
+              outline: 'unset'
+            }
+          }
+        }}
+      />
+    </Box>
   );
 };

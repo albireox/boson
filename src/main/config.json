@@ -64,12 +64,12 @@
       "resizable": true
     },
     "guider": {
-      "width": 800,
-      "height": 675,
+      "width": 965,
+      "height": 800,
       "resizable": true,
-      "minWidth": 800,
-      "minHeight": 675,
-      "aspectRatio": 1.185
+      "minWidth": 965,
+      "minHeight": 800,
+      "aspectRatio": 0.8296
     },
     "hal": {
       "width": 600,

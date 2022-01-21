@@ -7,7 +7,7 @@
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { Chip, Stack, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, Chip, Stack, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
@@ -134,31 +134,34 @@ export const GuideStack = () => {
   const [expTime, setExpTime] = React.useState<number | undefined>(15);
 
   return (
-    <Stack direction='row' pt={2} pb={0} spacing={1} alignItems={'center'}>
-      <AxesGroup />
-      <AstrometryFitStack />
+    <Box sx={{ overflowX: 'scroll' }}>
+      <Stack direction='row' pt={2} pb={0} spacing={1} alignItems={'center'}>
+        <AxesGroup />
+        <AstrometryFitStack />
 
-      <div css={{ flexGrow: 1 }} />
+        <div css={{ flexGrow: 1 }} />
 
-      <ValidatedNumberInput
-        label='Exposure Time'
-        value={expTime}
-        onChange={(e, value) => setExpTime(value)}
-        startAdornment={<AccessTimeIcon />}
-        endAdornment='s'
-        sx={{ maxWidth: '120px', pr: '10px' }}
-      />
-      <CommandButton
-        commandString={`fliswarm talk -c gfa expose ${expTime || ''}`}
-        endIcon={<CameraAltIcon fontSize='inherit' />}
-      />
-      <CommandButton
-        commandString={`cherno acquire -c -t ${expTime || ''}`}
-        abortCommand='cherno stop'
-        size='medium'
-      >
-        Guide
-      </CommandButton>
-    </Stack>
+        <ValidatedNumberInput
+          label='Exposure Time'
+          value={expTime}
+          onChange={(e, value) => setExpTime(value)}
+          startAdornment={<AccessTimeIcon />}
+          endAdornment='s'
+          sx={{ minWidth: '100px', maxWidth: '120px', pr: '10px' }}
+        />
+        <CommandButton
+          commandString={`fliswarm talk -c gfa expose ${expTime || ''}`}
+          endIcon={<CameraAltIcon fontSize='inherit' />}
+        />
+        <CommandButton
+          commandString={`cherno acquire -c -t ${expTime || ''}`}
+          abortCommand='cherno stop'
+          size='medium'
+          sx={{ minWidth: '80px' }}
+        >
+          Guide
+        </CommandButton>
+      </Stack>
+    </Box>
   );
 };

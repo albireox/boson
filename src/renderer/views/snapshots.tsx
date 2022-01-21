@@ -239,6 +239,8 @@ export default function SnapshotsView() {
           file={`${host}:${port}/${snapshots[index]}`}
           renderMode='canvas'
           onLoadProgress={updateButtons}
+          error=''
+          loading=''
         >
           <Page
             pageNumber={1}
