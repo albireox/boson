@@ -83,15 +83,21 @@ export default function loadEvents() {
     tron.removeStreamerWindow(event.sender.id);
   });
 
-  ipcMain.handle('tron-send-command', async (event, commandString: string) => {
-    let command = await tron.sendCommand(commandString);
-    return {
-      rawCommand: command.rawCommand,
-      commandId: command.commandId,
-      status: command.status,
-      replies: command.replies
-    };
-  });
+  ipcMain.handle(
+    'tron-send-command',
+    async (event, commandString: string, raise: boolean = false) => {
+      let command = await tron.sendCommand(commandString);
+      if (command.status === CommandStatus.Failed && raise) {
+        throw Error(`Command ${command.rawCommand} failed.`);
+      }
+      return {
+        rawCommand: command.rawCommand,
+        commandId: command.commandId,
+        status: command.status,
+        replies: command.replies
+      };
+    }
+  );
 
   ipcMain.handle(
     'tron-register-model-listener',

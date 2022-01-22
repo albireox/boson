@@ -28,7 +28,7 @@ export interface IElectronAPI {
     get_sync(key: string): any;
   };
   tron: {
-    send(commandString: string): Promise<TronEventReplyIFace>;
+    send(commandString: string, raise?: boolean): Promise<TronEventReplyIFace>;
   };
   openInBrowser(path: string): void;
   openInApplication(command: string): Promise<string>;
@@ -53,7 +53,8 @@ const API: IElectronAPI = {
     get_sync: (key) => store.get(key)
   },
   tron: {
-    send: async (commandString) => ipcRenderer.invoke('tron-send-command', commandString)
+    send: async (commandString, raise = false) =>
+      ipcRenderer.invoke('tron-send-command', commandString, raise)
   },
   openInBrowser: (path) => {
     require('electron').shell.openExternal(path);
