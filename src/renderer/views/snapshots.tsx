@@ -190,7 +190,7 @@ export default function SnapshotsView() {
             </Button>
           </Stack>
           <Stack sx={{ flexGrow: 1, alignItems: 'center', alignSelf: 'center' }}>
-            <Typography variant='subtitle1' color={grey[800]} sx={{ top: '-37px' }}>
+            <Typography variant='h6' color={grey[800]} fontWeight={400} sx={{ top: '-35px' }}>
               {snapshots[index] ? snapshots[index].split('/').reverse()[0] : ''}
             </Typography>
           </Stack>
