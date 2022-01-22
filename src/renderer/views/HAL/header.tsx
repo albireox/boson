@@ -9,12 +9,13 @@
 
 import UpdateIcon from '@mui/icons-material/Update';
 import {
+  CircularProgress,
   FormControl,
   FormControlLabel,
   IconButton,
-  InputAdornment,
   OutlinedInput,
   Stack,
+  Tooltip,
   Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -78,71 +79,122 @@ function DesignInput() {
   let configuration_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[0];
   let design_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[1];
 
-  const [preValue, setPreValue] = React.useState(design_id?.toString() || '<none>');
   const [value, setValue] = React.useState(design_id?.toString() || '<none>');
   const [error, setError] = React.useState(false);
 
+  const [color, setColor] = React.useState('text.primary');
+  const [width, setWidth] = React.useState('100px');
+
+  const [loading, setLoading] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
 
-  React.useEffect(() => {
+  // This is a ref to an empty and hidden textarea that we use to easily steal the focus from
+  // the design input.
+  const ref = React.useRef<HTMLTextAreaElement>(null);
+
+  const updateValue = React.useCallback(() => {
     if (design_id !== undefined) {
-      setValue(`${design_id} (conf. ${configuration_id})`);
+      setValue(`${design_id} (C. ${configuration_id})`);
+      setWidth('150px');
     } else {
       setValue('<none>');
+      setWidth('100px');
     }
-    setFocused(false);
   }, [design_id, configuration_id]);
+
+  React.useEffect(() => {
+    updateValue();
+
+    setFocused(false);
+    setError(false);
+    setLoading(false);
+
+    if (ref.current) ref.current.focus();
+  }, [updateValue]);
+
+  React.useEffect(() => {
+    if (error) {
+      setColor('error.main');
+    } else if (value === '<none>') {
+      setColor('warning.main');
+    } else {
+      setColor('text.primary');
+    }
+  }, [value, error]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       const new_design = Number.parseFloat(value);
       if (Number.isInteger(new_design)) {
-        window.api.tron.send(`jaeger configuration load ${new_design}`);
+        setLoading(true);
+        window.api.tron
+          .send(`jaeger configuration load ${new_design}`, true)
+          .catch(() => setError(true))
+          .finally(() => setLoading(false));
       }
     }
   };
 
+  const loadFromQueue = () => {
+    setLoading(true);
+    window.api.tron
+      .send('jaeger configuration load', true)
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  };
+
   return (
-    <OutlinedInput
-      error={error}
-      sx={{
-        '& input': {
-          padding: focused ? '10px 10px' : '0px',
-          width: focused ? '80px' : null,
-          typography: 'h5',
-          color: value === '<none>' ? 'warning.main' : 'text.primary'
-        },
-        '& .MuiOutlinedInput-notchedOutline': {
-          border: focused ? 'solid' : 'hidden'
-        }
-      }}
-      endAdornment={
-        focused ? (
-          <InputAdornment position='end'>
-            <IconButton size='small'>
-              <UpdateIcon />
-            </IconButton>
-          </InputAdornment>
-        ) : null
-      }
-      value={value}
-      onKeyPress={handleKeyDown}
-      onFocus={() => {
-        setPreValue(value);
-        if (value === '<none>') {
-          setValue('');
-        } else {
-          setValue(design_id ? design_id.toString() : '');
-        }
-        setFocused(true);
-      }}
-      onBlur={() => {
-        setValue(preValue);
-        setFocused(false);
-        setError(false);
-      }}
-      onChange={(e) => setValue(e.target.value)}
-    />
+    <Stack direction='row' spacing={0} sx={{ placeItems: 'center' }}>
+      <OutlinedInput
+        error={error}
+        sx={{
+          '& input': {
+            padding: focused ? '10px 10px' : '0px',
+            minWidth: width,
+            maxWidth: width,
+            typography: 'h6',
+            color: focused ? 'text.primary' : color
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            border: focused ? 'solid' : 'hidden'
+          }
+        }}
+        value={value}
+        onKeyPress={handleKeyDown}
+        onFocus={(e) => {
+          if (!loading) {
+            if (value === '<none>') {
+              setValue('');
+            } else {
+              setValue(design_id ? design_id.toString() : '');
+            }
+            setFocused(true);
+          } else {
+            e.preventDefault();
+          }
+        }}
+        onBlur={(e) => {
+          if (!loading) {
+            setFocused(false);
+            updateValue();
+          } else {
+            e.preventDefault();
+          }
+        }}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <textarea ref={ref} style={{ width: '0px', border: '0px' }} />
+
+      {loading ? (
+        <CircularProgress sx={{ ml: 2 }} size={25} />
+      ) : (
+        <Tooltip title='Load from queue'>
+          <IconButton size='small' onClick={loadFromQueue}>
+            <UpdateIcon />
+          </IconButton>
+        </Tooltip>
+      )}
+    </Stack>
   );
 }
 
@@ -150,7 +202,7 @@ export default function HALHeader() {
   return (
     <Stack direction='row'>
       <img src={hal9000logo} height='100px' alt='HAL9000 logo' />
-      <Stack direction='row' alignItems='center' pl={4}>
+      <Stack direction='row' alignItems='center' pl={2} sx={{ placeItems: 'center' }}>
         <Typography sx={{ mr: 1 }} variant='h5' color='text.primary'>
           Design
         </Typography>
