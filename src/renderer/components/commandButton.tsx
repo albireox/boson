@@ -17,7 +17,8 @@ import {
   DialogTitle,
   IconButton,
   SxProps,
-  Theme
+  Theme,
+  Tooltip
 } from '@mui/material';
 import { TronEventReplyIFace } from 'main/events';
 import { CommandStatus } from 'main/tron/types';
@@ -53,6 +54,7 @@ type CommandButtonProps = ButtonProps & {
   abortCommand?: string;
   onEvent?: (event: string) => void;
   beforeCallback?: () => boolean | Promise<boolean>;
+  tooltip?: string;
 };
 
 export function CommandButton({
@@ -60,6 +62,7 @@ export function CommandButton({
   abortCommand,
   onEvent,
   beforeCallback,
+  tooltip,
   ...props
 }: CommandButtonProps) {
   const baseIcon = props.endIcon || <SendIcon />;
@@ -131,7 +134,7 @@ export function CommandButton({
 
   props.size = props.size || 'small';
 
-  let button: React.ReactNode;
+  let button: React.ReactElement;
 
   if (props.children !== undefined) {
     button = (
@@ -154,7 +157,7 @@ export function CommandButton({
 
   return (
     <>
-      {button}
+      <Tooltip title={tooltip || ''}>{button}</Tooltip>
       <Dialog open={alertOpen}>
         <DialogTitle>{'Cancel command?'}</DialogTitle>
         <DialogContent>
