@@ -5,7 +5,16 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, Checkbox, Divider, FormControlLabel, Paper, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Paper,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
 import { MacroStageSelect } from 'renderer/components/macroStageSelect';
@@ -18,6 +27,7 @@ import MacroStepper from './macro_stepper';
 export default function ExposeView(): JSX.Element | null {
   const [apogeeTime, setApogeeTime] = React.useState<any>(macros.expose.defaults.apogee_exptime);
   const [bossTime, setBossTime] = React.useState<any>(macros.expose.defaults.boss_exptime);
+  const [count, setCount] = React.useState('1');
   const [pairs, setPairs] = React.useState<boolean>(macros.expose.defaults.pairs);
 
   const [stages, setStages] = React.useState<string[]>([]);
@@ -27,6 +37,7 @@ export default function ExposeView(): JSX.Element | null {
 
     const apogeeTimeTrim = apogeeTime.toString().trim();
     const bossTimeTrim = bossTime.toString().trim();
+    const countTrim = count.trim() || '1';
 
     if (stages.length > 0) commandString.push('-s ' + stages.join(','));
     if (pairs) {
@@ -36,6 +47,8 @@ export default function ExposeView(): JSX.Element | null {
     }
     if (apogeeTimeTrim) commandString.push(`-a ${apogeeTimeTrim}`);
     if (bossTimeTrim) commandString.push(`-b ${bossTimeTrim}`);
+
+    commandString.push(`--count ${countTrim}`);
 
     return commandString.join(' ');
   };
@@ -78,9 +91,21 @@ export default function ExposeView(): JSX.Element | null {
               value={apogeeTime}
               onChange={(e) => setApogeeTime(e.target.value)}
             />
+            <TextField
+              label='Count'
+              size='small'
+              variant='standard'
+              value={count || ' '}
+              onChange={(e) => setCount(e.target.value)}
+              sx={{
+                width: '60px',
+                '& .MuiInputBase-root': { marginTop: 1 }
+              }}
+            />
             <FormControlLabel
               control={
                 <Checkbox
+                  sx={{ pl: 0 }}
                   checked={pairs}
                   disableRipple
                   onChange={(e) => setPairs(e.target.checked)}
