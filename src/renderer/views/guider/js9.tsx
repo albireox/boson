@@ -27,6 +27,8 @@ type JS9Props = {
   updateURLs: (arg0: number, arg1: string) => void;
 };
 
+let selectedTimeout: NodeJS.Timeout;
+
 export const JS9 = ({
   keywords,
   gid,
@@ -141,7 +143,9 @@ export const JS9 = ({
         data-height={size}
         id={display}
         onDoubleClick={() => setZoomed(gid)}
-        onClick={() => setSelected(gid)}
+        onClick={() => {
+          setSelected(gid);
+        }}
       >
         <IconButton
           size='large'
@@ -182,7 +186,6 @@ export function JS9Frame() {
   window.JS9.globalOpts.alerts = false;
 
   let default_size = Math.round((win_size.width || 800) / 3.2);
-  // if (default_size > (win_size.width || 600) / 3) default_size = (win_size.width || 600) / 3;
 
   const updateSelected = React.useCallback(
     (gid: number) => {
@@ -196,6 +199,11 @@ export function JS9Frame() {
     },
     [selected]
   );
+
+  React.useEffect(() => {
+    selectedTimeout && clearTimeout(selectedTimeout);
+    selectedTimeout = setTimeout(() => setSelected(0), 5000);
+  }, [selected]);
 
   const updateURLs = (gid: number, url: string) => {
     setUrls((urls) => ({ ...urls, [gid]: url }));
