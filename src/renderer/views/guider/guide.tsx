@@ -127,7 +127,7 @@ const AstrometryFitStack = () => {
     }
 
     if (keywords['cherno.acquisition_valid']) {
-      setAcquired(keywords['cherno.acquisition_valid'].values[0]);
+      const did_acquire = keywords['cherno.acquisition_valid'].values[0] === 'T';
     }
   }, [keywords]);
 
