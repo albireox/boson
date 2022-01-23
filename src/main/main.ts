@@ -224,10 +224,7 @@ function checkForUpdates() {
 
 function updateAndRestart() {
   try {
-    setTimeout(() => {
-      app.relaunch();
-      app.exit(0);
-    }, 6000);
+    setTimeout(autoUpdater.quitAndInstall, 6000);
   } catch (e) {
     dialog.showErrorBox('Error', 'Failed to install updates');
   }
