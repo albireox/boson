@@ -164,7 +164,9 @@ export default function MacroStepper({ macroName, ...props }: MacroStepperProps)
                 completed={step.completed}
                 sx={{ minWidth: '75px' }}
               >
-                <StepLabel error={step.failed}>{step.description}</StepLabel>
+                <StepLabel error={step.failed} sx={{ '& .MuiStepLabel-label': { mt: 1 } }}>
+                  {step.description}
+                </StepLabel>
               </Step>
             );
           } else {
