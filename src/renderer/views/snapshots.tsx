@@ -150,6 +150,7 @@ export default function SnapshotsView() {
   return (
     <ThemeProvider theme={lightTheme}>
       <div
+        className='snapshots'
         style={{
           overflow: scale === 1 ? 'hidden' : 'scroll',
           backgroundColor: 'white',
