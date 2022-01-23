@@ -7,7 +7,7 @@
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { Box, Chip, Stack, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, Chip, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
@@ -48,29 +48,36 @@ const AxesGroup = () => {
   };
 
   return (
-    <ToggleButtonGroup color='secondary' value={enabledAxes} onChange={handleChange} size='small'>
-      <ToggleButton
-        color={enabledAxes.includes('radec') ? 'primary' : 'secondary'}
-        selected={true}
-        value='radec'
+    <Tooltip title='Click to select the axes to which corrections will be applied'>
+      <ToggleButtonGroup
+        color='secondary'
+        value={enabledAxes}
+        onChange={handleChange}
+        size='small'
       >
-        RA|Dec
-      </ToggleButton>
-      <ToggleButton
-        color={enabledAxes.includes('rot') ? 'primary' : 'secondary'}
-        selected={true}
-        value='rot'
-      >
-        Rot
-      </ToggleButton>
-      <ToggleButton
-        color={enabledAxes.includes('focus') ? 'primary' : 'secondary'}
-        selected={true}
-        value='focus'
-      >
-        Focus
-      </ToggleButton>
-    </ToggleButtonGroup>
+        <ToggleButton
+          color={enabledAxes.includes('radec') ? 'primary' : 'secondary'}
+          selected={true}
+          value='radec'
+        >
+          RA|Dec
+        </ToggleButton>
+        <ToggleButton
+          color={enabledAxes.includes('rot') ? 'primary' : 'secondary'}
+          selected={true}
+          value='rot'
+        >
+          Rot
+        </ToggleButton>
+        <ToggleButton
+          color={enabledAxes.includes('focus') ? 'primary' : 'secondary'}
+          selected={true}
+          value='focus'
+        >
+          Focus
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </Tooltip>
   );
 };
 
@@ -97,7 +104,7 @@ const AstrometryFitStack = () => {
         setFwhm('?');
         setFwhmColor('secondary');
       } else {
-        setFwhm(round(fwhm, 2).toString());
+        setFwhm(round(fwhm, 2).toString() + '"');
         if (fwhm >= 0 && fwhm < 1.5) {
           setFwhmColor('success');
         } else if (fwhm >= 1.5 && fwhm < 2.5) {
@@ -140,19 +147,31 @@ const AstrometryFitStack = () => {
     }
   }, [keywords]);
 
+  const RMSElement = (
+    <Tooltip title='RMS of the last fit'>
+      <Chip variant='outlined' label={`RMS ${rms} \u00b5m`} color={rmsColor} />
+    </Tooltip>
+  );
+  const FWHMElement = (
+    <Tooltip title='FWHM of the last fit'>
+      <Chip variant='outlined' label={`FWHM ${fwhm}`} color={fwhmColor} />
+    </Tooltip>
+  );
+  const AcquisitionElement = (
+    <Tooltip title='Was the last guide iteration successful?'>
+      <Chip
+        variant='outlined'
+        label={acquired === true ? 'Acquired' : 'Acquisition failed'}
+        color={acquired === true ? 'success' : 'error'}
+      />
+    </Tooltip>
+  );
+
   return (
     <Stack pl={1} spacing={1} direction='row' alignItems={'center'} justifyContent={'center'}>
-      {rms !== '' ? (
-        <Chip variant='outlined' label={`RMS ${rms} \u00b5m`} color={rmsColor} />
-      ) : null}
-      {fwhm !== '' ? <Chip variant='outlined' label={`FWHM ${fwhm}`} color={fwhmColor} /> : null}
-      {acquired !== undefined ? (
-        <Chip
-          variant='outlined'
-          label={acquired === true ? 'Acquired' : 'Acquisition failed'}
-          color={acquired === true ? 'success' : 'error'}
-        />
-      ) : null}
+      {rms !== '' ? RMSElement : null}
+      {fwhm !== '' ? FWHMElement : null}
+      {acquired !== undefined ? AcquisitionElement : null}
     </Stack>
   );
 };
@@ -179,12 +198,14 @@ export const GuideStack = () => {
         <CommandButton
           commandString={`fliswarm talk -c gfa expose ${expTime || ''}`}
           endIcon={<CameraAltIcon fontSize='inherit' />}
+          tooltip='Take a single exposure with all cameras'
         />
         <CommandButton
           commandString={`cherno acquire -c -t ${expTime || ''}`}
           abortCommand='cherno stop'
           size='medium'
           sx={{ minWidth: '80px' }}
+          tooltip='Start/stop the guide loop'
         >
           Guide
         </CommandButton>
