@@ -47,7 +47,7 @@ export function MacroStageSelect({
           onChange={handleChange}
           renderValue={(selected) => {
             if (selected.length === 0) {
-              return <em>All stages</em>;
+              return 'All stages';
             } else {
               return (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -59,9 +59,7 @@ export function MacroStageSelect({
             }
           }}
         >
-          <MenuItem value='all'>
-            <em>All stages</em>
-          </MenuItem>
+          <MenuItem value='all'>All stages</MenuItem>
           {stages.map((name) => (
             <MenuItem key={name} value={name} dense={true}>
               <Checkbox checked={selectedStages.indexOf(name) > -1} size='small' />
