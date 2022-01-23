@@ -53,7 +53,7 @@ export default function ExposeView(): JSX.Element | null {
         <Stack alignItems='center' direction='row' spacing={2}>
           <Typography variant='h6'>Expose</Typography>
           <MacroStageSelect
-            stages={macros.goto_field.stages}
+            stages={macros.expose.stages}
             maxWidth={200}
             minWidth={100}
             onStagesSelected={(stgs) => setStages(stgs)}
@@ -93,7 +93,7 @@ export default function ExposeView(): JSX.Element | null {
           <Box flexGrow={1} />
           <CommandButton
             commandString={getCommandString()}
-            abortCommand='hal goto-field --stop'
+            abortCommand='hal expose --stop'
             size='medium'
           >
             Run
