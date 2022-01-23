@@ -45,6 +45,7 @@ export default function SnapshotsView() {
   const [showSearch, setShowSearch] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
 
+  const divRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const renderHighlight = React.useCallback(
@@ -104,6 +105,14 @@ export default function SnapshotsView() {
     }
   }, [keywords]);
 
+  React.useEffect(() => {
+    // This prevents an issue in which if we have scrolled while zommed in and then set
+    // the scale back to 1, the document is not fully scolled up and overlaps with the menubar.
+    if (scale === 1 && divRef.current) {
+      divRef.current.scrollTo(0, 0);
+    }
+  }, [scale]);
+
   const increaseScale = () => {
     setScale((s) => {
       if (s >= 6.0) {
@@ -150,6 +159,7 @@ export default function SnapshotsView() {
   return (
     <ThemeProvider theme={lightTheme}>
       <div
+        ref={divRef}
         className='snapshots'
         style={{
           overflow: scale === 1 ? 'hidden' : 'scroll',
