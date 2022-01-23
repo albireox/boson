@@ -94,8 +94,8 @@ function DesignInput() {
 
   const updateValue = React.useCallback(() => {
     if (design_id !== undefined) {
-      setValue(`${design_id} (C. ${configuration_id})`);
-      setWidth('150px');
+      setValue(`${design_id} (Conf. ${configuration_id})`);
+      setWidth('180px');
     } else {
       setValue('<none>');
       setWidth('100px');
