@@ -1,7 +1,7 @@
 {
   "name": "boson",
   "productName": "boson",
-  "version": "0.0.4-alpha.20",
+  "version": "0.0.4-alpha.21",
   "author": "José Sánchez-Gallego <gallegoj@uw.edu>",
   "description": "SDSS observer graphical user interface",
   "repository": "github:albireox/boson",
