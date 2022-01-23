@@ -141,7 +141,7 @@ const AstrometryFitStack = () => {
   }, [keywords]);
 
   return (
-    <Stack pl={3} spacing={1} direction='row' alignItems={'center'} justifyContent={'center'}>
+    <Stack pl={1} spacing={1} direction='row' alignItems={'center'} justifyContent={'center'}>
       {rms !== '' ? (
         <Chip variant='outlined' label={`RMS ${rms} \u00b5m`} color={rmsColor} />
       ) : null}
