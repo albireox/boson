@@ -128,6 +128,15 @@ const AstrometryFitStack = () => {
 
     if (keywords['cherno.acquisition_valid']) {
       const did_acquire = keywords['cherno.acquisition_valid'].values[0] === 'T';
+
+      setAcquired(did_acquire);
+
+      // If it didn't acquire there's no guarantee the RMS and FWHM are recent. We mark
+      // them with the default colour.
+      if (!did_acquire) {
+        setRmsColor('default');
+        setFwhmColor('default');
+      }
     }
   }, [keywords]);
 
