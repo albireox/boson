@@ -121,6 +121,7 @@ export const GuideTable = () => {
     {
       field: 'axis',
       headerName: 'Axis',
+      sortable: false,
       flex: 0.1
     },
     {
@@ -129,6 +130,7 @@ export const GuideTable = () => {
       description: 'Raw value measured from the guider fit',
       flex: 0.2,
       align: 'right',
+      sortable: false,
       headerAlign: 'right'
     },
     {
@@ -137,6 +139,7 @@ export const GuideTable = () => {
       description: 'Correction applied in the last iteration, including the PID scaling',
       align: 'right',
       flex: 0.2,
+      sortable: false,
       headerAlign: 'right'
     },
     {
