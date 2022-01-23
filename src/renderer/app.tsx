@@ -57,7 +57,11 @@ export default function BosonApp() {
   let prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   // For the snapshots window we prefer a light background always.
-  if (window.location.pathname.includes('/snapshots')) prefersDarkMode = false;
+  if (
+    window.location.pathname.includes('snapshots') ||
+    window.location.search.slice(1) === 'snapshots'
+  )
+    prefersDarkMode = false;
 
   const theme = useMemo(
     () =>
