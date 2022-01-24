@@ -53,7 +53,7 @@ export default function GotoFieldView(): JSX.Element | null {
           />
           <Box flexGrow={1} />
           <CommandButton
-            commandString={`${commandString} --guider-time ${guiderTime}`}
+            commandString={`${commandString} --guider-time ${guiderTime || 15}`}
             abortCommand='hal goto-field --stop'
             size='medium'
           >

@@ -94,9 +94,13 @@ export default function ExposeView(): JSX.Element | null {
             <TextField
               label='Count'
               size='small'
+              type='number'
               variant='standard'
-              value={count || ' '}
+              value={count}
               onChange={(e) => setCount(e.target.value)}
+              InputLabelProps={{
+                shrink: true
+              }}
               sx={{
                 width: '60px',
                 '& .MuiInputBase-root': { marginTop: 1 }
