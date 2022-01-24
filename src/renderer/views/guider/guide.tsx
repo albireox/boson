@@ -144,16 +144,17 @@ const AstrometryFitChips = () => {
     'cherno.acquisition_valid'
   ]);
 
-  const [fwhm, setFwhm] = React.useState('1.12');
+  const [fwhm, setFwhm] = React.useState('');
   const [fwhmColor, setFwhmColor] = React.useState<any>('default');
 
-  const [rms, setRms] = React.useState('0.065');
+  const [rms, setRms] = React.useState('');
   const [rmsColor, setRmsColor] = React.useState<any>('default');
 
   const [acquired, setAcquired] = React.useState<boolean | undefined>(true);
 
   React.useEffect(() => {
     const astrometry_fit = keywords['cherno.astrometry_fit'];
+
     if (astrometry_fit) {
       const fwhm = astrometry_fit.values[4];
       if (fwhm < 0) {
