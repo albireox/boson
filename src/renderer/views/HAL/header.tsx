@@ -83,7 +83,6 @@ function DesignInput() {
   const [error, setError] = React.useState(false);
 
   const [color, setColor] = React.useState('text.primary');
-  const [width, setWidth] = React.useState('100px');
 
   const [loading, setLoading] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
@@ -94,13 +93,11 @@ function DesignInput() {
 
   const updateValue = React.useCallback(() => {
     if (design_id !== undefined) {
-      setValue(`${design_id} (Conf. ${configuration_id})`);
-      setWidth('180px');
+      setValue(`${design_id}`);
     } else {
       setValue('<none>');
-      setWidth('100px');
     }
-  }, [design_id, configuration_id]);
+  }, [design_id]);
 
   React.useEffect(() => {
     updateValue();
@@ -144,72 +141,79 @@ function DesignInput() {
   };
 
   return (
-    <Stack direction='row' spacing={0} sx={{ placeItems: 'center' }}>
-      <OutlinedInput
-        error={error}
-        sx={{
-          '& input': {
-            padding: focused ? '10px 10px' : '0px',
-            minWidth: width,
-            maxWidth: width,
-            typography: 'h6',
-            color: focused ? 'text.primary' : color
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            border: focused ? 'solid' : 'hidden'
-          }
-        }}
-        value={value}
-        onKeyPress={handleKeyDown}
-        onFocus={(e) => {
-          if (!loading) {
-            if (value === '<none>') {
-              setValue('');
-            } else {
-              setValue(design_id ? design_id.toString() : '');
-            }
-            setFocused(true);
-          } else {
-            e.preventDefault();
-          }
-        }}
-        onBlur={(e) => {
-          if (!loading) {
-            setFocused(false);
-            updateValue();
-          } else {
-            e.preventDefault();
-          }
-        }}
-        onChange={(e) => setValue(e.target.value)}
-      />
+    <Stack direction='row' spacing={0} pl={3} flexGrow={1} sx={{ placeItems: 'center' }}>
+      <Stack direction='column'>
+        <Stack direction='row'>
+          <Typography sx={{ mr: 1 }} variant='h5' color='text.primary' alignSelf='center'>
+            Design
+          </Typography>
+          <OutlinedInput
+            error={error}
+            sx={{
+              '& input': {
+                padding: focused ? '2px 8px' : '0px',
+                width: '80px',
+                typography: 'h5',
+                color: focused ? 'text.primary' : color
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                border: focused ? 'solid' : 'hidden'
+              }
+            }}
+            value={value}
+            onKeyPress={handleKeyDown}
+            onFocus={(e) => {
+              if (!loading) {
+                if (value === '<none>') {
+                  setValue('');
+                } else {
+                  setValue(design_id ? design_id.toString() : '');
+                }
+                setFocused(true);
+              } else {
+                e.preventDefault();
+              }
+            }}
+            onBlur={(e) => {
+              if (!loading) {
+                setFocused(false);
+                updateValue();
+              } else {
+                e.preventDefault();
+              }
+            }}
+            onChange={(e) => setValue(e.target.value)}
+          />
+        </Stack>
+        <Typography variant='h5' paddingTop={0.5}>
+          {configuration_id ? `Configuration ${configuration_id}` : ''}
+        </Typography>
+      </Stack>
+
       <textarea ref={ref} style={{ width: '0px', border: '0px' }} />
 
-      {loading ? (
-        <CircularProgress sx={{ ml: 2 }} size={25} />
-      ) : (
-        <Tooltip title='Load from queue'>
-          <IconButton size='small' onClick={loadFromQueue}>
-            <UpdateIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Box ml={3} alignSelf='left'>
+        {loading ? (
+          <CircularProgress sx={{ ml: 2 }} size={40} />
+        ) : (
+          <Tooltip title='Load from queue'>
+            <IconButton size='medium' onClick={loadFromQueue}>
+              <UpdateIcon fontSize='large' />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Box>
     </Stack>
   );
 }
 
 export default function HALHeader() {
   return (
-    <Stack direction='row' pb={1} pt={0.5}>
+    <Stack direction='row' pb={1} pt={0.5} width='100%'>
       <img src={hal9000logo} height='80px' alt='HAL9000 logo' />
-      <Stack direction='row' alignItems='center' pl={3} sx={{ placeItems: 'center' }}>
-        <Typography sx={{ mr: 1 }} variant='h5' color='text.primary'>
-          Design
-        </Typography>
-        <DesignInput />
-      </Stack>
+      <DesignInput />
       <div css={{ flexGrow: 1 }} />
-      <Box alignSelf='center' pr={2}>
+      <Box alignSelf='center' pr={3}>
         <FormControl>
           <FormControlLabel
             control={<IOSSwitch />}
