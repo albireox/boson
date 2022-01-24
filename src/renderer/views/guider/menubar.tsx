@@ -17,12 +17,17 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
+  LinearProgressProps,
   MenuItem,
   Select,
   Stack,
-  Tooltip
+  Tooltip,
+  Typography
 } from '@mui/material';
+import { round } from 'lodash';
 import React from 'react';
+import { BorderLinearProgress } from 'renderer/components/borderLinealProgress';
+import { useKeywords } from 'renderer/hooks';
 import { IJS9Opts, JS9Opts } from '.';
 
 type MenuBarProps = {
@@ -53,6 +58,83 @@ const AlertDialog = ({
       </DialogActions>
     </Dialog>
   );
+};
+
+const ExposureProgress = (props: LinearProgressProps) => {
+  const [etr, setEtr] = React.useState(0);
+  const [totalTime, setTotalTime] = React.useState(0);
+
+  const [intervalTimer, setIntervalTimer] = React.useState<NodeJS.Timeout | null>(null);
+
+  const keyword = useKeywords(['fliswarm.exposure_state']);
+  const exposureState = keyword['fliswarm.exposure_state'];
+
+  React.useEffect(() => {
+    // If the exposure_state keyword is integrating and we are not already updating the ETR
+    // (i.e., the intervalTimer variable is null), calculate initial ETR and start the timer.
+
+    if (intervalTimer) return;
+
+    const resolution = 0.1; // Refresh the progress bar every 0.1s
+
+    if (
+      exposureState &&
+      exposureState.values[0].startsWith('gfa') &&
+      exposureState.values[2] === 'integrating'
+    ) {
+      const expTime: number = exposureState.values[4];
+      const etrThis: number = exposureState.values[5];
+      const stackThis: number = exposureState.values[6];
+      const stackTotal: number = exposureState.values[7];
+
+      setTotalTime(expTime * stackTotal);
+      const etrRemaining = (stackTotal - stackThis) * expTime + etrThis;
+
+      setEtr(round(etrRemaining, 0));
+      setIntervalTimer(setInterval(() => setEtr((e) => e - resolution), resolution * 1000));
+    }
+  }, [exposureState, intervalTimer]);
+
+  React.useEffect(() => {
+    // Every time the interval timer updates the ETR check if we are at zero. In that
+    // case clear the interval.
+
+    if (intervalTimer && etr <= 0) {
+      clearInterval(intervalTimer);
+      setIntervalTimer(null);
+      setEtr(0);
+    }
+  }, [etr, intervalTimer]);
+
+  if (exposureState && exposureState.values[2] !== 'idle') {
+    return (
+      <Stack direction='row' alignItems='center' spacing={1} width='100%' px={2}>
+        <Stack flexGrow={1}>
+          <BorderLinearProgress
+            variant='determinate'
+            value={(1 - etr / totalTime) * 100}
+            sx={(theme) => ({
+              '.MuiLinearProgress-bar': {
+                backgroundColor:
+                  exposureState.values[2] === 'integrating'
+                    ? theme.palette.mode === 'light'
+                      ? '#1a90ff'
+                      : '#308fe8'
+                    : theme.palette.mode === 'light'
+                    ? theme.palette.secondary.light
+                    : theme.palette.secondary.dark
+              }
+            })}
+          />
+        </Stack>
+        <Typography variant='body1' color='text.secondary'>
+          {etr >= 0 ? round(etr, 0) : 0}s
+        </Typography>
+      </Stack>
+    );
+  } else {
+    return <div style={{ flexGrow: 1 }} />;
+  }
 };
 
 export const MenuBar = ({
@@ -169,7 +251,9 @@ export const MenuBar = ({
             </Select>
           </FormControl>
         </Stack>
-        <Stack sx={{ flexGrow: 1 }}></Stack>
+        {/* <Stack sx={{ flexGrow: 1 }} /> */}
+        <ExposureProgress />
+        {/* <Stack sx={{ flexGrow: 1 }} /> */}
         <Stack direction='row' spacing={1} sx={{ alignSelf: 'center' }}>
           <FormControl>
             <Tooltip title='Open in DS9'>
