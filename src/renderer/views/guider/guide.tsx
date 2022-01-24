@@ -7,7 +7,8 @@
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { Box, Chip, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
+import { Chip, Grid, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
@@ -18,6 +19,61 @@ import { ValidatedNumberInput } from '../../components/validatedInput';
 
 // This declaration must be here to prevent re-renders overriding it.
 let commandAxesTimeout: NodeJS.Timeout | null = null;
+
+enum GuiderStatus {
+  IDLE = 1 << 0,
+  EXPOSING = 1 << 1,
+  PROCESSING = 1 << 2,
+  CORRECTING = 1 << 3,
+  STOPPING = 1 << 4,
+  FAILED = 1 << 5,
+  NON_IDLE = EXPOSING | PROCESSING | CORRECTING | STOPPING
+}
+
+const GuiderStatusChip = () => {
+  const keyword = useKeywords(['cherno.guider_status']);
+  const guiderStatus = keyword['cherno.guider_status'];
+
+  const [status, setStatus] = React.useState('Idle');
+  const [color, setColor] = React.useState<any>('default');
+
+  React.useEffect(() => {
+    if (!guiderStatus) return;
+
+    const bits: number = parseInt(guiderStatus.values[0] as string);
+
+    if (bits & GuiderStatus.FAILED) {
+      setStatus('Error');
+      setColor('error');
+    } else if (bits & GuiderStatus.EXPOSING) {
+      setStatus('Exposing');
+      setColor('success');
+    } else if (bits & GuiderStatus.PROCESSING) {
+      setStatus('Processing');
+      setColor('success');
+    } else if (bits & GuiderStatus.CORRECTING) {
+      setStatus('Correcting');
+      setColor('success');
+    } else if (bits & GuiderStatus.STOPPING) {
+      setStatus('Stopping');
+      setColor('warning');
+    } else if (bits & GuiderStatus.IDLE) {
+      setStatus('Idle');
+      setColor('default');
+    } else {
+      setStatus('Unknown');
+      setColor('error');
+    }
+  }, [guiderStatus]);
+
+  return (
+    <Grid item>
+      <Tooltip title='Status of the guider'>
+        <Chip variant='outlined' label={status} color={color} />
+      </Tooltip>
+    </Grid>
+  );
+};
 
 const AxesGroup = () => {
   const keyword = useKeywords(['cherno.enabled_axes']);
@@ -81,20 +137,20 @@ const AxesGroup = () => {
   );
 };
 
-const AstrometryFitStack = () => {
+const AstrometryFitChips = () => {
   const keywords = useKeywords([
     'cherno.astrometry_fit',
     'cherno.guide_rms',
     'cherno.acquisition_valid'
   ]);
 
-  const [fwhm, setFwhm] = React.useState('');
+  const [fwhm, setFwhm] = React.useState('1.12');
   const [fwhmColor, setFwhmColor] = React.useState<any>('default');
 
-  const [rms, setRms] = React.useState('');
+  const [rms, setRms] = React.useState('0.065');
   const [rmsColor, setRmsColor] = React.useState<any>('default');
 
-  const [acquired, setAcquired] = React.useState<boolean | undefined>(undefined);
+  const [acquired, setAcquired] = React.useState<boolean | undefined>(true);
 
   React.useEffect(() => {
     const astrometry_fit = keywords['cherno.astrometry_fit'];
@@ -148,68 +204,92 @@ const AstrometryFitStack = () => {
   }, [keywords]);
 
   const RMSElement = (
-    <Tooltip title='RMS of the last fit'>
-      <Chip variant='outlined' label={`RMS ${rms} \u00b5m`} color={rmsColor} />
-    </Tooltip>
+    <Grid item>
+      <Tooltip title='RMS of the last fit'>
+        <Chip variant='outlined' label={`RMS ${rms} \u00b5m`} color={rmsColor} />
+      </Tooltip>
+    </Grid>
   );
   const FWHMElement = (
-    <Tooltip title='FWHM of the last fit'>
-      <Chip variant='outlined' label={`FWHM ${fwhm}`} color={fwhmColor} />
-    </Tooltip>
+    <Grid item>
+      <Tooltip title='FWHM of the last fit'>
+        <Chip variant='outlined' label={`FWHM ${fwhm}`} color={fwhmColor} />
+      </Tooltip>
+    </Grid>
   );
   const AcquisitionElement = (
-    <Tooltip title='Was the last guide iteration successful?'>
-      <Chip
-        variant='outlined'
-        label={acquired === true ? 'Acquired' : 'Acquisition failed'}
-        color={acquired === true ? 'success' : 'error'}
-      />
-    </Tooltip>
+    <Grid item>
+      <Tooltip title='Was the last guide iteration successful?'>
+        <Chip
+          variant='outlined'
+          label={acquired === true ? 'Acquired' : 'Acquisition failed'}
+          color={acquired === true ? 'success' : 'error'}
+        />
+      </Tooltip>
+    </Grid>
   );
 
   return (
-    <Stack pl={1} spacing={1} direction='row' alignItems={'center'} justifyContent={'center'}>
+    <>
+      {acquired !== undefined ? AcquisitionElement : null}
       {rms !== '' ? RMSElement : null}
       {fwhm !== '' ? FWHMElement : null}
-      {acquired !== undefined ? AcquisitionElement : null}
-    </Stack>
+    </>
   );
 };
 
 export const GuideStack = () => {
   const [expTime, setExpTime] = React.useState<number | undefined>(15);
 
+  const smallWindow = useMediaQuery('(max-width:800px)');
+
   return (
-    <Box sx={{ overflowX: 'scroll' }}>
-      <Stack direction='row' pt={2} pb={0} spacing={1} alignItems={'center'}>
-        <AxesGroup />
-        <AstrometryFitStack />
+    // <Box sx={{ overflowX: 'scroll' }}>
+    <Stack direction='row' pt={1} pb={0} spacing={1} alignItems={'center'}>
+      <AxesGroup />
 
-        <div css={{ flexGrow: 1 }} />
+      <Grid
+        container
+        alignItems='center'
+        columnSpacing={smallWindow ? 1 : 0.75}
+        rowSpacing={0}
+        pl={1}
+        justifyContent={smallWindow ? 'center' : 'left'}
+        sx={{
+          '.MuiGrid-item': {
+            py: 0.5
+          }
+        }}
+      >
+        <GuiderStatusChip />
+        <AstrometryFitChips />
+      </Grid>
 
-        <ValidatedNumberInput
-          label='Exposure Time'
-          value={expTime}
-          onChange={(e, value) => setExpTime(value)}
-          startAdornment={<AccessTimeIcon />}
-          endAdornment='s'
-          sx={{ minWidth: '100px', maxWidth: '120px', pr: '10px' }}
-        />
-        <CommandButton
-          commandString={`fliswarm talk -c gfa expose ${expTime || ''}`}
-          endIcon={<CameraAltIcon fontSize='inherit' />}
-          tooltip='Take a single exposure with all cameras'
-        />
-        <CommandButton
-          commandString={`cherno acquire -c -t ${expTime || ''}`}
-          abortCommand='cherno stop'
-          size='medium'
-          sx={{ minWidth: '80px' }}
-          tooltip='Start/stop the guide loop'
-        >
-          Guide
-        </CommandButton>
-      </Stack>
-    </Box>
+      <div css={{ flexGrow: 1 }} />
+
+      <ValidatedNumberInput
+        label='Exposure Time'
+        value={expTime}
+        onChange={(e, value) => setExpTime(value)}
+        startAdornment={<AccessTimeIcon />}
+        endAdornment='s'
+        sx={{ minWidth: '100px', maxWidth: '120px', pr: '10px' }}
+      />
+      <CommandButton
+        commandString={`fliswarm talk -c gfa expose ${expTime || ''}`}
+        endIcon={<CameraAltIcon fontSize='inherit' />}
+        tooltip='Take a single exposure with all cameras'
+      />
+      <CommandButton
+        commandString={`cherno acquire -c -t ${expTime || ''}`}
+        abortCommand='cherno stop'
+        size='medium'
+        sx={{ minWidth: '80px', height: '36px' }}
+        tooltip='Start/stop the guide loop'
+      >
+        Guide
+      </CommandButton>
+    </Stack>
+    // </Box>
   );
 };

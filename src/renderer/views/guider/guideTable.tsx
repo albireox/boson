@@ -173,7 +173,7 @@ export const GuideTable = () => {
     { id: 5, axis: 'Focus', measured: '', applied: '' }
   ];
   return (
-    <Box width='100%' py={2}>
+    <Box width='100%' pb={1}>
       <DataGridPro
         autoHeight
         rows={rows}
