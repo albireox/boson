@@ -10,48 +10,212 @@ import {
   Checkbox,
   Divider,
   FormControlLabel,
+  Grid,
+  LinearProgress,
+  LinearProgressProps,
   Paper,
   Stack,
   TextField,
   Typography
 } from '@mui/material';
+import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
 import { MacroStageSelect } from 'renderer/components/macroStageSelect';
-import { ExposureTimeInput } from '.';
+import { ExposureTimeInput, HALContext } from '.';
 import macros from './macros.json';
 import MacroStepper from './macro_stepper';
 
 /** @jsxImportSource @emotion/react */
 
+function LinearProgressWithLabel(
+  props: LinearProgressProps & {
+    total: number;
+    etr?: number;
+    header?: string;
+    suffix?: string;
+  }
+) {
+  const [etrDisplay, setEtrDisplay] = React.useState(props.etr || props.total);
+  const [value, setValue] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(
+      () => setEtrDisplay((etrDisplay) => (etrDisplay <= 0 ? 0 : etrDisplay - 1)),
+      1000
+    );
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  React.useEffect(() => setEtrDisplay(props.etr || 0), [props.etr]);
+
+  React.useEffect(() => {
+    setValue(((props.total - etrDisplay) / props.total) * 100);
+  }, [etrDisplay, props.total]);
+
+  return (
+    <Stack direction='row' alignItems='center' spacing={1}>
+      <Stack>
+        <Typography variant='body2' color='text.secondary'>
+          {props.header}
+        </Typography>
+      </Stack>
+      <Stack flexGrow={1}>
+        <LinearProgress variant='determinate' value={value} {...props} />
+      </Stack>
+      <Stack>
+        <Typography variant='body2' color='text.secondary'>{`${round(etrDisplay || 0, 0)}s ${
+          props.suffix
+        }`}</Typography>
+      </Stack>
+    </Stack>
+  );
+}
+
 export default function ExposeView(): JSX.Element | null {
-  const [apogeeTime, setApogeeTime] = React.useState<any>(macros.expose.defaults.apogee_exptime);
-  const [bossTime, setBossTime] = React.useState<any>(macros.expose.defaults.boss_exptime);
-  const [count, setCount] = React.useState('1');
+  const [apogeeReads, setApogeeReads] = React.useState<string>(
+    macros.expose.defaults.apogee_reads.toString()
+  );
+  const [bossTime, setBossTime] = React.useState<string>(
+    macros.expose.defaults.boss_exptime.toString()
+  );
+  const [count, setCount] = React.useState<string>(macros.expose.defaults.count.toString());
   const [pairs, setPairs] = React.useState<boolean>(macros.expose.defaults.pairs);
 
   const [stages, setStages] = React.useState<string[]>([]);
 
+  const [running, setRunning] = React.useState<boolean>(false);
+  const [progress, setProgress] = React.useState(<span />);
+  const [detail, setDetail] = React.useState(<span />);
+
+  const halKeywords = React.useContext(HALContext);
+
+  const apogeeState = halKeywords['hal.exposure_state_apogee'];
+  const bossState = halKeywords['hal.exposure_state_boss'];
+
   const getCommandString = () => {
     let commandString: string[] = ['hal expose'];
 
-    const apogeeTimeTrim = apogeeTime.toString().trim();
-    const bossTimeTrim = bossTime.toString().trim();
-    const countTrim = count.trim() || '1';
-
     if (stages.length > 0) commandString.push('-s ' + stages.join(','));
+
     if (pairs) {
       commandString.push('--pairs');
     } else {
       commandString.push('--no-pairs');
     }
-    if (apogeeTimeTrim) commandString.push(`-a ${apogeeTimeTrim}`);
-    if (bossTimeTrim) commandString.push(`-b ${bossTimeTrim}`);
 
-    commandString.push(`--count ${countTrim}`);
+    if (stages.length === 0 || stages.includes('expose_boss')) {
+      commandString.push(`-b ${bossTime || macros.expose.defaults.boss_exptime}`);
+    } else {
+      commandString.push(`--reads ${apogeeReads || macros.expose.defaults.apogee_reads}`);
+    }
+
+    commandString.push(`--count ${count || macros.expose.defaults.count}`);
 
     return commandString.join(' ');
   };
+
+  React.useEffect(() => {
+    // Calculate approximate exposure times.
+
+    let bossDetail = '';
+    let apogeeDetail = '';
+
+    const type = pairs ? 'pair(s)' : 'exposure(s)';
+
+    const nExp = parseInt(count || macros.expose.defaults.count.toString());
+
+    if (stages.length === 0 || stages.includes('expose_boss')) {
+      const bossExpTime = parseFloat(bossTime || macros.expose.defaults.boss_exptime.toString());
+      const bossTotal = nExp * (bossExpTime + 80);
+
+      bossDetail = `BOSS: ~${round(bossTotal, 0)} s (${nExp}x${round(bossExpTime, 0)})`;
+
+      if (stages.length === 0 || stages.includes('expose_apogee')) {
+        apogeeDetail = `APOGEE: ~${round(bossTotal - 67, 0)} s (${nExp} ${type})`;
+      }
+    } else {
+      let apogeeTotal =
+        nExp * 10.6 * parseInt(apogeeReads || macros.expose.defaults.apogee_reads.toString());
+      if (pairs) apogeeTotal *= 2;
+
+      apogeeDetail = `APOGEE: ~${round(apogeeTotal, 0)} s (${nExp} ${type})`;
+    }
+
+    setDetail(
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1 }}>
+        {bossDetail && (
+          <Grid item xs={apogeeDetail && bossDetail ? 6 : 12}>
+            {bossDetail}
+          </Grid>
+        )}
+        {apogeeDetail && (
+          <Grid item xs={apogeeDetail && bossDetail ? 6 : 12}>
+            {apogeeDetail}
+          </Grid>
+        )}
+      </Grid>
+    );
+  }, [running, stages, apogeeReads, bossTime, count, pairs]);
+
+  React.useEffect(() => {
+    // Create and update progress bars.
+
+    let apogeeProgress: JSX.Element | undefined = undefined;
+    let bossProgress: JSX.Element | undefined = undefined;
+
+    if (stages.length === 0 || stages.includes('expose_boss')) {
+      if (bossState) {
+        const boss_state = bossState.values;
+        const boss_total = boss_state[3];
+        const boss_etr = boss_state[2];
+
+        bossProgress = (
+          <LinearProgressWithLabel
+            total={boss_total}
+            etr={boss_etr}
+            header='BOSS'
+            suffix={`(${boss_state[0]}/${boss_state[1]})`}
+          />
+        );
+      }
+    }
+
+    if (stages.length === 0 || stages.includes('expose_apogee')) {
+      if (apogeeState) {
+        const apogee_state = apogeeState.values;
+        const apogee_total = apogee_state[5];
+        const apogee_etr = apogee_state[4];
+
+        apogeeProgress = (
+          <LinearProgressWithLabel
+            color='secondary'
+            total={apogee_total}
+            etr={apogee_etr}
+            header='APOGEE'
+            suffix={`(${apogee_state[0]}/${apogee_state[1]}) ${apogee_state[3]}`}
+          />
+        );
+      }
+    }
+
+    setProgress(
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 2 }}>
+        {bossProgress && (
+          <Grid item xs={apogeeProgress && bossProgress ? 6 : 12}>
+            {bossProgress}
+          </Grid>
+        )}
+        {apogeeProgress && (
+          <Grid item xs={apogeeProgress && bossProgress ? 6 : 12}>
+            {apogeeProgress}
+          </Grid>
+        )}
+      </Grid>
+    );
+  }, [apogeeState, bossState, stages]);
 
   return (
     <Paper variant='outlined'>
@@ -77,20 +241,38 @@ export default function ExposeView(): JSX.Element | null {
             spacing={2}
             flexWrap={'wrap'}
             justifyContent={'center'}
+            sx={{ pointerEvents: running ? 'none' : 'initial' }}
           >
-            <ExposureTimeInput
-              label='BOSS Exp Time'
-              value={bossTime}
-              onChange={(e) => {
-                e.preventDefault();
-                setBossTime(e.target.value);
-              }}
-            />
-            <ExposureTimeInput
-              label='AP Exp Time'
-              value={apogeeTime}
-              onChange={(e) => setApogeeTime(e.target.value)}
-            />
+            {(stages.length === 0 || stages.includes('expose_boss')) && (
+              <ExposureTimeInput
+                label='BOSS Exp Time'
+                value={bossTime}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setBossTime(e.target.value);
+                }}
+              />
+            )}
+            {!stages.includes('expose_boss') && stages.includes('expose_apogee') && (
+              <TextField
+                label='AP reads'
+                type='number'
+                size='small'
+                variant='standard'
+                value={apogeeReads}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setApogeeReads(e.target.value);
+                }}
+                InputLabelProps={{
+                  shrink: true
+                }}
+                sx={{
+                  width: '80px',
+                  '& .MuiInputBase-root': { marginTop: 1 }
+                }}
+              />
+            )}
             <TextField
               label='Count'
               size='small'
@@ -124,9 +306,13 @@ export default function ExposeView(): JSX.Element | null {
             commandString={getCommandString()}
             abortCommand='hal expose --stop'
             size='medium'
+            onEvent={(event) => setRunning(event === 'running')}
           >
             Run
           </CommandButton>
+        </Stack>
+        <Stack alignItems='center' textAlign='center' spacing={4}>
+          {running ? progress : detail}
         </Stack>
         <Stack alignItems='center' direction='row' spacing={2} overflow='scroll'>
           <MacroStepper macroName='expose' />

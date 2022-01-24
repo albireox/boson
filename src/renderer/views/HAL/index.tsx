@@ -47,7 +47,13 @@ export const ExposureTimeInput = ({ label, value, onChange }: ExposureTimeInputT
 
 export default function HALView() {
   const halKeywords = useKeywords(
-    ['hal.stage_status', 'hal.stages', 'hal.available_scripts'],
+    [
+      'hal.stage_status',
+      'hal.stages',
+      'hal.available_scripts',
+      'hal.exposure_state_apogee',
+      'hal.exposure_state_boss'
+    ],
     'hal-keys'
   );
 
