@@ -2331,42 +2331,42 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid-pro@npm:^5.2.2":
-  version: 5.2.2
-  resolution: "@mui/x-data-grid-pro@npm:5.2.2"
+"@mui/x-data-grid-pro@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@mui/x-data-grid-pro@npm:5.3.0"
   dependencies:
     "@mui/utils": ^5.2.3
-    "@mui/x-license-pro": 5.2.2
+    "@mui/x-license-pro": 5.3.0
     clsx: ^1.0.4
-    prop-types: ^15.8.0
+    prop-types: ^15.8.1
     reselect: ^4.1.5
   peerDependencies:
-    "@mui/material": ^5.2.7
-    "@mui/system": ^5.2.6
+    "@mui/material": ^5.2.8
+    "@mui/system": ^5.2.8
     react: ^17.0.2
-  checksum: 535599f90fb8dc5b799a3f9083215422126efa9f0b3c180a2c4d6e6ab0c3f9553ca23abaaf2d3c6a950c0b8c4ce7e8f742806e26a6c10d8ae19649345a30711c
+  checksum: b0ba7f15408c704049c3514d7307ffe2cd8dec032926da1b8dc1f53bf1bcd2925dc8a86e00db5a078d73a4437b46cb331caf45ad4b03280e3ece3db51746f73f
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid@npm:^5.2.2":
-  version: 5.2.2
-  resolution: "@mui/x-data-grid@npm:5.2.2"
+"@mui/x-data-grid@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@mui/x-data-grid@npm:5.3.0"
   dependencies:
     "@mui/utils": ^5.2.3
     clsx: ^1.1.1
-    prop-types: ^15.8.0
+    prop-types: ^15.8.1
     reselect: ^4.1.5
   peerDependencies:
-    "@mui/material": ^5.2.7
-    "@mui/system": ^5.2.6
+    "@mui/material": ^5.2.8
+    "@mui/system": ^5.2.8
     react: ^17.0.2
-  checksum: 955440b7c545b3ade71008a47870d4ac8f4db7365dd23cf287273802fe5f4b999f3f2f57765777f88808618220f123b5b8e473ed98e53e40858dc2b03aea6d3f
+  checksum: b62b752930f429700feb23e56b58a75a5cfc4d4cdbc5d6fb5862735a44fb4bb4463b04e5a980b89c92cf59877d7ef3cba536e68a3992e0a3f410c2417472a826
   languageName: node
   linkType: hard
 
-"@mui/x-license-pro@npm:5.2.2":
-  version: 5.2.2
-  resolution: "@mui/x-license-pro@npm:5.2.2"
+"@mui/x-license-pro@npm:5.3.0":
+  version: 5.3.0
+  resolution: "@mui/x-license-pro@npm:5.3.0"
   dependencies:
     "@mui/utils": ^5.2.3
     esm: ^3.2.25
@@ -2375,7 +2375,7 @@ __metadata:
     react: ^17.0.2
   bin:
     licensegen: bin/license-gen-script.js
-  checksum: 6c971e1a379f6fb3a7e6d4dcb21f66a27ca84e40cd8cdddb1dbd8e19eb6810cf4147536e83ccf671423d1c28f0c89afc4b57ea090a69855620d9a68a585c5c87
+  checksum: 0a646666b6028880e0c1e6272329527bf8ff502a3b31c0868db89afebe827a460261296f304253a323a855a26a403378949fa877964579df9b048f7e3f9ec5bc
   languageName: node
   linkType: hard
 
@@ -4614,8 +4614,8 @@ __metadata:
     "@mui/material": ^5.3.0
     "@mui/styles": ^5.3.0
     "@mui/system": ^5.3.0
-    "@mui/x-data-grid": ^5.2.2
-    "@mui/x-data-grid-pro": ^5.2.2
+    "@mui/x-data-grid": ^5.3.0
+    "@mui/x-data-grid-pro": ^5.3.0
     "@types/electron-devtools-installer": ^2.2.1
     "@types/jest": ^27.4.0
     "@types/lodash": ^4.14.178
@@ -4650,7 +4650,7 @@ __metadata:
     react-highlight-words: ^0.17.0
     react-pdf: ^5.6.0
     react-scripts: ^5.0.0
-    react-virtuoso: ^2.4.1
+    react-virtuoso: ^2.5.0
     rxjs: ^7.5.2
     source-map-explorer: ^2.5.2
     source-map-support: ^0.5.21
@@ -12323,7 +12323,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.0":
+"prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -12671,15 +12671,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^2.4.1":
-  version: 2.4.1
-  resolution: "react-virtuoso@npm:2.4.1"
+"react-virtuoso@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "react-virtuoso@npm:2.5.0"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.12
     "@virtuoso.dev/urx": ^0.2.12
   peerDependencies:
     react: ">=16"
-  checksum: affd169bdf69210e1b53dca924f5088ff37a7284b8e0dbf5a9ebc03d86f7df9d8639006313a420f00757bbca0e441c46f2377bc5fd02393ecaf2d8e42fe1a724
+  checksum: d4a6846ee844ba2ed8249e07f39429cf792a721da43124e8c76ec996ed13bbac0fe71486093b62ba5dbb5441c4d0570efca2d800da738eb7584e2da37e65c4a0
   languageName: node
   linkType: hard
 
