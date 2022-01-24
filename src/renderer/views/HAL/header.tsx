@@ -201,8 +201,8 @@ function DesignInput() {
 export default function HALHeader() {
   return (
     <Stack direction='row' pb={1} pt={0.5}>
-      <img src={hal9000logo} height='100px' alt='HAL9000 logo' />
-      <Stack direction='row' alignItems='center' pl={2} sx={{ placeItems: 'center' }}>
+      <img src={hal9000logo} height='80px' alt='HAL9000 logo' />
+      <Stack direction='row' alignItems='center' pl={3} sx={{ placeItems: 'center' }}>
         <Typography sx={{ mr: 1 }} variant='h5' color='text.primary'>
           Design
         </Typography>
