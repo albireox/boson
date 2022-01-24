@@ -1,7 +1,6 @@
 {
   "goto_field": {
     "stages": [
-      "prepare",
       "slew",
       "reconfigure",
       "boss_hartmann",
@@ -11,6 +10,7 @@
       "acquire",
       "guide"
     ],
+    "precondition_stages": ["prepare"],
     "cleanup_stages": ["cleanup"],
     "concurrent": [["slew", "reconfigure"]],
     "descriptions": {
@@ -25,7 +25,8 @@
     }
   },
   "apogee_dome_flat": {
-    "stages": ["gang_at_cart", "ffs", "open_shutter", "expose"],
+    "stages": ["ffs", "open_shutter", "expose"],
+    "precondition_stages": ["gang_at_cart"],
     "cleanup_stages": ["cleanup"],
     "concurrent": [["ffs", "open_shutter"]],
     "descriptions": {
@@ -35,7 +36,8 @@
     }
   },
   "expose": {
-    "stages": ["prepare", "expose_boss", "expose_apogee"],
+    "stages": ["expose_boss", "expose_apogee"],
+    "precondition_stages": ["prepare"],
     "cleanup_stages": ["cleanup"],
     "concurrent": [["expose_boss", "expose_apogee"]],
     "descriptions": {
@@ -43,9 +45,10 @@
       "expose_apogee": "APOGEE"
     },
     "defaults": {
-      "apogee_exptime": "",
+      "apogee_reads": 46,
       "boss_exptime": 900.0,
-      "pairs": true
+      "pairs": true,
+      "count": 1
     }
 
   }

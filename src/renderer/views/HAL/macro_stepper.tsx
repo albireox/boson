@@ -33,6 +33,7 @@ export interface StageState {
 export interface IMacroData {
   [macro: string]: {
     stages: string[];
+    precondition_stages?: string[];
     cleanup_stages?: string[];
     concurrent?: string[][];
     descriptions?: { [key: string]: string };
@@ -101,7 +102,11 @@ export default function MacroStepper({ macroName, ...props }: MacroStepperProps)
   const initialStageState: StageState[] = [];
 
   let n = 0;
-  const allStages = [...thisMacroData.stages, ...(thisMacroData.cleanup_stages || [])];
+  const allStages = [
+    ...(thisMacroData.precondition_stages || []),
+    ...thisMacroData.stages,
+    ...(thisMacroData.cleanup_stages || [])
+  ];
   allStages.forEach((stageName) => {
     let description: string;
     if (thisMacroData.descriptions && thisMacroData.descriptions[stageName]) {
@@ -164,7 +169,7 @@ export default function MacroStepper({ macroName, ...props }: MacroStepperProps)
                 completed={step.completed}
                 sx={{ minWidth: '75px' }}
               >
-                <StepLabel error={step.failed} sx={{ '& .MuiStepLabel-label': { mt: 1 } }}>
+                <StepLabel error={step.failed} sx={{ '& .MuiStepLabel-label': { mt: 0.75 } }}>
                   {step.description}
                 </StepLabel>
               </Step>
