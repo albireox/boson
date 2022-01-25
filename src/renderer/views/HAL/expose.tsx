@@ -85,8 +85,8 @@ export default function ExposeView(): JSX.Element | null {
   const [pairs, setPairs] = React.useState<boolean>(macros.expose.defaults.pairs);
 
   const [stages, setStages] = React.useState<string[]>([]);
+  const [actorStages, setActorStages] = React.useState<string[]>([]);
 
-  const [running, setRunning] = React.useState<boolean>(false);
   const [progress, setProgress] = React.useState(<span />);
   const [detail, setDetail] = React.useState(<span />);
 
@@ -94,6 +94,8 @@ export default function ExposeView(): JSX.Element | null {
 
   const apogeeState = halKeywords['hal.exposure_state_apogee'];
   const bossState = halKeywords['hal.exposure_state_boss'];
+  const stagesKey = halKeywords['hal.stages'];
+  const runningMacros = halKeywords['hal.running_macros'];
 
   const getCommandString = () => {
     let commandString: string[] = ['hal expose'];
@@ -158,15 +160,21 @@ export default function ExposeView(): JSX.Element | null {
         )}
       </Grid>
     );
-  }, [running, stages, apogeeReads, bossTime, count, pairs]);
+  }, [stages, apogeeReads, bossTime, count, pairs]);
 
   React.useEffect(() => {
-    // Create and update progress bars.
+    if (stagesKey && stagesKey.values[0] === 'expose') setActorStages(stagesKey.values.slice(1));
+  }, [stagesKey]);
+
+  React.useEffect(() => {
+    // Create and update progress bars. This only depend on actor keywords.
+
+    if (!runningMacros) return;
 
     let apogeeProgress: JSX.Element | undefined = undefined;
     let bossProgress: JSX.Element | undefined = undefined;
 
-    if (stages.length === 0 || stages.includes('expose_boss')) {
+    if (actorStages.length === 0 || actorStages.includes('expose_boss')) {
       if (bossState) {
         const boss_state = bossState.values;
         const boss_total = boss_state[3];
@@ -183,7 +191,7 @@ export default function ExposeView(): JSX.Element | null {
       }
     }
 
-    if (stages.length === 0 || stages.includes('expose_apogee')) {
+    if (actorStages.length === 0 || actorStages.includes('expose_apogee')) {
       if (apogeeState) {
         const apogee_state = apogeeState.values;
         const apogee_total = apogee_state[5];
@@ -215,7 +223,7 @@ export default function ExposeView(): JSX.Element | null {
         )}
       </Grid>
     );
-  }, [apogeeState, bossState, stages]);
+  }, [actorStages, apogeeState, bossState, runningMacros]);
 
   return (
     <Paper variant='outlined'>
@@ -241,7 +249,6 @@ export default function ExposeView(): JSX.Element | null {
             spacing={2}
             flexWrap={'wrap'}
             justifyContent={'center'}
-            sx={{ pointerEvents: running ? 'none' : 'initial' }}
           >
             {(stages.length === 0 || stages.includes('expose_boss')) && (
               <ExposureTimeInput
@@ -306,13 +313,12 @@ export default function ExposeView(): JSX.Element | null {
             commandString={getCommandString()}
             abortCommand='hal expose --stop'
             size='medium'
-            onEvent={(event) => setRunning(event === 'running')}
           >
             Run
           </CommandButton>
         </Stack>
         <Stack alignItems='center' textAlign='center' spacing={4}>
-          {running ? progress : detail}
+          {runningMacros && runningMacros.values.includes('expose') ? progress : detail}
         </Stack>
         <Stack alignItems='center' direction='row' spacing={2} overflow='scroll'>
           <MacroStepper macroName='expose' />
