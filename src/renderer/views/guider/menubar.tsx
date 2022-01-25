@@ -69,6 +69,8 @@ const ExposureProgress = (props: LinearProgressProps) => {
   const keyword = useKeywords(['fliswarm.exposure_state']);
   const exposureState = keyword['fliswarm.exposure_state'];
 
+  const isGFA = exposureState && exposureState.values[0].startsWith('gfa');
+
   React.useEffect(() => {
     // If the exposure_state keyword is integrating and we are not already updating the ETR
     // (i.e., the intervalTimer variable is null), calculate initial ETR and start the timer.
@@ -106,7 +108,7 @@ const ExposureProgress = (props: LinearProgressProps) => {
     }
   }, [etr, intervalTimer]);
 
-  if (exposureState && exposureState.values[2] !== 'idle') {
+  if (isGFA && exposureState.values[2] !== 'idle') {
     return (
       <Stack direction='row' alignItems='center' spacing={1} width='100%' px={2}>
         <Stack flexGrow={1}>
@@ -116,7 +118,7 @@ const ExposureProgress = (props: LinearProgressProps) => {
             sx={(theme) => ({
               '.MuiLinearProgress-bar': {
                 backgroundColor:
-                  exposureState.values[2] === 'integrating'
+                  isGFA && exposureState.values[2] === 'integrating'
                     ? theme.palette.mode === 'light'
                       ? '#1a90ff'
                       : '#308fe8'
