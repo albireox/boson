@@ -8,13 +8,28 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { app, BrowserWindow, dialog, Menu, nativeTheme, Notification, screen } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  crashReporter,
+  dialog,
+  Menu,
+  nativeTheme,
+  Notification,
+  screen
+} from 'electron';
 import log from 'electron-log';
 import { autoUpdater, UpdateInfo } from 'electron-updater';
 import * as path from 'path';
 import loadEvents from './events';
 import menu from './menu';
 import store from './store';
+
+crashReporter.start({
+  ignoreSystemCrashHandler: true,
+  submitURL:
+    'https://o1126647.ingest.sentry.io/api/6167771/minidump/?sentry_key=87712a3208a3443890ea677fd296adf1'
+});
 
 log.transports.console.level = false;
 
