@@ -254,7 +254,6 @@ export const GuideStack = () => {
         alignItems='center'
         columnSpacing={smallWindow ? 1 : 0.75}
         rowSpacing={0}
-        pl={1}
         justifyContent={smallWindow ? 'center' : 'left'}
         sx={{
           '.MuiGrid-item': {
