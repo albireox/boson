@@ -201,7 +201,7 @@ export default function SnapshotsView() {
           </Stack>
           <Stack sx={{ flexGrow: 1, alignItems: 'center', alignSelf: 'center' }}>
             <Typography variant='h6' color={grey[800]} fontWeight={400} sx={{ top: '-35px' }}>
-              {snapshots[index] ? snapshots[index].split('/').reverse()[0] : ''}
+              {snapshots[index] ? snapshots[index].split('/').reverse()[0] : 'Snapshots'}
             </Typography>
           </Stack>
           <Stack direction='row' spacing={1} sx={{ alignSelf: 'right' }}>
@@ -245,20 +245,22 @@ export default function SnapshotsView() {
             />
           </Collapse>
         </Stack>
-        <Document
-          file={`${snapshots[index]}`}
-          renderMode='canvas'
-          onLoadProgress={updateButtons}
-          error=''
-          loading=''
-        >
-          <Page
-            pageNumber={1}
-            scale={scale}
-            width={win_size.width}
-            customTextRenderer={renderHighlight}
-          />
-        </Document>
+        {snapshots[index] && (
+          <Document
+            file={`${snapshots[index]}`}
+            renderMode='canvas'
+            onLoadProgress={updateButtons}
+            error=''
+            loading=''
+          >
+            <Page
+              pageNumber={1}
+              scale={scale}
+              width={win_size.width}
+              customTextRenderer={renderHighlight}
+            />
+          </Document>
+        )}
       </div>
     </ThemeProvider>
   );
