@@ -27,11 +27,6 @@ import React from 'react';
 import { Document, Page, TextLayerItemInternal } from 'react-pdf';
 import { useKeywords, useWindowSize } from 'renderer/hooks';
 
-let host: string = window.api.store.get_sync('user.connection.httpHost');
-let port: number = window.api.store.get_sync('user.connection.httpPort');
-
-if (~host.startsWith('http')) host = 'http://' + host;
-
 export default function SnapshotsView() {
   const keywords = useKeywords(['jaeger.configuration_snapshot', 'jaeger.snapshot'], 'snapshots');
 
@@ -92,7 +87,11 @@ export default function SnapshotsView() {
     for (const kk of ['jaeger.configuration_snapshot', 'jaeger.snapshot']) {
       if (!keywords[kk]) return;
 
-      const path = keywords[kk].values[0];
+      const host = window.api.store.get_sync('user.connection.httpHost');
+      const port = window.api.store.get_sync('user.connection.httpPort');
+
+      let path = `${host}:${port}/${keywords[kk].values[0]}`;
+      if (~path.startsWith('http')) path = 'http://' + path;
 
       setSnapshots((snaps) => {
         if (snaps.includes(path)) {
@@ -134,7 +133,7 @@ export default function SnapshotsView() {
   };
 
   const openInBrowser = () => {
-    window.api.openInBrowser(`${host}:${port}/${snapshots[index]}`);
+    window.api.openInBrowser(`${snapshots[index]}`);
   };
 
   const clearSearch = () => {
@@ -247,7 +246,7 @@ export default function SnapshotsView() {
           </Collapse>
         </Stack>
         <Document
-          file={`${host}:${port}/${snapshots[index]}`}
+          file={`${snapshots[index]}`}
           renderMode='canvas'
           onLoadProgress={updateButtons}
           error=''
