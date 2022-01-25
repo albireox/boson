@@ -77,7 +77,7 @@ const ExposureProgress = (props: LinearProgressProps) => {
 
     if (intervalTimer) return;
 
-    const resolution = 0.1; // Refresh the progress bar every 0.1s
+    const resolution = 0.25; // Refresh the progress bar every 0.25s
 
     if (
       exposureState &&
@@ -101,12 +101,12 @@ const ExposureProgress = (props: LinearProgressProps) => {
     // Every time the interval timer updates the ETR check if we are at zero. In that
     // case clear the interval.
 
-    if (intervalTimer && etr <= 0) {
+    if (intervalTimer && (etr <= 0 || (isGFA && exposureState.values[2] !== 'integrating'))) {
       clearInterval(intervalTimer);
       setIntervalTimer(null);
       setEtr(0);
     }
-  }, [etr, intervalTimer]);
+  }, [etr, intervalTimer, exposureState, isGFA]);
 
   if (isGFA && exposureState.values[2] !== 'idle') {
     return (
