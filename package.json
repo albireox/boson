@@ -59,7 +59,13 @@
     "generateUpdatesFilesForAllChannels": true,
     "mac": {
       "target": [
-        "default"
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
       ],
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
