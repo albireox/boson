@@ -101,8 +101,13 @@ export const JS9 = ({
   }, [keywords, display, currentImage, first, gid, updateURLs, zoomed]);
 
   React.useEffect(() => {
-    window.JS9.SetColormap(opts.colormap, { display: display });
-    window.JS9.SetScale(opts.scale, { display: display });
+    try {
+      window.JS9.SetColormap(opts.colormap, { display: display });
+      window.JS9.SetScale(opts.scale, { display: display });
+    } catch (err) {
+      console.log('Error in JS9', err);
+      return;
+    }
   }, [opts, display]);
 
   return (
