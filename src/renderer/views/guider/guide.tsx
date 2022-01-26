@@ -45,18 +45,18 @@ const GuiderStatusChip = () => {
     if (bits & GuiderStatus.FAILED) {
       setStatus('Error');
       setColor('error');
+    } else if (bits & GuiderStatus.STOPPING) {
+      setStatus('Stopping');
+      setColor('warning');
     } else if (bits & GuiderStatus.EXPOSING) {
       setStatus('Exposing');
-      setColor('success');
-    } else if (bits & GuiderStatus.PROCESSING) {
-      setStatus('Processing');
       setColor('success');
     } else if (bits & GuiderStatus.CORRECTING) {
       setStatus('Correcting');
       setColor('success');
-    } else if (bits & GuiderStatus.STOPPING) {
-      setStatus('Stopping');
-      setColor('warning');
+    } else if (bits & GuiderStatus.PROCESSING) {
+      setStatus('Processing');
+      setColor('success');
     } else if (bits & GuiderStatus.IDLE) {
       setStatus('Idle');
       setColor('default');
