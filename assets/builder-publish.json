@@ -12,7 +12,15 @@
     }
   ],
   "mac": {
-    "target": ["default"],
+    "target": [
+      {
+        "target": "dmg",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      }
+    ],
     "hardenedRuntime": true,
     "entitlements": "assets/entitlements.mac.plist",
     "entitlementsInherit": "assets/entitlements.mac.plist"
