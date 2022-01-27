@@ -159,7 +159,16 @@ export default function MacroStepper({ macroName, ...props }: MacroStepperProps)
   }, [stageStatusKw, macroName]);
 
   return (
-    <Box overflow='scroll' width='100%' pt={1}>
+    <Box
+      overflow='scroll'
+      width='100%'
+      pt={1}
+      css={{
+        '::-webkit-scrollbar': {
+          display: 'none'
+        }
+      }}
+    >
       <Stepper alternativeLabel {...props}>
         {stageState.map((step) => {
           if (!step.disabled) {

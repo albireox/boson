@@ -7,7 +7,7 @@
 
 /** @jsxImportSource @emotion/react */
 
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import * as React from 'react';
 import { GuideStack } from './guide';
 import { GuideTable } from './guideTable';
@@ -25,10 +25,20 @@ export const JS9Opts = {
 
 export default function GuiderView() {
   return (
-    <Stack alignContent='top' direction='column' px={2} py={0} spacing={1}>
-      <JS9Frame />
-      <GuideStack />
-      <GuideTable />
-    </Stack>
+    <Box
+      overflow='scroll'
+      width='100%'
+      css={{
+        '::-webkit-scrollbar': {
+          display: 'none'
+        }
+      }}
+    >
+      <Stack alignContent='top' direction='column' px={2} py={0} spacing={1}>
+        <JS9Frame />
+        <GuideStack />
+        <GuideTable />
+      </Stack>
+    </Box>
   );
 }
