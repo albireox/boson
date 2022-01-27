@@ -41,6 +41,9 @@
     "sprintf-js": "^1.1.2",
     "uuid": "^8.3.2"
   },
+  "workspaces": [
+    "docs"
+  ],
   "scripts": {
     "start": "concurrently \"yarn copy-deps\" \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://127.0.0.1:3000 && tsc -p src/main && electron .\"",
     "build": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder",
