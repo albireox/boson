@@ -22,6 +22,7 @@ import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
 import { MacroStageSelect } from 'renderer/components/macroStageSelect';
+import { getTAITime } from 'utils/time';
 import { ExposureTimeInput, HALContext } from '.';
 import macros from './macros.json';
 import MacroStepper from './macro_stepper';
@@ -41,7 +42,7 @@ function LinearProgressWithLabel(
 
   React.useEffect(() => {
     const interval = setInterval(
-      () => setEtrDisplay((etrDisplay) => (etrDisplay <= 0 ? 0 : etrDisplay - 1)),
+      () => setEtrDisplay((etrDisplay) => (etrDisplay - 1 <= 0 ? 0 : etrDisplay - 1)),
       1000
     );
     return () => {
@@ -49,10 +50,15 @@ function LinearProgressWithLabel(
     };
   }, []);
 
-  React.useEffect(() => setEtrDisplay(props.etr || 0), [props.etr]);
+  React.useEffect(() => {
+    setEtrDisplay(!props.etr || props.etr <= 0 ? 0 : props.etr);
+  }, [props.etr]);
 
   React.useEffect(() => {
-    setValue(((props.total - etrDisplay) / props.total) * 100);
+    let calculatedValue = ((props.total - etrDisplay) / props.total) * 100;
+    if (calculatedValue > 100) calculatedValue = 100;
+    if (calculatedValue < 0) calculatedValue = 0;
+    setValue(calculatedValue);
   }, [etrDisplay, props.total]);
 
   return (
@@ -87,7 +93,9 @@ export default function ExposeView(): JSX.Element | null {
   const [stages, setStages] = React.useState<string[]>([]);
   const [actorStages, setActorStages] = React.useState<string[]>([]);
 
-  const [progress, setProgress] = React.useState(<span />);
+  const [apogeeProgress, setApogeeProgress] = React.useState(<span />);
+  const [bossProgress, setBossProgress] = React.useState(<span />);
+
   const [detail, setDetail] = React.useState(<span />);
 
   const halKeywords = React.useContext(HALContext);
@@ -167,20 +175,19 @@ export default function ExposeView(): JSX.Element | null {
   }, [stagesKey]);
 
   React.useEffect(() => {
-    // Create and update progress bars. This only depend on actor keywords.
+    // Create and update the BOSS progress bar. This only depend on actor keywords.
 
-    if (!runningMacros) return;
-
-    let apogeeProgress: JSX.Element | undefined = undefined;
-    let bossProgress: JSX.Element | undefined = undefined;
+    let progress: JSX.Element | null = null;
 
     if (actorStages.length === 0 || actorStages.includes('expose_boss')) {
       if (bossState) {
         const boss_state = bossState.values;
         const boss_total = boss_state[3];
-        const boss_etr = boss_state[2];
+        const boss_timestamp = boss_state[4];
+        const boss_delta_t = getTAITime().getTime() / 1000 - boss_timestamp;
+        const boss_etr = boss_state[2] - boss_delta_t;
 
-        bossProgress = (
+        progress = (
           <LinearProgressWithLabel
             total={boss_total}
             etr={boss_etr}
@@ -191,13 +198,31 @@ export default function ExposeView(): JSX.Element | null {
       }
     }
 
+    setBossProgress(
+      progress ? (
+        <Grid item xs={actorStages.includes('expose_apogee') ? 6 : 12}>
+          {progress}
+        </Grid>
+      ) : (
+        <span />
+      )
+    );
+  }, [actorStages, bossState]);
+
+  React.useEffect(() => {
+    // Create and update the APOGEE progress bars. This only depend on actor keywords.
+
+    let progress: JSX.Element | null = null;
+
     if (actorStages.length === 0 || actorStages.includes('expose_apogee')) {
       if (apogeeState) {
         const apogee_state = apogeeState.values;
         const apogee_total = apogee_state[5];
-        const apogee_etr = apogee_state[4];
+        const apogee_timestamp = apogee_state[6];
+        const apogee_delta_t = getTAITime().getTime() / 1000 - apogee_timestamp;
+        const apogee_etr = apogee_state[4] - apogee_delta_t;
 
-        apogeeProgress = (
+        progress = (
           <LinearProgressWithLabel
             color='secondary'
             total={apogee_total}
@@ -209,21 +234,16 @@ export default function ExposeView(): JSX.Element | null {
       }
     }
 
-    setProgress(
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 2 }}>
-        {bossProgress && (
-          <Grid item xs={apogeeProgress && bossProgress ? 6 : 12}>
-            {bossProgress}
-          </Grid>
-        )}
-        {apogeeProgress && (
-          <Grid item xs={apogeeProgress && bossProgress ? 6 : 12}>
-            {apogeeProgress}
-          </Grid>
-        )}
-      </Grid>
+    setApogeeProgress(
+      progress ? (
+        <Grid item xs={actorStages.includes('expose_boss') ? 6 : 12}>
+          {progress}
+        </Grid>
+      ) : (
+        <span />
+      )
     );
-  }, [actorStages, apogeeState, bossState, runningMacros]);
+  }, [actorStages, apogeeState]);
 
   return (
     <Paper variant='outlined'>
@@ -318,7 +338,13 @@ export default function ExposeView(): JSX.Element | null {
           </CommandButton>
         </Stack>
         <Stack alignItems='center' textAlign='center' spacing={4}>
-          {runningMacros && runningMacros.values.includes('expose') ? progress : detail}
+          {runningMacros && runningMacros.values.includes('expose') ? (
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 2 }}>
+              {bossProgress} {apogeeProgress}
+            </Grid>
+          ) : (
+            detail
+          )}
         </Stack>
         <Stack alignItems='center' direction='row' spacing={2} overflow='scroll'>
           <MacroStepper macroName='expose' />
