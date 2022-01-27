@@ -9,7 +9,7 @@ const config = {
   title: 'Boson',
   tagline: 'Bosons are cool',
   url: 'https://albireox.github.io/',
-  baseUrl: '/',
+  baseUrl: '/boson/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
