@@ -38,7 +38,7 @@ const config = {
         title: 'Boson',
         logo: {
           alt: 'Boson Logo',
-          src: 'img/logo.svg'
+          src: 'img/icon.png'
         },
         items: [
           {
