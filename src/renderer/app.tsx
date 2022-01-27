@@ -71,6 +71,17 @@ export default function BosonApp() {
         },
         typography: {
           fontSize: 12
+        },
+        transitions: {
+          duration: {
+            shortest: 75,
+            shorter: 100,
+            short: 125,
+            standard: 150,
+            complex: 175,
+            enteringScreen: 125,
+            leavingScreen: 125
+          }
         }
       }),
     [prefersDarkMode]
