@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: [docs/**, .github/wokflows/**]
+    paths: [docs/**, .github/workflows/**]
 
 jobs:
   deploy:
