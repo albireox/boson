@@ -218,7 +218,7 @@ export default function SnapshotsView() {
           </IconButton>
           <Collapse in={showSearch} onEnter={() => inputRef.current && inputRef.current.focus()}>
             <OutlinedInput
-              color='secondary'
+              color='primary'
               size='small'
               value={searchText}
               onChange={(e) => {
