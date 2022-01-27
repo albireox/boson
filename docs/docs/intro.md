@@ -1,47 +1,24 @@
 ---
 sidebar_position: 1
+slug: /
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Boson is a new observer graphical interface for the 2.5-metre [Sloan](https://sdss5.org) telescope.
 
-## Getting Started
+The goal of Boson is to eventually replace the longstanding [STUI](https://github.com/ApachePointObservatory/stui) GUI with a new application that uses modern, standard technologies, and it's easier to maintain long-term.
 
-Get started by **creating a new site**.
+## Technologies
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+Under the hood, Boson uses the the following libraries and frameworks:
 
-### What you'll need
+- [Typescript](https://typescriptlang.org/) as the main programming language.
+- [Node.js](https://nodejs.org/en/) as the JavaScript runtime environment.
+- [Electron](https://electronjs.org) as a framework for creating native, cross-platform applications.
+- [React](https://reactjs.org) for building interfaces.
+- [MUI](https://mui.com) as a library of React components with a unified design.
 
-- [Node.js](https://nodejs.org/en/download/) version 14 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+## Support
 
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+Boson is developed and maintained in [GitHub](https://github.com/albireox/boson/). Issues can be reported [here](https://github.com/albireox/boson/issues).
