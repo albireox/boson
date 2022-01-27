@@ -21,8 +21,8 @@ const classes = {
     margin: 0,
     padding: 0,
     fontFamily: 'Source Code Pro',
-    fontWeight: 400,
-    whiteSpace: 'pre-wrap'
+    fontWeight: 400
+    // whiteSpace: 'pre-wrap'
   }
 } as const;
 
@@ -275,7 +275,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
 
   useListener((replies: Reply[]) => setBuffer((prev) => [...prev, ...replies]));
 
-  return <FollowScroll virtuoso ref={ref} messages={state.messages} />;
+  return <FollowScroll virtuoso ref={ref} messages={state.messages} wrap={config.wrap} />;
 };
 
 export default Messages;

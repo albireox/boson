@@ -28,6 +28,7 @@ export interface ConfigState {
   nMessages: number;
   seenActors: string[];
   selectedActors: string[];
+  wrap: boolean;
 }
 
 export interface SearchState {
@@ -41,7 +42,8 @@ const IConfigState = {
   levels: [ReplyCode.Info, ReplyCode.Warning, ReplyCode.Error, ReplyCode.Failed, ReplyCode.Done],
   nMessages: 0, // Not in use
   seenActors: [],
-  selectedActors: []
+  selectedActors: [],
+  wrap: false
 };
 
 const ISearchState = {

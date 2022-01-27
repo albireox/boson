@@ -189,10 +189,11 @@ export interface FollowScrollProps {
   messages: React.ReactNode[];
   virtuoso?: boolean;
   sticky?: boolean;
+  wrap?: boolean;
 }
 
 const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
-  ({ virtuoso, messages, sticky, ...props }, ref) => {
+  ({ virtuoso, messages, wrap, sticky, ...props }, ref) => {
     const [atBottom, setAtBottom] = React.useState(true);
 
     const [stick, setStick] = React.useState<boolean>(sticky || false);
@@ -217,7 +218,8 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
           height: '80%',
           width: '100vw',
           padding: '2px 8px 4px',
-          wordWrap: 'break-word'
+          whiteSpace: wrap ? undefined : 'nowrap'
+          // wordWrap: 'break-word'
         }}
         id='logBox'
       >

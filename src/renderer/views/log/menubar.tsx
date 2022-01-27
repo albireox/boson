@@ -18,6 +18,7 @@ import {
   ReportProblemOutlined,
   Search
 } from '@mui/icons-material';
+import WrapTextIcon from '@mui/icons-material/WrapText';
 import {
   Box,
   BoxProps,
@@ -101,6 +102,28 @@ const MessageLevelButtons: React.FC<MessageLevelButtonsProps> = ({ onConfigUpdat
     </ToggleButtonGroup>
   );
 };
+
+// Wrap text
+function WrapText(props: { onConfigUpdate: (newConfig: Partial<ConfigState>) => void }) {
+  const [selected, setSelected] = React.useState(false);
+
+  return (
+    <Tooltip title='Wrap text'>
+      <ToggleButton
+        size='small'
+        sx={{ ml: 1 }}
+        value='check'
+        selected={selected}
+        onChange={() => {
+          setSelected(!selected);
+          props.onConfigUpdate({ wrap: !selected });
+        }}
+      >
+        <WrapTextIcon />
+      </ToggleButton>
+    </Tooltip>
+  );
+}
 
 // Selected actors
 type SelectActorsProps = TextFieldProps & {
@@ -325,6 +348,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ onConfigUpdate, onSearchUpdate, ...pr
     <Box component='div' {...props}>
       <MessageLevelButtons value={null} onConfigUpdate={onConfigUpdate} />
       <SelectActors onConfigUpdate={onConfigUpdate} sx={classes.selectActors} />
+      <WrapText onConfigUpdate={onConfigUpdate} />
       {/* <SelectNumberMessages
         id='selectNumberMessages'
         onConfigUpdate={onConfigUpdate}
