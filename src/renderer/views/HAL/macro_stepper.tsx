@@ -63,6 +63,11 @@ function updateStageState(
 
       if (clonedState[i].name === name) {
         clonedState[i].disabled = false;
+        clonedState[i].failed = false;
+        clonedState[i].completed = false;
+        clonedState[i].active = false;
+        clonedState[i].cancelled = false;
+
         if (state === 'finished') {
           clonedState[i].completed = true;
         } else if (state === 'cancelled') {
@@ -75,11 +80,8 @@ function updateStageState(
           clonedState[i].failed = true;
         } else if (state === 'active') {
           clonedState[i].active = true;
-        } else if (state === 'waiting') {
-          clonedState[i].active = false;
-          clonedState[i].completed = false;
-          clonedState[i].failed = false;
         }
+
         matched = true;
         if (!presentIndices.includes(clonedState[i].index)) currentIndex++;
         clonedState[i].currentIndex = currentIndex;
