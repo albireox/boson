@@ -4629,7 +4629,7 @@ __metadata:
     "@types/uuid": ^8.3.4
     concurrently: ^7.0.0
     dotenv: ^14.3.2
-    electron: beta
+    electron: ^16.0.7
     electron-builder: ^22.14.13
     electron-devtools-installer: ^3.2.0
     electron-is-dev: ^2.0.0
@@ -6569,16 +6569,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:beta":
-  version: 17.0.0-beta.7
-  resolution: "electron@npm:17.0.0-beta.7"
+"electron@npm:^16.0.7":
+  version: 16.0.7
+  resolution: "electron@npm:16.0.7"
   dependencies:
     "@electron/get": ^1.13.0
     "@types/node": ^14.6.2
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 2baa97d6dc5b3af91c40efb40481a60b0d5f5ce21d6e5d5d2baac2160e4b6e408386ecff63b570c7d16e84d20a0c9c5b27e9ad3fcda0413cfd07dc2289a0637f
+  checksum: 9ca82da3739ad737b736c9f5ff9d0e4883f69cb55128d65c39b559ad26b95502d7fb54899e01d744ee4d1d8d1414fe0a77750ed30ed187e90737562b823e1ee1
   languageName: node
   linkType: hard
 
