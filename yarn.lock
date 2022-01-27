@@ -3398,6 +3398,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@docusaurus/types@npm:^2.0.0-beta.15":
+  version: 2.0.0-beta.15
+  resolution: "@docusaurus/types@npm:2.0.0-beta.15"
+  dependencies:
+    commander: ^5.1.0
+    joi: ^17.4.2
+    querystring: 0.2.1
+    utility-types: ^3.10.0
+    webpack: ^5.61.0
+    webpack-merge: ^5.8.0
+  checksum: f630b77d16ccf4b201ac473df8a65c79bbbd9735278ed85654e67d1c8810927df1034b6bfbcbc4bb153f4733329a782c2560e0032633c2bd2faa90f4c1ce0fe1
+  languageName: node
+  linkType: hard
+
 "@docusaurus/utils-common@npm:2.0.0-beta.15":
   version: 2.0.0-beta.15
   resolution: "@docusaurus/utils-common@npm:2.0.0-beta.15"
@@ -6897,6 +6911,7 @@ __metadata:
   dependencies:
     "@docusaurus/core": 2.0.0-beta.15
     "@docusaurus/preset-classic": 2.0.0-beta.15
+    "@docusaurus/types": ^2.0.0-beta.15
     "@mdx-js/react": ^1.6.21
     clsx: ^1.1.1
     prism-react-renderer: ^1.2.1
@@ -16241,6 +16256,13 @@ __metadata:
   version: 0.2.0
   resolution: "querystring@npm:0.2.0"
   checksum: 8258d6734f19be27e93f601758858c299bdebe71147909e367101ba459b95446fbe5b975bf9beb76390156a592b6f4ac3a68b6087cea165c259705b8b4e56a69
+  languageName: node
+  linkType: hard
+
+"querystring@npm:0.2.1":
+  version: 0.2.1
+  resolution: "querystring@npm:0.2.1"
+  checksum: 7b83b45d641e75fd39cd6625ddfd44e7618e741c61e95281b57bbae8fde0afcc12cf851924559e5cc1ef9baa3b1e06e22b164ea1397d65dd94b801f678d9c8ce
   languageName: node
   linkType: hard
 
