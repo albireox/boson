@@ -48,7 +48,9 @@ export default function SnapshotsView() {
       if (showSearch) {
         if (
           (searchText.length >= 4 && layer.str.includes(searchText)) ||
-          (searchText.length === 3 && layer.str.includes('P0' + searchText))
+          (searchText.length === 3 && layer.str.includes('P0' + searchText)) ||
+          (searchText.length === 2 && layer.str.includes('P00' + searchText)) ||
+          (searchText.length === 1 && layer.str.includes('P000' + searchText))
         ) {
           const size: number = 30 * layer.scale!;
           return (
