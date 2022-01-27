@@ -189,6 +189,8 @@ export function JS9Frame() {
 
   window.JS9.globalOpts['resize'] = false;
   window.JS9.globalOpts.alerts = false;
+  window.JS9.globalOpts.clearImageMemory = 'always';
+  window.JS9.DEBUG = 10;
 
   let default_size = Math.round((win_size.width || 800) / 3.2);
 
