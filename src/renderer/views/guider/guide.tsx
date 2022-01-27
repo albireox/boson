@@ -246,7 +246,7 @@ export const GuideStack = () => {
 
   return (
     // <Box sx={{ overflowX: 'scroll' }}>
-    <Stack direction='row' pt={1} pb={0} spacing={1} alignItems={'center'}>
+    <Stack direction='row' pt={0.5} pb={0.5} spacing={1} alignItems={'center'}>
       <AxesGroup />
 
       <Grid
