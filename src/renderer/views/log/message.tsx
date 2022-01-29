@@ -21,8 +21,9 @@ const classes = {
     margin: 0,
     padding: 0,
     fontFamily: 'Source Code Pro',
-    fontWeight: 400
-    // whiteSpace: 'pre-wrap'
+    fontWeight: 400,
+    paddingLeft: '2em',
+    textIndent: '-2em'
   }
 } as const;
 
