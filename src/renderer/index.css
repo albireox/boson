@@ -61,3 +61,17 @@ html, body, main#root {
   border: 2px solid white;
   background-color: rgba(0, 0, 0, .5);
 }
+
+/* source-code-pro-regular - latin */
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/source-code-pro-v18-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../fonts/source-code-pro-v18-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/source-code-pro-v18-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/source-code-pro-v18-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/source-code-pro-v18-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/source-code-pro-v18-latin-regular.svg#SourceCodePro') format('svg'); /* Legacy iOS */
+}
