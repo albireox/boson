@@ -24,7 +24,7 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import { round } from 'lodash';
+import { capitalize, round } from 'lodash';
 import React from 'react';
 import { BorderLinearProgress } from 'renderer/components/borderLinealProgress';
 import { useKeywords } from 'renderer/hooks';
@@ -146,22 +146,12 @@ export const MenuBar = ({
   ...props
 }: MenuBarProps & React.HTMLProps<HTMLDivElement>) => {
   const cmaps = ['Grey', 'Heat', 'Cool', 'Viridis', 'Magma', 'Red', 'Green', 'Blue'];
-
-  const scales = [
-    'linear',
-    'log',
-    'histeq',
-    'power',
-    'sqrt',
-    'squared',
-    'asinh',
-    'sinh',
-    'zscale',
-    'dataminmax'
-  ];
+  const scales = ['linear', 'log', 'histeq', 'power', 'sqrt', 'squared', 'asinh', 'sinh'];
+  const scalelims = ['zscale', 'dataminmax'];
 
   const [cmap, setCmap] = React.useState(JS9Opts.colormap);
   const [scale, setScale] = React.useState(JS9Opts.scale);
+  const [scaleLim, setScaleLim] = React.useState(JS9Opts.scalelim);
 
   const [errorMessage, setErrorMessage] = React.useState<string | undefined>(undefined);
 
@@ -217,6 +207,7 @@ export const MenuBar = ({
                 setCmap(event.target.value as string);
                 onUpdate({ colormap: event.target.value as string });
               }}
+              renderValue={(selected) => capitalize(selected.toString())}
             >
               {cmaps.map((_cmap) => {
                 return (
@@ -247,6 +238,23 @@ export const MenuBar = ({
                 return (
                   <MenuItem key={_scale} value={_scale.toLowerCase()}>
                     {_scale}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <FormControl size='small'>
+            <Select
+              value={scaleLim}
+              onChange={(event) => {
+                setScaleLim(event.target.value as string);
+                onUpdate({ scalelim: event.target.value as string });
+              }}
+            >
+              {scalelims.map((_scalelim) => {
+                return (
+                  <MenuItem key={_scalelim} value={_scalelim.toLowerCase()}>
+                    {_scalelim}
                   </MenuItem>
                 );
               })}

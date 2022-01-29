@@ -23,6 +23,7 @@ const Label = styled(Box)({ textAlign: 'right' });
 
 const cmaps = ['Grey', 'Heat', 'Cool', 'Viridis', 'Magma', 'Red', 'Green', 'Blue'];
 const scales = ['linear', 'log', 'histeq', 'power', 'sqrt', 'squared', 'asinh', 'sinh'];
+const scalelims = ['dataminmax', 'zscale'];
 
 export default function GuiderPreferences(): React.ReactElement {
   const handleChange = (event: any) => {
@@ -124,6 +125,30 @@ export default function GuiderPreferences(): React.ReactElement {
               return (
                 <MenuItem key={_scale} value={_scale.toLowerCase()}>
                   {_scale}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </Grid>
+
+      <Grid item xs={4}>
+        <Label>
+          <Typography>Scale clipping:</Typography>
+        </Label>
+      </Grid>
+      <Grid item xs={8}>
+        <FormControl size='small'>
+          <Select
+            defaultValue={window.api.store.get_sync('user.guider.scalelim')}
+            onChange={handleChange}
+            size='small'
+            name='scalelim'
+          >
+            {scalelims.map((_scalelim) => {
+              return (
+                <MenuItem key={_scalelim} value={_scalelim.toLowerCase()}>
+                  {_scalelim}
                 </MenuItem>
               );
             })}

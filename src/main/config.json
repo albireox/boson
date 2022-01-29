@@ -98,7 +98,8 @@
       "xpaset": "/usr/bin/xpaset",
       "fullImage": false,
       "colormap": "red",
-      "scale": "dataminmax"
+      "scale": "heat",
+      "scalelim": "zscale"
     },
     "windows": {},
     "defaultWindows": ["main"],

@@ -16,11 +16,13 @@ import { JS9Frame } from './js9';
 export interface IJS9Opts {
   colormap: string;
   scale: string;
+  scalelim: string;
 }
 
 export const JS9Opts = {
   colormap: window.api.store.get_sync('user.guider.colormap') || 'grey',
-  scale: window.api.store.get_sync('user.guider.scale') || 'log'
+  scale: window.api.store.get_sync('user.guider.scale') || 'log',
+  scalelim: window.api.store.get_sync('user.guider.scalelim') || 'zscale'
 };
 
 export default function GuiderView() {

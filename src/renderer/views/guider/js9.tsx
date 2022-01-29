@@ -62,13 +62,12 @@ export const JS9 = ({
     if (currentImage === values[2] || values[0] !== `gfa${gid}`) return;
     if (hostname === '' || port === '') return;
 
-    let load_opts = first
-      ? {
-          scale: JS9Opts.scale,
-          colormap: JS9Opts.colormap,
-          zoom: 'toFit'
-        }
-      : {};
+    let load_opts = {
+      scale: opts.scale,
+      colormap: opts.colormap,
+      scaleclipping: opts.scalelim,
+      zoom: 'toFit'
+    };
 
     const fullPath: string = values[2];
     const snapPath = fullPath.replace('.fits', '-snap.fits');
@@ -98,6 +97,7 @@ export const JS9 = ({
     try {
       window.JS9.SetColormap(opts.colormap, { display: display });
       window.JS9.SetScale(opts.scale, { display: display });
+      window.JS9.SetScale(opts.scalelim, { display: display });
     } catch (err) {
       console.log('Error in JS9', err);
       return;
