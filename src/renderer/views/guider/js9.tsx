@@ -41,7 +41,6 @@ export const JS9 = ({
   updateURLs
 }: JS9Props) => {
   const [currentImage, setCurrentImage] = React.useState<string>('');
-  const [first, setFirst] = React.useState(true);
 
   let display = `gfa${gid}`;
   const visible = zoomed === 0 || (zoomed && gid === zoomed);
@@ -83,10 +82,7 @@ export const JS9 = ({
     }
 
     try {
-      window.JS9.Load(url, load_opts, {
-        display: display
-      });
-      window.JS9.SetImageInherit(true, { display: display });
+      window.JS9.Load(url, load_opts, { display: display });
     } catch (err) {
       console.log('Error in JS9', err);
       return;
@@ -95,10 +91,8 @@ export const JS9 = ({
     setCurrentImage(fullPath);
     updateURLs(gid, `http://${hostname}:${port}${fullPath}`);
 
-    if (first) {
-      setFirst(false);
-    }
-  }, [keywords, display, currentImage, first, gid, updateURLs, zoomed]);
+    return () => window.JS9.CloseImage({ display: display });
+  }, [keywords, display, currentImage, gid, updateURLs, zoomed, opts]);
 
   React.useEffect(() => {
     try {
@@ -125,9 +119,10 @@ export const JS9 = ({
             (selected === gid && zoomed !== gid ? 'darkred' : theme.palette.background.default),
           'div.JS9Container > canvas.JS9Image': {
             backgroundColor: theme.palette.background.default,
-            backgroundImage: first
-              ? `url(${process.env.PUBLIC_URL + '/images/SDSS-V.png'})`
-              : 'none',
+            backgroundImage:
+              currentImage === ''
+                ? `url(${process.env.PUBLIC_URL + '/images/SDSS-V.png'})`
+                : 'none',
             backgroundSize: 'cover',
             backgroundBlendMode: 'hard-light',
             backgroundPosition: 'center',
@@ -186,11 +181,6 @@ export function JS9Frame() {
   const onOptsUpdate = (newOpts: Partial<IJS9Opts>) => {
     setOpts({ ...opts, ...newOpts });
   };
-
-  window.JS9.globalOpts['resize'] = false;
-  window.JS9.globalOpts.alerts = false;
-  window.JS9.globalOpts.clearImageMemory = 'always';
-  window.JS9.DEBUG = 10;
 
   let default_size = Math.round((win_size.width || 800) / 3.2);
 
