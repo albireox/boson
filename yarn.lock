@@ -3994,7 +3994,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdx-js/react@npm:1.6.22, @mdx-js/react@npm:^1.6.21":
+"@mdx-js/react@npm:1.6.22, @mdx-js/react@npm:^1.6.21, @mdx-js/react@npm:^1.6.22":
   version: 1.6.22
   resolution: "@mdx-js/react@npm:1.6.22"
   peerDependencies:
@@ -4243,21 +4243,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.2.3":
-  version: 5.2.3
-  resolution: "@mui/utils@npm:5.2.3"
-  dependencies:
-    "@babel/runtime": ^7.16.3
-    "@types/prop-types": ^15.7.4
-    "@types/react-is": ^16.7.1 || ^17.0.0
-    prop-types: ^15.7.2
-    react-is: ^17.0.2
-  peerDependencies:
-    react: ^17.0.2
-  checksum: 554a7e19fc0768222023463ccdf51bd2c59fb6f1325aa1df7132cea555c58b5cdffe74f221ecab6861dc7ab8aa0dd359e19e40070bb683a296d2433ca2969315
-  languageName: node
-  linkType: hard
-
 "@mui/utils@npm:^5.3.0":
   version: 5.3.0
   resolution: "@mui/utils@npm:5.3.0"
@@ -4273,12 +4258,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid-pro@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "@mui/x-data-grid-pro@npm:5.3.0"
+"@mui/x-data-grid-pro@npm:^5.4.0":
+  version: 5.4.0
+  resolution: "@mui/x-data-grid-pro@npm:5.4.0"
   dependencies:
-    "@mui/utils": ^5.2.3
-    "@mui/x-license-pro": 5.3.0
+    "@mui/utils": ^5.3.0
+    "@mui/x-license-pro": 5.4.0
     clsx: ^1.0.4
     prop-types: ^15.8.1
     reselect: ^4.1.5
@@ -4286,15 +4271,15 @@ __metadata:
     "@mui/material": ^5.2.8
     "@mui/system": ^5.2.8
     react: ^17.0.2
-  checksum: b0ba7f15408c704049c3514d7307ffe2cd8dec032926da1b8dc1f53bf1bcd2925dc8a86e00db5a078d73a4437b46cb331caf45ad4b03280e3ece3db51746f73f
+  checksum: d85675235e3d2af4e1e9be0b757ad1abc4cc3591b9d0c2863201ab32755ddec6e0ffc3662baac45277d0c1144654c5cb3e6f7c22bdb4311f6e66ad2957b3619d
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "@mui/x-data-grid@npm:5.3.0"
+"@mui/x-data-grid@npm:^5.4.0":
+  version: 5.4.0
+  resolution: "@mui/x-data-grid@npm:5.4.0"
   dependencies:
-    "@mui/utils": ^5.2.3
+    "@mui/utils": ^5.3.0
     clsx: ^1.1.1
     prop-types: ^15.8.1
     reselect: ^4.1.5
@@ -4302,22 +4287,22 @@ __metadata:
     "@mui/material": ^5.2.8
     "@mui/system": ^5.2.8
     react: ^17.0.2
-  checksum: b62b752930f429700feb23e56b58a75a5cfc4d4cdbc5d6fb5862735a44fb4bb4463b04e5a980b89c92cf59877d7ef3cba536e68a3992e0a3f410c2417472a826
+  checksum: 90f96dbe5446d12f72be42ceee668bb9378ddba5faa648fc5477b98651cd6832fd0716d739071e422bafb9c8fc1533ff825cc5b7f01084356792bb7aa9c6b4bb
   languageName: node
   linkType: hard
 
-"@mui/x-license-pro@npm:5.3.0":
-  version: 5.3.0
-  resolution: "@mui/x-license-pro@npm:5.3.0"
+"@mui/x-license-pro@npm:5.4.0":
+  version: 5.4.0
+  resolution: "@mui/x-license-pro@npm:5.4.0"
   dependencies:
-    "@mui/utils": ^5.2.3
+    "@mui/utils": ^5.3.0
     esm: ^3.2.25
     yargs: ^17.3.1
   peerDependencies:
     react: ^17.0.2
   bin:
     licensegen: bin/license-gen-script.js
-  checksum: 0a646666b6028880e0c1e6272329527bf8ff502a3b31c0868db89afebe827a460261296f304253a323a855a26a403378949fa877964579df9b048f7e3f9ec5bc
+  checksum: 736b3c41105861332eb60c59f0a64693e107fd47829b7f33da18f952aa00fb12845e1a83a88660e5c2493ef42666e09a3b27114600a2aefe055a3451aa264a16
   languageName: node
   linkType: hard
 
@@ -5240,7 +5225,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^17.0.12, @types/node@npm:^17.0.5":
+"@types/node@npm:^17.0.13":
+  version: 17.0.13
+  resolution: "@types/node@npm:17.0.13"
+  checksum: 8b87c850c1604c65e3474bd03d122914464b7970caed20f65f4a7706ab429353b896a3916be4d2581164eccda9e3dd95c338fbccf686ff85a824c40d15e8f3fa
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^17.0.5":
   version: 17.0.12
   resolution: "@types/node@npm:17.0.12"
   checksum: f7e4c384b72648550391c2c8bd42560dfccf5b7a0506fb5842f326f8b176286be279dd63f62af621fe6d409d474ea5d312855061f512132e999f4e902a22e4db
@@ -6912,11 +6904,11 @@ __metadata:
     "@docusaurus/core": 2.0.0-beta.15
     "@docusaurus/preset-classic": 2.0.0-beta.15
     "@docusaurus/types": ^2.0.0-beta.15
-    "@mdx-js/react": ^1.6.21
+    "@mdx-js/react": ^1.6.22
     clsx: ^1.1.1
     prism-react-renderer: ^1.2.1
-    react: ^17.0.1
-    react-dom: ^17.0.1
+    react: ^17.0.2
+    react-dom: ^17.0.2
   languageName: unknown
   linkType: soft
 
@@ -6934,12 +6926,12 @@ __metadata:
     "@mui/material": ^5.3.1
     "@mui/styles": ^5.3.0
     "@mui/system": ^5.3.0
-    "@mui/x-data-grid": ^5.3.0
-    "@mui/x-data-grid-pro": ^5.3.0
+    "@mui/x-data-grid": ^5.4.0
+    "@mui/x-data-grid-pro": ^5.4.0
     "@types/electron-devtools-installer": ^2.2.1
     "@types/jest": ^27.4.0
     "@types/lodash": ^4.14.178
-    "@types/node": ^17.0.12
+    "@types/node": ^17.0.13
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
     "@types/react-highlight-words": ^0.16.4
@@ -6949,7 +6941,7 @@ __metadata:
     "@types/uuid": ^8.3.4
     concurrently: ^7.0.0
     dotenv: ^14.3.2
-    electron: ^16.0.7
+    electron: ^16.0.8
     electron-builder: ^22.14.13
     electron-devtools-installer: ^3.2.0
     electron-is-dev: ^2.0.0
@@ -6968,9 +6960,9 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-highlight-words: ^0.17.0
-    react-pdf: ^5.6.0
+    react-pdf: ^5.7.0
     react-scripts: ^5.0.0
-    react-virtuoso: ^2.5.0
+    react-virtuoso: ^2.5.1
     rxjs: ^7.5.2
     source-map-explorer: ^2.5.2
     source-map-support: ^0.5.21
@@ -9267,16 +9259,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^16.0.7":
-  version: 16.0.7
-  resolution: "electron@npm:16.0.7"
+"electron@npm:^16.0.8":
+  version: 16.0.8
+  resolution: "electron@npm:16.0.8"
   dependencies:
     "@electron/get": ^1.13.0
     "@types/node": ^14.6.2
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 9ca82da3739ad737b736c9f5ff9d0e4883f69cb55128d65c39b559ad26b95502d7fb54899e01d744ee4d1d8d1414fe0a77750ed30ed187e90737562b823e1ee1
+  checksum: 9d3a2e1c3e6dcfdce25b4d9e1ef9dfe736354f9c3605945cfc5b1568862b69ad0a81e402cfaf09c2f51615b64bc3585ef4828a013437b9506cd0dbff3e6db903
   languageName: node
   linkType: hard
 
@@ -14701,16 +14693,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pdfjs-dist@npm:2.10.377":
-  version: 2.10.377
-  resolution: "pdfjs-dist@npm:2.10.377"
-  peerDependencies:
-    worker-loader: ^3.0.7
-  checksum: 5a4c14777676e15aeca9a627cc1f368821071ae040154983edf21f1040cb89acd9b0168b43b64ac10d66f86094dcb48b33513b9810b6d422446c599fb172d5a4
-  languageName: node
-  linkType: hard
-
-"pdfjs-dist@npm:^2.10.377":
+"pdfjs-dist@npm:2.12.313, pdfjs-dist@npm:^2.10.377":
   version: 2.12.313
   resolution: "pdfjs-dist@npm:2.12.313"
   peerDependencies:
@@ -16405,7 +16388,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^17.0.1, react-dom@npm:^17.0.2":
+"react-dom@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-dom@npm:17.0.2"
   dependencies:
@@ -16507,9 +16490,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-pdf@npm:^5.6.0":
-  version: 5.6.0
-  resolution: "react-pdf@npm:5.6.0"
+"react-pdf@npm:^5.7.0":
+  version: 5.7.0
+  resolution: "react-pdf@npm:5.7.0"
   dependencies:
     "@babel/runtime": ^7.0.0
     file-loader: ^6.0.0
@@ -16517,12 +16500,14 @@ __metadata:
     make-event-props: ^1.1.0
     merge-class-names: ^1.1.1
     merge-refs: ^1.0.0
-    pdfjs-dist: 2.10.377
+    pdfjs-dist: 2.12.313
     prop-types: ^15.6.2
+    tiny-invariant: ^1.0.0
+    tiny-warning: ^1.0.0
   peerDependencies:
-    react: ^16.3.0 || ^17.0.0-0
-    react-dom: ^16.3.0 || ^17.0.0-0
-  checksum: da3b1fe841d8a75df003cf0895aa10bae4a3b9fd0301dfe9fe027f6f70c5b7cf7d4ad5680effba2874d38db76d7f4822439a04bbbf0efa11ebf5a9e2f4f01cd4
+    react: ^16.3.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
+  checksum: 46ef2413b1a5d770655a2bfa0c8e9ed93397ff2ae6f680e1317cf153f9c4bda1df8c3078b9cfae7f4b84c3b014d1dc15e81d571a67fc4c7a909a45b6644e9009
   languageName: node
   linkType: hard
 
@@ -16686,19 +16671,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^2.5.0":
-  version: 2.5.0
-  resolution: "react-virtuoso@npm:2.5.0"
+"react-virtuoso@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "react-virtuoso@npm:2.5.1"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.12
     "@virtuoso.dev/urx": ^0.2.12
   peerDependencies:
     react: ">=16"
-  checksum: d4a6846ee844ba2ed8249e07f39429cf792a721da43124e8c76ec996ed13bbac0fe71486093b62ba5dbb5441c4d0570efca2d800da738eb7584e2da37e65c4a0
+  checksum: dccfc8e8542ceece6459e59088ead14d7a9e9040c94d8fe9398a5ddded17a088db32d1b140d21bf6b1afdc4f108c5282e5ff596f8759ae716eacd2d803ab897a
   languageName: node
   linkType: hard
 
-"react@npm:^17.0.1, react@npm:^17.0.2":
+"react@npm:^17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
@@ -18695,7 +18680,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tiny-invariant@npm:^1.0.2":
+"tiny-invariant@npm:^1.0.0, tiny-invariant@npm:^1.0.2":
   version: 1.2.0
   resolution: "tiny-invariant@npm:1.2.0"
   checksum: e09a718a7c4a499ba592cdac61f015d87427a0867ca07f50c11fd9b623f90cdba18937b515d4a5e4f43dac92370498d7bdaee0d0e7a377a61095e02c4a92eade
