@@ -12,8 +12,10 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 import SearchIcon from '@mui/icons-material/Search';
 import {
+  Box,
   Button,
   ButtonGroup,
+  Chip,
   Collapse,
   createTheme,
   IconButton,
@@ -28,7 +30,16 @@ import { Document, Page, TextLayerItemInternal } from 'react-pdf';
 import { useKeywords, useWindowSize } from 'renderer/hooks';
 
 export default function SnapshotsView() {
-  const keywords = useKeywords(['jaeger.configuration_snapshot', 'jaeger.snapshot'], 'snapshots');
+  const keywords = useKeywords(
+    [
+      'jaeger.configuration_snapshot',
+      'jaeger.snapshot',
+      'jaeger.folded',
+      'jaeger.locked',
+      'jaeger.locked_by'
+    ],
+    'snapshots'
+  );
 
   const [snapshots, setSnapshots] = React.useState<string[]>([]);
   const [index, setIndex] = React.useState<number>(1);
@@ -87,7 +98,7 @@ export default function SnapshotsView() {
 
   React.useEffect(() => {
     for (const kk of ['jaeger.configuration_snapshot', 'jaeger.snapshot']) {
-      if (!keywords[kk]) return;
+      if (!keywords[kk]) continue;
 
       const host = window.api.store.get_sync('user.connection.httpHost');
       const port = window.api.store.get_sync('user.connection.httpPort');
@@ -157,6 +168,28 @@ export default function SnapshotsView() {
     }
   };
 
+  const locked = keywords['jaeger.locked'];
+  const locked_by = keywords['jaeger.locked_by'];
+
+  React.useEffect(() => {
+    if (!locked || !locked_by) return;
+
+    if (locked_by) {
+      setShowSearch(true);
+      setSearchText(locked_by.values[0].toString());
+    }
+  }, [locked, locked_by]);
+
+  const FoldedChip = () => {
+    if (!keywords['jaeger.folded'] || keywords['jaeger.folded'].values[0] === 'F') return null;
+    return <Chip variant='filled' label='Folded' color='success' />;
+  };
+
+  const LockedChip = () => {
+    if (!locked || locked.values[0] === 'F') return null;
+    return <Chip variant='filled' label='Locked' color='error' />;
+  };
+
   return (
     <ThemeProvider theme={lightTheme}>
       <div
@@ -168,11 +201,23 @@ export default function SnapshotsView() {
           height: win_size.height
         }}
       >
+        <Box position='fixed' top='6px' zIndex={1000} width='100%'>
+          <Typography
+            variant='h6'
+            color={grey[800]}
+            fontWeight={400}
+            textAlign='center'
+            sx={{ userSelect: 'none' }}
+          >
+            {snapshots[index] ? snapshots[index].split('/').reverse()[0] : 'Snapshots'}
+          </Typography>
+        </Box>
         <Stack
           direction='row'
           spacing={1}
           sx={{ zIndex: 1, position: 'fixed', width: '100%' }}
-          padding={1}
+          px={1}
+          pt={1.5}
         >
           <Stack direction='row' spacing={1} sx={{ alignSelf: 'left' }}>
             <ButtonGroup variant='contained' size='small'>
@@ -201,12 +246,10 @@ export default function SnapshotsView() {
               Open in browser
             </Button>
           </Stack>
-          <Stack sx={{ flexGrow: 1, alignItems: 'center', alignSelf: 'center' }}>
-            <Typography variant='h6' color={grey[800]} fontWeight={400} sx={{ top: '-35px' }}>
-              {snapshots[index] ? snapshots[index].split('/').reverse()[0] : 'Snapshots'}
-            </Typography>
-          </Stack>
+          <div style={{ flexGrow: 1 }} />
           <Stack direction='row' spacing={1} sx={{ alignSelf: 'right' }}>
+            <LockedChip />
+            <FoldedChip />
             <Button variant='contained' size='small' onClick={() => setScale(1)}>
               Fit
             </Button>
@@ -214,38 +257,38 @@ export default function SnapshotsView() {
               <Button onClick={decreaseScale}>-</Button>
               <Button onClick={increaseScale}>+</Button>
             </ButtonGroup>
+            <IconButton size='small' onClick={() => setShowSearch((s) => !s)}>
+              <SearchIcon sx={{ color: blue[700] }} fontSize='medium' />
+            </IconButton>
+            <Collapse in={showSearch} onEnter={() => inputRef.current && inputRef.current.focus()}>
+              <OutlinedInput
+                color='primary'
+                size='small'
+                value={searchText}
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                }}
+                onKeyDown={(e) => e.key === 'Escape' && clearSearch()}
+                sx={{
+                  backgroundColor: 'white',
+                  boxShadow: '2px 2px 4px black',
+                  width: '100px',
+                  position: 'absolute',
+                  top: '45px',
+                  right: '15px',
+                  pr: 1
+                }}
+                inputRef={inputRef}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton size='small' onClick={clearSearch}>
+                      <CloseIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </Collapse>
           </Stack>
-          <IconButton size='small' onClick={() => setShowSearch((s) => !s)}>
-            <SearchIcon sx={{ color: blue[700] }} fontSize='medium' />
-          </IconButton>
-          <Collapse in={showSearch} onEnter={() => inputRef.current && inputRef.current.focus()}>
-            <OutlinedInput
-              color='primary'
-              size='small'
-              value={searchText}
-              onChange={(e) => {
-                setSearchText(e.target.value);
-              }}
-              onKeyDown={(e) => e.key === 'Escape' && clearSearch()}
-              sx={{
-                backgroundColor: 'white',
-                boxShadow: '2px 2px 4px black',
-                width: '100px',
-                position: 'absolute',
-                top: '45px',
-                right: '15px',
-                pr: 1
-              }}
-              inputRef={inputRef}
-              endAdornment={
-                <InputAdornment position='end'>
-                  <IconButton size='small' onClick={clearSearch}>
-                    <CloseIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </Collapse>
         </Stack>
         {snapshots[index] && (
           <Document
