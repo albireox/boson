@@ -218,8 +218,8 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
           height: '80%',
           width: '100vw',
           padding: '2px 8px 4px',
-          whiteSpace: wrap ? undefined : 'nowrap'
-          // wordWrap: 'break-word'
+          whiteSpace: wrap ? 'normal' : 'nowrap',
+          wordWrap: 'break-word'
         }}
         id='logBox'
       >
