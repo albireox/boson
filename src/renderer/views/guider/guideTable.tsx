@@ -154,7 +154,8 @@ export const GuideTable = () => {
     {
       field: 'offset',
       headerName: 'Offset',
-      description: 'Manual offset to send to the axis, in arcsec except for focus which are mm',
+      description:
+        'Manual offset to send to the axis, in arcsec except for focus which are \u00b5m',
       headerAlign: 'right',
       sortable: false,
       flex: 0.3,
