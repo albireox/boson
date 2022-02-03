@@ -198,7 +198,7 @@ function DesignInput() {
         ) : (
           <Tooltip title='Load from queue'>
             <IconButton size='medium' onClick={loadFromQueue}>
-              <UpdateIcon fontSize='large' />
+              <UpdateIcon fontSize='large' color='primary' />
             </IconButton>
           </Tooltip>
         )}
