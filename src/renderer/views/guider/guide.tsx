@@ -150,7 +150,7 @@ const AstrometryFitChips = () => {
   const [rms, setRms] = React.useState('');
   const [rmsColor, setRmsColor] = React.useState<any>('default');
 
-  const [acquired, setAcquired] = React.useState<boolean | undefined>(true);
+  const [solved, setSolved] = React.useState<boolean | undefined>(true);
 
   React.useEffect(() => {
     const astrometry_fit = keywords['cherno.astrometry_fit'];
@@ -193,7 +193,7 @@ const AstrometryFitChips = () => {
     if (keywords['cherno.acquisition_valid']) {
       const did_acquire = keywords['cherno.acquisition_valid'].values[0] === 'T';
 
-      setAcquired(did_acquire);
+      setSolved(did_acquire);
 
       // If it didn't acquire there's no guarantee the RMS and FWHM are recent. We mark
       // them with the default colour.
@@ -223,8 +223,8 @@ const AstrometryFitChips = () => {
       <Tooltip title='Was the last guide iteration successful?'>
         <Chip
           variant='outlined'
-          label={acquired === true ? 'Acquired' : 'Acquisition failed'}
-          color={acquired === true ? 'success' : 'error'}
+          label={solved === true ? 'Solved' : 'Not solved'}
+          color={solved === true ? 'success' : 'error'}
         />
       </Tooltip>
     </Grid>
@@ -232,7 +232,7 @@ const AstrometryFitChips = () => {
 
   return (
     <>
-      {acquired !== undefined ? AcquisitionElement : null}
+      {solved !== undefined ? AcquisitionElement : null}
       {rms !== '' ? RMSElement : null}
       {fwhm !== '' ? FWHMElement : null}
     </>

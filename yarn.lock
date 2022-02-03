@@ -3709,10 +3709,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify/icons-mdi@npm:^1.1.44":
-  version: 1.1.44
-  resolution: "@iconify/icons-mdi@npm:1.1.44"
-  checksum: b8337a76e584dd4648a78c573381b7b52a07f1d8b5e1c2ba57437dfcf09eb4e6ba4dcab7e394a9e9268fcc158648b3a7baf578b5073a0da54f97eb55c5062bdc
+"@iconify/icons-mdi@npm:^1.1.46":
+  version: 1.1.46
+  resolution: "@iconify/icons-mdi@npm:1.1.46"
+  checksum: ae41ff5ab2aacb30c926562ef57aaa853beca81f52b84dff97470b3ae0b547ba100f3a99803760ecbf7199eda68604aa8c176480dee42c46ae5c222213bd2dde
   languageName: node
   linkType: hard
 
@@ -4023,9 +4023,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/base@npm:5.0.0-alpha.66":
-  version: 5.0.0-alpha.66
-  resolution: "@mui/base@npm:5.0.0-alpha.66"
+"@mui/base@npm:5.0.0-alpha.67":
+  version: 5.0.0-alpha.67
+  resolution: "@mui/base@npm:5.0.0-alpha.67"
   dependencies:
     "@babel/runtime": ^7.16.7
     "@emotion/is-prop-valid": ^1.1.1
@@ -4041,7 +4041,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: e035bda9215fb2e13500c4e49c094cc197b374c7d7a7e57d0ca6c7c99e83d5ffbb5183fe3f29b7fa63e59d856c887550d4fd47af6bdece9df36332dc133c7e79
+  checksum: c6d1336c7f54309543132f2d74dfb478a2cca0de08e79c5fcea46f5ceb2ccb243ed567980569982f027f8cf58b26a53ec8436420750be3c097ee7056484dc6e0
   languageName: node
   linkType: hard
 
@@ -4061,17 +4061,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/lab@npm:^5.0.0-alpha.66":
-  version: 5.0.0-alpha.66
-  resolution: "@mui/lab@npm:5.0.0-alpha.66"
+"@mui/lab@npm:^5.0.0-alpha.67":
+  version: 5.0.0-alpha.67
+  resolution: "@mui/lab@npm:5.0.0-alpha.67"
   dependencies:
     "@babel/runtime": ^7.16.7
     "@date-io/date-fns": ^2.11.0
     "@date-io/dayjs": ^2.11.0
     "@date-io/luxon": ^2.11.1
     "@date-io/moment": ^2.11.0
-    "@mui/base": 5.0.0-alpha.66
-    "@mui/system": ^5.3.0
+    "@mui/base": 5.0.0-alpha.67
+    "@mui/system": ^5.4.0
     "@mui/utils": ^5.3.0
     clsx: ^1.1.1
     prop-types: ^15.7.2
@@ -4098,17 +4098,17 @@ __metadata:
       optional: true
     moment:
       optional: true
-  checksum: ac9c2fe43c7291c61bd82921f2d610096a6c278c311a86092161db5898707e5e704ff80485f2781a0fd960652811b1ae48c06838a7c716f3ef54b5e93626490c
+  checksum: e2d435160d518a16caa90e826a645c16bf62fcc5fdf0a2b99fce753cd5a16b1d08812d3f0659d27e7d16462a5de120555d499e8dbfb78d0c415df92c63df0744
   languageName: node
   linkType: hard
 
-"@mui/material@npm:^5.3.1":
-  version: 5.3.1
-  resolution: "@mui/material@npm:5.3.1"
+"@mui/material@npm:^5.4.0":
+  version: 5.4.0
+  resolution: "@mui/material@npm:5.4.0"
   dependencies:
     "@babel/runtime": ^7.16.7
-    "@mui/base": 5.0.0-alpha.66
-    "@mui/system": ^5.3.0
+    "@mui/base": 5.0.0-alpha.67
+    "@mui/system": ^5.4.0
     "@mui/types": ^7.1.0
     "@mui/utils": ^5.3.0
     "@types/react-transition-group": ^4.4.4
@@ -4131,7 +4131,7 @@ __metadata:
       optional: true
     "@types/react":
       optional: true
-  checksum: 2e98ae48a33b73198334395b590fed247767ed55db1c975d86be4593decb37c27b6865c86e7b1ffefc8973b7c800d822b9468c1ca31f40806594c9ea3db3032a
+  checksum: 29b92b98d5b8029a31132ceaa174e551b3b0b7430b8c4d021ca61e3e3e750e0e31ff8e6a2515266de4da40aa0c5392309edbbb3dc658a9958c186d150f89f839
   languageName: node
   linkType: hard
 
@@ -4203,9 +4203,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/system@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "@mui/system@npm:5.3.0"
+"@mui/system@npm:^5.4.0":
+  version: 5.4.0
+  resolution: "@mui/system@npm:5.4.0"
   dependencies:
     "@babel/runtime": ^7.16.7
     "@mui/private-theming": ^5.3.0
@@ -4227,7 +4227,7 @@ __metadata:
       optional: true
     "@types/react":
       optional: true
-  checksum: 97d23976eb9f4275fbc331e5ebc3f2276a8092bbf46b272029fc2ab7b15e2a1f814f5f16aaf34ec696517fb67a8a560f310b748b6731351fa52da5c54690f35c
+  checksum: 59f9798a13fe41c40abfd951407c014c6d511a33992bdacdb6cf0287ea38c8df6503ed070ae0a917a4d126d639362163cd3a2f36e9569c5779a6470ed1be1a4c
   languageName: node
   linkType: hard
 
@@ -5225,10 +5225,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^17.0.13":
-  version: 17.0.13
-  resolution: "@types/node@npm:17.0.13"
-  checksum: 8b87c850c1604c65e3474bd03d122914464b7970caed20f65f4a7706ab429353b896a3916be4d2581164eccda9e3dd95c338fbccf686ff85a824c40d15e8f3fa
+"@types/node@npm:^17.0.14":
+  version: 17.0.14
+  resolution: "@types/node@npm:17.0.14"
+  checksum: cc059ce29686bad5890685f45741826a1a7d1d27382464f6d5fa00b72ba239f6f5b8245a7fa5a56c23ce928030dc76b165a4ab0b86dc078f05b44597d8fe1a46
   languageName: node
   linkType: hard
 
@@ -6919,19 +6919,19 @@ __metadata:
     "@emotion/react": ^11.7.1
     "@emotion/styled": ^11.6.0
     "@iconify-icons/file-icons": ^1.1.8
-    "@iconify/icons-mdi": ^1.1.44
+    "@iconify/icons-mdi": ^1.1.46
     "@iconify/react": ^3.1.3
     "@mui/icons-material": ^5.3.1
-    "@mui/lab": ^5.0.0-alpha.66
-    "@mui/material": ^5.3.1
+    "@mui/lab": ^5.0.0-alpha.67
+    "@mui/material": ^5.4.0
     "@mui/styles": ^5.3.0
-    "@mui/system": ^5.3.0
+    "@mui/system": ^5.4.0
     "@mui/x-data-grid": ^5.4.0
     "@mui/x-data-grid-pro": ^5.4.0
     "@types/electron-devtools-installer": ^2.2.1
     "@types/jest": ^27.4.0
     "@types/lodash": ^4.14.178
-    "@types/node": ^17.0.13
+    "@types/node": ^17.0.14
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
     "@types/react-highlight-words": ^0.16.4
@@ -6940,8 +6940,8 @@ __metadata:
     "@types/sprintf-js": ^1.1.2
     "@types/uuid": ^8.3.4
     concurrently: ^7.0.0
-    dotenv: ^14.3.2
-    electron: ^16.0.8
+    dotenv: ^16.0.0
+    electron: ^17.0.0
     electron-builder: ^22.14.13
     electron-devtools-installer: ^3.2.0
     electron-is-dev: ^2.0.0
@@ -6954,7 +6954,7 @@ __metadata:
     highcharts: ^9.3.2
     highcharts-react-official: ^3.1.0
     js9: ^3.6.2
-    keytar: ^7.7.0
+    keytar: ^7.8.0
     lodash: ^4.17.21
     prettier: ^2.5.1
     react: ^17.0.2
@@ -6962,7 +6962,7 @@ __metadata:
     react-highlight-words: ^0.17.0
     react-pdf: ^5.7.0
     react-scripts: ^5.0.0
-    react-virtuoso: ^2.5.1
+    react-virtuoso: ^2.5.2
     rxjs: ^7.5.2
     source-map-explorer: ^2.5.2
     source-map-support: ^0.5.21
@@ -8587,12 +8587,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"decompress-response@npm:^4.2.0":
-  version: 4.2.1
-  resolution: "decompress-response@npm:4.2.1"
+"decompress-response@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "decompress-response@npm:6.0.0"
   dependencies:
-    mimic-response: ^2.0.0
-  checksum: 4e783ca4dfe9417354d61349750fe05236f565a4415a6ca20983a311be2371debaedd9104c0b0e7b36e5f167aeaae04f84f1a0b3f8be4162f1d7d15598b8fdba
+    mimic-response: ^3.1.0
+  checksum: d377cf47e02d805e283866c3f50d3d21578b779731e8c5072d6ce8c13cc31493db1c2f6784da9d1d5250822120cefa44f1deab112d5981015f2e17444b763812
   languageName: node
   linkType: hard
 
@@ -8730,12 +8730,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detect-libc@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "detect-libc@npm:1.0.3"
-  bin:
-    detect-libc: ./bin/detect-libc.js
-  checksum: daaaed925ffa7889bd91d56e9624e6c8033911bb60f3a50a74a87500680652969dbaab9526d1e200a4c94acf80fc862a22131841145a0a8482d60a99c24f4a3e
+"detect-libc@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "detect-libc@npm:2.0.0"
+  checksum: cb96738a4a6fd2cc7b2e2c86624d0fc4a1f6e2b9502175b8d04e71a1075d65bcf9c3489b2f9a459e4caccc46fefa96a3c8f3182ddc876d850f639c956f7c5610
   languageName: node
   linkType: hard
 
@@ -9080,10 +9078,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^14.3.2":
-  version: 14.3.2
-  resolution: "dotenv@npm:14.3.2"
-  checksum: 86c06758915d6facc35275f4a7fafc16705b6f3b44befaa8abca91367991efc8ff8db5437d3cc14778231d19fb97610fe82d60f8a53ba723cdb69fe4171439aa
+"dotenv@npm:^16.0.0":
+  version: 16.0.0
+  resolution: "dotenv@npm:16.0.0"
+  checksum: 664cebb51f0a9a1d1b930f51f0271e72e26d62feaecc9dc03df39453dd494b4e724809ca480fb3ec3213382b1ed3f791aaeb83569a137f9329ce58efd4853dbf
   languageName: node
   linkType: hard
 
@@ -9259,16 +9257,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^16.0.8":
-  version: 16.0.8
-  resolution: "electron@npm:16.0.8"
+"electron@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "electron@npm:17.0.0"
   dependencies:
     "@electron/get": ^1.13.0
     "@types/node": ^14.6.2
     extract-zip: ^1.0.3
   bin:
     electron: cli.js
-  checksum: 9d3a2e1c3e6dcfdce25b4d9e1ef9dfe736354f9c3605945cfc5b1568862b69ad0a81e402cfaf09c2f51615b64bc3585ef4828a013437b9506cd0dbff3e6db903
+  checksum: c945a1a5475ba66ca70637b150b3f10ea9d28b1f2167a9d8d2137e087785f647e1153f4335f898238470392ed689e3d207b2b96928025c5dd092d6f601e21414
   languageName: node
   linkType: hard
 
@@ -13037,14 +13035,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keytar@npm:^7.7.0":
-  version: 7.7.0
-  resolution: "keytar@npm:7.7.0"
+"keytar@npm:^7.8.0":
+  version: 7.8.0
+  resolution: "keytar@npm:7.8.0"
   dependencies:
-    node-addon-api: ^3.0.0
+    node-addon-api: ^4.3.0
     node-gyp: latest
-    prebuild-install: ^6.0.0
-  checksum: ea180b713a15e7baa52323d38940255d2df809ed5c2f91d132bf1c44c93515ad28e41119a4589786c28b1c2728010e2b259b8083c032484df1ced61655ea3d6e
+    prebuild-install: ^7.0.1
+  checksum: 4a81f4394aea3c76fe1c4103a3cb8e447302e89306a281dcac257d9435d43b5e2eb541997e18e1f094e6136fef44951d43dedc593a6aa190982845b382a7d4cc
   languageName: node
   linkType: hard
 
@@ -13713,10 +13711,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mimic-response@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "mimic-response@npm:2.1.0"
-  checksum: 014fad6ab936657e5f2f48bd87af62a8e928ebe84472aaf9e14fec4fcb31257a5edff77324d8ac13ddc6685ba5135cf16e381efac324e5f174fb4ddbf902bf07
+"mimic-response@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "mimic-response@npm:3.1.0"
+  checksum: 25739fee32c17f433626bf19f016df9036b75b3d84a3046c7d156e72ec963dd29d7fc8a302f55a3d6c5a4ff24259676b15d915aad6480815a969ff2ec0836867
   languageName: node
   linkType: hard
 
@@ -13971,12 +13969,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-abi@npm:^2.21.0":
-  version: 2.30.1
-  resolution: "node-abi@npm:2.30.1"
+"node-abi@npm:^3.3.0":
+  version: 3.8.0
+  resolution: "node-abi@npm:3.8.0"
   dependencies:
-    semver: ^5.4.1
-  checksum: 3f4b0c912ce4befcd7ceab4493ba90b51d60dfcc90f567c93f731d897ef8691add601cb64c181683b800f21d479d68f9a6e15d8ab8acd16a5706333b9e30a881
+    semver: ^7.3.5
+  checksum: 3644dd51f4f189358ef56055407501aa698632d67448585b38c46c81a482a0c3bfb06da513ac4060a12ce5f607f208ba9d9c8280f1c38329670b709bd735fcae
   languageName: node
   linkType: hard
 
@@ -13989,12 +13987,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-addon-api@npm:^3.0.0":
-  version: 3.2.1
-  resolution: "node-addon-api@npm:3.2.1"
+"node-addon-api@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "node-addon-api@npm:4.3.0"
   dependencies:
     node-gyp: latest
-  checksum: 2369986bb0881ccd9ef6bacdf39550e07e089a9c8ede1cbc5fc7712d8e2faa4d50da0e487e333d4125f8c7a616c730131d1091676c9d499af1d74560756b4a18
+  checksum: 3de396e23cc209f539c704583e8e99c148850226f6e389a641b92e8967953713228109f919765abc1f4355e801e8f41842f96210b8d61c7dcc10a477002dcf00
   languageName: node
   linkType: hard
 
@@ -15948,26 +15946,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prebuild-install@npm:^6.0.0":
-  version: 6.1.4
-  resolution: "prebuild-install@npm:6.1.4"
+"prebuild-install@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "prebuild-install@npm:7.0.1"
   dependencies:
-    detect-libc: ^1.0.3
+    detect-libc: ^2.0.0
     expand-template: ^2.0.3
     github-from-package: 0.0.0
     minimist: ^1.2.3
     mkdirp-classic: ^0.5.3
     napi-build-utils: ^1.0.1
-    node-abi: ^2.21.0
+    node-abi: ^3.3.0
     npmlog: ^4.0.1
     pump: ^3.0.0
     rc: ^1.2.7
-    simple-get: ^3.0.3
+    simple-get: ^4.0.0
     tar-fs: ^2.0.0
     tunnel-agent: ^0.6.0
   bin:
     prebuild-install: bin.js
-  checksum: de4313eda821305912af922700a2db04bb8e77fe8aa9c2788550f1000c026cbefc82da468ec0c0a37764c5417bd8169dbd540928535fb38d00bb9bbd673dd217
+  checksum: 117c8966f221242633bbf245755fb469dabc7085909f5e3db83359d6281a88dedbdada7e839315805a192c74b7cce3ed1a86c1382a8d950c1ea60a9d5d8e7bf0
   languageName: node
   linkType: hard
 
@@ -16671,15 +16669,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "react-virtuoso@npm:2.5.1"
+"react-virtuoso@npm:^2.5.2":
+  version: 2.5.2
+  resolution: "react-virtuoso@npm:2.5.2"
   dependencies:
     "@virtuoso.dev/react-urx": ^0.2.12
     "@virtuoso.dev/urx": ^0.2.12
   peerDependencies:
     react: ">=16"
-  checksum: dccfc8e8542ceece6459e59088ead14d7a9e9040c94d8fe9398a5ddded17a088db32d1b140d21bf6b1afdc4f108c5282e5ff596f8759ae716eacd2d803ab897a
+  checksum: 597ad3f90fec488127df0d0995b38c5447e80ae1113f30f98144a1190a8d5fe95836d88726be5bcbdd83442e21ac80b34f4f8fed9011dca1d36f7eec50603e88
   languageName: node
   linkType: hard
 
@@ -17731,14 +17729,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-get@npm:^3.0.3":
-  version: 3.1.0
-  resolution: "simple-get@npm:3.1.0"
+"simple-get@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "simple-get@npm:4.0.1"
   dependencies:
-    decompress-response: ^4.2.0
+    decompress-response: ^6.0.0
     once: ^1.3.1
     simple-concat: ^1.0.0
-  checksum: cca91a9ab2b532fa8d367757c196b54e2dfe3325aab0298d66a3e2a45a29a9d335d1a3fb41f036dad14000f78baddd4170fbf9621d72869791d2912baf9469aa
+  checksum: e4132fd27cf7af230d853fa45c1b8ce900cb430dd0a3c6d3829649fe4f2b26574c803698076c4006450efb0fad2ba8c5455fbb5755d4b0a5ec42d4f12b31d27e
   languageName: node
   linkType: hard
 
