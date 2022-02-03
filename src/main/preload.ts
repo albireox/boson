@@ -8,12 +8,12 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { contextBridge, ipcRenderer, IpcRenderer } from 'electron';
+import { contextBridge, dialog, ipcRenderer, IpcRenderer } from 'electron';
 import log from 'electron-log';
 import { TronEventReplyIFace } from './events';
 import store from './store';
 
-// TODO: According to https://bit.ly/38aeKXB, we should to expose the ipcRenderer
+// TODO: According to https://bit.ly/38aeKXB, we should not expose the ipcRenderer
 // directly. Instead, we should expose the channels from events.ts here.
 
 export interface IElectronAPI {
@@ -32,6 +32,10 @@ export interface IElectronAPI {
   };
   openInBrowser(path: string): void;
   openInApplication(command: string): Promise<string>;
+  dialog: {
+    showMessageBox: typeof dialog.showMessageBox;
+    showErrorBox(title: string, content: string): Promise<void>;
+  };
 }
 
 const API: IElectronAPI = {
@@ -70,6 +74,10 @@ const API: IElectronAPI = {
     }
 
     return stdout;
+  },
+  dialog: {
+    showMessageBox: async (options) => ipcRenderer.invoke('show-message-box', options),
+    showErrorBox: async (title, content) => ipcRenderer.invoke('show-error-box', title, content)
   }
 };
 

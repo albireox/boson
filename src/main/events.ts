@@ -8,7 +8,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { ipcMain, Menu, nativeTheme } from 'electron';
+import { dialog, ipcMain, Menu, MessageBoxOptions, nativeTheme } from 'electron';
 import * as keytar from 'keytar';
 import { createWindow, windows } from './main';
 import store from './store';
@@ -41,6 +41,16 @@ export default function loadEvents() {
     let win = windows.get(name)!;
     return win.getSize();
   });
+
+  ipcMain.handle(
+    'show-message-box',
+    async (event, options: MessageBoxOptions) => await dialog.showMessageBox(options)
+  );
+
+  ipcMain.handle(
+    'show-error-box',
+    async (event, title: string, content: string) => await dialog.showErrorBox(title, content)
+  );
 
   ipcMain.handle('window-set-size', async (event, name, width, height, animate = false) => {
     let win = windows.get(name);
