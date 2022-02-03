@@ -53,7 +53,7 @@ type CommandButtonProps = ButtonProps & {
   commandString: string;
   abortCommand?: string;
   onEvent?: (event: string) => void;
-  beforeCallback?: () => boolean | Promise<boolean>;
+  beforeCallback?: () => boolean | Promise<boolean | null>;
   tooltip?: string;
 };
 
@@ -106,8 +106,11 @@ export function CommandButton({
 
       if (beforeCallback) {
         const result = await beforeCallback();
-        if (!result) {
+        if (result === false) {
           changeButtonState('error');
+          return;
+        } else if (result === null) {
+          changeButtonState('idle');
           return;
         }
       }
