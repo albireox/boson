@@ -51,7 +51,7 @@
     "postinstall": "electron-builder install-app-deps",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "eject": "react-scripts eject",
-    "publish": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder --publish always --config assets/builder-publish.json",
+    "publish": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder --publish always --config assets/builder-publish.json && electron-builder install-app-deps",
     "copy-deps": "node ./scripts/copy-deps.js"
   },
   "build": {
