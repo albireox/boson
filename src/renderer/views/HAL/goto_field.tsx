@@ -56,7 +56,7 @@ export default function GotoFieldView(): JSX.Element | null {
       }
     }
 
-    return false;
+    return true;
   };
 
   return (
