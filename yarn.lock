@@ -3994,12 +3994,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdx-js/react@npm:1.6.22, @mdx-js/react@npm:^1.6.21, @mdx-js/react@npm:^1.6.22":
+"@mdx-js/react@npm:1.6.22, @mdx-js/react@npm:^1.6.21":
   version: 1.6.22
   resolution: "@mdx-js/react@npm:1.6.22"
   peerDependencies:
     react: ^16.13.1 || ^17.0.0
   checksum: bc84bd514bc127f898819a0c6f1a6915d9541011bd8aefa1fcc1c9bea8939f31051409e546bdec92babfa5b56092a16d05ef6d318304ac029299df5181dc94c8
+  languageName: node
+  linkType: hard
+
+"@mdx-js/react@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@mdx-js/react@npm:2.0.0"
+  dependencies:
+    "@types/mdx": ^2.0.0
+    "@types/react": ">=16"
+  peerDependencies:
+    react: ">=16"
+  checksum: 4d47ac0418eb9820527829838aaf508a2cdea82f7be8c62b4f739bb2a439f98556360dcdf4cef74f7db615f3e0c05e28353c4b5b182bc36e1b920893f54670f4
   languageName: node
   linkType: hard
 
@@ -4258,12 +4270,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid-pro@npm:^5.4.0":
-  version: 5.4.0
-  resolution: "@mui/x-data-grid-pro@npm:5.4.0"
+"@mui/x-data-grid-pro@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "@mui/x-data-grid-pro@npm:5.5.0"
   dependencies:
     "@mui/utils": ^5.3.0
-    "@mui/x-license-pro": 5.4.0
+    "@mui/x-license-pro": 5.5.0
     clsx: ^1.0.4
     prop-types: ^15.8.1
     reselect: ^4.1.5
@@ -4271,13 +4283,13 @@ __metadata:
     "@mui/material": ^5.2.8
     "@mui/system": ^5.2.8
     react: ^17.0.2
-  checksum: d85675235e3d2af4e1e9be0b757ad1abc4cc3591b9d0c2863201ab32755ddec6e0ffc3662baac45277d0c1144654c5cb3e6f7c22bdb4311f6e66ad2957b3619d
+  checksum: 2456bd6983cff27ff63fbdc05e88a0dcd43bbd351d2aee3503e320cba7cf5f4d729b73f98f1decd2e44a8b80bd66fdb88b7216a3c688a93056e37a77bb254144
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid@npm:^5.4.0":
-  version: 5.4.0
-  resolution: "@mui/x-data-grid@npm:5.4.0"
+"@mui/x-data-grid@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "@mui/x-data-grid@npm:5.5.0"
   dependencies:
     "@mui/utils": ^5.3.0
     clsx: ^1.1.1
@@ -4287,13 +4299,13 @@ __metadata:
     "@mui/material": ^5.2.8
     "@mui/system": ^5.2.8
     react: ^17.0.2
-  checksum: 90f96dbe5446d12f72be42ceee668bb9378ddba5faa648fc5477b98651cd6832fd0716d739071e422bafb9c8fc1533ff825cc5b7f01084356792bb7aa9c6b4bb
+  checksum: cbd9b4c03f3eb58e299b5dfbd86de36573ed97d5ef093fa49638d17665c7d0753d02d39f0797d5c59926aa0bd2a8c3b3b9f285753d13420308755e22d227a41f
   languageName: node
   linkType: hard
 
-"@mui/x-license-pro@npm:5.4.0":
-  version: 5.4.0
-  resolution: "@mui/x-license-pro@npm:5.4.0"
+"@mui/x-license-pro@npm:5.5.0":
+  version: 5.5.0
+  resolution: "@mui/x-license-pro@npm:5.5.0"
   dependencies:
     "@mui/utils": ^5.3.0
     esm: ^3.2.25
@@ -4302,7 +4314,7 @@ __metadata:
     react: ^17.0.2
   bin:
     licensegen: bin/license-gen-script.js
-  checksum: 736b3c41105861332eb60c59f0a64693e107fd47829b7f33da18f952aa00fb12845e1a83a88660e5c2493ef42666e09a3b27114600a2aefe055a3451aa264a16
+  checksum: 68973fcbef3c8a325a4fb7da160e266522b233714b6465321579e59271581dd7d734148ab3d69b6a92b5be27c9b8443421ff5f1973c1a4395a89ce28f2cb987b
   languageName: node
   linkType: hard
 
@@ -5190,6 +5202,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mdx@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "@types/mdx@npm:2.0.1"
+  checksum: 521ee9f976af45859a4dd60b159e1cc09109de49ec5570fe70f34cddb0a7b5472b87c1bea743429270398207a997821dec34fd7bd63cbc2a1e5f2f6c701dd1c2
+  languageName: node
+  linkType: hard
+
 "@types/mime@npm:^1":
   version: 1.3.2
   resolution: "@types/mime@npm:1.3.2"
@@ -5225,10 +5244,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^17.0.14":
-  version: 17.0.14
-  resolution: "@types/node@npm:17.0.14"
-  checksum: cc059ce29686bad5890685f45741826a1a7d1d27382464f6d5fa00b72ba239f6f5b8245a7fa5a56c23ce928030dc76b165a4ab0b86dc078f05b44597d8fe1a46
+"@types/node@npm:^17.0.15":
+  version: 17.0.15
+  resolution: "@types/node@npm:17.0.15"
+  checksum: aa64ecf4fbcf9888e794dcdc20e98c49cdcb102b17e57c44ca56943904732d6cc250e766f8448a3cd71d6a40a4b597bd83c565e5bd9b982733fa3f9813d5c291
   languageName: node
   linkType: hard
 
@@ -5365,7 +5384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^17.0.38":
+"@types/react@npm:*":
   version: 17.0.38
   resolution: "@types/react@npm:17.0.38"
   dependencies:
@@ -5373,6 +5392,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: 4079f4f959cd4a4bfaeda8b89fe8a1b1f8bdc9d87acfdc5f74a0b39cec9ec6a470724357c62778c0f063180b360c250e920c5a142f1dbcda67d9cc25a6d43a85
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:>=16, @types/react@npm:^17.0.39":
+  version: 17.0.39
+  resolution: "@types/react@npm:17.0.39"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: bf04d3c2894559012710d595553e12b422d3b91cd8f4f7e122d8cb044ba9c2ba17f6e8a4e09581359cc5509ddc59cd8c8fabd6774f3505a40a45393f074d6e6e
   languageName: node
   linkType: hard
 
@@ -6904,7 +6934,7 @@ __metadata:
     "@docusaurus/core": 2.0.0-beta.15
     "@docusaurus/preset-classic": 2.0.0-beta.15
     "@docusaurus/types": ^2.0.0-beta.15
-    "@mdx-js/react": ^1.6.22
+    "@mdx-js/react": ^2.0.0
     clsx: ^1.1.1
     prism-react-renderer: ^1.2.1
     react: ^17.0.2
@@ -6926,13 +6956,13 @@ __metadata:
     "@mui/material": ^5.4.0
     "@mui/styles": ^5.3.0
     "@mui/system": ^5.4.0
-    "@mui/x-data-grid": ^5.4.0
-    "@mui/x-data-grid-pro": ^5.4.0
+    "@mui/x-data-grid": ^5.5.0
+    "@mui/x-data-grid-pro": ^5.5.0
     "@types/electron-devtools-installer": ^2.2.1
     "@types/jest": ^27.4.0
     "@types/lodash": ^4.14.178
-    "@types/node": ^17.0.14
-    "@types/react": ^17.0.38
+    "@types/node": ^17.0.15
+    "@types/react": ^17.0.39
     "@types/react-dom": ^17.0.11
     "@types/react-highlight-words": ^0.16.4
     "@types/react-pdf": ^5.0.9
@@ -6951,7 +6981,7 @@ __metadata:
     electron-store: ^8.0.1
     electron-updater: ^4.6.5
     gps-time: ^1.0.8
-    highcharts: ^9.3.2
+    highcharts: ^9.3.3
     highcharts-react-official: ^3.1.0
     js9: ^3.6.2
     keytar: ^7.8.0
@@ -11078,10 +11108,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"highcharts@npm:^9.3.2":
-  version: 9.3.2
-  resolution: "highcharts@npm:9.3.2"
-  checksum: f7671a1ef3b071bca684e2192ca29cc7776f4276b799c59f3376d649ee0f4a7254fcc9924a9c0fdd793b3f70fc9f12e1bf99a2b6408593cbf4f0eb0b76448a50
+"highcharts@npm:^9.3.3":
+  version: 9.3.3
+  resolution: "highcharts@npm:9.3.3"
+  checksum: bd952eafcf7b1c136ab1e20d6b58172f9aeab9381c13e3d67f08b10eb6b2c1f96e62a8d276f29b1e92ef0a8cbc6d1696cd0e554691063a5183235e820b42404b
   languageName: node
   linkType: hard
 

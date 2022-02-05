@@ -9,6 +9,7 @@
 
 import UpdateIcon from '@mui/icons-material/Update';
 import {
+  Badge,
   CircularProgress,
   FormControl,
   FormControlLabel,
@@ -79,6 +80,9 @@ function DesignInput() {
   let configuration_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[0];
   let design_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[1];
 
+  const configuration_loaded = keywords['jaeger.configuration_loaded'];
+  const cloned = configuration_loaded && configuration_loaded.values[9] === 'T';
+
   const [value, setValue] = React.useState(design_id?.toString() || '<none>');
   const [error, setError] = React.useState(false);
 
@@ -147,43 +151,50 @@ function DesignInput() {
           <Typography sx={{ mr: 1 }} variant='h5' color='text.primary' alignSelf='center'>
             Design
           </Typography>
-          <OutlinedInput
-            error={error}
-            sx={{
-              '& input': {
-                padding: focused ? '2px 8px' : '0px',
-                width: '80px',
-                typography: 'h5',
-                color: focused ? 'text.primary' : color
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                border: focused ? 'solid' : 'hidden'
-              }
-            }}
-            value={value}
-            onKeyPress={handleKeyDown}
-            onFocus={(e) => {
-              if (!loading) {
-                if (value === '<none>') {
-                  setValue('');
-                } else {
-                  setValue(design_id ? design_id.toString() : '');
+          <Badge
+            badgeContent='Cloned'
+            color='primary'
+            invisible={!cloned}
+            sx={{ '.MuiBadge-badge': { right: '-4px' } }}
+          >
+            <OutlinedInput
+              error={error}
+              sx={{
+                '& input': {
+                  padding: focused ? '2px 8px' : '0px',
+                  width: '80px',
+                  typography: 'h5',
+                  color: focused ? 'text.primary' : color
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                  border: focused ? 'solid' : 'hidden'
                 }
-                setFocused(true);
-              } else {
-                e.preventDefault();
-              }
-            }}
-            onBlur={(e) => {
-              if (!loading) {
-                setFocused(false);
-                updateValue();
-              } else {
-                e.preventDefault();
-              }
-            }}
-            onChange={(e) => setValue(e.target.value)}
-          />
+              }}
+              value={value}
+              onKeyPress={handleKeyDown}
+              onFocus={(e) => {
+                if (!loading) {
+                  if (value === '<none>') {
+                    setValue('');
+                  } else {
+                    setValue(design_id ? design_id.toString() : '');
+                  }
+                  setFocused(true);
+                } else {
+                  e.preventDefault();
+                }
+              }}
+              onBlur={(e) => {
+                if (!loading) {
+                  setFocused(false);
+                  updateValue();
+                } else {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => setValue(e.target.value)}
+            />
+          </Badge>
         </Stack>
         <Typography variant='h5' paddingTop={0.5}>
           {configuration_id ? `Configuration ${configuration_id}` : ''}
