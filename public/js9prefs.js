@@ -13,8 +13,9 @@ var JS9Prefs = {
     resize: false,
     fits2fits: 'never',
     alerts: false,
-    clearImageMemory: 'always'
-    // waitType: 'mouse'
+    clearImageMemory: 'always',
+    // waitType: 'mouse',
+    useWasm: false
   },
   imageOpts: {
     colormap: 'grey',

@@ -174,7 +174,7 @@ export default function SnapshotsView() {
   React.useEffect(() => {
     if (!locked || !locked_by) return;
 
-    if (locked_by) {
+    if (locked.values[0] === 'T' && locked_by.values.length > 0) {
       setShowSearch(true);
       setSearchText(locked_by.values[0].toString());
     }
