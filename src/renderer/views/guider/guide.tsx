@@ -9,6 +9,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { Chip, Grid, Stack, ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/system';
 import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
@@ -34,6 +35,8 @@ const GuiderStatusChip = () => {
   const keyword = useKeywords(['cherno.guider_status']);
   const guiderStatus = keyword['cherno.guider_status'];
 
+  const theme = useTheme();
+
   const [status, setStatus] = React.useState('Idle');
   const [color, setColor] = React.useState<any>('default');
 
@@ -42,29 +45,40 @@ const GuiderStatusChip = () => {
 
     const bits: number = parseInt(guiderStatus.values[0] as string);
 
+    let titlebar_color = 'transparent';
+
     if (bits & GuiderStatus.FAILED) {
       setStatus('Error');
       setColor('error');
+      titlebar_color = theme.palette.error[theme.palette.mode];
     } else if (bits & GuiderStatus.STOPPING) {
       setStatus('Stopping');
       setColor('warning');
+      titlebar_color = theme.palette.success[theme.palette.mode];
     } else if (bits & GuiderStatus.EXPOSING) {
       setStatus('Exposing');
       setColor('success');
+      titlebar_color = theme.palette.success[theme.palette.mode];
     } else if (bits & GuiderStatus.CORRECTING) {
       setStatus('Correcting');
       setColor('success');
+      titlebar_color = theme.palette.success[theme.palette.mode];
     } else if (bits & GuiderStatus.PROCESSING) {
       setStatus('Processing');
       setColor('success');
+      titlebar_color = theme.palette.success[theme.palette.mode];
     } else if (bits & GuiderStatus.IDLE) {
       setStatus('Idle');
       setColor('default');
+      titlebar_color = 'transparent';
     } else {
       setStatus('Unknown');
       setColor('error');
+      titlebar_color = theme.palette.error[theme.palette.mode];
     }
-  }, [guiderStatus]);
+
+    document.getElementById('titlebar')?.setAttribute('style', `background: ${titlebar_color}`);
+  }, [guiderStatus, theme]);
 
   return (
     <Grid item>
