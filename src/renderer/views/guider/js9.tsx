@@ -81,6 +81,7 @@ export const JS9 = ({
     }
 
     try {
+      window.JS9.CloseImage({ display: display });
       window.JS9.Load(url, load_opts, { display: display });
     } catch (err) {
       console.log('Error in JS9', err);
@@ -90,7 +91,10 @@ export const JS9 = ({
     setCurrentImage(fullPath);
     updateURLs(gid, `http://${hostname}:${port}${fullPath}`);
 
-    return () => window.JS9.CloseImage({ display: display });
+    return () => {
+      window.JS9.CloseImage({ display: display });
+      window.JS9.cleanupFITSFile(url, false);
+    };
   }, [keywords, display, currentImage, gid, updateURLs, zoomed, opts]);
 
   React.useEffect(() => {
