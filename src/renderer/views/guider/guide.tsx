@@ -83,7 +83,7 @@ const GuiderStatusChip = () => {
   return (
     <Grid item>
       <Tooltip title='Status of the guider'>
-        <Chip variant='outlined' label={status} color={color} />
+        <Chip label={status} color={color} />
       </Tooltip>
     </Grid>
   );
