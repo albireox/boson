@@ -52,10 +52,10 @@ export const JS9 = ({
 
     if (keywords === undefined || keywords['fliswarm.filename'] === undefined) return;
 
-    // let now = new Date();
-    // if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
-    //   return;
-    // }
+    let now = new Date();
+    if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
+      return;
+    }
 
     let values = keywords['fliswarm.filename'].values;
 
