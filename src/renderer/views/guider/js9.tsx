@@ -52,10 +52,10 @@ export const JS9 = ({
 
     if (keywords === undefined || keywords['fliswarm.filename'] === undefined) return;
 
-    let now = new Date();
-    if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
-      return;
-    }
+    // let now = new Date();
+    // if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
+    //   return;
+    // }
 
     let values = keywords['fliswarm.filename'].values;
 
@@ -71,6 +71,15 @@ export const JS9 = ({
 
     const fullPath: string = values[2];
     const snapPath = fullPath.replace('.fits', '-snap.fits');
+
+    const exp_id_match = fullPath.match(/.+-([0-9]+)\.fits/);
+    console.log(exp_id_match);
+    const titlebar = document.getElementById('titlebar');
+    if (titlebar && exp_id_match !== null) {
+      titlebar.innerHTML = `Exposure ${parseInt(exp_id_match[1])}`;
+    } else if (titlebar) {
+      titlebar.innerHTML = '';
+    }
 
     let url: string;
 

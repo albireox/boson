@@ -21,6 +21,10 @@ html, body, main#root {
   width: 100vw;
   min-height: 30px;
   height: 30px;
+  text-align: center;
+  padding-top: 4px;
+  font-weight: 500;
+  font-size: 11pt;
 }
 .titlebar else {
   -webkit-app-region: no-drag;
