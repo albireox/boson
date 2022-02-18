@@ -302,6 +302,9 @@ export default class TronConnection {
       }
 
       this.replies.push(reply);
+      if (this.replies.length > 10000) {
+        this.replies = this.replies.slice(-10000);
+      }
 
       // We convert to JSON now and store a list of JSON replies. That way,
       // when we open a new log window and have to send hundreds of thousands

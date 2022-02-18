@@ -221,7 +221,10 @@ const reducer = (
   if (action.type === 'append') {
     return {
       replies: [...state.replies, ...action.data!],
-      messages: [...state.messages, ...filterReplies(action.data!, action.config!, action.search!)]
+      messages: [
+        ...state.messages.slice(-10000),
+        ...filterReplies(action.data!, action.config!, action.search!)
+      ]
     };
   } else if (action.type === 'refresh') {
     return {
