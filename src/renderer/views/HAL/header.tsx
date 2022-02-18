@@ -10,6 +10,7 @@
 import UpdateIcon from '@mui/icons-material/Update';
 import {
   Badge,
+  Button,
   CircularProgress,
   FormControl,
   FormControlLabel,
@@ -21,7 +22,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Switch, { SwitchProps } from '@mui/material/Switch';
-import { Box } from '@mui/system';
+import { Box, useTheme } from '@mui/system';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
 import hal9000logo from './images/hal9000.png';
@@ -74,11 +75,49 @@ const IOSSwitch = styled((props: SwitchProps) => (
   }
 }));
 
+function PreloadedDesign() {
+  const keywords = useKeywords(['jaeger.configuration_loaded', 'jaeger.design_preloaded']);
+
+  let design_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[1];
+  let preloaded: number | undefined = keywords['jaeger.design_preloaded']?.values[0];
+
+  const theme = useTheme();
+
+  if (!preloaded || preloaded < 0 || (design_id && design_id === preloaded)) return null;
+
+  return (
+    <Stack
+      direction='row'
+      flexGrow={1}
+      sx={{ bgcolor: `${theme.palette.primary[theme.palette.mode]}`, mb: 1, p: 1 }}
+    >
+      <Typography variant='subtitle1' alignSelf='center' color='#fff' ml={1}>
+        Design {preloaded} has been preloaded.
+      </Typography>
+      <Stack flexGrow={1} />
+      <Button
+        variant='outlined'
+        size='small'
+        sx={(theme) => ({
+          '&.MuiButton-root': {
+            color: '#fff',
+            border: `1px solid #fff`
+          }
+        })}
+        onClick={() => window.api.tron.send('jaeger configuration load --from-preloaded')}
+      >
+        Load
+      </Button>
+    </Stack>
+  );
+}
+
 function DesignInput() {
   const keywords = useKeywords(['jaeger.configuration_loaded'], 'configuration-input-loaded');
 
   let configuration_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[0];
   let design_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[1];
+  let field_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[2];
 
   const configuration_loaded = keywords['jaeger.configuration_loaded'];
   const cloned = configuration_loaded && configuration_loaded.values[9] === 'T';
@@ -139,7 +178,7 @@ function DesignInput() {
   const loadFromQueue = () => {
     setLoading(true);
     window.api.tron
-      .send('jaeger configuration load', true)
+      .send('jaeger configuration preload', true)
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   };
@@ -199,6 +238,9 @@ function DesignInput() {
         <Typography variant='h5' paddingTop={0.5}>
           {configuration_id ? `Configuration ${configuration_id}` : ''}
         </Typography>
+        <Typography variant='h5' paddingTop={0.5}>
+          {field_id ? `Field ${field_id}` : ''}
+        </Typography>
       </Stack>
 
       <textarea ref={ref} style={{ width: '0px', border: '0px' }} />
@@ -207,7 +249,7 @@ function DesignInput() {
         {loading ? (
           <CircularProgress sx={{ ml: 2 }} size={40} />
         ) : (
-          <Tooltip title='Load from queue'>
+          <Tooltip title='Preload from queue'>
             <IconButton size='medium' onClick={loadFromQueue}>
               <UpdateIcon fontSize='large' color='primary' />
             </IconButton>
@@ -220,23 +262,26 @@ function DesignInput() {
 
 export default function HALHeader() {
   return (
-    <Stack direction='row' pb={1} pt={0.5} width='100%'>
-      <img src={hal9000logo} height='80px' alt='HAL9000 logo' />
-      <DesignInput />
-      <div css={{ flexGrow: 1 }} />
-      <Box alignSelf='center' pr={3}>
-        <FormControl>
-          <FormControlLabel
-            control={<IOSSwitch />}
-            label={
-              <Typography sx={{ mr: 1.5 }} variant='h5' color='text.secondary'>
-                Auto
-              </Typography>
-            }
-            labelPlacement='start'
-          />
-        </FormControl>
-      </Box>
-    </Stack>
+    <>
+      <PreloadedDesign />
+      <Stack direction='row' px={2} pb={1} pt={0.5} width='100%'>
+        <img src={hal9000logo} height='80px' alt='HAL9000 logo' />
+        <DesignInput />
+        <div css={{ flexGrow: 1 }} />
+        <Box alignSelf='center' pr={3}>
+          <FormControl>
+            <FormControlLabel
+              control={<IOSSwitch />}
+              label={
+                <Typography sx={{ mr: 1.5 }} variant='h5' color='text.secondary'>
+                  Auto
+                </Typography>
+              }
+              labelPlacement='start'
+            />
+          </FormControl>
+        </Box>
+      </Stack>
+    </>
   );
 }

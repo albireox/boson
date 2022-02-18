@@ -77,8 +77,8 @@ export default function HALView() {
           }
         }}
       >
-        <Stack direction='column' spacing={1} px={2} zIndex={10} position='relative'>
-          <HALHeader />
+        <HALHeader />
+        <Stack direction='column' spacing={1} pt={0.5} px={2} zIndex={10} position='relative'>
           <GotoFieldView />
           <ExposeView />
           <ApogeeDomeFlatView />
