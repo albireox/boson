@@ -99,7 +99,8 @@
       "fullImage": false,
       "colormap": "red",
       "scale": "heat",
-      "scalelim": "zscale"
+      "scalelim": "zscale",
+      "titlebar_status": true
     },
     "windows": {},
     "defaultWindows": ["main"],

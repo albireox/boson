@@ -77,7 +77,13 @@ const GuiderStatusChip = () => {
       titlebar_color = theme.palette.error[theme.palette.mode];
     }
 
-    document.getElementById('titlebar')?.setAttribute('style', `background: ${titlebar_color}`);
+    window.api.store.get('user.guider.titlebar_status').then((value) => {
+      console.log(value);
+      if (value)
+        document
+          .getElementById('titlebar')
+          ?.setAttribute('style', `background: ${titlebar_color}`);
+    });
   }, [guiderStatus, theme]);
 
   return (

@@ -7,6 +7,7 @@
 
 import {
   Box,
+  Checkbox,
   FormControl,
   Grid,
   MenuItem,
@@ -26,10 +27,18 @@ const scales = ['linear', 'log', 'histeq', 'power', 'sqrt', 'squared', 'asinh', 
 const scalelims = ['dataminmax', 'zscale'];
 
 export default function GuiderPreferences(): React.ReactElement {
+  const [titlebarStatus, setTitlebarStatus] = React.useState<boolean>(
+    window.api.store.get_sync('user.guider.titlebar_status')
+  );
+
   const handleChange = (event: any) => {
     const name = event.target.name;
-    const value = event.target.value;
+    let value = event.target.value;
+    if (event.target.checked !== undefined) {
+      value = event.target.checked;
+    }
     window.api.store.set('user.guider.' + name, value);
+    if (name === 'titlebar_status') setTitlebarStatus(value);
   };
 
   return (
@@ -153,6 +162,16 @@ export default function GuiderPreferences(): React.ReactElement {
               );
             })}
           </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs={4}>
+        <Label>
+          <Typography>Titlebar status</Typography>
+        </Label>
+      </Grid>
+      <Grid item xs={8}>
+        <FormControl size='small'>
+          <Checkbox name='titlebar_status' checked={titlebarStatus} onChange={handleChange} />
         </FormControl>
       </Grid>
     </Grid>
