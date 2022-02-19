@@ -12,7 +12,7 @@
     ],
     "precondition_stages": ["prepare"],
     "cleanup_stages": ["cleanup"],
-    "concurrent": [["slew", "reconfigure"]],
+    "concurrent": [["slew", "reconfigure"], ["fvc", "boss_arcs"]],
     "descriptions": {
       "reconfigure": "Reconf.",
       "boss_hartmann": "Hartmann",
