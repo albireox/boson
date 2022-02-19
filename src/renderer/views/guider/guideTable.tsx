@@ -99,6 +99,7 @@ export const GuideTable = () => {
   const keywords = useKeywords([
     'cherno.pid_radec',
     'cherno.pid_rot',
+    'cherno.pid_focus',
     'cherno.correction_applied',
     'cherno.did_correct',
     'cherno.acquisition_valid',
