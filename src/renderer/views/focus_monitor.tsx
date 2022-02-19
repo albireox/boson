@@ -29,7 +29,7 @@ export default function FocusMonitorView() {
     gfa5: undefined,
     gfa6: undefined
   });
-  const [focusCurve, setFocusCurve] = React.useState<number[][] | undefined>(undefined);
+  const [focusCurve, setFocusCurve] = React.useState<number[][]>([]);
   const [offset, setOffset] = React.useState<number | undefined>(undefined);
 
   const [currentExp, setCurrentExp] = React.useState<number>(-999);
@@ -52,6 +52,7 @@ export default function FocusMonitorView() {
           gfa6: undefined
         });
         setCurrentExp(fwhm_camera.values[1]);
+        setFocusCurve([]);
       }
       setFwhm((f) => ({ ...f, [fwhm_camera.values[0]]: fwhm_camera.values[2] }));
     }
