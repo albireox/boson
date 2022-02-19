@@ -262,9 +262,9 @@ function DesignInput() {
 
 export default function HALHeader() {
   return (
-    <>
+    <Box pt={1}>
       <PreloadedDesign />
-      <Stack direction='row' px={2} pb={1} pt={0.5} width='100%'>
+      <Stack direction='row' px={2} pb={1} pt={1} width='100%'>
         <img src={hal9000logo} height='80px' alt='HAL9000 logo' />
         <DesignInput />
         <div css={{ flexGrow: 1 }} />
@@ -282,6 +282,6 @@ export default function HALHeader() {
           </FormControl>
         </Box>
       </Stack>
-    </>
+    </Box>
   );
 }
