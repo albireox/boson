@@ -184,7 +184,7 @@ export default function FocusMonitorView() {
         type: 'scatter',
         name: 'GFA6',
         marker: {
-          symbol: 'circle',
+          symbol: 'diamond',
           radius: 8,
           fillColor: theme.palette.primary.main
         },
