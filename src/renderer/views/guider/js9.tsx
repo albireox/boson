@@ -73,7 +73,7 @@ export const JS9 = ({
     const snapPath = fullPath.replace('.fits', '-snap.fits');
 
     const exp_id_match = fullPath.match(/.+-([0-9]+)\.fits/);
-    console.log(exp_id_match);
+
     const titlebar = document.getElementById('titlebar');
     if (titlebar && exp_id_match !== null) {
       titlebar.innerHTML = `Exposure ${parseInt(exp_id_match[1])}`;
@@ -93,7 +93,6 @@ export const JS9 = ({
       window.JS9.CloseImage({ display: display });
       window.JS9.Load(url, load_opts, { display: display });
     } catch (err) {
-      console.log('Error in JS9', err);
       return;
     }
 
