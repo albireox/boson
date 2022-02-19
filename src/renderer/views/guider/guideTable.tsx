@@ -27,7 +27,7 @@ const AxisOffsetInput = (params: { axis: string }) => {
 
   axis = axis.toLowerCase();
 
-  if (['scale', 'focus'].includes(axis)) return <div />;
+  if (['scale'].includes(axis)) return <div />;
 
   const handleClick = () => {
     if (offset === '') return;
@@ -50,6 +50,9 @@ const AxisOffsetInput = (params: { axis: string }) => {
         break;
       case 'rotator':
         command = `tcc offset guide 0.0, 0.0, ${offsetDeg} /computed`;
+        break;
+      case 'focus':
+        command = `set focus=${Number(offset)} /incremental`;
         break;
       default:
         return;
@@ -99,22 +102,33 @@ export const GuideTable = () => {
     'cherno.correction_applied',
     'cherno.did_correct',
     'cherno.acquisition_valid',
-    'cherno.astrometry_fit'
+    'cherno.astrometry_fit',
+    'cherno.focus_fit'
   ]);
 
-  const [pid, setPid] = React.useState<number[]>([0.0, 0.0]);
-  const [measured, setMeasured] = React.useState<number[]>([0.0, 0.0, 0.0, 0.0]);
+  const [pid, setPid] = React.useState<number[]>([0.0, 0.0, 0.0]);
+
+  const [measured, setMeasured] = React.useState<number[]>([0.0, 0.0, 0.0, 0.0, 0.0]);
   const [applied, setApplied] = React.useState<number[]>([0.0, 0.0, 0.0]);
 
+  const [focusMeasured, setFocusMeasured] = React.useState<number>(0.0);
+
   React.useEffect(() => {
-    keywords['cherno.pid_radec'] && setPid((d) => [keywords['cherno.pid_radec'].values[0], d[1]]);
-    keywords['cherno.pid_rot'] && setPid((d) => [d[0], keywords['cherno.pid_rot'].values[0]]);
+    keywords['cherno.pid_radec'] &&
+      setPid((d) => [keywords['cherno.pid_radec'].values[0], d[1], d[2]]);
+    keywords['cherno.pid_rot'] &&
+      setPid((d) => [d[0], keywords['cherno.pid_rot'].values[0], d[2]]);
+    keywords['cherno.pid_focus'] &&
+      setPid((d) => [d[0], d[1], keywords['cherno.pid_focus'].values[0]]);
 
     const astrometry_fit = keywords['cherno.astrometry_fit'];
     if (astrometry_fit) setMeasured(astrometry_fit.values.slice(-4));
 
     const correction_applied = keywords['cherno.correction_applied'];
     if (correction_applied) setApplied(correction_applied.values);
+
+    const focus_fit = keywords['cherno.focus_fit'];
+    if (focus_fit) setFocusMeasured(focus_fit.values[6]);
   }, [keywords]);
 
   const columns: GridColDef[] = [
@@ -170,8 +184,8 @@ export const GuideTable = () => {
     { id: 1, axis: 'RA', measured: measured[0], applied: applied[0], pid: pid[0] },
     { id: 2, axis: 'Declination', measured: measured[1], applied: applied[1], pid: pid[0] },
     { id: 3, axis: 'Rotator', measured: measured[2], applied: applied[2], pid: pid[1] },
-    { id: 4, axis: 'Scale', measured: measured[3], applied: '' },
-    { id: 5, axis: 'Focus', measured: '', applied: '' }
+    { id: 4, axis: 'Focus', measured: focusMeasured, applied: applied[4], pid: pid[2] },
+    { id: 5, axis: 'Scale', measured: measured[3], applied: '' }
   ];
   return (
     <Box width='100%' pb={1}>
