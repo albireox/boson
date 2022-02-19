@@ -131,6 +131,11 @@ const template: any[] = [
         click: () => createWindow('guider')
       },
       {
+        label: 'Focus Monitor',
+        id: 'focus_monitor',
+        click: () => createWindow('focus_monitor')
+      },
+      {
         label: 'HAL',
         id: 'hal',
         accelerator: 'CmdOrCtrl+Shift+H',

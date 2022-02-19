@@ -12,6 +12,7 @@ import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from '@mui/mat
 import { useMemo } from 'react';
 import './index.css';
 import ConnectView from './views/connect';
+import FocusMonitorView from './views/focus_monitor';
 import FPSView from './views/FPS';
 import GuiderView from './views/guider';
 import HALView from './views/HAL';
@@ -31,6 +32,7 @@ function ViewManager() {
     keywords: <KeywordsView />,
     log: <LogView />,
     main: <MainView />,
+    focus_monitor: <FocusMonitorView />,
     preferences: <PreferencesView />,
     snapshots: <SnapshotsView />,
     weather: <WeatherView />
