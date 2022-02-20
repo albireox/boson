@@ -76,14 +76,13 @@ const IOSSwitch = styled((props: SwitchProps) => (
 }));
 
 function PreloadedDesign() {
-  const keywords = useKeywords(['jaeger.configuration_loaded', 'jaeger.design_preloaded']);
+  const keywords = useKeywords(['jaeger.design_preloaded']);
 
-  let design_id: number | undefined = keywords['jaeger.configuration_loaded']?.values[1];
   let preloaded: number | undefined = keywords['jaeger.design_preloaded']?.values[0];
 
   const theme = useTheme();
 
-  if (!preloaded || preloaded < 0 || (design_id && design_id === preloaded)) return null;
+  if (!preloaded || preloaded < 0) return null;
 
   return (
     <Stack
