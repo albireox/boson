@@ -7,6 +7,7 @@
 
 /** @jsxImportSource @emotion/react */
 
+import ClearIcon from '@mui/icons-material/Clear';
 import UpdateIcon from '@mui/icons-material/Update';
 import {
   Badge,
@@ -107,6 +108,14 @@ function PreloadedDesign() {
       >
         Load
       </Button>
+      <IconButton
+        sx={{ ml: 1 }}
+        size='small'
+        disableRipple
+        onClick={() => window.api.tron.send('jaeger configuration preload --clear')}
+      >
+        <ClearIcon fontSize='inherit' />
+      </IconButton>
     </Stack>
   );
 }
