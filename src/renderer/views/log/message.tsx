@@ -159,7 +159,7 @@ const Message: React.FC<MessageProps> = ({ reply, HighlighterProps, ...props }) 
   const theme: Theme = useTheme();
 
   const getMessageColourMemo = React.useCallback(
-    (code) => getMessageColour(theme as Theme, code),
+    (code: any) => getMessageColour(theme as Theme, code),
     [theme]
   );
 

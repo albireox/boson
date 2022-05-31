@@ -129,8 +129,7 @@ export function createWindow(name: string = 'main'): BrowserWindow | null {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
-      contextIsolation: true,
-      nativeWindowOpen: true
+      contextIsolation: true
     }
   });
 
