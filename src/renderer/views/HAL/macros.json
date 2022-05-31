@@ -3,16 +3,17 @@
     "stages": [
       "slew",
       "reconfigure",
-      "boss_hartmann",
       "fvc",
-      "boss_arcs",
+      "reslew",
       "boss_flat",
+      "boss_hartmann",
+      "boss_arcs",
       "acquire",
       "guide"
     ],
     "precondition_stages": ["prepare"],
     "cleanup_stages": ["cleanup"],
-    "concurrent": [["slew", "reconfigure"], ["fvc", "boss_arcs"]],
+    "concurrent": [["slew", "reconfigure"]],
     "descriptions": {
       "reconfigure": "Reconf.",
       "boss_hartmann": "Hartmann",

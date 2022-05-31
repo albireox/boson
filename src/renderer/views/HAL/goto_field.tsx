@@ -5,7 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
+import { Box, Checkbox, Divider, FormControlLabel, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { CommandButton } from 'renderer/components/commandButton';
 import { MacroStageSelect } from 'renderer/components/macroStageSelect';
@@ -18,6 +18,7 @@ import MacroStepper from './macro_stepper';
 
 export default function GotoFieldView(): JSX.Element | null {
   const [guiderTime, setGuiderTime] = React.useState<any>(macros.goto_field.defaults.guider_time);
+  const [fixedAltAz, setFixedAltAz] = React.useState<boolean>(false);
   const [commandString, setCommandString] = React.useState('hal goto-field');
 
   const keywords = useKeywords(['jaeger.configuration_loaded']);
@@ -29,6 +30,14 @@ export default function GotoFieldView(): JSX.Element | null {
     } else {
       setCommandString('hal goto-field -s ' + stages.join(','));
     }
+  };
+
+  const getCommandString = () => {
+    let cmdString = `${commandString} --guider-time ${guiderTime || 15}`;
+    if (fixedAltAz) {
+      cmdString += ' --fixed-altaz';
+    }
+    return cmdString;
   };
 
   const checkConfiguration = async () => {
@@ -83,9 +92,21 @@ export default function GotoFieldView(): JSX.Element | null {
             value={guiderTime}
             onChange={(e) => setGuiderTime(e.target.value)}
           />
+          <FormControlLabel
+            control={
+              <Checkbox
+                sx={{ pl: 0 }}
+                checked={fixedAltAz}
+                disableRipple
+                onChange={(e) => setFixedAltAz(e.target.checked)}
+                size='small'
+              />
+            }
+            label='Fix Alt/Az'
+          />
           <Box flexGrow={1} />
           <CommandButton
-            commandString={`${commandString} --guider-time ${guiderTime || 15}`}
+            commandString={getCommandString()}
             beforeCallback={checkConfiguration}
             abortCommand='hal goto-field --stop'
             size='medium'
