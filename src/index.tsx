@@ -9,7 +9,7 @@
  */
 
 import { IElectronAPI } from 'main/preload';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import BosonApp from './renderer/app';
 
 // Add the contextBridge element to the window.
@@ -20,4 +20,6 @@ declare global {
   }
 }
 
-ReactDOM.render(<BosonApp />, document.getElementById('root'));
+const container = document.getElementById('root');
+const root = createRoot(container!);
+root.render(<BosonApp />);
