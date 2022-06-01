@@ -26,7 +26,8 @@ import {
 } from '@mui/material';
 import { blue, grey, purple } from '@mui/material/colors';
 import React from 'react';
-import { Document, Page, TextLayerItemInternal } from 'react-pdf';
+import { TextLayerItemInternal } from 'react-pdf';
+import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
 import { useKeywords, useWindowSize } from 'renderer/hooks';
 
 export default function SnapshotsView() {
