@@ -119,6 +119,10 @@ export function createWindow(name: string = 'main'): BrowserWindow | null {
     }
   }
 
+  // TODO: Electron 20 requires preload scripts that use Node.js to be unsandoxed. See
+  // https://www.electronjs.org/docs/latest/breaking-changes#planned-breaking-api-changes-200
+  // In the future we may want to separe renderers that require sandbox from the others. This
+  // Would require two preload scripts or something similar.
   let win: WindowType = new BrowserWindow({
     ...windowConfig,
     titleBarStyle: 'hidden',
@@ -128,8 +132,8 @@ export function createWindow(name: string = 'main'): BrowserWindow | null {
     icon: path.join(__dirname, 'logo.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: false,
-      contextIsolation: true
+      contextIsolation: true,
+      sandbox: false
     }
   });
 
