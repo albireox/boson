@@ -8,17 +8,17 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { contextBridge, dialog, ipcRenderer, IpcRenderer } from 'electron';
+import { contextBridge, dialog, ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { TronEventReplyIFace } from './events';
 import store from './store';
 
 // TODO: According to https://bit.ly/38aeKXB, we should not expose the ipcRenderer
-// directly. Instead, we should expose the channels from events.ts here.
+// directly. Instead, we should expose the channels from events.ts here. We should also
+// not expose the ipcRendered invoke, send, on functions.
 
 export interface IElectronAPI {
   log: log.LogFunctions;
-  ipcRenderer: IpcRenderer;
   invoke(arg0: string, ...arg1: any): Promise<any>;
   send(arg0: string, ...arg1: any): void;
   on(arg0: string, listener: any): void;
@@ -29,6 +29,7 @@ export interface IElectronAPI {
   };
   tron: {
     send(commandString: string, raise?: boolean): Promise<TronEventReplyIFace>;
+    simulateTronData(sender: string, line: string): Promise<void>;
   };
   openInBrowser(path: string): void;
   openInApplication(command: string): Promise<string>;
@@ -40,7 +41,6 @@ export interface IElectronAPI {
 
 const API: IElectronAPI = {
   log: log.functions,
-  ipcRenderer: ipcRenderer,
   invoke: (channel, ...params) => {
     return ipcRenderer.invoke(channel, ...params);
   },
@@ -58,7 +58,10 @@ const API: IElectronAPI = {
   },
   tron: {
     send: async (commandString, raise = false) =>
-      ipcRenderer.invoke('tron-send-command', commandString, raise)
+      ipcRenderer.invoke('tron-send-command', commandString, raise),
+    simulateTronData: async (sender, line) => {
+      ipcRenderer.invoke('tron-simulate-data', sender, line);
+    }
   },
   openInBrowser: (path) => {
     require('electron').shell.openExternal(path);

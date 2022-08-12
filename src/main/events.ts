@@ -96,7 +96,7 @@ export default function loadEvents() {
   ipcMain.handle(
     'tron-send-command',
     async (event, commandString: string, raise: boolean = false) => {
-      let command = await tron.sendCommand(commandString);
+      let command = await tron.sendCommand(commandString).then();
       if (command.status === CommandStatus.Failed && raise) {
         throw Error(`Command ${command.rawCommand} failed.`);
       }
@@ -107,6 +107,10 @@ export default function loadEvents() {
         replies: command.replies
       };
     }
+  );
+
+  ipcMain.handle('tron-simulate-data', async (event, sender: string, line: string) =>
+    tron.parseData(`.${sender} 666 ${sender} d ${line}`)
   );
 
   ipcMain.handle(
