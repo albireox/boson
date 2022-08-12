@@ -21,42 +21,65 @@ function makeArr(startValue: number, stopValue: number, cardinality: number) {
 }
 
 export default function FocusMonitorView() {
-  const [fwhm, setFwhm] = React.useState<{ [key: string]: undefined | number }>({
-    gfa1: undefined,
-    gfa2: undefined,
-    gfa3: undefined,
-    gfa4: undefined,
-    gfa5: undefined,
-    gfa6: undefined
-  });
+  const [seriesData, setSeriesData] = React.useState<Highcharts.PointOptionsObject[]>([]);
   const [focusCurve, setFocusCurve] = React.useState<number[][]>([]);
+
   const [offset, setOffset] = React.useState<number | undefined>(undefined);
 
-  const [currentExp, setCurrentExp] = React.useState<number>(-999);
+  const [xMinMax, setXMinMax] = React.useState<number[]>([-500.0, 500.0]);
+  const [yMinMax, setYMinMax] = React.useState<number[]>([0.0, 2.0]);
+
+  const xBuffer = 50;
+  const yBuffer = 0.5;
 
   const theme = useTheme();
-  const keywords = useKeywords(['cherno.fwhm_camera', 'cherno.focus_fit']);
+  const keywords = useKeywords(['cherno.focus_data', 'cherno.focus_fit']);
 
-  const fwhm_camera = keywords['cherno.fwhm_camera'];
+  const focus_data = keywords['cherno.focus_data'];
   const focus_fit = keywords['cherno.focus_fit'];
 
   React.useEffect(() => {
-    if (fwhm_camera) {
-      if (fwhm_camera.values[1] !== currentExp) {
-        setFwhm({
-          gfa1: undefined,
-          gfa2: undefined,
-          gfa3: undefined,
-          gfa4: undefined,
-          gfa5: undefined,
-          gfa6: undefined
-        });
-        setCurrentExp(fwhm_camera.values[1]);
-        setFocusCurve([]);
+    if (focus_data) {
+      if (focus_data.values.length === 1) {
+        setSeriesData([]);
+        setOffset(undefined);
       }
-      setFwhm((f) => ({ ...f, [fwhm_camera.values[0]]: fwhm_camera.values[2] }));
+
+      const temp_series_data: Highcharts.PointOptionsObject[] = [];
+
+      let ii = 1;
+
+      let xMin = 0.0;
+      let xMax = 0.0;
+      let yMin = 0.0;
+      let yMax = 0.0;
+
+      while (true) {
+        if (focus_data.values[ii] === undefined) break;
+
+        const x = focus_data.values[ii + 2];
+        const y = focus_data.values[ii + 1];
+
+        temp_series_data.push({
+          name: `GFA${focus_data.values[ii]}`,
+          x: x,
+          y: y
+        });
+
+        if (x < xMin) xMin = x;
+        if (x > xMax) xMax = x;
+
+        if (y < yMin) yMin = y;
+        if (y > yMax) yMax = y;
+
+        ii = ii + 3;
+      }
+
+      setSeriesData(temp_series_data);
+      setXMinMax([xMin, xMax]);
+      setYMinMax([yMin, yMax]);
     }
-  }, [fwhm_camera, currentExp]);
+  }, [focus_data]);
 
   React.useEffect(() => {
     if (focus_fit) {
@@ -64,14 +87,13 @@ export default function FocusMonitorView() {
       const b: number = focus_fit.values[3];
       const c: number = focus_fit.values[4];
 
-      const x = makeArr(-400, 400, 1000);
+      const x = makeArr(xMinMax[0] - xBuffer, xMinMax[1] + xBuffer, 1000);
       const yMicro = x.map((v) => a * v * v + b * v + c);
-      const focus = x.map((_, idx) => [x[idx], yMicro[idx] / 2.889]);
 
-      setFocusCurve(focus);
+      setFocusCurve(x.map((_, idx) => [x[idx], yMicro[idx] / 2.889]));
       setOffset(-b / 2 / a);
     }
-  }, [focus_fit]);
+  }, [focus_fit, xMinMax]);
 
   const options: Highcharts.Options = {
     title: {
@@ -106,7 +128,9 @@ export default function FocusMonitorView() {
           dashStyle: 'LongDash',
           value: offset
         }
-      ]
+      ],
+      min: xMinMax[0] - xBuffer,
+      max: xMinMax[1] + xBuffer
     },
     yAxis: [
       {
@@ -116,14 +140,18 @@ export default function FocusMonitorView() {
             color: theme.palette.text.primary
           }
         },
+        showEmpty: true,
         labels: {
           format: '{value} arcsec',
           style: {
             color: theme.palette.text.primary
           }
-        }
+        },
+        min: yMinMax[0],
+        max: yMinMax[1] + yBuffer
       }
     ],
+
     legend: {
       enabled: false
     },
@@ -132,64 +160,24 @@ export default function FocusMonitorView() {
     },
     series: [
       {
+        // Just to show the chart even if the data is empty.
         type: 'scatter',
-        name: 'GFA1',
-        marker: {
-          symbol: 'diamond',
-          radius: 8,
-          fillColor: theme.palette.primary.main
-        },
-        data: [[0, fwhm.gfa1]]
+        yAxis: 0
       },
       {
         type: 'scatter',
-        name: 'GFA2',
         marker: {
           symbol: 'diamond',
           radius: 8,
           fillColor: theme.palette.primary.main
         },
-        data: [[-375, fwhm.gfa2]]
-      },
-      {
-        type: 'scatter',
-        name: 'GFA3',
-        marker: {
-          symbol: 'diamond',
-          radius: 8,
-          fillColor: theme.palette.primary.main
+        yAxis: 0,
+        name: 'Focus data',
+        tooltip: {
+          pointFormat:
+            'Camera: <b>{point.name}</b><br/>x: <b>{point.x}</b><br/>y: <b>{point.y}</b><br/>'
         },
-        data: [[-200, fwhm.gfa3]]
-      },
-      {
-        type: 'scatter',
-        name: 'GFA4',
-        marker: {
-          symbol: 'diamond',
-          radius: 8,
-          fillColor: theme.palette.primary.main
-        },
-        data: [[0, fwhm.gfa4]]
-      },
-      {
-        type: 'scatter',
-        name: 'GFA5',
-        marker: {
-          symbol: 'diamond',
-          radius: 8,
-          fillColor: theme.palette.primary.main
-        },
-        data: [[375, fwhm.gfa5]]
-      },
-      {
-        type: 'scatter',
-        name: 'GFA6',
-        marker: {
-          symbol: 'diamond',
-          radius: 8,
-          fillColor: theme.palette.primary.main
-        },
-        data: [[0, fwhm.gfa6]]
+        data: seriesData
       },
       {
         type: 'line',
@@ -197,6 +185,7 @@ export default function FocusMonitorView() {
         yAxis: 0,
         color: theme.palette.secondary.main,
         data: focusCurve,
+        marker: { enabled: false },
         tooltip: {
           valueDecimals: 2,
           valueSuffix: ' arcsec'
