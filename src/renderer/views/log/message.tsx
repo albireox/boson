@@ -257,7 +257,7 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
   }, [actors, onConfigUpdate]);
 
   React.useEffect(() => {
-    window.api.on('clear-logs', () => dispatch({ type: 'clear' }));
+    window.api.tron.onClearLogs(() => dispatch({ type: 'clear' }));
   }, []);
 
   React.useEffect(() => {

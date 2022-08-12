@@ -62,15 +62,10 @@ export function useKeywords(keys: string[], channel: any = null, refresh: boolea
     const channel = params.current.channel;
 
     // Subscribe to model and listen on channel.
-    window.api.on(channel, updateKeywords);
-    window.api.invoke(
-      'tron-register-model-listener',
-      Array.from(lowerKeys.keys()),
-      channel,
-      refresh
-    );
+    window.api.tron.subscribe(channel, updateKeywords);
+    window.api.tron.registerModelListener(Array.from(lowerKeys.keys()), channel, refresh);
 
-    const unload = () => window.api.invoke('tron-remove-model-listener', channel);
+    const unload = () => window.api.tron.removeModelListener(channel);
     window.addEventListener('unload', unload);
 
     // Unsubscribe when component unmounts.
@@ -101,13 +96,13 @@ export function useListener(onReceived: (reply: Reply[]) => any, sendAll = true)
   );
 
   useEffect(() => {
-    window.api.on('tron-model-received-reply', parseReplies);
+    window.api.tron.onModelReceivedReply(parseReplies);
   }, [parseReplies]);
 
   useEffect(() => {
-    window.api.invoke('tron-add-streamer-window', params.current.sendAll);
+    window.api.tron.addStreamerWindow(params.current.sendAll);
 
-    const unload = () => window.api.invoke('tron-remove-streamer-window');
+    const unload = () => window.api.tron.removeStreamerWindow();
     window.addEventListener('unload', unload);
 
     return () => {

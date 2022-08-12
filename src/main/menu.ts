@@ -60,7 +60,7 @@ const template: any[] = [
                   .then((response) => {
                     if (response.response === 0) {
                       BrowserWindow.getAllWindows().forEach((win) => {
-                        win.webContents.send('clear-logs');
+                        win.webContents.send('tron:clear-logs');
                         tron.clear();
                       });
                     }

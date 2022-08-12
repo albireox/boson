@@ -27,21 +27,27 @@ export interface TronEventReplyIFace {
 export default function loadEvents() {
   // Add events to ipcMain
 
-  // Main
-  ipcMain.handle('window-open', async (event, name) => {
+  // Window handling
+  ipcMain.handle('window:open', async (event, name) => {
     createWindow(name);
   });
 
-  ipcMain.handle('window-close', async (event, name) => {
+  ipcMain.handle('window:close', async (event, name) => {
     let win = windows.get(name)!;
     win.close();
   });
 
-  ipcMain.handle('window-get-size', async (event, name) => {
+  ipcMain.handle('window:get-size', async (event, name) => {
     let win = windows.get(name)!;
     return win.getSize();
   });
 
+  ipcMain.handle('window:set-size', async (event, name, width, height, animate = false) => {
+    let win = windows.get(name);
+    if (win !== undefined) win.setSize(width, height, animate);
+  });
+
+  // Show alerts
   ipcMain.handle(
     'show-message-box',
     async (event, options: MessageBoxOptions) => await dialog.showMessageBox(options)
@@ -52,49 +58,44 @@ export default function loadEvents() {
     async (event, title: string, content: string) => await dialog.showErrorBox(title, content)
   );
 
-  ipcMain.handle('window-set-size', async (event, name, width, height, animate = false) => {
-    let win = windows.get(name);
-    if (win !== undefined) win.setSize(width, height, animate);
-  });
-
   // Store
-  ipcMain.handle('get-from-store', async (event, key) => {
+  ipcMain.handle('store:get', async (event, key) => {
     if (Array.isArray(key)) return key.map((k) => store.get(k));
     return store.get(key);
   });
 
-  ipcMain.handle('set-in-store', async (event, key, value) => {
+  ipcMain.handle('store:set', async (event, key, value) => {
     return store.set(key, value);
   });
 
-  // keytar
-  ipcMain.handle('get-password', async (event, service, account) => {
+  // keytar passwords
+  ipcMain.handle('password:get', async (event, service, account) => {
     return await keytar.getPassword(service, account);
   });
 
-  ipcMain.handle('set-password', async (event, service, account, value) => {
+  ipcMain.handle('password:set', async (event, service, account, value) => {
     return await keytar.setPassword(service, account, value);
   });
 
   // Tron
-  ipcMain.handle('tron-connect', async (event, host: string, port: number) => {
+  ipcMain.handle('tron:connect', async (event, host: string, port: number) => {
     return await tron.connect(host, port);
   });
 
-  ipcMain.handle('tron-authorise', async (event, credentials) => {
+  ipcMain.handle('tron:authorise', async (event, credentials) => {
     return await tron.authorise(credentials);
   });
 
-  ipcMain.handle('tron-add-streamer-window', async (event, sendAll = false) => {
+  ipcMain.handle('tron:add-streamer-window', async (event, sendAll = false) => {
     tron.addStreamerWindow(event.sender.id, event.sender, sendAll);
   });
 
-  ipcMain.handle('tron-remove-streamer-window', async (event) => {
+  ipcMain.handle('tron:remove-streamer-window', async (event) => {
     tron.removeStreamerWindow(event.sender.id);
   });
 
   ipcMain.handle(
-    'tron-send-command',
+    'tron:send-command',
     async (event, commandString: string, raise: boolean = false) => {
       let command = await tron.sendCommand(commandString).then();
       if (command.status === CommandStatus.Failed && raise) {
@@ -109,22 +110,22 @@ export default function loadEvents() {
     }
   );
 
-  ipcMain.handle('tron-simulate-data', async (event, sender: string, line: string) =>
+  ipcMain.handle('tron:simulate-data', async (event, sender: string, line: string) =>
     tron.parseData(`.${sender} 666 ${sender} d ${line}`)
   );
 
   ipcMain.handle(
-    'tron-register-model-listener',
+    'tron:register-model-listener',
     async (event, keys: string[], listenOn, refresh = true) => {
       tron.model.registerListener(keys, event, listenOn, true, refresh);
     }
   );
 
-  ipcMain.handle('tron-remove-model-listener', async (event, listenOn) => {
-    tron.model.removeListener(listenOn);
+  ipcMain.handle('tron:remove-model-listener', async (event, channel) => {
+    tron.model.removeListener(channel);
   });
 
-  ipcMain.handle('tron-model-getall', async (event) => {
+  ipcMain.handle('tron:model-getall', async (event) => {
     return tron.model.keywords;
   });
 
@@ -145,7 +146,7 @@ export default function loadEvents() {
     }
 
     if (mainWindow) {
-      mainWindow.webContents.send('tron-status', tron.status);
+      mainWindow.webContents.send('tron:status', tron.status);
     }
   }
 
@@ -160,7 +161,7 @@ export default function loadEvents() {
 
   nativeTheme.on('updated', () => reportTheme());
 
-  ipcMain.handle('theme-use-dark', () => {
+  ipcMain.handle('theme:use-dark', () => {
     return nativeTheme.shouldUseDarkColors;
   });
 }

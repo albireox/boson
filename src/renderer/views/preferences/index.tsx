@@ -18,7 +18,7 @@ export default function PreferencesView() {
     const height = containerRef.current?.clientHeight;
     const width = containerRef.current?.clientWidth;
     if (height && width) {
-      window.api.invoke('window-set-size', 'preferences', width, height + 30);
+      window.api.window.setSize('preferences', width, height + 30);
     }
   }, [value]);
 

@@ -260,7 +260,7 @@ export default class TronConnection {
     this._subscribedWindows.forEach((webContents, id) => {
       if (!windowId || windowId === id) {
         try {
-          webContents.send('tron-model-received-reply', reply);
+          webContents.send('tron:model-received-reply', reply);
         } catch {
           log.debug('Failed sending message to listener', id);
           log.debug('Purging listener', id);

@@ -34,14 +34,10 @@ async function autoconnect() {
   if (!config.every((x: unknown) => x)) return [false, false];
 
   const [program, user, host, port] = config;
-  const password: string | null = await window.api.invoke(
-    'get-password',
-    'hub',
-    program.toLowerCase()
-  );
+  const password: string | null = await window.api.password.get('hub', program.toLowerCase());
   if (!password) return [false, false];
 
-  const connResult = await window.api.invoke('tron-connect', host, port);
+  const connResult = await window.api.tron.connect(host, port);
   switch (connResult) {
     case ConnectionStatus.Connected:
       break;
@@ -51,7 +47,7 @@ async function autoconnect() {
       return [false, true];
   }
 
-  const authResult = await window.api.invoke('tron-authorise', {
+  const authResult = await window.api.tron.authorise({
     program,
     user,
     password
@@ -86,7 +82,7 @@ async function getTabView(tab: ValidTabs) {
     ({ width, height } = await window.api.store.get('windows.main'));
   }
 
-  window.api.invoke('window-set-size', 'main', width + 100, height + 50, true);
+  window.api.window.setSize('main', width + 100, height + 50, true);
 
   let TabView: React.FunctionComponent;
   if (tab === 'tcc') {
@@ -116,7 +112,7 @@ function ConnectSnackbar(): JSX.Element {
   };
 
   React.useEffect(() => {
-    window.api.on('tron-status', handleTronStatus);
+    window.api.tron.onStatus(handleTronStatus);
     window.api.store.get('user.autoconnect').then((res: boolean) => {
       if (res) handleReconnect(false); // Initial connect
     });
@@ -126,7 +122,7 @@ function ConnectSnackbar(): JSX.Element {
     const result = await autoconnect();
     if (result[0] === false) {
       setOpen(true);
-      if (openConnect) await window.api.invoke('window-open', 'connect');
+      if (openConnect) await window.api.window.open('connect');
     } else {
       setOpen(false);
     }

@@ -97,7 +97,7 @@ export default function ConnectView() {
       .get(['user.connection.program', 'user.connection.user', 'user.connection.host'])
       .then(async (res: any) => {
         let program = res[0];
-        if (program) return [...res, await window.api.invoke('get-password', 'hub', program)];
+        if (program) return [...res, await window.api.password.get('hub', program)];
         return [...res, ''];
       })
       .then((res: any) => {
@@ -116,7 +116,7 @@ export default function ConnectView() {
     window.api.store.set('user.connection.program', connectForm.program.toLowerCase());
     window.api.store.set('user.connection.user', connectForm.user);
     if (connectForm.program)
-      window.api.invoke('set-password', 'hub', connectForm.program, connectForm.password);
+      window.api.password.set('hub', connectForm.program, connectForm.password);
   };
 
   let handleConnect = async (event: SyntheticEvent) => {
@@ -126,17 +126,16 @@ export default function ConnectView() {
 
     let port = (await window.api.store.get('connection.port')) || 9877;
 
-    const connectionResult = await window.api.invoke('tron-connect', connectForm.host, port);
+    const connectionResult = await window.api.tron.connect(connectForm.host, port);
 
     switch (connectionResult) {
       case ConnectionStatus.Connected:
-        const [result, err]: [boolean, string | null] = await window.api.invoke(
-          'tron-authorise',
+        const [result, err]: [boolean, string | null] = await window.api.tron.authorise(
           (({ program, user, password }) => ({ program, user, password }))(connectForm)
         );
         if (result === true) {
           storeCredentials();
-          window.api.invoke('window-close', NAME);
+          window.api.window.close(NAME);
         } else {
           setError(err!);
         }
@@ -148,7 +147,7 @@ export default function ConnectView() {
         setError('Connection timed out');
         break;
       default:
-        window.api.invoke('window-close', NAME);
+        window.api.window.close(NAME);
         break;
     }
     setButtonDisabled(false);

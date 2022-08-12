@@ -34,8 +34,8 @@ function createCommandObservable(command: string) {
     });
   }
   return new Observable((subscriber) => {
-    window.api
-      .invoke('tron-send-command', command)
+    window.api.tron
+      .send(command)
       .then((reply: TronEventReplyIFace) => {
         if (reply.status === CommandStatus.Done) {
           subscriber.complete();
