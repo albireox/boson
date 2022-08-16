@@ -5,14 +5,23 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Divider, Grid, TextField, Typography } from '@mui/material';
+import {
+  Divider,
+  Grid,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  Typography
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Box } from '@mui/system';
+import { Box, Stack } from '@mui/system';
 import React from 'react';
 
 /** @jsxImportSource @emotion/react */
 
 interface IConnectionPreferences {
+  observatory: string;
   program: string;
   user: string;
   host: string;
@@ -21,13 +30,13 @@ interface IConnectionPreferences {
   httpPort: string;
 }
 
-const Label = styled(Box)(({ theme }) => ({
-  textAlign: 'right'
-}));
+const Label = styled(Box)(({ theme }) => ({ textAlign: 'right' }));
 
 export default function ConnectionPreferences(): React.ReactElement {
+  const [restartNeeded, setRestartNeeded] = React.useState<boolean>(false);
+
   const parameters = React.useMemo(
-    () => ['program', 'user', 'host', 'port', 'httpHost', 'httpPort'],
+    () => ['observatory', 'program', 'user', 'host', 'port', 'httpHost', 'httpPort'],
     []
   );
 
@@ -58,6 +67,13 @@ export default function ConnectionPreferences(): React.ReactElement {
     window.api.store.set('user.connection.' + name, value);
   };
 
+  const handleObservatory = (event: SelectChangeEvent<string>) => {
+    const value = event.target.value;
+    setValues({ ...values, observatory: value });
+    window.api.store.set('user.connection.observatory', value);
+    setRestartNeeded(true);
+  };
+
   return (
     <Grid
       container
@@ -69,6 +85,23 @@ export default function ConnectionPreferences(): React.ReactElement {
       justifyContent='center'
       alignItems='center'
     >
+      <Grid item xs={3}>
+        <Label>
+          <Typography>Observatory:</Typography>
+        </Label>
+      </Grid>
+      <Grid item xs={9}>
+        <Stack spacing={2} direction='row'>
+          <Select value={values.observatory} onChange={handleObservatory} size='small'>
+            <MenuItem value='APO'>APO</MenuItem>
+            <MenuItem value='LCO'>LCO</MenuItem>
+          </Select>
+          <Label width='100%' alignSelf='center' hidden={!restartNeeded}>
+            <Typography>Restart needed</Typography>
+          </Label>
+        </Stack>
+      </Grid>
+
       <Grid item xs={3}>
         <Label>
           <Typography>Username:</Typography>
