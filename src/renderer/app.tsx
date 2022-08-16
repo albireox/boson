@@ -17,6 +17,7 @@ import FPSView from './views/FPS';
 import GuiderView from './views/guider';
 import HALView from './views/HAL';
 import KeywordsView from './views/keywords';
+import LampsView from './views/lamps';
 import LogView from './views/log';
 import MainView from './views/main';
 import PreferencesView from './views/preferences';
@@ -33,6 +34,7 @@ function ViewManager() {
     log: <LogView />,
     main: <MainView />,
     focus_monitor: <FocusMonitorView />,
+    lamps: <LampsView />,
     preferences: <PreferencesView />,
     snapshots: <SnapshotsView />,
     weather: <WeatherView />

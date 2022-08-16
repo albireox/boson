@@ -70,6 +70,11 @@
       "height": 600,
       "resizable": true
     },
+    "lamps": {
+      "width": 180,
+      "height": 280,
+      "resizable": false
+    },
     "guider": {
       "width": 965,
       "height": 800,
@@ -94,6 +99,7 @@
   },
   "user": {
     "connection": {
+      "observatory": "APO",
       "program": "apo",
       "user": "",
       "host": "sdss5-hub.apo.nmsu.edu",

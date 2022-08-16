@@ -155,6 +155,16 @@ const template: any[] = [
     ]
   },
 
+  {
+    label: 'Telescope',
+    submenu: [
+      {
+        label: 'Lamps',
+        id: 'lamps',
+        click: () => createWindow('lamps')
+      }
+    ]
+  },
   // { role: 'viewMenu' }
   {
     label: 'View',
