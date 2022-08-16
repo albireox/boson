@@ -50,16 +50,17 @@ export const JS9 = ({
     const port = window.api.store.get_sync('user.connection.httpPort');
     const useFullImage = window.api.store.get_sync('user.guider.fullImage');
 
-    if (keywords === undefined || keywords['fliswarm.filename'] === undefined) return;
+    if (keywords === undefined || keywords['fliswarm.filename_bundle'] === undefined) return;
 
-    let now = new Date();
-    if (now.getTime() - keywords['fliswarm.filename'].lastSeenAt.getTime() > 5000) {
-      return;
+    let values = keywords['fliswarm.filename_bundle'].values;
+    let fullPath: string | undefined = undefined;
+    for (let v of values) {
+      if (v.includes(`gfa${gid}`)) {
+        fullPath = v;
+      }
     }
 
-    let values = keywords['fliswarm.filename'].values;
-
-    if (currentImage === values[2] || values[0] !== `gfa${gid}`) return;
+    if (!fullPath || currentImage.includes(fullPath)) return;
     if (hostname === '' || port === '') return;
 
     let load_opts = {
@@ -69,7 +70,6 @@ export const JS9 = ({
       zoom: 'toFit'
     };
 
-    const fullPath: string = values[2];
     const snapPath = fullPath.replace('.fits', '-snap.fits');
 
     const exp_id_match = fullPath.match(/.+-([0-9]+)\.fits/);
@@ -182,7 +182,7 @@ export const JS9 = ({
 };
 
 export function JS9Frame() {
-  const keywords = useKeywords(['fliswarm.filename'], 'guider-filename', false);
+  const keywords = useKeywords(['fliswarm.filename_bundle'], 'guider-filename', false);
   let win_size = useWindowSize();
 
   const [zoomed, setZoomed] = React.useState<number>(0);
