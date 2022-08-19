@@ -90,7 +90,7 @@ export default function FocusMonitorView() {
       const x = makeArr(xMinMax[0] - xBuffer, xMinMax[1] + xBuffer, 1000);
       const yMicro = x.map((v) => a * v * v + b * v + c);
 
-      setFocusCurve(x.map((_, idx) => [x[idx], yMicro[idx] / 2.889]));
+      setFocusCurve(x.map((_, idx) => [x[idx], yMicro[idx]]));
       setOffset(-b / 2 / a);
     }
   }, [focus_fit, xMinMax]);
