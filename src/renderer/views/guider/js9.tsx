@@ -100,8 +100,8 @@ export const JS9 = ({
     updateURLs(gid, `http://${hostname}:${port}${fullPath}`);
 
     return () => {
-      window.JS9.CloseImage({ display: display });
-      window.JS9.cleanupFITSFile(url, false);
+      // window.JS9.CloseImage({ display: display });
+      // window.JS9.cleanupFITSFile(url, false);
     };
   }, [keywords, display, currentImage, gid, updateURLs, zoomed, opts]);
 
