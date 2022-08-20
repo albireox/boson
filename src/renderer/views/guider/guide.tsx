@@ -78,7 +78,6 @@ const GuiderStatusChip = () => {
     }
 
     window.api.store.get('user.guider.titlebar_status').then((value) => {
-      console.log(value);
       if (value)
         document
           .getElementById('titlebar')
