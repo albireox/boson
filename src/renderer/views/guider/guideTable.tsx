@@ -192,11 +192,40 @@ export const GuideTable = () => {
   ];
 
   const rows = [
-    { id: 1, axis: 'RA', measured: measured[0], applied: applied[0], pid: pid[0] },
-    { id: 2, axis: 'Declination', measured: measured[1], applied: applied[1], pid: pid[0] },
-    { id: 3, axis: 'Rotator', measured: measured[2], applied: applied[2], pid: pid[1] },
-    { id: 4, axis: 'Focus', measured: focusMeasured, applied: applied[4], pid: pid[2] },
-    { id: 5, axis: 'Scale', measured: measured[3], applied: '' }
+    {
+      id: 1,
+      axis: 'RA',
+      measured: measured[0] && measured[0] > -999 ? measured[0] : '-',
+      applied: applied[0],
+      pid: pid[0]
+    },
+    {
+      id: 2,
+      axis: 'Declination',
+      measured: measured[1] && measured[1] > -999 ? measured[1] : '-',
+      applied: applied[1],
+      pid: pid[0]
+    },
+    {
+      id: 3,
+      axis: 'Rotator',
+      measured: measured[2] && measured[2] > -999 ? measured[2] : '-',
+      applied: applied[2],
+      pid: pid[1]
+    },
+    {
+      id: 4,
+      axis: 'Focus',
+      measured: focusMeasured && focusMeasured > -999 ? focusMeasured : '-',
+      applied: applied[4],
+      pid: pid[2]
+    },
+    {
+      id: 5,
+      axis: 'Scale',
+      measured: measured[3] && measured[3] > -999 ? measured[3] : '-',
+      applied: ''
+    }
   ];
   return (
     <Box width='100%' pb={1}>
