@@ -110,9 +110,25 @@ export const GuideTable = () => {
   const [pid, setPid] = React.useState<number[]>([0.0, 0.0, 0.0]);
 
   const [measured, setMeasured] = React.useState<number[]>([0.0, 0.0, 0.0, 0.0, 0.0]);
-  const [applied, setApplied] = React.useState<number[]>([0.0, 0.0, 0.0]);
+  const [applied, setApplied] = React.useState<number[]>([0.0, 0.0, 0.0, 0.0, 0.0]);
 
   const [focusMeasured, setFocusMeasured] = React.useState<number>(0.0);
+
+  const astrometry_fit = keywords['cherno.astrometry_fit'];
+
+  React.useEffect(() => {
+    // Clear the applied offsets when a new measurements arrives.
+    if (astrometry_fit) {
+      setMeasured(astrometry_fit.values.slice(-4));
+      setApplied([0.0, 0.0, 0.0, 0.0, 0.0]);
+    }
+  }, [astrometry_fit]);
+
+  const correction_applied = keywords['cherno.correction_applied'];
+
+  React.useEffect(() => {
+    if (correction_applied) setApplied(correction_applied.values);
+  }, [correction_applied]);
 
   React.useEffect(() => {
     keywords['cherno.pid_radec'] &&
@@ -121,12 +137,6 @@ export const GuideTable = () => {
       setPid((d) => [d[0], keywords['cherno.pid_rot'].values[0], d[2]]);
     keywords['cherno.pid_focus'] &&
       setPid((d) => [d[0], d[1], keywords['cherno.pid_focus'].values[0]]);
-
-    const astrometry_fit = keywords['cherno.astrometry_fit'];
-    if (astrometry_fit) setMeasured(astrometry_fit.values.slice(-4));
-
-    const correction_applied = keywords['cherno.correction_applied'];
-    if (correction_applied) setApplied(correction_applied.values);
 
     const focus_fit = keywords['cherno.focus_fit'];
     if (focus_fit) setFocusMeasured(focus_fit.values[6]);
