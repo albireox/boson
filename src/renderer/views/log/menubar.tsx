@@ -346,7 +346,7 @@ type MenuBarProps = BoxProps & {
 const MenuBar: React.FC<MenuBarProps> = ({ onConfigUpdate, onSearchUpdate, ...props }) => {
   return (
     <Box component='div' {...props}>
-      <MessageLevelButtons value={null} onConfigUpdate={onConfigUpdate} />
+      <MessageLevelButtons value={''} onConfigUpdate={onConfigUpdate} />
       <SelectActors onConfigUpdate={onConfigUpdate} sx={classes.selectActors} />
       <WrapText onConfigUpdate={onConfigUpdate} />
       {/* <SelectNumberMessages

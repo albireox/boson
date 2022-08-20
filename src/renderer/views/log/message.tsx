@@ -115,10 +115,7 @@ export function getMessage(
       const highlighterProps = getHighlighterProps(queued_string, search);
       if (highlighterProps !== null) {
         cmd_queued_jsx = (
-          <Typography
-            sx={{ ...classes.messages, ...{ color: 'info.main' } }}
-            key={'CmdQueued' + reply.id.toString()}
-          >
+          <Typography sx={{ ...classes.messages, ...{ color: 'info.main' } }}>
             <Highlighter
               {...(highlighterProps as HighlighterProps)}
               textToHighlight={queued_string}
@@ -137,7 +134,7 @@ export function getMessage(
       return cmd_queued_jsx;
     } else {
       if (visible) {
-        message_jsx = <Message reply={reply} key={reply.id} HighlighterProps={highlighterProps} />;
+        message_jsx = <Message reply={reply} HighlighterProps={highlighterProps} />;
       }
       return (
         <>
@@ -246,6 +243,8 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
 
   const actors = useKeywords(['hub.actors'], 'log-hub-actors');
 
+  const [stop, setStop] = React.useState(false);
+
   const ref = React.useRef<FollowScrollHandle>(null);
 
   React.useEffect(() => {
@@ -266,20 +265,30 @@ const Messages: React.FC<MessagesProps> = ({ onConfigUpdate }) => {
 
   React.useEffect(() => {
     let timer = setInterval(() => {
-      dispatch({
-        type: 'append',
-        data: buffer,
-        config: config,
-        search: search
-      });
-      setBuffer([]);
+      if (!stop) {
+        dispatch({
+          type: 'append',
+          data: buffer,
+          config: config,
+          search: search
+        });
+        setBuffer([]);
+      }
     }, 100);
     return () => clearInterval(timer);
-  }, [buffer, config, search, dispatch]);
+  }, [buffer, config, search, dispatch, stop]);
 
   useListener((replies: Reply[]) => setBuffer((prev) => [...prev, ...replies]));
 
-  return <FollowScroll virtuoso ref={ref} messages={state.messages} wrap={config.wrap} />;
+  return (
+    <FollowScroll
+      virtuoso
+      ref={ref}
+      messages={state.messages}
+      wrap={config.wrap}
+      stopScroll={setStop}
+    />
+  );
 };
 
 export default Messages;

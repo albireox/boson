@@ -20,14 +20,14 @@ export interface ViewPortHandle {
 }
 
 export interface ViewPortProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode[];
+  data: React.ReactNode[];
   isAtBottom?: (atBottom: boolean) => void;
   virtuoso?: boolean;
   stick?: boolean;
 }
 
 const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
-  ({ children, virtuoso, stick, isAtBottom, ...props }, ref) => {
+  ({ data, virtuoso, stick, isAtBottom, ...props }, ref) => {
     const virtuosoRef = React.useRef<VirtuosoHandle>(null);
 
     const [atBottom, setAtBottom] = React.useState<null | boolean>(null);
@@ -99,7 +99,7 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
 
           if (virtuoso) {
             virtuosoRef.current?.scrollToIndex({
-              index: children.length - 1,
+              index: data.length - 1,
               align: 'end',
               behavior: behavior as 'auto' | 'smooth'
             });
@@ -111,7 +111,7 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
           }
         }
       },
-      [manuallyScrolled, stick, virtuoso, children.length, scrolling]
+      [manuallyScrolled, stick, virtuoso, data.length, scrolling]
     );
 
     // Try to autoscroll when the messages change. This works well but has the
@@ -147,9 +147,9 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
       return (
         <Virtuoso
           id='virtuoso'
-          data={children}
+          data={data}
           ref={virtuosoRef}
-          style={{ overflowY: stick ? 'hidden' : 'scroll' }}
+          // style={{ overflowY: stick ? 'hidden' : 'scroll' }}
           itemContent={(index, message) => message}
           isScrolling={(status) => setScrolling(status)}
           onScroll={handleScroll}
@@ -171,7 +171,7 @@ const ViewPort = React.forwardRef<ViewPortHandle, ViewPortProps>(
             }}
             onScroll={handleScroll}
           >
-            {children}
+            {data}
             <div id='scrollAnchor' />
           </div>
         </>
@@ -187,13 +187,14 @@ export interface FollowScrollHandle {
 
 export interface FollowScrollProps {
   messages: React.ReactNode[];
+  stopScroll: (arg0: boolean) => void;
   virtuoso?: boolean;
   sticky?: boolean;
   wrap?: boolean;
 }
 
 const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
-  ({ virtuoso, messages, wrap, sticky, ...props }, ref) => {
+  ({ virtuoso, messages, wrap, sticky, stopScroll, ...props }, ref) => {
     const [atBottom, setAtBottom] = React.useState(true);
 
     const [stick, setStick] = React.useState<boolean>(sticky || false);
@@ -210,6 +211,10 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
         setFBOpacity(0.2);
       }
     }, [stick, atBottom]);
+
+    React.useEffect(() => {
+      stopScroll(!atBottom);
+    }, [atBottom, stopScroll]);
 
     return (
       <div
@@ -228,10 +233,9 @@ const FollowScroll = React.forwardRef<FollowScrollHandle, FollowScrollProps>(
           stick={stick}
           isAtBottom={(bottom) => setAtBottom(bottom)}
           style={{ overflowY: stick ? 'hidden' : 'scroll' }}
+          data={messages}
           {...props}
-        >
-          {messages}
-        </ViewPort>
+        />
         <div
           css={{
             position: 'fixed',
