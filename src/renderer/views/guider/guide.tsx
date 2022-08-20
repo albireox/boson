@@ -175,7 +175,7 @@ const AstrometryFitChips = () => {
         setRms('?');
         setRmsColor('secondary');
       } else {
-        setRms(round(rms, 3).toString());
+        setRms(round(rms, 2).toString());
         if (rms >= 0 && rms < 0.07) {
           setRmsColor('success');
         } else if (rms >= 0.07 && rms < 0.1) {
@@ -203,7 +203,7 @@ const AstrometryFitChips = () => {
   const RMSElement = (
     <Grid item>
       <Tooltip title='RMS of the last fit'>
-        <Chip variant='outlined' label={`RMS ${rms} \u00b5m`} color={rmsColor} />
+        <Chip variant='outlined' label={`RMS ${rms}"`} color={rmsColor} />
       </Tooltip>
     </Grid>
   );
