@@ -25,6 +25,7 @@ import {
   Typography
 } from '@mui/material';
 import { blue, grey, purple } from '@mui/material/colors';
+import { styled } from '@mui/system';
 import React from 'react';
 import { TextLayerItemInternal } from 'react-pdf';
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
@@ -98,7 +99,7 @@ export default function SnapshotsView() {
   });
 
   React.useEffect(() => {
-    for (const kk of ['jaeger.configuration_snapshot', 'jaeger.snapshot']) {
+    for (const kk of ['jaeger.configuration_snapshot', 'jaeger.snapshot', 'jaeger.fps_status']) {
       if (!keywords[kk]) continue;
 
       const host = window.api.store.get_sync('user.connection.httpHost');
@@ -119,8 +120,8 @@ export default function SnapshotsView() {
   }, [keywords]);
 
   React.useEffect(() => {
-    // This prevents an issue in which if we have scrolled while zommed in and then set
-    // the scale back to 1, the document is not fully scolled up and overlaps with the menubar.
+    // This prevents an issue in which if we have scrolled while zoommed in and then set
+    // the scale back to 1, the document is not fully scrolled up and overlaps with the menubar.
     if (scale === 1 && divRef.current) {
       divRef.current.scrollTo(0, 0);
     }
@@ -171,6 +172,7 @@ export default function SnapshotsView() {
 
   const locked = keywords['jaeger.locked'];
   const locked_by = keywords['jaeger.locked_by'];
+  const fps_status = keywords['jaeger.fps_status'];
 
   React.useEffect(() => {
     if (!locked || !locked_by) return;
@@ -186,9 +188,26 @@ export default function SnapshotsView() {
     return <Chip variant='filled' label='Folded' color='success' />;
   };
 
-  const LockedChip = () => {
-    if (!locked || locked.values[0] === 'F') return null;
-    return <Chip variant='filled' label='Locked' color='error' />;
+  const StatusChip = () => {
+    let status_int = fps_status ? parseInt(fps_status.values[0], 16) : undefined;
+    let moving = status_int === 2;
+
+    const BlinkingChip = styled(Chip)({
+      animation: 'blinker 1s linear infinite',
+      '@keyframes blinker': {
+        '0%': { opacity: 0 },
+        '50%': { opacity: 0.6 },
+        '100%': { opacity: 1 }
+      }
+    });
+
+    if (locked && locked.values[0] === 'T') {
+      return <Chip variant='filled' label='Locked' color='error' />;
+    } else if (moving) {
+      return <BlinkingChip variant='filled' label='Moving' color='warning' />;
+    }
+
+    return null;
   };
 
   return (
@@ -249,7 +268,7 @@ export default function SnapshotsView() {
           </Stack>
           <div style={{ flexGrow: 1 }} />
           <Stack direction='row' spacing={1} sx={{ alignSelf: 'right' }}>
-            <LockedChip />
+            <StatusChip />
             <FoldedChip />
             <Button variant='contained' size='small' onClick={() => setScale(1)}>
               Fit
