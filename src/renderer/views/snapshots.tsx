@@ -190,7 +190,7 @@ export default function SnapshotsView() {
 
   const StatusChip = () => {
     let status_int = fps_status ? parseInt(fps_status.values[0], 16) : undefined;
-    let moving = status_int === 2;
+    let moving = status_int !== undefined && (status_int & 2) > 0;
 
     const BlinkingChip = styled(Chip)({
       animation: 'blinker 1s linear infinite',
