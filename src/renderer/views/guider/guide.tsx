@@ -125,7 +125,8 @@ const AxesGroup = () => {
   return (
     <Tooltip title='Click to select the axes to which corrections will be applied'>
       <ToggleButtonGroup color='primary' value={enabledAxes} onChange={handleChange} size='small'>
-        <ToggleButton value='radec'>RA|Dec</ToggleButton>
+        <ToggleButton value='ra'>RA</ToggleButton>
+        <ToggleButton value='dec'>Dec</ToggleButton>
         <ToggleButton value='rot'>Rot</ToggleButton>
         <ToggleButton value='focus'>Focus</ToggleButton>
       </ToggleButtonGroup>
