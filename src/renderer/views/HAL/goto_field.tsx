@@ -19,6 +19,7 @@ import MacroStepper from './macro_stepper';
 export default function GotoFieldView(): JSX.Element | null {
   const [guiderTime, setGuiderTime] = React.useState<any>(macros.goto_field.defaults.guider_time);
   const [fixedAltAz, setFixedAltAz] = React.useState<boolean>(false);
+  const [keepOffsets, setKeepOffsets] = React.useState<boolean>(true);
   const [commandString, setCommandString] = React.useState('hal goto-field');
 
   const keywords = useKeywords(['jaeger.configuration_loaded']);
@@ -36,6 +37,11 @@ export default function GotoFieldView(): JSX.Element | null {
     let cmdString = `${commandString} --guider-time ${guiderTime || 15}`;
     if (fixedAltAz) {
       cmdString += ' --fixed-altaz';
+    }
+    if (keepOffsets) {
+      cmdString += " --keep-offsets"
+    } else {
+      cmdString += " --no-keep-offsets"
     }
     return cmdString;
   };
@@ -103,6 +109,18 @@ export default function GotoFieldView(): JSX.Element | null {
               />
             }
             label='Fix Alt/Az'
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                sx={{ pl: 0 }}
+                checked={keepOffsets}
+                disableRipple
+                onChange={(e) => setKeepOffsets(e.target.checked)}
+                size='small'
+              />
+            }
+            label='Keep Offsets'
           />
           <Box flexGrow={1} />
           <CommandButton
