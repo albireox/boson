@@ -39,3 +39,7 @@ yarn-error.log*
 
 public/pdf.worker.js
 public/js9
+
+launch.json
+/.vscode
+/.idea
