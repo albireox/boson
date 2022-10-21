@@ -106,7 +106,9 @@ export default function FocusMonitorView() {
       renderTo: 'container',
       backgroundColor: 'transparent',
       height: (9 / 16) * 100 + '%',
-      zoomType: 'x'
+      zooming: {
+        type: 'x'
+      }
     },
     xAxis: {
       title: {

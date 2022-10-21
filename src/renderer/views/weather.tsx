@@ -75,7 +75,9 @@ export default function WeatherView() {
       style: {
         color: 'red'
       },
-      zoomType: 'x'
+      zooming: {
+        type: 'x'
+      }
     },
     xAxis: {
       type: 'datetime',
