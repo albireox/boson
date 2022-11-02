@@ -1,131 +1,231 @@
 {
-  "name": "boson",
-  "productName": "boson",
-  "version": "0.1.2-beta.1",
   "author": "José Sánchez-Gallego <gallegoj@uw.edu>",
   "description": "SDSS observer graphical user interface",
   "repository": "github:albireox/boson",
   "homepage": "https://github.com/albireox/boson",
   "bugs": "https://github.com/albireox/boson/issues",
   "license": "BSD-3-Clause",
-  "main": "build/src/main/main.js",
-  "private": true,
-  "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@iconify/icons-mdi": "^1.2.32",
-    "@iconify/react": "^4.0.0",
-    "@mui/icons-material": "^5.10.9",
-    "@mui/lab": "^5.0.0-alpha.104",
-    "@mui/material": "^5.10.10",
-    "@mui/styles": "^5.10.10",
-    "@mui/system": "^5.10.10",
-    "@mui/x-data-grid": "^5.17.8",
-    "@mui/x-data-grid-pro": "^5.17.8",
-    "electron-is-dev": "^2.0.0",
-    "electron-log": "^4.4.8",
-    "electron-store": "^8.1.0",
-    "electron-updater": "^5.3.0",
-    "gps-time": "^1.0.8",
-    "highcharts": "^10.2.1",
-    "highcharts-react-official": "^3.1.0",
-    "js9": "^3.8.0",
-    "keytar": "^7.9.0",
-    "lodash": "^4.17.21",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-highlight-words": "^0.18.0",
-    "react-pdf": "^5.7.2",
-    "react-virtuoso": "^3.1.1",
-    "rxjs": "^7.5.7",
-    "sprintf-js": "^1.1.2",
-    "uuid": "^9.0.0"
-  },
-  "workspaces": [
-    "docs"
-  ],
+  "main": "./src/main/main.ts",
   "scripts": {
-    "start": "concurrently \"yarn copy-deps\" \"BROWSER=none react-scripts start\" \"tsc -p src/main -w --preserveWatchOutput\" \"wait-on http://127.0.0.1:3000 && tsc -p src/main && electron .\"",
-    "build": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder",
-    "test": "react-scripts test",
-    "postinstall": "electron-builder install-app-deps",
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "eject": "react-scripts eject",
-    "publish": "PUBLIC_URL=./ react-scripts build && tsc -p src/main && electron-builder --publish always --config assets/builder-publish.json && electron-builder install-app-deps",
-    "copy-deps": "node ./scripts/copy-deps.js"
+    "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
+    "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
+    "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
+    "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
+    "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
+    "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
+    "prepare": "husky install",
+    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
+    "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
+    "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
+    "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
+    "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
+    "test": "jest"
   },
-  "build": {
-    "appId": "com.boson.mac",
-    "extends": null,
-    "productName": "boson",
-    "artifactName": "boson-${version}-${os}-${arch}.${ext}",
-    "generateUpdatesFilesForAllChannels": true,
-    "mac": {
-      "target": [
-        {
-          "target": "default",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "hardenedRuntime": true,
-      "entitlements": "assets/entitlements.mac.plist",
-      "entitlementsInherit": "assets/entitlements.mac.plist"
-    },
-    "files": [
-      "build/**/*",
-      "public"
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "cross-env NODE_ENV=development eslint --cache"
     ],
-    "directories": {
-      "buildResources": "assets"
-    }
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+    "*.json,.{eslintrc,prettierrc}": [
+      "prettier --ignore-path .eslintignore --parser json --write"
     ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+    "*.{css,scss}": [
+      "prettier --ignore-path .eslintignore --single-quote --write"
+    ],
+    "*.{html,md,yml}": [
+      "prettier --ignore-path .eslintignore --single-quote --write"
     ]
   },
+  "browserslist": [],
+  "prettier": {
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": [
+          ".prettierrc",
+          ".eslintrc"
+        ],
+        "options": {
+          "parser": "json"
+        }
+      }
+    ]
+  },
+  "jest": {
+    "moduleDirectories": [
+      "node_modules",
+      "release/app/node_modules",
+      "src"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx",
+      "json"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "setupFiles": [
+      "./.erb/scripts/check-build-exists.ts"
+    ],
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "url": "http://localhost/"
+    },
+    "testPathIgnorePatterns": [
+      "release/app/dist"
+    ],
+    "transform": {
+      "\\.(ts|tsx|js|jsx)$": "ts-jest"
+    }
+  },
+  "dependencies": {
+    "electron-debug": "^3.2.0",
+    "electron-log": "^4.4.8",
+    "electron-updater": "^5.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.3"
+  },
   "devDependencies": {
-    "@iconify-icons/file-icons": "^1.2.2",
-    "@types/electron-devtools-installer": "^2.2.2",
-    "@types/jest": "^29.2.0",
-    "@types/lodash": "^4.14.186",
-    "@types/node": "^18.11.3",
-    "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.6",
-    "@types/react-highlight-words": "^0.16.4",
-    "@types/react-pdf": "^5.7.2",
-    "@types/react-router-dom": "^5.3.3",
-    "@types/sprintf-js": "^1.1.2",
-    "@types/uuid": "^8.3.4",
-    "concurrently": "^7.4.0",
-    "dotenv": "^16.0.3",
-    "electron": "^21.2.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.8",
+    "@svgr/webpack": "^6.5.1",
+    "@teamsupercell/typings-for-css-modules-loader": "^2.5.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@types/jest": "^29.2.1",
+    "@types/node": "18.11.9",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.8",
+    "@types/react-test-renderer": "^18.0.0",
+    "@types/terser-webpack-plugin": "^5.2.0",
+    "@types/webpack-bundle-analyzer": "^4.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "browserslist-config-erb": "^0.0.3",
+    "chalk": "^4.1.2",
+    "concurrently": "^7.5.0",
+    "core-js": "^3.26.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.7.1",
+    "css-minimizer-webpack-plugin": "^4.2.2",
+    "detect-port": "^1.5.1",
+    "electron": "^21.2.1",
     "electron-builder": "^23.6.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-notarize": "^1.2.2",
-    "electron-reload": "^2.0.0-alpha.1",
+    "electron-rebuild": "^3.2.9",
+    "electronmon": "^2.0.2",
+    "eslint": "^8.26.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-erb": "^4.0.3",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-import-resolver-webpack": "^0.13.2",
+    "eslint-plugin-compat": "^4.0.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^26.9.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "husky": "^8.0.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^28.1.3",
+    "lint-staged": "^13.0.3",
+    "mini-css-extract-plugin": "^2.6.1",
     "prettier": "^2.7.1",
-    "react-scripts": "^5.0.1",
-    "source-map-explorer": "^2.5.3",
-    "source-map-support": "^0.5.21",
+    "react-refresh": "^0.14.0",
+    "react-test-renderer": "^18.2.0",
+    "rimraf": "^3.0.2",
+    "sass": "^1.55.0",
+    "sass-loader": "^13.1.0",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "^5.3.6",
+    "ts-jest": "^28.0.8",
+    "ts-loader": "^9.4.1",
+    "ts-node": "^10.9.1",
     "typescript": "^4.8.4",
-    "wait-on": "^6.0.1"
+    "url-loader": "^4.1.1",
+    "webpack": "^5.74.0",
+    "webpack-bundle-analyzer": "^4.7.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1",
+    "webpack-merge": "^5.8.0"
   },
-  "resolutions": {
-    "react-scripts/eslint-webpack-plugin": "2.3.0"
+  "build": {
+    "productName": "boson",
+    "appId": "org.sdss.boson",
+    "asar": true,
+    "asarUnpack": "**\\*.{node,dll}",
+    "files": [
+      "dist",
+      "node_modules",
+      "package.json"
+    ],
+    "afterSign": ".erb/scripts/notarize.js",
+    "mac": {
+      "target": {
+        "target": "default",
+        "arch": [
+          "arm64",
+          "x64"
+        ]
+      },
+      "type": "distribution",
+      "hardenedRuntime": true,
+      "entitlements": "assets/entitlements.mac.plist",
+      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Development"
+    },
+    "directories": {
+      "app": "release/app",
+      "buildResources": "assets",
+      "output": "release/build"
+    },
+    "extraResources": [
+      "./assets/**"
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "albireox",
+      "repo": "boson"
+    }
   },
-  "packageManager": "yarn@3.2.2"
+  "devEngines": {
+    "node": ">=14.x",
+    "npm": ">=7.x"
+  },
+  "electronmon": {
+    "patterns": [
+      "!**/**",
+      "src/main/**"
+    ],
+    "logLevel": "quiet"
+  },
+  "packageManager": "yarn@3.2.4"
 }
