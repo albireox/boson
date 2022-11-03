@@ -10,11 +10,29 @@
  */
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
+import Store from 'electron-store';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
+import default_config from './defaults.json';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
+// For now disable log rotation
+log.transports.file.maxSize = 0;
+
+// Define the store
+const store = new Store({
+  defaults: default_config,
+});
+
+ipcMain.on('electron-store-get', async (event, val) => {
+  event.returnValue = store.get(val);
+});
+ipcMain.on('electron-store-set', async (event, key, val) => {
+  store.set(key, val);
+});
+
+// Set up auto-updater
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -24,12 +42,6 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -110,7 +122,9 @@ const createWindow = async () => {
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
-    return { action: 'deny' };
+    return {
+      action: 'deny',
+    };
   });
 
   // Remove this if your app does not use auto updates
@@ -141,3 +155,5 @@ app
     });
   })
   .catch(console.log);
+
+log.info('test');
