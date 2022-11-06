@@ -131,9 +131,9 @@ const MainStatus = () => {
         resetElapsed();
         setConnectionText(
           <StatusText color={theme.palette.warning[mode]}>
-            {ConnectionStatus.Connecting & status
-              ? 'Connecting'
-              : 'Reconnecting'}
+            {ConnectionStatus.Reconnecting & status
+              ? 'Reconnecting'
+              : 'Connecting'}
           </StatusText>
         );
       } else if (ConnectionStatus.Disconnected & status) {
