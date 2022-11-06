@@ -8,29 +8,19 @@
  * When running `npm run build` or `npm run build:main`, this file is compiled to
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
+
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
-import Store from 'electron-store';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
-import default_config from './defaults.json';
 import MenuBuilder from './menu';
+import store from './store';
+import tron from './tron';
+import { WindowParams } from './types';
 import { resolveHtmlPath } from './util';
 
 // For now disable log rotation
 log.transports.file.maxSize = 0;
-
-// Define the store
-const store = new Store({
-  defaults: default_config,
-});
-
-ipcMain.on('electron-store-get', async (event, val) => {
-  event.returnValue = store.get(val);
-});
-ipcMain.on('electron-store-set', async (event, key, val) => {
-  store.set(key, val);
-});
 
 // Set up auto-updater
 class AppUpdater {
@@ -41,7 +31,7 @@ class AppUpdater {
   }
 }
 
-let mainWindow: BrowserWindow | null = null;
+const windows: { [key: string]: BrowserWindow | null } = { main: null };
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -68,7 +58,7 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-const createWindow = async () => {
+const createWindow = async (name: string) => {
   if (isDebug) {
     await installExtensions();
   }
@@ -81,11 +71,17 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
-  mainWindow = new BrowserWindow({
+  let windowParams: WindowParams = store.get(`windows.${name}`) || {};
+  const savedWindowParams: WindowParams =
+    store.get(`savedState.windows.${name}`) || {};
+
+  windowParams = { ...windowParams, ...savedWindowParams };
+
+  const newWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
     icon: getAssetPath('icon.png'),
+    titleBarStyle: 'hidden',
+    ...windowParams,
     webPreferences: {
       contextIsolation: true,
       sandbox: false,
@@ -95,32 +91,58 @@ const createWindow = async () => {
     },
   });
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  windows[name] = newWindow;
 
-  mainWindow.on('ready-to-show', () => {
-    if (!mainWindow) {
+  newWindow.loadURL(resolveHtmlPath('index.html'));
+
+  newWindow.on('ready-to-show', () => {
+    if (!newWindow) {
       throw new Error('"mainWindow" is not defined');
     }
 
     if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
+      newWindow.minimize();
     } else {
-      mainWindow.show();
+      newWindow.show();
     }
 
+    const openWindows: string[] = store.get('savedState.windows.openWindows');
+    if (!openWindows.includes(name)) openWindows.push(name);
+    store.set('savedState.windows.openWindows', openWindows);
+
     // Force devtools to not show up on start.
-    mainWindow.webContents.closeDevTools();
+    // newWindow.webContents.closeDevTools();
+    if (name === 'main') tron.connect();
   });
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
+  newWindow.on('resized', () => {
+    const size = newWindow.getSize();
+    store.set(`savedState.windows.${name}.width`, size[0]);
+    store.set(`savedState.windows.${name}.height`, size[1]);
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  newWindow.on('moved', () => {
+    const position = newWindow.getPosition();
+    store.set(`savedState.windows.${name}.x`, position[0]);
+    store.set(`savedState.windows.${name}.y`, position[1]);
+  });
+
+  newWindow.on('closed', () => {
+    windows[name] = null;
+    const openWindows: string[] = store.get('savedState.windows.openWindows');
+    const newOpenWindows = openWindows.filter((value) => {
+      return value === 'main' || value !== name;
+    });
+    store.set('savedState.windows.openWindows', newOpenWindows);
+  });
+
+  if (name === 'main') {
+    const menuBuilder = new MenuBuilder(newWindow);
+    menuBuilder.buildMenu();
+  }
 
   // Open urls in the user's browser
-  mainWindow.webContents.setWindowOpenHandler((edata) => {
+  newWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return {
       action: 'deny',
@@ -129,7 +151,7 @@ const createWindow = async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
+  if (name === 'main') new AppUpdater();
 };
 
 /**
@@ -147,13 +169,29 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    createWindow();
+    const openWindows: string[] = store.get(
+      'savedState.windows.openWindows'
+    ) || ['main'];
+    openWindows.map((key) => createWindow(key));
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (mainWindow === null) createWindow();
+      if (windows.main === null) createWindow('main');
     });
   })
   .catch(console.log);
 
-log.info('test');
+ipcMain.handle('app:get-version', () => app.getVersion());
+ipcMain.handle('app:is-packaged', () => app.isPackaged);
+
+ipcMain.handle('tron:get-status', () => tron.status);
+ipcMain.handle('tron:get-last-connected', () => tron.lastConnected);
+ipcMain.handle('tron:connect', () => tron.connect());
+ipcMain.handle('tron:disconnect', () => tron.disconnect());
+
+ipcMain.on('store:get', async (event, val) => {
+  event.returnValue = store.get(val);
+});
+ipcMain.on('store:set', async (event, key, val) => {
+  store.set(key, val);
+});

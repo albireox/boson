@@ -8,6 +8,13 @@ module.exports = {
     // Since React 17 and typescript 4.1 you can safely disable the rule
     'react/react-in-jsx-scope': 'off',
     'jsx-quotes': [2, 'prefer-single'],
+    'react/no-multi-comp': [2, { ignoreStateless: true }],
+    'react/forbid-prop-types': 'error',
+    'react/jsx-filename-extension': 'error',
+    'react/jsx-pascal-case': 'error',
+    'react/prop-types': 'off', // Since we do not use prop-types
+    'react/require-default-props': 'off', // Since we do not use prop-types
+    'no-bitwise': 'off',
   },
 
   parserOptions: {

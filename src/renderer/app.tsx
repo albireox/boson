@@ -1,51 +1,55 @@
+import { createTheme, useMediaQuery } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { useMemo } from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
-import icon from '../../assets/icon.png';
 import './App.css';
-
-const Hello = () => {
-  return (
-    <div>
-      <div className='Hello'>
-        <img width='200' alt='icon' src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className='Hello'>
-        <a
-          href='https://electron-react-boilerplate.js.org/'
-          target='_blank'
-          rel='noreferrer'
-        >
-          <button type='button'>
-            <span role='img' aria-label='books'>
-              📚
-            </span>
-            Read our docs
-          </button>
-        </a>
-        <a
-          href='https://github.com/sponsors/electron-react-boilerplate'
-          target='_blank'
-          rel='noreferrer'
-        >
-          <button type='button'>
-            <span role='img' aria-label='folded hands'>
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
-    </div>
-  );
-};
+import Main from './Main';
 
 export default function App() {
-  console.log(window.electron.store.get('autoconnect'));
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? 'dark' : 'light',
+          background: {
+            default: prefersDarkMode ? '#37393E' : '#FFFFFF',
+            paper: prefersDarkMode ? '#2F3136' : '#F2F3F5',
+          },
+        },
+        typography: {
+          fontSize: 12,
+        },
+        transitions: {
+          duration: {
+            shortest: 75,
+            shorter: 100,
+            short: 125,
+            standard: 150,
+            complex: 175,
+            enteringScreen: 125,
+            leavingScreen: 125,
+          },
+        },
+        components: {
+          MuiButtonBase: {
+            defaultProps: {
+              disableRipple: true,
+            },
+          },
+        },
+      }),
+    [prefersDarkMode]
+  );
+
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<Hello />} />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Main />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
