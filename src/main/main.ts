@@ -12,10 +12,12 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
+import * as keytar from 'keytar';
 import path from 'path';
 import MenuBuilder from './menu';
 import store from './store';
-import tron from './tron';
+import { connectAndAuthorise } from './tron';
+import tron from './tron/tron';
 import { WindowParams } from './types';
 import { resolveHtmlPath } from './util';
 
@@ -112,7 +114,6 @@ const createWindow = async (name: string) => {
 
     // Force devtools to not show up on start.
     // newWindow.webContents.closeDevTools();
-    if (name === 'main') tron.connect();
   });
 
   newWindow.on('resized', () => {
@@ -184,14 +185,24 @@ app
 ipcMain.handle('app:get-version', () => app.getVersion());
 ipcMain.handle('app:is-packaged', () => app.isPackaged);
 
+// tron
 ipcMain.handle('tron:get-status', () => tron.status);
 ipcMain.handle('tron:get-last-connected', () => tron.lastConnected);
 ipcMain.handle('tron:connect', () => tron.connect());
 ipcMain.handle('tron:disconnect', () => tron.disconnect());
+ipcMain.handle('tron:connect-and-authorise', async () => connectAndAuthorise());
 
 ipcMain.on('store:get', async (event, val) => {
   event.returnValue = store.get(val);
 });
 ipcMain.on('store:set', async (event, key, val) => {
   store.set(key, val);
+});
+
+// keytar passwords
+ipcMain.on('keytar:get', (event, key) => {
+  event.returnValue = keytar.getPassword('boson', key);
+});
+ipcMain.handle('keytar:set', async (event, key, value) => {
+  keytar.setPassword('boson', key, value);
 });

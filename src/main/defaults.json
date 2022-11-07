@@ -21,7 +21,7 @@
     "program": "apo",
     "user": "",
     "host": "localhost",
-    "port": 6093,
+    "port": 9877,
     "httpHost": "sdss5-hub.apo.nmsu.edu",
     "httpPort": 80,
     "autoconnect": true

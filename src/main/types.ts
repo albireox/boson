@@ -7,17 +7,6 @@
 
 /* eslint-disable import/prefer-default-export */
 
-export enum ConnectionStatus {
-  Disconnected = 1 << 0,
-  Connecting = 1 << 1,
-  Reconnecting = 1 << 2,
-  Connected = 1 << 3,
-  Authorising = 1 << 4,
-  Authorised = 1 << 5,
-  Failed = 1 << 6,
-  TimedOut = 1 << 7,
-}
-
 export type WindowParams = {
   width?: number;
   height?: number;

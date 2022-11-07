@@ -8,6 +8,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { ConnectionStatus } from './tron';
 
 export type Channels = 'tron:connection-status';
 
@@ -50,6 +51,9 @@ const ElectronAPI = {
     getLastConnected() {
       return ipcRenderer.invoke('tron:get-last-connected');
     },
+    connectAndAuthorise(): Promise<ConnectionStatus> {
+      return ipcRenderer.invoke('tron:connect-and-authorise');
+    },
     connect() {
       return ipcRenderer.invoke('tron:connect');
     },
@@ -63,6 +67,14 @@ const ElectronAPI = {
     },
     set(property: string, val: any) {
       return ipcRenderer.send('store:set', property, val);
+    },
+  },
+  keytar: {
+    get(key: string) {
+      return ipcRenderer.sendSync('keytar:get', key);
+    },
+    set(key: string, val: string) {
+      return ipcRenderer.invoke('keytar:set', key, val);
     },
   },
 };
