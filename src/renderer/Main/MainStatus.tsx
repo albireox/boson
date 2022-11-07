@@ -5,22 +5,14 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  Alert,
-  Button,
-  Card,
-  CardContent,
-  Snackbar,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Card, CardContent, Typography, useTheme } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { Box } from '@mui/system';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useElapsedTime } from 'use-elapsed-time';
 import icon from '../../../assets/icon.png';
-import { ConnectionStatus } from '../../main/types';
+import { ConnectionStatus } from '../../main/tron/types';
 
 type StatusTextProps = { color?: string | undefined } & React.PropsWithChildren;
 
@@ -38,41 +30,6 @@ const StatusText = ({ color = undefined, children }: StatusTextProps) => {
   );
 };
 
-type ConnectStackbarProps = {
-  open: boolean;
-  isReconnecting: boolean;
-  handleConnect: () => void;
-  handleStopConnecting: () => void;
-};
-
-const ConnectSnackbar = ({
-  open,
-  isReconnecting,
-  handleConnect,
-  handleStopConnecting,
-}: ConnectStackbarProps): JSX.Element => {
-  // Show a reconnect snackbar
-
-  const handleAction = () =>
-    isReconnecting ? handleStopConnecting() : handleConnect();
-
-  return (
-    <Snackbar
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      open={open}
-    >
-      <Alert severity='warning'>
-        <span style={{ padding: '0px 24px 0px 0px' }}>
-          {`boson is ${!isReconnecting ? 'disconnected' : 'reconnecting'}`}
-        </span>
-        <Button color='secondary' size='small' onClick={() => handleAction()}>
-          {!isReconnecting ? 'RECONNECT' : 'CANCEL'}
-        </Button>
-      </Alert>
-    </Snackbar>
-  );
-};
-
 const MainStatus = () => {
   const theme = useTheme();
   const { mode } = theme.palette;
@@ -84,10 +41,9 @@ const MainStatus = () => {
     <StatusText color={theme.palette.text.disabled}>Unknown</StatusText>
   );
 
-  const [isConnected, setIsConnected] = useState(false);
-  const [isReconnecting, setIsReconnecting] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const { elapsedTime, reset: resetElapsed } = useElapsedTime({
-    isPlaying: isConnected,
+    isPlaying,
     updateInterval: 1,
   });
 
@@ -111,40 +67,50 @@ const MainStatus = () => {
       .catch(() => {});
 
     const handleConnectionStatus = (status: number) => {
-      if (ConnectionStatus.Connected & status) {
+      if (ConnectionStatus.Authorised & status) {
         setConnectionText(
-          <StatusText color={theme.palette.success[mode]}>Connected</StatusText>
+          <StatusText color={theme.palette.success[mode]}>
+            Authorised
+          </StatusText>
         );
-        setIsConnected(true);
         window.electron.tron
           .getLastConnected()
           .then((value: Date) => {
             return resetElapsed((Date.now() - value.getTime()) / 1000);
           })
           .catch(() => {});
-      } else if (
-        ConnectionStatus.Reconnecting & status ||
-        ConnectionStatus.Connecting & status
-      ) {
-        setIsConnected(false);
-        if (ConnectionStatus.Reconnecting & status) setIsReconnecting(true);
+        setIsPlaying(true);
+      } else {
         resetElapsed();
-        setConnectionText(
-          <StatusText color={theme.palette.warning[mode]}>
-            {ConnectionStatus.Reconnecting & status
-              ? 'Reconnecting'
-              : 'Connecting'}
-          </StatusText>
-        );
-      } else if (ConnectionStatus.Disconnected & status) {
-        setIsConnected(false);
-        setIsReconnecting(false);
-        resetElapsed();
-        setConnectionText(
-          <StatusText color={theme.palette.error[mode]}>
-            Disconnected
-          </StatusText>
-        );
+        setIsPlaying(false);
+        if (ConnectionStatus.Connected & status) {
+          setConnectionText(
+            <StatusText color={theme.palette.warning[mode]}>
+              Not authorised
+            </StatusText>
+          );
+        } else if (ConnectionStatus.Connecting & status) {
+          setConnectionText(
+            <StatusText color={theme.palette.warning[mode]}>
+              Connecting
+            </StatusText>
+          );
+        } else if (
+          ConnectionStatus.AuthenticationFailed & status &&
+          !(ConnectionStatus.NoPassword & status)
+        ) {
+          setConnectionText(
+            <StatusText color={theme.palette.error[mode]}>
+              Authentication failed (check password)
+            </StatusText>
+          );
+        } else if (ConnectionStatus.Disconnected & status) {
+          setConnectionText(
+            <StatusText color={theme.palette.error[mode]}>
+              Disconnected
+            </StatusText>
+          );
+        }
       }
     };
 
@@ -162,9 +128,6 @@ const MainStatus = () => {
 
     return function cleanup() {};
   }, [mode, theme, resetElapsed]);
-
-  const handleConnect = () => window.electron.tron.connect();
-  const handleStopConnecting = () => window.electron.tron.disconnect();
 
   return (
     <>
@@ -192,12 +155,6 @@ const MainStatus = () => {
           </Card>
         </Box>
       </Stack>
-      <ConnectSnackbar
-        open={!isConnected}
-        isReconnecting={isReconnecting}
-        handleConnect={handleConnect}
-        handleStopConnecting={handleStopConnecting}
-      />
     </>
   );
 };

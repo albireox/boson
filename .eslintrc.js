@@ -15,6 +15,7 @@ module.exports = {
     'react/prop-types': 'off', // Since we do not use prop-types
     'react/require-default-props': 'off', // Since we do not use prop-types
     'no-bitwise': 'off',
+    'promise/catch-or-return': [2, { allowFinally: true }],
   },
 
   parserOptions: {
