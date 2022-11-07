@@ -158,7 +158,6 @@ const createWindow = async (name: string) => {
 /**
  * Add event listeners...
  */
-
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
@@ -182,6 +181,7 @@ app
   })
   .catch(console.log);
 
+// app events
 ipcMain.handle('app:get-version', () => app.getVersion());
 ipcMain.handle('app:is-packaged', () => app.isPackaged);
 
@@ -192,6 +192,7 @@ ipcMain.handle('tron:connect', () => tron.connect());
 ipcMain.handle('tron:disconnect', () => tron.disconnect());
 ipcMain.handle('tron:connect-and-authorise', async () => connectAndAuthorise());
 
+// store
 ipcMain.on('store:get', async (event, val) => {
   event.returnValue = store.get(val);
 });
