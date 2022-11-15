@@ -3,6 +3,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import { useMemo } from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Log from './Log';
+
 import Main from './Main';
 
 export default function App() {
@@ -43,11 +45,33 @@ export default function App() {
     [prefersDarkMode]
   );
 
+  let path: string;
+
+  if (window.location.search !== '') {
+    // Production mode. The path is in the form ../index.html?<path>
+    path = window.location.search.slice(1);
+  } else {
+    // Development mode. The path is in the form /albireox/boson/<path>
+    [path] = window.location.pathname.split('/').reverse();
+  }
+
+  let view: React.ReactElement | null;
+  switch (path) {
+    case 'main':
+      view = <Main />;
+      break;
+    case 'log':
+      view = <Log />;
+      break;
+    default:
+      view = null;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-          <Route path='/' element={<Main />} />
+          <Route path='/' element={view} />
         </Routes>
       </Router>
     </ThemeProvider>
