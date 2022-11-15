@@ -12,18 +12,22 @@ import ListItemText from '@mui/material/ListItemText';
 import * as React from 'react';
 
 export interface DrawerListItemProps {
+  name: string;
   text: string;
   icon: React.ReactElement;
   open?: boolean;
+  onClick?: ((name: string) => void) | null;
 }
 
 export default function DrawerListItem({
+  name,
   text,
   icon,
   open = false,
+  onClick = null,
 }: DrawerListItemProps) {
   return (
-    <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+    <ListItem key={name} disablePadding sx={{ display: 'block' }}>
       <ListItemButton
         sx={{
           minHeight: 48,
@@ -37,6 +41,7 @@ export default function DrawerListItem({
             mr: open ? 3 : 'auto',
             justifyContent: 'center',
           }}
+          onClick={() => (onClick ? onClick(name) : undefined)}
         >
           {icon}
         </ListItemIcon>
