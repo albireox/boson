@@ -10,7 +10,7 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { ConnectionStatus } from './tron';
 
-export type Channels = 'tron:connection-status';
+export type Channels = 'tron:connection-status' | 'tron:received-reply';
 
 const ElectronAPI = {
   ipcRenderer: {
@@ -42,6 +42,9 @@ const ElectronAPI = {
     },
     isPackaged() {
       return ipcRenderer.invoke('app:is-packaged');
+    },
+    openNewWindow(name: string) {
+      return ipcRenderer.invoke('app:new-window', name);
     },
   },
   tron: {

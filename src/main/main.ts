@@ -61,9 +61,15 @@ const installExtensions = async () => {
 };
 
 const createWindow = async (name: string) => {
-  if (isDebug) {
-    await installExtensions();
+  if (windows[name] !== undefined && windows[name] !== null) {
+    const window = windows[name];
+    window?.focus();
+    return;
   }
+
+  // if (isDebug) {
+  //   await installExtensions();
+  // }
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')
@@ -95,7 +101,7 @@ const createWindow = async (name: string) => {
 
   windows[name] = newWindow;
 
-  newWindow.loadURL(resolveHtmlPath('index.html'));
+  newWindow.loadURL(resolveHtmlPath(name));
 
   newWindow.on('ready-to-show', () => {
     if (!newWindow) {
@@ -184,6 +190,7 @@ app
 // app events
 ipcMain.handle('app:get-version', () => app.getVersion());
 ipcMain.handle('app:is-packaged', () => app.isPackaged);
+ipcMain.handle('app:new-window', async (event, name) => createWindow(name));
 
 // tron
 ipcMain.handle('tron:get-status', () => tron.status);
