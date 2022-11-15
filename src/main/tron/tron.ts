@@ -191,16 +191,13 @@ export class TronConnection {
     });
 
     // Write to socket.
-    console.log(`${command.commandId} ${command.rawCommand}\r\n`);
     this.client.write(`${command.commandId} ${command.rawCommand}\r\n`);
 
     return command;
   }
 
   parseData(data: string) {
-    log.warn(data);
-
-    const newLines = data.trim().split(/\r/);
+    const newLines = data.trim().split(/\r|\n/);
 
     newLines.forEach((line) => {
       const [lineMatched, keywords] = parseLine(line);

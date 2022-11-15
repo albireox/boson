@@ -109,13 +109,16 @@ export default function Main() {
   const [program] = React.useState<string>(
     window.electron.store.get('connection.program')
   );
+  const [needsAuthentication] = React.useState<boolean>(
+    window.electron.store.get('connection.needsAuthentication')
+  );
 
-  const connect = React.useCallback(() => {
+  const connect = React.useCallback((authorise = true) => {
     setIsConnecting(true);
     setShowPasswordModal(false);
     setAuthenticationFailed(false);
     window.electron.tron
-      .connectAndAuthorise()
+      .connectAndAuthorise(authorise)
       .then((status) => {
         if (status & ConnectionStatus.Authorised) {
           setIsConnected(true);
@@ -143,7 +146,7 @@ export default function Main() {
   React.useEffect(() => {
     let timer: NodeJS.Timeout | number = 0;
     if (!isConnected && !isConnecting && reconnect) {
-      timer = setTimeout(connect, 1000);
+      timer = setTimeout(() => connect(needsAuthentication), 1000);
     }
 
     const handleStatus = (status: ConnectionStatus) => {
@@ -165,13 +168,13 @@ export default function Main() {
       );
       clearInterval(timer);
     };
-  }, [connect, isConnected, isConnecting, reconnect]);
+  }, [connect, isConnected, isConnecting, reconnect, needsAuthentication]);
 
   const handlePassword = () => {
     if (password !== null) {
       window.electron.keytar.set(program, password);
       setShowPasswordModal(false);
-      connect();
+      connect(needsAuthentication);
     }
   };
 

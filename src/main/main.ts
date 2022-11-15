@@ -190,7 +190,9 @@ ipcMain.handle('tron:get-status', () => tron.status);
 ipcMain.handle('tron:get-last-connected', () => tron.lastConnected);
 ipcMain.handle('tron:connect', () => tron.connect());
 ipcMain.handle('tron:disconnect', () => tron.disconnect());
-ipcMain.handle('tron:connect-and-authorise', async () => connectAndAuthorise());
+ipcMain.handle('tron:connect-and-authorise', async (event, authorise = true) =>
+  connectAndAuthorise(authorise)
+);
 
 // store
 ipcMain.on('store:get', async (event, val) => {

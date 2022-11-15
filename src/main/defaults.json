@@ -22,6 +22,7 @@
     "user": "",
     "host": "localhost",
     "port": 9877,
+    "needsAuthentication": true,
     "httpHost": "sdss5-hub.apo.nmsu.edu",
     "httpPort": 80,
     "autoconnect": true
