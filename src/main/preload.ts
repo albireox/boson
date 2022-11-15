@@ -60,6 +60,12 @@ const ElectronAPI = {
     disconnect() {
       return ipcRenderer.invoke('tron:disconnect');
     },
+    subscribe() {
+      return ipcRenderer.invoke('tron:subscribe');
+    },
+    unsubscribe() {
+      return ipcRenderer.invoke('tron:unsubscribe');
+    },
   },
   store: {
     get(key: string) {

@@ -178,6 +178,10 @@ export default function Main() {
     }
   };
 
+  const openNewWindow = (name: string) => {
+    window.electron.app.openNewWindow(name);
+  };
+
   return (
     <>
       <Box sx={{ display: 'flex', height: '100%' }}>
@@ -185,13 +189,16 @@ export default function Main() {
         <PersistentDrawer open={open}>
           <>
             <DrawerListItem
+              name='log'
               icon={<NotesIcon />}
               text='New log window'
+              onClick={openNewWindow}
               open={open}
             />
             <div style={{ flexGrow: 1 }} />
             <List>
               <DrawerListItem
+                name='settings'
                 icon={<SettingsIcon />}
                 text='Settings'
                 open={open}

@@ -6,7 +6,7 @@
  */
 
 import { createHash } from 'crypto';
-import { app, webContents } from 'electron';
+import { app, webContents, WebContents } from 'electron';
 import log from 'electron-log';
 import * as keytar from 'keytar';
 import { Socket } from 'net';
@@ -26,6 +26,8 @@ export class TronConnection {
   private port: number | undefined = undefined;
 
   private commands: Map<number, Command> = new Map();
+
+  private listeners: Map<number, WebContents> = new Map();
 
   client = new Socket();
 
@@ -216,7 +218,38 @@ export class TronConnection {
       );
 
       this.commands.get(reply.commandId)?.addReply(reply);
+      this.listeners.forEach((win) => win.send('tron:received-reply', reply));
     });
+  }
+
+  subscribeWindow(sender: WebContents) {
+    const { id } = sender;
+    if (sender.isDestroyed()) {
+      this.unsubscribeWindow(sender);
+      return;
+    }
+    if (this.listeners.has(id)) {
+      log.warn(`Window ${id} is already subscribed.`);
+      return;
+    }
+    this.listeners.set(id, sender);
+    log.info(
+      `Window ${id} has been subscribed. ` +
+        `${this.listeners.size} listeners connected.`
+    );
+  }
+
+  unsubscribeWindow(sender: WebContents) {
+    const { id } = sender;
+    if (!this.listeners.has(id)) {
+      log.warn(`Window ${id} is not subscribed.`);
+      return;
+    }
+    this.listeners.delete(id);
+    log.info(
+      `Window ${id} has been unsubscribed. ` +
+        `${this.listeners.size} listeners still connected.`
+    );
   }
 }
 

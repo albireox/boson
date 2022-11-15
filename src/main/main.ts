@@ -193,6 +193,12 @@ ipcMain.handle('tron:disconnect', () => tron.disconnect());
 ipcMain.handle('tron:connect-and-authorise', async (event, authorise = true) =>
   connectAndAuthorise(authorise)
 );
+ipcMain.handle('tron:subscribe', async (event) =>
+  tron.subscribeWindow(event.sender)
+);
+ipcMain.handle('tron:unsubscribe', async (event) =>
+  tron.unsubscribeWindow(event.sender)
+);
 
 // store
 ipcMain.on('store:get', async (event, val) => {
