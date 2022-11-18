@@ -15,7 +15,7 @@ import { autoUpdater } from 'electron-updater';
 import * as keytar from 'keytar';
 import path from 'path';
 import MenuBuilder from './menu';
-import store from './store';
+import store, { subscriptions as storeSubscriptions } from './store';
 import { connectAndAuthorise } from './tron';
 import tron from './tron/tron';
 import { WindowParams } from './types';
@@ -211,8 +211,21 @@ ipcMain.handle('tron:unsubscribe', async (event) =>
 ipcMain.on('store:get', async (event, val) => {
   event.returnValue = store.get(val);
 });
-ipcMain.on('store:set', async (event, key, val) => {
+ipcMain.handle('store:set', async (event, key, val) => {
   store.set(key, val);
+});
+ipcMain.handle('store:delete', async (event, key) => {
+  store.delete(key);
+});
+ipcMain.handle('store:subscribe', async (event, property, channel: string) => {
+  const unsubscribe = store.onDidChange(property, (newValue) =>
+    event.sender.send(channel, newValue)
+  );
+  storeSubscriptions.set(channel, unsubscribe);
+});
+ipcMain.handle('store:unsubscribe', async (event, channel: string) => {
+  const unsubscribe = storeSubscriptions.get(channel);
+  if (unsubscribe) unsubscribe();
 });
 
 // keytar passwords

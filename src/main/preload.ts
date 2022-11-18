@@ -75,7 +75,16 @@ const ElectronAPI = {
       return ipcRenderer.sendSync('store:get', key);
     },
     set(property: string, val: any) {
-      return ipcRenderer.send('store:set', property, val);
+      return ipcRenderer.invoke('store:set', property, val);
+    },
+    delete(key: string) {
+      return ipcRenderer.invoke('store:delete', key);
+    },
+    subscribe(property: string, channel: string) {
+      return ipcRenderer.invoke('store:subscribe', property, channel);
+    },
+    unsubscribe(channel: string) {
+      return ipcRenderer.invoke('store:unsubscribe', channel);
     },
   },
   keytar: {

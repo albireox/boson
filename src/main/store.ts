@@ -11,6 +11,9 @@ import default_config from './defaults.json';
 // Define the store
 const store = new Store({
   defaults: default_config,
+  watch: true,
 });
 
-export { store as default };
+const subscriptions = new Map<string, () => EventEmitter>();
+
+export { store as default, subscriptions };
