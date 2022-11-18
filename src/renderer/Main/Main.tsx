@@ -27,6 +27,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import * as React from 'react';
+import { useStore } from 'renderer/hooks';
 import { ConnectionStatus } from '../../main/tron/types';
 import DrawerListItem from '../Components/DrawerListItem';
 import PersistentDrawer from '../Components/PersistentDrawer';
@@ -106,32 +107,17 @@ export default function Main() {
   const [showPasswordModal, setShowPasswordModal] = React.useState(false);
   const [password, setPassword] = React.useState<string | null>(null);
 
-  const [program] = React.useState<string>(
-    window.electron.store.get('connection.program')
-  );
-  const [needsAuthentication] = React.useState<boolean>(
-    window.electron.store.get('connection.needsAuthentication')
+  const [program] = useStore<string>('connection.program');
+  const [needsAuthentication] = useStore<boolean>(
+    'connection.needsAuthentication'
   );
 
   const connect = React.useCallback((authorise = true) => {
     setIsConnecting(true);
-    setShowPasswordModal(false);
     setAuthenticationFailed(false);
     window.electron.tron
       .connectAndAuthorise(authorise)
-      .then((status) => {
-        if (status & ConnectionStatus.Authorised) {
-          setIsConnected(true);
-          setAuthenticationFailed(false);
-          setReconnect(true);
-        } else if (status & ConnectionStatus.NoPassword) {
-          setIsConnected(true);
-          setShowPasswordModal(true);
-        } else if (status & ConnectionStatus.Connected) {
-          setIsConnected(true);
-        } else if (status & ConnectionStatus.AuthenticationFailed) {
-          setIsConnected(true);
-        }
+      .then(() => {
         return true;
       })
       .catch(() => {
@@ -141,6 +127,44 @@ export default function Main() {
       .finally(() => {
         setIsConnecting(false);
       });
+  }, []);
+
+  React.useEffect(() => {
+    const handleConnectionStatus = (status: ConnectionStatus) => {
+      if (status & ConnectionStatus.Authorised) {
+        setIsConnected(true);
+        setAuthenticationFailed(false);
+        setReconnect(true);
+        setShowPasswordModal(false);
+      } else if (status & ConnectionStatus.NoPassword) {
+        setIsConnected(true);
+        setShowPasswordModal(true);
+      } else if (status & ConnectionStatus.Connected) {
+        setIsConnected(true);
+      } else if (status & ConnectionStatus.AuthenticationFailed) {
+        setIsConnected(true);
+        setReconnect(false);
+      }
+    };
+
+    // First time, just in case tron doesn't emit the status on time.
+    window.electron.tron
+      .getStatus()
+      .then(handleConnectionStatus)
+      .catch(() => {});
+
+    // From now on just listen to the event.
+    window.electron.ipcRenderer.on(
+      'tron:connection-status',
+      handleConnectionStatus
+    );
+
+    return function cleanup() {
+      window.electron.ipcRenderer.removeListener(
+        'tron:connection-status',
+        handleConnectionStatus
+      );
+    };
   }, []);
 
   React.useEffect(() => {
@@ -198,9 +222,10 @@ export default function Main() {
             <div style={{ flexGrow: 1 }} />
             <List>
               <DrawerListItem
-                name='settings'
+                name='preferences'
                 icon={<SettingsIcon />}
-                text='Settings'
+                text='Preferences'
+                onClick={openNewWindow}
                 open={open}
               />
 

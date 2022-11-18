@@ -10,6 +10,7 @@ import Stack from '@mui/material/Stack';
 import { Box } from '@mui/system';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useStore } from 'renderer/hooks';
 import { useElapsedTime } from 'use-elapsed-time';
 import icon from '../../../assets/icon.png';
 import { ConnectionStatus } from '../../main/tron/types';
@@ -53,7 +54,13 @@ const MainStatus = () => {
     return date.toISOString().substring(11, 19);
   };
 
-  const program: string = window.electron.store.get('connection.program');
+  const [program] = useStore<string>('connection.program', true);
+  const [host] = useStore<string>('connection.host', true);
+  const [port] = useStore<number>('connection.port', true);
+  const [needsAuthentication] = useStore<number>(
+    'connection.needsAuthentication',
+    true
+  );
 
   useEffect(() => {
     window.electron.app
@@ -84,11 +91,19 @@ const MainStatus = () => {
         resetElapsed();
         setIsPlaying(false);
         if (ConnectionStatus.Connected & status) {
-          setConnectionText(
-            <StatusText color={theme.palette.warning[mode]}>
-              Not authorised
-            </StatusText>
-          );
+          if (needsAuthentication) {
+            setConnectionText(
+              <StatusText color={theme.palette.warning[mode]}>
+                Not authorised
+              </StatusText>
+            );
+          } else {
+            setConnectionText(
+              <StatusText color={theme.palette.success[mode]}>
+                Connected
+              </StatusText>
+            );
+          }
         } else if (ConnectionStatus.Connecting & status) {
           setConnectionText(
             <StatusText color={theme.palette.warning[mode]}>
@@ -126,8 +141,13 @@ const MainStatus = () => {
       handleConnectionStatus
     );
 
-    return function cleanup() {};
-  }, [mode, theme, resetElapsed]);
+    return function cleanup() {
+      window.electron.ipcRenderer.removeListener(
+        'tron:connection-status',
+        handleConnectionStatus
+      );
+    };
+  }, [mode, theme, resetElapsed, needsAuthentication]);
 
   return (
     <>
@@ -151,6 +171,8 @@ const MainStatus = () => {
               <StatusText>Elapsed: {formatElapsedTime()}</StatusText>
               <br />
               <StatusText>Program: {program.toUpperCase()}</StatusText>
+              <br />
+              <StatusText>Host: {`${host}:${port}`}</StatusText>
             </CardContent>
           </Card>
         </Box>
