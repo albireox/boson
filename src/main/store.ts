@@ -6,6 +6,7 @@
  */
 
 import Store from 'electron-store';
+import EventEmitter from 'events';
 import default_config from './defaults.json';
 
 // Define the store
