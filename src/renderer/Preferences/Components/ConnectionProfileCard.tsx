@@ -59,10 +59,7 @@ export default function ConnectionProfileCard(
   };
 
   const handleDelete = () => {
-    window.electron.store.delete(`profiles.${name}`).catch((error) => {
-      console.log(error);
-    });
-    console.log('here');
+    window.electron.store.delete(`profiles.${name}`);
   };
 
   return (
