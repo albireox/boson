@@ -5,6 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import { Tooltip } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -28,25 +29,27 @@ export default function DrawerListItem({
 }: DrawerListItemProps) {
   return (
     <ListItem key={name} disablePadding sx={{ display: 'block' }}>
-      <ListItemButton
-        sx={{
-          minHeight: 48,
-          justifyContent: open ? 'initial' : 'center',
-          px: 2.5,
-        }}
-      >
-        <ListItemIcon
+      <Tooltip title={text}>
+        <ListItemButton
           sx={{
-            minWidth: 0,
-            mr: open ? 3 : 'auto',
-            justifyContent: 'center',
+            minHeight: 48,
+            justifyContent: open ? 'initial' : 'center',
+            px: 2.5,
           }}
-          onClick={() => (onClick ? onClick(name) : undefined)}
         >
-          {icon}
-        </ListItemIcon>
-        <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-      </ListItemButton>
+          <ListItemIcon
+            sx={{
+              minWidth: 0,
+              mr: open ? 3 : 'auto',
+              justifyContent: 'center',
+            }}
+            onClick={() => (onClick ? onClick(name) : undefined)}
+          >
+            {icon}
+          </ListItemIcon>
+          <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+        </ListItemButton>
+      </Tooltip>
     </ListItem>
   );
 }
