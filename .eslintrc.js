@@ -16,8 +16,11 @@ module.exports = {
     'react/require-default-props': 'off', // Since we do not use prop-types
     'no-bitwise': 'off',
     'promise/catch-or-return': [2, { allowFinally: true }],
+    '@typescript-eslint/no-unused-expressions': [
+      'error',
+      { allowShortCircuit: true, allowTernary: true },
+    ],
   },
-
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
