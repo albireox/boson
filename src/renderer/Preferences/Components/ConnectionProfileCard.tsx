@@ -12,6 +12,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { Stack } from '@mui/system';
@@ -74,12 +75,15 @@ export default function ConnectionProfileCard(
               {name}
             </Typography>
             <Box flexGrow={1} />
-            <VerifiedIcon
-              color='primary'
-              sx={{
-                visibility: name === currentProfileName ? undefined : 'hidden',
-              }}
-            />
+            <Tooltip title='This profile is active'>
+              <VerifiedIcon
+                color='primary'
+                sx={{
+                  visibility:
+                    name === currentProfileName ? undefined : 'hidden',
+                }}
+              />
+            </Tooltip>
           </Stack>
           <Typography sx={{ mb: 1.5 }} color='text.secondary'>
             {observatory} ({program})
