@@ -10,10 +10,15 @@ import { ConnectionStatus } from './types';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export default async function connectAndAuthorise(
+export default async function connectAndAuthorise({
   authorise = true,
-  timeout = 5
-) {
+  force = false,
+  timeout = 5,
+}) {
+  if (tron.status & ConnectionStatus.Connected && force) {
+    tron.disconnect();
+  }
+
   if (!(tron.status & ConnectionStatus.Connected)) {
     if (!(tron.status & ConnectionStatus.Connecting)) {
       tron.connect();
