@@ -54,8 +54,11 @@ const ElectronAPI = {
     getLastConnected() {
       return ipcRenderer.invoke('tron:get-last-connected');
     },
-    connectAndAuthorise(authorise: boolean): Promise<ConnectionStatus> {
-      return ipcRenderer.invoke('tron:connect-and-authorise', authorise);
+    connectAndAuthorise(
+      authorise = true,
+      force = false
+    ): Promise<ConnectionStatus> {
+      return ipcRenderer.invoke('tron:connect-and-authorise', authorise, force);
     },
     connect() {
       return ipcRenderer.invoke('tron:connect');
