@@ -4,8 +4,8 @@ import { useMemo } from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Log from './Log';
-
 import Main from './Main';
+import Preferences from './Preferences';
 
 export default function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -62,6 +62,9 @@ export default function App() {
       break;
     case 'log':
       view = <Log />;
+      break;
+    case 'preferences':
+      view = <Preferences />;
       break;
     default:
       view = null;
