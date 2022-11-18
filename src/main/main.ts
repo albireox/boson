@@ -9,6 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 
+import { randomUUID } from 'crypto';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
@@ -236,4 +237,9 @@ ipcMain.handle('keytar:get', async (event, key) => {
 });
 ipcMain.handle('keytar:set', async (event, key, value) => {
   keytar.setPassword('boson', key, value);
+});
+
+// tools
+ipcMain.on('tools:get-uuid', async (event) => {
+  event.returnValue = randomUUID();
 });

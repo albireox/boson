@@ -95,6 +95,11 @@ const ElectronAPI = {
       return ipcRenderer.invoke('keytar:set', key, val);
     },
   },
+  tools: {
+    getUUID() {
+      return ipcRenderer.sendSync('tools:get-uuid');
+    },
+  },
 };
 
 contextBridge.exposeInMainWorld('electron', ElectronAPI);
