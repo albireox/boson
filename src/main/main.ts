@@ -141,7 +141,10 @@ const createWindow = async (name: string) => {
     const newOpenWindows = openWindows.filter((value) => {
       return value === 'main' || value !== name;
     });
-    store.set('savedState.windows.openWindows', newOpenWindows);
+    setTimeout(
+      () => store.set('savedState.windows.openWindows', newOpenWindows),
+      3000
+    );
   });
 
   if (name === 'main') {
