@@ -14,18 +14,66 @@
       "y": 0,
       "closable": true,
       "resizable": true
+    },
+    "preferences": {
+      "x": 876,
+      "y": 160,
+      "width": 1018,
+      "height": 884
     }
   },
   "connection": {
+    "name": "APO",
     "observatory": "APO",
     "program": "apo",
     "user": "",
-    "host": "localhost",
+    "host": "sdss5-hub.apo.nmsu.edu",
     "port": 9877,
     "needsAuthentication": true,
     "httpHost": "sdss5-hub.apo.nmsu.edu",
-    "httpPort": 80,
-    "autoconnect": true
+    "httpPort": 80
+  },
+  "profiles": {
+    "APO": {
+      "observatory": "APO",
+      "program": "apo",
+      "user": "",
+      "host": "sdss5-hub.apo.nmsu.edu",
+      "port": 9877,
+      "needsAuthentication": true,
+      "httpHost": "sdss5-hub.apo.nmsu.edu",
+      "httpPort": 80
+    },
+    "LCO": {
+      "observatory": "LCO",
+      "program": "lco",
+      "user": "",
+      "host": "sdss5-hub.lco.cl",
+      "port": 9877,
+      "needsAuthentication": true,
+      "httpHost": "sdss5-hub.lco.cl",
+      "httpPort": 80
+    },
+    "APO Tunnel": {
+      "observatory": "APO",
+      "program": "apo",
+      "user": "",
+      "host": "localhost",
+      "port": 9877,
+      "needsAuthentication": true,
+      "httpHost": "localhost",
+      "httpPort": 8080
+    },
+    "LCO Tunnel": {
+      "observatory": "LCO",
+      "program": "lco",
+      "user": "",
+      "host": "localhost",
+      "port": 9877,
+      "needsAuthentication": true,
+      "httpHost": "localhost",
+      "httpPort": 8080
+    }
   },
   "guider": {
     "xpaset": "/usr/bin/xpaset",

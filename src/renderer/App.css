@@ -4,11 +4,10 @@
  */
 
 
- html, body, main, div#root {
+ html, body, main {
   height: 100%;
-  display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .titlebar {
