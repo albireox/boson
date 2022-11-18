@@ -231,8 +231,8 @@ ipcMain.handle('store:unsubscribe', async (event, channel: string) => {
 });
 
 // keytar passwords
-ipcMain.on('keytar:get', (event, key) => {
-  event.returnValue = keytar.getPassword('boson', key);
+ipcMain.handle('keytar:get', async (event, key) => {
+  return keytar.getPassword('boson', key);
 });
 ipcMain.handle('keytar:set', async (event, key, value) => {
   keytar.setPassword('boson', key, value);

@@ -89,7 +89,7 @@ const ElectronAPI = {
   },
   keytar: {
     get(key: string) {
-      return ipcRenderer.sendSync('keytar:get', key);
+      return ipcRenderer.invoke('keytar:get', key);
     },
     set(key: string, val: string) {
       return ipcRenderer.invoke('keytar:set', key, val);
