@@ -10,8 +10,8 @@ import { RadioGroup, styled } from '@mui/material';
 const PreferencesRadioGroup = styled(RadioGroup)(({ theme }) => ({
   '& .MuiFormControlLabel-root': {
     marginTop: theme.spacing(0.75),
+    marginLeft: 'unset',
     padding: theme.spacing(0.5, 1),
-    paddingLeft: theme.spacing(2),
     '& .MuiButtonBase-root': {
       color: theme.palette.action.active,
     },

@@ -14,16 +14,24 @@ import {
   useRadioGroup,
 } from '@mui/material';
 
-const StyledFormControlLabel = styled(FormControlLabel)(
-  ({ theme, checked }) => ({
-    background: checked
-      ? theme.palette.action.disabledBackground
-      : theme.palette.background.paper,
-  })
-);
+const StyledFormControlLabel = styled(FormControlLabel, {
+  shouldForwardProp: (prop) => prop !== 'gutterColor',
+})<PreferencesFormControlLabelProps>(({ theme, checked, gutterColor }) => ({
+  background: checked
+    ? theme.palette.action.disabledBackground
+    : theme.palette.background.paper,
+  borderLeft: gutterColor && `2.5px solid ${gutterColor}`,
+  borderTopLeftRadius: gutterColor && '3px',
+  borderBottomLeftRadius: gutterColor && '3px',
+}));
+
+export interface PreferencesFormControlLabelProps
+  extends FormControlLabelProps {
+  gutterColor?: string;
+}
 
 export default function PreferencesFormControlLabel(
-  props: FormControlLabelProps
+  props: PreferencesFormControlLabelProps
 ) {
   const { value } = props;
   const radioGroup = useRadioGroup();
