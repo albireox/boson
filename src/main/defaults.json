@@ -22,6 +22,10 @@
       "height": 884
     }
   },
+  "interface": {
+    "mode": "system",
+    "saveWindows": true
+  },
   "connection": {
     "name": "APO",
     "observatory": "APO",
