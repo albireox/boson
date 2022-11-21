@@ -10,7 +10,9 @@ import CachedIcon from '@mui/icons-material/Cached';
 import {
   alpha,
   Divider,
+  FormControl,
   IconButton,
+  Radio,
   Stack,
   Tooltip,
   Typography,
@@ -22,6 +24,8 @@ import ConnectionProfileCard from '../Components/ConnectionProfileCard';
 import EditProfileDialog from '../Components/EditProfileDialog';
 import Pane from '../Components/Pane';
 import PasswordInput from '../Components/PasswordInput';
+import PreferencesFormControlLabel from '../Components/PreferencesFormControlLabel';
+import PreferencesRadioGroup from '../Components/PreferencesRadioGroup';
 import ProfileType from '../Components/ProfileType';
 import Switch from '../Components/Switch';
 import TextInput from '../Components/TextInput';
@@ -182,9 +186,50 @@ function ConnectionProfiles() {
   );
 }
 
+function Observatory() {
+  const [observatory] = useStore('connection.observatory');
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    window.electron.store.set(
+      'connection.observatory',
+      event.target.value.toUpperCase()
+    );
+  };
+
+  return (
+    <Pane title='Observatory'>
+      <Grid container direction='row'>
+        <Grid md={9}>
+          <Stack direction='column'>
+            <FormControl fullWidth>
+              <PreferencesRadioGroup
+                value={observatory}
+                onChange={handleChange}
+              >
+                <PreferencesFormControlLabel
+                  value='APO'
+                  control={<Radio />}
+                  label='APO'
+                />
+                <PreferencesFormControlLabel
+                  value='LCO'
+                  control={<Radio />}
+                  label='LCO'
+                />
+              </PreferencesRadioGroup>
+            </FormControl>
+            <Divider sx={{ my: 4 }} />
+          </Stack>
+        </Grid>
+      </Grid>
+    </Pane>
+  );
+}
+
 export default function ConnectionPane() {
   return (
     <Stack>
+      <Observatory />
       <ConnectionDetails />
       <ConnectionProfiles />
     </Stack>
