@@ -36,10 +36,11 @@ const IOSSwitch = styled((props: SwitchProps) => (
   padding: 0,
   '& .MuiSwitch-switchBase': {
     padding: 0,
-    margin: 2.7,
+    margin: 2.5,
     transitionDuration: '300ms',
     backgroundColor: theme.palette.action.active,
     '&.Mui-checked': {
+      backgroundColor: theme.palette.mode === 'light' && 'white',
       transform: 'translateX(16px)',
       '& + .MuiSwitch-track': {
         backgroundColor: theme.palette.success[theme.palette.mode],
@@ -47,7 +48,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
         border: 0,
       },
       '&:hover': {
-        backgroundColor: theme.palette.action.active,
+        backgroundColor: theme.palette.mode === 'light' && 'white',
       },
     },
     '&:hover': {
