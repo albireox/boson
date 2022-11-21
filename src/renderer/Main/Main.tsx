@@ -256,7 +256,7 @@ export default function Main() {
             </List>
           </>
         </PersistentDrawer>
-        <Box component='main' sx={{ flexGrow: 1, p: 3, height: '100%' }}>
+        <Box sx={{ flexGrow: 1, p: 3, height: '100%' }}>
           <MainStatus />
         </Box>
       </Box>
