@@ -49,7 +49,9 @@ const MenuItem = (props: MenuItemProps) => {
         mb: 0.5,
         borderRadius: '2px',
         userSelect: 'none',
-        backgroundColor: active ? theme.palette.action.selected : null,
+        backgroundColor: active
+          ? theme.palette.action.disabledBackground
+          : null,
         '&:hover': { backgroundColor: theme.palette.background.default },
       }}
     >
