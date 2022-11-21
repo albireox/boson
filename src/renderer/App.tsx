@@ -1,49 +1,74 @@
 import { createTheme, useMediaQuery } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { useMemo } from 'react';
+import React from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import { useStore } from './hooks';
 import Log from './Log';
 import Main from './Main';
 import Preferences from './Preferences';
 
-export default function App() {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+export type ColorModeValues = 'bright' | 'dark' | 'system';
 
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: prefersDarkMode ? 'dark' : 'light',
-          background: {
-            default: prefersDarkMode ? '#37393E' : '#FFFFFF',
-            paper: prefersDarkMode ? '#2F3136' : '#F2F3F5',
+export default function App() {
+  const [mode] = useStore<ColorModeValues>('interface.mode');
+  const mediaMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = React.useMemo(() => {
+    let prefersDarkMode: boolean;
+    if (mode === 'system') {
+      prefersDarkMode = mediaMode;
+    } else {
+      prefersDarkMode = mode === 'dark';
+    }
+
+    return createTheme({
+      palette: {
+        mode: prefersDarkMode ? 'dark' : 'light',
+        background: {
+          default: prefersDarkMode ? '#37393E' : '#FFFFFF',
+          paper: prefersDarkMode ? '#2F3136' : '#F2F3F5',
+        },
+      },
+      typography: {
+        fontSize: 12,
+      },
+      transitions: {
+        duration: {
+          shortest: 75,
+          shorter: 100,
+          short: 125,
+          standard: 150,
+          complex: 175,
+          enteringScreen: 125,
+          leavingScreen: 125,
+        },
+      },
+      components: {
+        MuiButtonBase: {
+          defaultProps: {},
+        },
+        MuiRadio: {
+          defaultProps: {
+            disableFocusRipple: true,
+            disableRipple: true,
+            disableTouchRipple: true,
           },
         },
-        typography: {
-          fontSize: 12,
-        },
-        transitions: {
-          duration: {
-            shortest: 75,
-            shorter: 100,
-            short: 125,
-            standard: 150,
-            complex: 175,
-            enteringScreen: 125,
-            leavingScreen: 125,
-          },
-        },
-        components: {
-          MuiButtonBase: {
-            defaultProps: {
-              disableRipple: true,
+        MuiButton: {
+          styleOverrides: {
+            containedPrimary: {
+              backgroundColor: prefersDarkMode ? '#5764EE' : '#5665F0',
+              color: '#ffffff',
+              '&:hover': {
+                backgroundColor: prefersDarkMode ? '#5764EE' : '#5665F0',
+              },
             },
           },
         },
-      }),
-    [prefersDarkMode]
-  );
+      },
+    });
+  }, [mode, mediaMode]);
 
   let path: string;
 

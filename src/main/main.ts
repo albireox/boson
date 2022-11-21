@@ -48,6 +48,10 @@ if (isDebug) {
   require('electron-debug')();
 }
 
+function saveWindows() {
+  return store.get('interface.saveWindows', true);
+}
+
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
@@ -84,7 +88,9 @@ const createWindow = async (name: string) => {
   const savedWindowParams: WindowParams =
     store.get(`savedState.windows.${name}`) || {};
 
-  windowParams = { ...windowParams, ...savedWindowParams };
+  if (saveWindows()) {
+    windowParams = { ...windowParams, ...savedWindowParams };
+  }
 
   const newWindow = new BrowserWindow({
     show: false,
@@ -137,7 +143,10 @@ const createWindow = async (name: string) => {
 
   newWindow.on('closed', () => {
     windows[name] = null;
-    const openWindows: string[] = store.get('savedState.windows.openWindows');
+    const openWindows: string[] = store.get(
+      'savedState.windows.openWindows',
+      []
+    );
     const newOpenWindows = openWindows.filter((value) => {
       return value === 'main' || value !== name;
     });
@@ -179,10 +188,13 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    const openWindows: string[] = store.get(
-      'savedState.windows.openWindows'
-    ) || ['main'];
+    let openWindows = ['main'];
+    if (saveWindows()) {
+      openWindows = store.get('savedState.windows.openWindows', ['main']);
+    }
+
     openWindows.map((key) => createWindow(key));
+
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
