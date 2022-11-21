@@ -5,7 +5,15 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Button, Divider, FormControl, Radio, Typography } from '@mui/material';
+import {
+  Button,
+  Divider,
+  FormControl,
+  Radio,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import { blue } from '@mui/material/colors';
 import { Stack } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid';
 import React from 'react';
@@ -16,6 +24,7 @@ import PreferencesRadioGroup from '../Components/PreferencesRadioGroup';
 import Switch from '../Components/Switch';
 
 function ThemeMode() {
+  const theme = useTheme();
   const [themeMode, setThemeMode] = React.useState<ColorModeValues>('system');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,16 +47,19 @@ function ThemeMode() {
             value='light'
             control={<Radio />}
             label='Light'
+            gutterColor={theme.palette.grey[200]}
           />
           <PreferencesFormControlLabel
             value='dark'
             control={<Radio />}
             label='Dark'
+            gutterColor={theme.palette.grey[600]}
           />
           <PreferencesFormControlLabel
             value='system'
             control={<Radio />}
             label='System'
+            gutterColor={blue[500]}
           />
         </PreferencesRadioGroup>
       </FormControl>
