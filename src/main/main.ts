@@ -121,7 +121,9 @@ const createWindow = async (name: string) => {
       newWindow.show();
     }
 
-    const openWindows: string[] = store.get('savedState.windows.openWindows');
+    const openWindows: string[] = store.get('savedState.windows.openWindows', [
+      'main',
+    ]);
     if (!openWindows.includes(name)) openWindows.push(name);
     store.set('savedState.windows.openWindows', openWindows);
 
