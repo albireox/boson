@@ -42,7 +42,7 @@ function ConnectionDetails() {
       <Grid container>
         <Grid sm={12} md={9}>
           <Stack direction='column' spacing={1}>
-            <Stack direction='row' spacing={2}>
+            <Stack direction='row' spacing={1}>
               <TextInput fullWidth label='User' param='connection.user' />
               <TextInput fullWidth label='Program' param='connection.program' />
               <PasswordInput fullWidth label='Password' account={program} />
@@ -51,7 +51,7 @@ function ConnectionDetails() {
               <Grid xs={9}>
                 <TextInput fullWidth label='Host' param='connection.host' />
               </Grid>
-              <Grid xs={3} pl={2}>
+              <Grid xs={3} pl={1}>
                 <TextInput fullWidth label='Port' param='connection.port' />
               </Grid>
             </Grid>
@@ -63,7 +63,7 @@ function ConnectionDetails() {
                   param='connection.httpHost'
                 />
               </Grid>
-              <Grid xs={3} pl={2}>
+              <Grid xs={3} pl={1}>
                 <TextInput
                   fullWidth
                   label='HTTP Port'
