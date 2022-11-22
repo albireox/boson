@@ -6,4 +6,10 @@ declare global {
   }
 }
 
+declare module '@mui/material/styles' {
+  interface TypeAction {
+    boxBackground: React.CSSProperties['color'];
+  }
+}
+
 export {};

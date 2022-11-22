@@ -29,6 +29,9 @@ export default function App() {
           default: prefersDarkMode ? '#37393E' : '#FFFFFF',
           paper: prefersDarkMode ? '#2F3136' : '#F2F3F5',
         },
+        action: {
+          boxBackground: prefersDarkMode ? '#40444B' : '#40444B',
+        },
       },
       typography: {
         fontSize: 12,
