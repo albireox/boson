@@ -226,6 +226,11 @@ ipcMain.handle('tron:subscribe', async (event) =>
 ipcMain.handle('tron:unsubscribe', async (event) =>
   tron.unsubscribeWindow(event.sender)
 );
+ipcMain.handle('tron:send', async (event, command) => {
+  const cmd = tron.sendCommand(command);
+  await cmd.awaitUntilDone();
+  return cmd;
+});
 
 // store
 ipcMain.on('store:get', async (event, val) => {

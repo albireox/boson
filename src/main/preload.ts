@@ -72,6 +72,9 @@ const ElectronAPI = {
     unsubscribe() {
       return ipcRenderer.invoke('tron:unsubscribe');
     },
+    send(command: string) {
+      return ipcRenderer.invoke('tron:send', command);
+    },
   },
   store: {
     get(key: string) {

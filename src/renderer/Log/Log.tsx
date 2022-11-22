@@ -6,9 +6,11 @@
  */
 
 import { Box, CssBaseline } from '@mui/material';
+import { Stack } from '@mui/system';
 import * as React from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import Reply from '../../main/tron/reply';
+import CommandInput from './CommandInput';
 
 const Row = ({
   data,
@@ -27,7 +29,7 @@ const Log = () => {
 
   React.useEffect(() => {
     const test = (reply: Reply) => {
-      setReplies((old) => [...old.slice(-10000), reply.rawLine]);
+      setReplies((old) => [...old, reply.rawLine]);
     };
 
     window.electron.ipcRenderer.on('tron:received-reply', test);
@@ -46,39 +48,38 @@ const Log = () => {
   }, []);
 
   return (
-    <Box component='main' sx={{ display: 'flex', height: '100%', p: 3 }}>
+    <Box
+      component='main'
+      sx={{
+        display: 'flex',
+        position: 'absolute',
+        height: '100%',
+        p: 3,
+      }}
+      width='100%'
+      position='absolute'
+      top={0}
+    >
       <CssBaseline />
-      {/* <Box>
-        {replies.map((reply, idx) => (
-          <div key={idx}>{reply}</div>
-        ))}
-      </Box> */}
-      {/* <List
-        height={1000}
-        itemCount={replies.length}
-        itemSize={22}
-        itemData={replies}
-        width={1000}
-        style={{ whiteSpace: 'nowrap', flexDirection: 'row-reverse' }}
-      >
-        {Row}
-      </List> */}
-      <Virtuoso
-        style={{
-          height: '100%',
-          width: '100%',
-        }}
-        totalCount={replies.length}
-        data={replies}
-        overscan={1000}
-        itemContent={(index) => (
-          <div style={{ whiteSpace: 'nowrap' }}>{replies[index]}</div>
-        )}
-        followOutput='smooth'
-        alignToBottom
-        atBottomThreshold={400}
-        defaultItemHeight={22}
-      />
+      <Stack height='100%' direction='column' pt={2} spacing={2}>
+        <Virtuoso
+          style={{
+            height: '100%',
+            width: '100%',
+          }}
+          totalCount={replies.length}
+          data={replies}
+          overscan={1000}
+          itemContent={(index) => (
+            <div style={{ whiteSpace: 'nowrap' }}>{replies[index]}</div>
+          )}
+          followOutput='smooth'
+          alignToBottom
+          atBottomThreshold={400}
+          defaultItemHeight={22}
+        />
+        <CommandInput />
+      </Stack>
     </Box>
   );
 };
