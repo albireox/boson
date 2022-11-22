@@ -116,7 +116,7 @@ export default function Main() {
     setIsConnecting(true);
     setAuthenticationFailed(false);
     window.electron.tron
-      .connectAndAuthorise(authorise)
+      .connectAndAuthorise(authorise, true)
       .then(() => {
         return true;
       })
@@ -289,14 +289,15 @@ export default function Main() {
       <ReconnectSnackbar
         open={!isConnected && !authenticationFailed}
         isReconnecting={reconnect}
-        handleConnect={() => {
-          setReconnect(true);
-        }}
+        handleConnect={() => setReconnect(true)}
         handleStopConnecting={() => setReconnect(false)}
       />
       <AuthenticationFailedSnackbar
         open={!isConnecting && authenticationFailed}
-        handleRetry={connect}
+        handleRetry={() => {
+          setIsConnected(false);
+          setReconnect(true);
+        }}
       />
     </>
   );
