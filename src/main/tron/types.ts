@@ -37,6 +37,7 @@ export enum CommandStatus {
 }
 
 export enum ReplyCode {
+  Started,
   Info,
   Error,
   Warning,
@@ -48,6 +49,7 @@ export enum ReplyCode {
 }
 
 export const ReplyCodeMap = new Map<ReplyCode, string>([
+  [ReplyCode.Started, 's'],
   [ReplyCode.Info, 'i'],
   [ReplyCode.Error, 'e'],
   [ReplyCode.Warning, 'w'],
@@ -58,6 +60,7 @@ export const ReplyCodeMap = new Map<ReplyCode, string>([
 ]);
 
 export const ReplyCodeReverseMap = new Map<string, ReplyCode>([
+  ['s', ReplyCode.Started],
   ['i', ReplyCode.Info],
   ['e', ReplyCode.Error],
   ['w', ReplyCode.Warning],

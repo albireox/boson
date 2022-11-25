@@ -27,6 +27,9 @@ export class TronConnection {
 
   private commands: Map<number, Command> = new Map();
 
+  private cmdsCommands: Map<number, [number, string, string, string]> =
+    new Map();
+
   private listeners: Map<number, WebContents> = new Map();
 
   private replies: Reply[] = [];
@@ -201,6 +204,10 @@ export class TronConnection {
   }
 
   parseData(data: string) {
+    const CmdQueuedRegex = new RegExp(
+      'CmdQueued=([0-9]+),([0-9.]+),"(.+?)",([0-9]+),"(.+?)",([0-9]+),"(.+?)"'
+    );
+
     const newLines = data.trim().split(/\r|\n/);
 
     newLines.forEach((line) => {
@@ -209,9 +216,43 @@ export class TronConnection {
       if (!lineMatched || !lineMatched.groups) return;
 
       const { groups } = lineMatched;
+      let rawLine = line;
+
+      // In the log windows we want to colour the start and end of a command
+      // and for that we rely on cmds, but CmdDone does not have all the
+      // information, only the internal tron ID. When a command is queued
+      // we grab that information from CmdQueued and then attach it to CmdDone.
+      if (groups.sender === 'cmds') {
+        if (line.includes('CmdQueued')) {
+          const cmdsMatch = line.match(CmdQueuedRegex);
+          if (cmdsMatch) {
+            const tronId = parseInt(cmdsMatch[1], 10);
+            const cmdId = parseInt(cmdsMatch[4], 10);
+            this.cmdsCommands.set(tronId, [
+              cmdId,
+              cmdsMatch[3], // user that commanded this command
+              cmdsMatch[5], // actor being commanded
+              cmdsMatch[7], // command sent to the actor
+            ]);
+            groups.code = 's'; // started. This is not a standard tron code.
+          }
+        } else if (line.includes('CmdDone')) {
+          const cmdsMatch = line.match(/CmdDone=([0-9]+),"([:f])"/);
+          if (cmdsMatch) {
+            const tronId = parseInt(cmdsMatch[1], 10);
+            const doneCode = cmdsMatch[2];
+            if (this.cmdsCommands.has(tronId)) {
+              const [cmdId, fromWhom, toActor, cmd] =
+                this.cmdsCommands.get(tronId) ?? [];
+              groups.code = doneCode; // Change its code to the command result.
+              rawLine += `,${cmdId},"${fromWhom}","${toActor}","${cmd}"`;
+            }
+          }
+        }
+      }
 
       const reply = new Reply(
-        line,
+        rawLine,
         groups.commander,
         groups.sender,
         parseInt(groups.commandId, 10),
