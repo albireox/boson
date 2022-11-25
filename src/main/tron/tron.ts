@@ -29,6 +29,8 @@ export class TronConnection {
 
   private listeners: Map<number, WebContents> = new Map();
 
+  private replies: Reply[] = [];
+
   client = new Socket();
 
   lastConnected: Date | undefined = undefined;
@@ -217,9 +219,14 @@ export class TronConnection {
         keywords
       );
 
+      this.replies.push(reply);
       this.commands.get(reply.commandId)?.addReply(reply);
       this.listeners.forEach((win) => win.send('tron:received-reply', reply));
     });
+  }
+
+  getReplies() {
+    return this.replies;
   }
 
   subscribeWindow(sender: WebContents) {
