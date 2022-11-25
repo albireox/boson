@@ -104,13 +104,20 @@ export default function App() {
     [path] = window.location.pathname.split('/').reverse();
   }
 
+  // log window names are log1, log2, etc.
+  let logId: number | null = null;
+  if (path.startsWith('log')) {
+    logId = parseInt(path.slice(3), 10);
+    path = 'log';
+  }
+
   let view: React.ReactElement | null;
   switch (path) {
     case 'main':
       view = <Main />;
       break;
     case 'log':
-      view = <Log />;
+      view = <Log logId={logId ?? 0} />;
       break;
     case 'preferences':
       view = <Preferences />;

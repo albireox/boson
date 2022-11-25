@@ -77,6 +77,8 @@ export default function CommandInput() {
 
   const HISTORY_MENU_N = 10;
 
+  const textRef = React.useRef<HTMLInputElement>(null);
+
   const [historyMenuAnchor, setHistoryMenuAnchor] =
     React.useState<null | HTMLElement>(null);
 
@@ -90,17 +92,17 @@ export default function CommandInput() {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
     setError(false);
+    setValue(event.target.value);
   };
 
   const sendCommand = (command: string) => {
     if (history[1] !== command) {
       setHistory((current) => [current[0], command, ...current.slice(1)]);
-      window.electron.tron.send(command).catch(() => {});
-      setValue('');
-      setHistoryIndex(0);
     }
+    window.electron.tron.send(command).catch(() => {});
+    setValue('');
+    setHistoryIndex(0);
   };
 
   const handleCommand = () => {
@@ -127,6 +129,12 @@ export default function CommandInput() {
         setHistoryIndex(newIndex);
       }
     }
+    if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && textRef) {
+      setTimeout(() => {
+        const selection = textRef.current?.value.length ?? 0;
+        textRef.current?.setSelectionRange(selection, selection);
+      }, 10);
+    }
   };
 
   const handleMenuClick = (
@@ -152,6 +160,7 @@ export default function CommandInput() {
         fullWidth
         margin='none'
         autoFocus
+        inputRef={textRef}
         placeholder='Send command to tron'
         startAdornment={
           <InputAdornment position='start'>
