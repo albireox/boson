@@ -215,7 +215,7 @@ export class TronConnection {
         groups.commander,
         groups.sender,
         parseInt(groups.commandId, 10),
-        ReplyCodeReverseMap.get(groups.code.toLowerCase()) || ReplyCode.Unknown,
+        ReplyCodeReverseMap.get(groups.code.toLowerCase()) ?? ReplyCode.Unknown,
         keywords
       );
 
