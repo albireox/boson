@@ -199,7 +199,7 @@ function Observatory() {
   return (
     <Pane title='Observatory'>
       <Grid container direction='row'>
-        <Grid md={9}>
+        <Grid xs={12} md={9}>
           <Stack direction='column'>
             <FormControl fullWidth>
               <PreferencesRadioGroup

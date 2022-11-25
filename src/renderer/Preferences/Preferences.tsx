@@ -48,8 +48,7 @@ export default function Preferences() {
       position='absolute'
       top={0}
       display='grid'
-      gridTemplateColumns={250}
-      gridAutoColumns='1fr'
+      gridTemplateColumns='minmax(150px, 250px) 1fr'
       gridAutoFlow='column'
     >
       <CssBaseline />
@@ -69,7 +68,7 @@ export default function Preferences() {
           </Stack>
         </Stack>
       </Paper>
-      <Box overflow='scroll' px={4} py={5}>
+      <Box overflow='scroll' minWidth={500} px={4} py={5}>
         {getPane(selectedPane)}
       </Box>
     </Box>
