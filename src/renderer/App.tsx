@@ -30,7 +30,7 @@ export default function App() {
           paper: prefersDarkMode ? '#2F3136' : '#F2F3F5',
         },
         action: {
-          boxBackground: prefersDarkMode ? '#40444B' : '#40444B',
+          boxBackground: prefersDarkMode ? '#40444B' : '#EBEDEF',
         },
       },
       typography: {
