@@ -19,7 +19,9 @@
       "x": 876,
       "y": 160,
       "width": 1018,
-      "height": 884
+      "height": 884,
+      "minWidth": 685,
+      "minHeight": 585
     }
   },
   "interface": {
