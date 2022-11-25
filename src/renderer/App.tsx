@@ -48,8 +48,29 @@ export default function App() {
         },
       },
       components: {
+        MuiTooltip: {
+          defaultProps: {
+            arrow: true,
+          },
+          styleOverrides: {
+            tooltip: {
+              fontSize: '12px',
+              backgroundColor: prefersDarkMode ? '#18191C' : undefined,
+            },
+            arrow: {
+              color: prefersDarkMode ? '#18191C' : undefined,
+            },
+          },
+        },
         MuiButtonBase: {
           defaultProps: {},
+        },
+        MuiIconButton: {
+          defaultProps: {
+            disableFocusRipple: true,
+            disableRipple: true,
+            disableTouchRipple: true,
+          },
         },
         MuiRadio: {
           defaultProps: {
