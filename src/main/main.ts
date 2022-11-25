@@ -9,17 +9,13 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 
-import { randomUUID } from 'crypto';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
-import * as keytar from 'keytar';
 import path from 'path';
 import loadEvents from './events';
 import MenuBuilder from './menu';
-import store, { subscriptions as storeSubscriptions } from './store';
-import { connectAndAuthorise } from './tron';
-import tron from './tron/tron';
+import store from './store';
 import { WindowParams } from './types';
 import { resolveHtmlPath } from './util';
 
@@ -35,7 +31,7 @@ class AppUpdater {
   }
 }
 
-const windows: { [key: string]: BrowserWindow | null } = { main: null };
+const windows = new Map<string, BrowserWindow | null>([['main', null]]);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -66,9 +62,27 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-const createWindow = async (name: string) => {
-  if (windows[name] !== undefined && windows[name] !== null) {
-    const window = windows[name];
+function getLogWindowName() {
+  let nn = 1;
+  while (nn <= 100) {
+    if (!windows.has(`log${nn}`)) return `log${nn}`;
+    nn += 1;
+  }
+  log.warn('Maximum number of log windows reached.');
+  return 'log1';
+}
+
+export async function createWindow(windowName: string) {
+  let name: string;
+  if (windowName === 'log') {
+    name = getLogWindowName();
+  } else {
+    name = windowName;
+  }
+  console.log(windowName, name);
+
+  if (windows.get(name) !== undefined && windows.get(name) !== null) {
+    const window = windows.get(name);
     window?.focus();
     return;
   }
@@ -85,7 +99,7 @@ const createWindow = async (name: string) => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
-  let windowParams: WindowParams = store.get(`windows.${name}`) || {};
+  let windowParams: WindowParams = store.get(`windows.${windowName}`) || {};
   const savedWindowParams: WindowParams =
     store.get(`savedState.windows.${name}`) || {};
 
@@ -107,7 +121,7 @@ const createWindow = async (name: string) => {
     },
   });
 
-  windows[name] = newWindow;
+  windows.set(name, newWindow);
 
   newWindow.loadURL(resolveHtmlPath(name));
 
@@ -145,7 +159,7 @@ const createWindow = async (name: string) => {
   });
 
   newWindow.on('closed', () => {
-    windows[name] = null;
+    windows.delete(name);
     const openWindows: string[] = store.get(
       'savedState.windows.openWindows',
       []
@@ -177,7 +191,7 @@ const createWindow = async (name: string) => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   if (name === 'main') new AppUpdater();
-};
+}
 
 /**
  * Add event listeners...
@@ -203,7 +217,7 @@ app
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (windows.main === null) createWindow('main');
+      if (windows.get('main') === null) createWindow('main');
     });
   })
   .catch(console.log);
