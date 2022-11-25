@@ -1,10 +1,13 @@
+/* eslint-disable import/no-cycle */
+
 import {
   app,
-  Menu,
-  shell,
   BrowserWindow,
+  Menu,
   MenuItemConstructorOptions,
+  shell,
 } from 'electron';
+import { createWindow } from './main';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -59,6 +62,12 @@ export default class MenuBuilder {
         {
           label: 'About ElectronReact',
           selector: 'orderFrontStandardAboutPanel:',
+        },
+        { type: 'separator' },
+        {
+          label: 'Preferences ...',
+          accelerator: 'Command+,',
+          click: () => createWindow('preferences'),
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
@@ -138,6 +147,16 @@ export default class MenuBuilder {
         },
       ],
     };
+    const subMenuTools: MenuItemConstructorOptions = {
+      label: 'Tools',
+      submenu: [
+        {
+          label: 'New log window ...',
+          accelerator: 'Command+N',
+          click: () => createWindow('log'),
+        },
+      ],
+    };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
       label: 'Window',
       submenu: [
@@ -189,7 +208,14 @@ export default class MenuBuilder {
         ? subMenuViewDev
         : subMenuViewProd;
 
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+    return [
+      subMenuAbout,
+      subMenuEdit,
+      subMenuView,
+      subMenuTools,
+      subMenuWindow,
+      subMenuHelp,
+    ];
   }
 
   buildDefaultTemplate() {
