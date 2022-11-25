@@ -189,7 +189,7 @@ export class TronConnection {
     this.commands.set(command.commandId, command);
 
     // Remove command from TronConnection list when done.
-    command.lock.promise?.then((value) => {
+    command.lock?.promise?.then((value) => {
       this.commands.delete(value.commandId);
       return null;
     });

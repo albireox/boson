@@ -17,7 +17,7 @@ export default class Command {
 
   commandId: number;
 
-  lock: CommandLock<Command>;
+  lock: CommandLock<Command> | undefined;
 
   actor: string;
 
@@ -68,7 +68,7 @@ export default class Command {
   }
 
   async awaitUntilDone() {
-    await this.lock.promise;
+    await this.lock?.promise;
   }
 
   addReply(reply: Reply) {
@@ -86,7 +86,7 @@ export default class Command {
         break;
     }
     if (this.isDone()) {
-      this.lock.disable();
+      this.lock?.disable();
     }
   }
 }
