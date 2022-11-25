@@ -73,5 +73,5 @@ export default function parseLine(
     return [lineMatched, keywords];
   }
 
-  return [null, []];
+  return [lineMatched, []];
 }
