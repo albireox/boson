@@ -15,6 +15,7 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import * as keytar from 'keytar';
 import path from 'path';
+import loadEvents from './events';
 import MenuBuilder from './menu';
 import store, { subscriptions as storeSubscriptions } from './store';
 import { connectAndAuthorise } from './tron';
@@ -161,6 +162,8 @@ const createWindow = async (name: string) => {
   if (name === 'main') {
     const menuBuilder = new MenuBuilder(newWindow);
     menuBuilder.buildMenu();
+
+    loadEvents();
   }
 
   // Open urls in the user's browser
@@ -204,64 +207,3 @@ app
     });
   })
   .catch(console.log);
-
-// app events
-ipcMain.handle('app:get-version', () => app.getVersion());
-ipcMain.handle('app:is-packaged', () => app.isPackaged);
-ipcMain.handle('app:new-window', async (event, name) => createWindow(name));
-
-// tron
-ipcMain.handle('tron:get-status', () => tron.status);
-ipcMain.handle('tron:get-last-connected', () => tron.lastConnected);
-ipcMain.handle('tron:connect', () => tron.connect());
-ipcMain.handle('tron:disconnect', () => tron.disconnect());
-ipcMain.handle(
-  'tron:connect-and-authorise',
-  async (event, authorise = true, force = false) =>
-    connectAndAuthorise({ authorise, force })
-);
-ipcMain.handle('tron:subscribe', async (event) =>
-  tron.subscribeWindow(event.sender)
-);
-ipcMain.handle('tron:unsubscribe', async (event) =>
-  tron.unsubscribeWindow(event.sender)
-);
-ipcMain.handle('tron:send', async (event, command) => {
-  const cmd = tron.sendCommand(command);
-  await cmd.awaitUntilDone();
-  return cmd;
-});
-
-// store
-ipcMain.on('store:get', async (event, val) => {
-  event.returnValue = store.get(val);
-});
-ipcMain.handle('store:set', async (event, key, val) => {
-  store.set(key, val);
-});
-ipcMain.handle('store:delete', async (event, key) => {
-  store.delete(key);
-});
-ipcMain.handle('store:subscribe', async (event, property, channel: string) => {
-  const unsubscribe = store.onDidChange(property, (newValue) =>
-    event.sender.send(channel, newValue)
-  );
-  storeSubscriptions.set(channel, unsubscribe);
-});
-ipcMain.handle('store:unsubscribe', async (event, channel: string) => {
-  const unsubscribe = storeSubscriptions.get(channel);
-  if (unsubscribe) unsubscribe();
-});
-
-// keytar passwords
-ipcMain.handle('keytar:get', async (event, key) => {
-  return keytar.getPassword('boson', key);
-});
-ipcMain.handle('keytar:set', async (event, key, value) => {
-  keytar.setPassword('boson', key, value);
-});
-
-// tools
-ipcMain.on('tools:get-uuid', async (event) => {
-  event.returnValue = randomUUID();
-});

@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { ConnectionStatus } from './tron';
+import { ConnectionStatus, Reply } from './tron';
 
 export type Channels = 'tron:connection-status' | 'tron:received-reply';
 
@@ -71,6 +71,9 @@ const ElectronAPI = {
     },
     unsubscribe() {
       return ipcRenderer.invoke('tron:unsubscribe');
+    },
+    getAllReplies(): Promise<Reply[]> {
+      return ipcRenderer.invoke('tron:all-replies');
     },
     send(command: string) {
       return ipcRenderer.invoke('tron:send', command);
