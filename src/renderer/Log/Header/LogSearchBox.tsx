@@ -1,7 +1,7 @@
 /*
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
  *  @Date: 2022-11-24
- *  @Filename: SearchBox.tsx
+ *  @Filename: LogSearchBox.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
@@ -9,9 +9,9 @@ import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import ClearIcon from '@mui/icons-material/Clear';
 import CropFreeIcon from '@mui/icons-material/CropFree';
 import SearchIcon from '@mui/icons-material/Search';
-import { Fade, InputBase, InputBaseProps, Stack, Tooltip } from '@mui/material';
+import { Fade, Stack, Tooltip } from '@mui/material';
 import React from 'react';
-import { IconButtonFlat } from 'renderer/Components';
+import { IconButtonFlat, SearchBox } from 'renderer/Components';
 import { useLogConfig } from '../hooks';
 
 const NoSearchIcon = (props: { value: string }) => {
@@ -97,9 +97,8 @@ const SearchingIcons = (props: {
   );
 };
 
-export default function SearchBox(props: InputBaseProps) {
+export default function LogSearchBox() {
   const [value, setValue] = React.useState('');
-  const [focused, setFocused] = React.useState(false);
 
   const { config, setSearchText, setShowMatched, setUseRegEx } = useLogConfig();
 
@@ -141,25 +140,8 @@ export default function SearchBox(props: InputBaseProps) {
   );
 
   return (
-    <InputBase
-      sx={(theme) => ({
-        borderRadius: '4px',
-        position: 'relative',
-        backgroundColor: theme.palette.mode === 'light' ? '#E3E5E8' : '#202225',
-        color: theme.palette.action.active,
-        border: 'none',
-        padding: '0px 6px',
-        fontWeight: 500,
-        transition: 'all 0.5s ease 0s',
-        width: !focused && !value ? '150px' : '250px',
-        '& .MuiInputBase-input': {
-          padding: '2.5px',
-        },
-      })}
-      value={value}
-      placeholder='Search'
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
+    <SearchBox
+      expand
       onChange={handleChange}
       onKeyDown={handleKeyDown}
       endAdornment={
@@ -173,7 +155,6 @@ export default function SearchBox(props: InputBaseProps) {
           />
         </>
       }
-      {...props}
     />
   );
 }

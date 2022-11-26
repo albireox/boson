@@ -8,8 +8,8 @@
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import { useLogConfig } from '../hooks';
 import ActorButton from './ActorButton';
+import LogSearchBox from './LogSearchBox';
 import ReplyCodeButton from './ReplyCodeButton';
-import SearchBox from './SearchBox';
 
 interface ActorInfoProps {
   actors: Set<string>;
@@ -80,7 +80,7 @@ export default function Header(props: HeaderProps) {
         <div style={{ flexGrow: 1 }} />
         <ActorButton />
         <ReplyCodeButton />
-        <SearchBox />
+        <LogSearchBox />
       </Stack>
     </Box>
   );

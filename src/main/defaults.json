@@ -15,7 +15,13 @@
       "closable": true,
       "resizable": true
     },
+    "snapshots": {
+      "trafficLightPosition": { "x": 10, "y": 15 },
+      "minWidth": 480,
+      "minHeight": 400
+    },
     "log": {
+      "trafficLightPosition": { "x": 10, "y": 15 },
       "minWidth": 480,
       "minHeight": 400
     },

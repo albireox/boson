@@ -16,3 +16,4 @@ export { default as HeaderIconButton } from './HeaderIconButton';
 export { default as IconButtonFlat } from './IconButtonFlat';
 export { default as IOSwitch } from './IOSwitch';
 export { default as PersistentDrawer } from './PersistentDrawer';
+export { default as SearchBox } from './SearchBox';

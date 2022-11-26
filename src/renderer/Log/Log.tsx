@@ -32,13 +32,10 @@ export default function Log(props: LogProps) {
   return (
     <Box
       component='main'
-      sx={{
-        display: 'flex',
-        position: 'absolute',
-        height: '100%',
-      }}
-      width='100%'
+      display='flex'
       position='absolute'
+      height='100%'
+      width='100%'
       top={0}
     >
       <CssBaseline />

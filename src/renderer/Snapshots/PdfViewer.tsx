@@ -5,38 +5,104 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import { Box } from '@mui/material';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import { LoadingProcessData, TextLayerItemInternal } from 'react-pdf';
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
 
 interface PdfViewerProps {
-  file: string;
+  files: string[];
+  index: number;
   scale: number;
-  customTextRendered: (layer: TextLayerItemInternal) => JSX.Element;
-  onLoadProgress: (data: LoadingProcessData) => void;
+  onLoadProgress?: (data: LoadingProcessData) => void;
   width?: number;
+  searchText?: string;
+}
+
+// Seems to be a problem with the typing of renderHighlight because
+// react-pdf v6 requires the function to return a string but the typing
+// seems to require a JSX.Element, so we force it.
+interface FakeTextLayerItem {
+  (layer: TextLayerItemInternal): JSX.Element;
 }
 
 export default function PdfViewer(props: PdfViewerProps) {
-  const { file, scale, width, customTextRendered, onLoadProgress } = props;
+  const { files, index, scale, width, onLoadProgress, searchText } = props;
 
-  if (!file) return null;
+  const renderHighlight = React.useCallback(
+    ({ str }: TextLayerItemInternal) => {
+      if (!searchText) return ReactDOMServer.renderToString(<span />);
+
+      if (
+        (searchText.length >= 4 && str.includes(searchText)) ||
+        (searchText.length === 3 && str.includes(`P0${searchText}`)) ||
+        (searchText.length === 2 && str.includes(`P00${searchText}`)) ||
+        (searchText.length === 1 && str.includes(`P000${searchText}`))
+      ) {
+        const size: number = 30 * (scale ?? 1);
+        const JSXElement = (
+          <div
+            style={{
+              textAlign: 'center',
+              color: '#fff',
+              fontSize: '8em',
+              height: `${size}px`,
+              width: `${size}px`,
+              position: 'relative',
+              left: `-${size / 2}px`,
+              top: `-${size / 2}px`,
+            }}
+          >
+            <div
+              style={{
+                content: '',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRadius: '50%',
+                background: 'linear-gradient(crimson,#f90)',
+                WebkitMask:
+                  'radial-gradient(farthest-side, transparent calc(100% - 5px),#fff 0)',
+              }}
+            />
+          </div>
+        );
+        return ReactDOMServer.renderToString(JSXElement);
+      }
+
+      return '<span />';
+    },
+    [searchText, scale]
+  );
+
+  if (!files[index]) return null;
 
   return (
-    <Document
-      file={file}
-      renderMode='canvas'
-      onLoadProgress={onLoadProgress}
-      error=''
-      loading=''
+    <Box
+      height='100%'
+      sx={{ backgroundColor: '#fff' }}
+      position='relative'
+      overflow='scroll'
     >
-      <Page
-        pageNumber={1}
-        scale={scale}
-        width={width}
-        customTextRenderer={customTextRendered}
-        renderAnnotationLayer
-        renderTextLayer
-      />
-    </Document>
+      <Document
+        file={files[index]}
+        renderMode='canvas'
+        onLoadProgress={onLoadProgress}
+        error=''
+        loading=''
+      >
+        <Page
+          pageNumber={1}
+          scale={scale}
+          width={width}
+          customTextRenderer={renderHighlight as unknown as FakeTextLayerItem}
+          renderAnnotationLayer
+          renderTextLayer
+        />
+      </Document>
+    </Box>
   );
 }

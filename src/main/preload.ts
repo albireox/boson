@@ -7,7 +7,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer, IpcRendererEvent, shell } from 'electron';
 import { ConnectionStatus, Reply } from './tron/types';
 
 const ElectronAPI = {
@@ -130,6 +130,9 @@ const ElectronAPI = {
   tools: {
     getUUID() {
       return ipcRenderer.sendSync('tools:get-uuid');
+    },
+    openInBrowser: (path: string) => {
+      shell.openExternal(path);
     },
   },
 };
