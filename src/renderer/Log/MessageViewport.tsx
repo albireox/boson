@@ -102,7 +102,14 @@ export default function MessageViewport() {
       data={filtered}
       overscan={1000}
       itemContent={(index) => {
-        return <Message reply={filtered[index]} theme={theme} />;
+        return (
+          <Message
+            reply={filtered[index]}
+            theme={theme}
+            searchText={config.searchText}
+            searchUseRegEx={config.searchUseRegEx}
+          />
+        );
       }}
       followOutput='auto'
       alignToBottom
