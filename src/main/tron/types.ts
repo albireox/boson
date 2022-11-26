@@ -26,7 +26,8 @@ export interface Credentials {
 
 export interface Keyword {
   name: string;
-  values: unknown[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  values: any[];
 }
 
 export enum CommandStatus {
