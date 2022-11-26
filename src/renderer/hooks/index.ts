@@ -10,3 +10,4 @@
 export { default as useConnectionStatus } from './useConnectionStatus';
 export { default as useKeywords } from './useKeywords';
 export { default as useStore } from './useStore';
+export { default as useWindowSize } from './useWindowSize';

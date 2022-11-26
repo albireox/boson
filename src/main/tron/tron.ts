@@ -338,10 +338,14 @@ export class TronConnection {
         `keys getFor=${actor} ${keywords.join(' ')}`
       ).awaitUntilDone();
       if (replies.length > 0) {
-        const keysReply = replies[0];
-        // Change sender so that it will appear as if coming from the actor.
-        keysReply.sender = actor;
-        this.emitKeywords(keysReply);
+        replies.every((reply) => {
+          if (reply.code !== ReplyCode.Info) return true;
+
+          // Change sender so that it will appear as if coming from the actor.
+          reply.sender = actor;
+          this.emitKeywords(reply);
+          return false;
+        });
       }
     }
   }

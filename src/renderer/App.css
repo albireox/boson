@@ -24,6 +24,18 @@
   -webkit-app-region: no-drag;
 }
 
+.snapshots::-webkit-scrollbar {
+  display:block;
+  -webkit-appearance: none;
+  width: 11px;
+}
+
+.snapshots::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid white;
+  background-color: rgba(0, 0, 0, .5);
+}
+
 /* source-code-pro-regular - latin */
 @font-face {
   font-family: 'Source Code Pro';

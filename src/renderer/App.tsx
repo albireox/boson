@@ -7,6 +7,7 @@ import { useStore } from './hooks';
 import Log from './Log';
 import Main from './Main';
 import Preferences from './Preferences';
+import { Snapshots } from './Snapshots';
 
 export type ColorModeValues = 'bright' | 'dark' | 'system';
 
@@ -128,6 +129,9 @@ export default function App() {
       break;
     case 'preferences':
       view = <Preferences />;
+      break;
+    case 'snapshots':
+      view = <Snapshots />;
       break;
     default:
       view = null;

@@ -33,7 +33,7 @@ export default function useKeywords(
 
   const handleEvent = React.useCallback((keyword: Keyword) => {
     const update: { [key: string]: any } = {};
-    update[keyword.name] = keyword.values;
+    update[keyword.name] = keyword;
     setKeys((previous) => ({ ...previous, ...update }));
   }, []);
 
