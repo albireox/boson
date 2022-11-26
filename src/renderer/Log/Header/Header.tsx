@@ -5,9 +5,39 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
+import { useLogConfig } from '../hooks';
+import ActorButton from './ActorButton';
 import ReplyCodeButton from './ReplyCodeButton';
 import SearchBox from './SearchBox';
+
+interface ActorInfoProps {
+  actors: Set<string>;
+}
+
+function ActorInfo(props: ActorInfoProps) {
+  const { actors } = props;
+
+  if (actors.size === 0) return null;
+
+  return (
+    <>
+      <Divider orientation='vertical' variant='middle' sx={{ height: '60%' }} />
+      <Typography
+        variant='body1'
+        color='text.secondary'
+        sx={{
+          maxWidth: '100px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {Array.from(actors).join(', ')}
+      </Typography>
+    </>
+  );
+}
 
 export interface HeaderProps {
   logId: number;
@@ -15,6 +45,9 @@ export interface HeaderProps {
 
 export default function Header(props: HeaderProps) {
   const { logId } = props;
+
+  const { config } = useLogConfig();
+  const { actors } = config;
 
   return (
     <Box height='50px' pl={8}>
@@ -43,7 +76,9 @@ export default function Header(props: HeaderProps) {
             #{logId}
           </Typography>
         </div>
+        <ActorInfo actors={actors} />
         <div style={{ flexGrow: 1 }} />
+        <ActorButton />
         <ReplyCodeButton />
         <SearchBox />
       </Stack>

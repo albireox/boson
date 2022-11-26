@@ -6,27 +6,30 @@
  */
 
 import { Checkbox, MenuItem, Stack, Typography } from '@mui/material';
+import React from 'react';
 
 export interface CheckMenuItemProps {
   text: string;
+  noCheckbox?: boolean;
   checked?: boolean;
   onClick?: (
-    event: React.MouseEvent<HTMLLIElement | HTMLButtonElement, MouseEvent>,
+    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
     text: string
   ) => void;
 }
 
 export default function CheckMenuItem(props: CheckMenuItemProps) {
-  const { text, onClick, checked } = props;
+  const { text, onClick, checked, noCheckbox, ...rest } = props;
   return (
     <MenuItem
-      {...props}
+      {...rest}
       id={text}
       disableRipple
       disableTouchRipple
       onClick={(event) => (onClick ? onClick(event, text) : undefined)}
       sx={(theme) => ({
         px: '8px',
+        textAlign: noCheckbox ? 'center' : undefined,
         '&:hover': {
           borderRadius: '4%',
           backgroundColor:
@@ -41,24 +44,27 @@ export default function CheckMenuItem(props: CheckMenuItemProps) {
         <Typography variant='body2' width='100%'>
           {text}
         </Typography>
-        <div style={{ minWidth: '20px', flexGrow: 1 }} />
-        <Checkbox
-          sx={(theme) => ({
-            p: 0,
-            '&.Mui-checked': {
-              color: theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD',
-            },
-            '&.Mui-checked:hover': {
-              color: theme.palette.text.primary,
-            },
-          })}
-          checked={checked}
-          size='small'
-          disableFocusRipple
-          disableRipple
-          disableTouchRipple
-          onClick={(event) => (onClick ? onClick(event, text) : undefined)}
-        />
+        {!noCheckbox && (
+          <>
+            <div style={{ minWidth: '20px', flexGrow: 1 }} />
+            <Checkbox
+              sx={(theme) => ({
+                p: 0,
+                '&.Mui-checked': {
+                  color: theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD',
+                },
+                '&.Mui-checked:hover': {
+                  color: theme.palette.text.primary,
+                },
+              })}
+              checked={checked}
+              size='small'
+              disableFocusRipple
+              disableRipple
+              disableTouchRipple
+            />
+          </>
+        )}
       </Stack>
     </MenuItem>
   );

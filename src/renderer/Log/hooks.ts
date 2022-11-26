@@ -10,10 +10,16 @@ import { Reply } from '../../main/tron';
 import { ReplyCodeMap } from '../../main/tron/types';
 import LogConfigContext from './config';
 
+const ACTORS = new Set<string>([]);
+
 export function useLogConfig() {
   const context = React.useContext(LogConfigContext);
 
   return context;
+}
+
+export function useActors(): [Set<string>, () => void] {
+  return [ACTORS, () => ACTORS.clear()];
 }
 
 export function useReplyFilter() {
@@ -24,10 +30,22 @@ export function useReplyFilter() {
       replies.filter((reply) => {
         if (reply === undefined) return false;
 
+        ACTORS.add(reply.sender);
+
+        if (reply.sender === 'hub' && reply.rawLine.includes('Actors=')) {
+          reply.keywords.forEach((key) => {
+            if (key.name === 'Actors') {
+              key.values.forEach((actor: string) =>
+                ACTORS.add(actor.replace(/^"(.+(?="$))"$/, '$1'))
+              );
+            }
+          });
+        }
+
         const replyCodeLetter = ReplyCodeMap.get(reply.code);
         if (
           replyCodeLetter &&
-          (!replyCodeLetter || !config.codes.includes(replyCodeLetter))
+          (!replyCodeLetter || !config.codes.has(replyCodeLetter))
         )
           return false;
 
@@ -38,6 +56,9 @@ export function useReplyFilter() {
             return false;
           }
         }
+
+        if (config.actors.size > 0 && !config.actors.has(reply.sender))
+          return false;
 
         return true;
       }),

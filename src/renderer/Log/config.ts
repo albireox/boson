@@ -8,14 +8,16 @@
 import React from 'react';
 
 const defaultConfig = {
-  codes: ['i', 'w', 'e', 'f', ':', 's'],
+  codes: new Set(['i', 'w', 'e', 'f', ':', 's']),
+  actors: new Set([]),
   searchText: null,
   searchShowMatched: false,
   searchUseRegEx: false,
 };
 
 export interface ConfigIface {
-  codes: string[];
+  codes: Set<string>;
+  actors: Set<string>;
   searchText: string | null;
   searchShowMatched: boolean;
   searchUseRegEx: boolean;
@@ -28,6 +30,8 @@ export interface LogConfigIface {
   setShowMatched: (mode: boolean) => void;
   setUseRegEx: (mode: boolean) => void;
   toggleCode: (code: string) => void;
+  toggleActor: (actor: string) => void;
+  clearActors: () => void;
 }
 
 const logConfig: LogConfigIface = {
@@ -37,6 +41,8 @@ const logConfig: LogConfigIface = {
   setSearchText: () => {},
   setShowMatched: () => {},
   setUseRegEx: () => {},
+  toggleActor: () => {},
+  clearActors: () => {},
 };
 
 const LogConfigContext = React.createContext<LogConfigIface>(logConfig);
@@ -48,25 +54,27 @@ export function createLogConfig(
   return {
     config,
     setConfig,
-    toggleCode: (item) => {
-      const thisCode = item.toLowerCase()[0];
-      if (config.codes.includes(thisCode)) {
-        setConfig((current) => ({
+    toggleCode: (code) => {
+      const codeL = code.toLowerCase()[0];
+      setConfig((current) => {
+        const codes = new Set(current.codes);
+        codes.has(codeL) ? codes.delete(codeL) : codes.add(codeL);
+        return {
           ...current,
-          ...{ codes: current.codes.filter((code) => code !== thisCode) },
-        }));
-      } else {
-        setConfig((current) => ({
-          ...current,
-          ...{ codes: [...current.codes, thisCode] },
-        }));
-      }
+          ...{ codes },
+        };
+      });
     },
     setSearchText: (text) => {
-      setConfig((current) => ({
-        ...current,
-        ...{ searchText: text || null },
-      }));
+      setConfig((current) => {
+        if (current.searchText === text || (!current.searchText && !text))
+          return current;
+
+        return {
+          ...current,
+          ...{ searchText: text || null },
+        };
+      });
     },
     setShowMatched: (mode) => {
       setConfig((current) => ({
@@ -79,6 +87,19 @@ export function createLogConfig(
         ...current,
         ...{ searchUseRegEx: mode },
       }));
+    },
+    toggleActor: (actor) => {
+      setConfig((current) => {
+        const actors = new Set(current.actors);
+        actors.has(actor) ? actors.delete(actor) : actors.add(actor);
+        return {
+          ...current,
+          ...{ actors },
+        };
+      });
+    },
+    clearActors: () => {
+      setConfig((current) => ({ ...current, ...{ actors: new Set() } }));
     },
   };
 }

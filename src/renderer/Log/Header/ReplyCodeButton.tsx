@@ -5,12 +5,13 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import FlagIcon from '@mui/icons-material/Flag';
+import CodeIcon from '@mui/icons-material/Code';
 import {
   bindHover,
   bindMenu,
   usePopupState,
 } from 'material-ui-popup-state/hooks';
+import React from 'react';
 import {
   CheckMenuItem,
   HeaderHoverMenu,
@@ -28,21 +29,27 @@ export default function ReplyCodeButton() {
 
   const { config, toggleCode } = useLogConfig();
 
-  const handleClick = (_, item: string) => {
-    const itemL = item.toLowerCase();
-    toggleCode(itemL);
-  };
+  const handleClick = React.useCallback(
+    (_: React.MouseEvent, item: string) => {
+      toggleCode(item);
+    },
+    [toggleCode]
+  );
 
   return (
     <>
-      <HeaderIconButton {...bindHover(popupState)} Icon={FlagIcon} />
+      <HeaderIconButton
+        sx={{ px: 0 }}
+        {...bindHover(popupState)}
+        Icon={CodeIcon}
+      />
       <HeaderHoverMenu {...bindMenu(popupState)}>
         {codes.map((code) => (
           <CheckMenuItem
             key={code}
             text={code}
             onClick={handleClick}
-            checked={config.codes.includes(code.toLowerCase()[0])}
+            checked={config.codes.has(code.toLowerCase()[0])}
           />
         ))}
       </HeaderHoverMenu>
