@@ -62,6 +62,13 @@ export default function App() {
             },
           },
         },
+        MuiTypography: {
+          styleOverrides: {
+            root: {
+              WebkitUserSelect: 'none',
+            },
+          },
+        },
         MuiButtonBase: {
           defaultProps: {},
         },
