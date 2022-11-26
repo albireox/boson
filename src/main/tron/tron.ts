@@ -21,10 +21,6 @@ import { ConnectionStatus, ReplyCode, ReplyCodeReverseMap } from './types';
 export class TronConnection {
   private connectionStatus: ConnectionStatus = ConnectionStatus.Disconnected;
 
-  private host: string | undefined = undefined;
-
-  private port: number | undefined = undefined;
-
   private commands: Map<number, Command> = new Map();
 
   private cmdsCommands: Map<number, [number, string, string, string]> =
@@ -34,7 +30,15 @@ export class TronConnection {
 
   private replies: Reply[] = [];
 
-  client = new Socket();
+  private client = new Socket();
+
+  host: string | undefined = undefined;
+
+  port: number | undefined = undefined;
+
+  user: string | undefined = undefined;
+
+  program: string | undefined = undefined;
 
   lastConnected: Date | undefined = undefined;
 
@@ -82,6 +86,9 @@ export class TronConnection {
       return this.status;
     }
 
+    this.user = undefined;
+    this.program = undefined;
+
     this.host = newHost;
     this.port = newPort;
 
@@ -91,20 +98,26 @@ export class TronConnection {
     return this.status;
   }
 
-  async authorise(): Promise<[boolean, string | null]> {
-    const program: string = store.get('connection.program');
-    let user: string = store.get('connection.user');
-    const password = await keytar.getPassword('boson', program);
+  async authorise(
+    user_?: string,
+    program_?: string
+  ): Promise<[boolean, string | null]> {
+    const program = program_ ?? store.get('connection.program');
+    if (!program) return [false, 'Program not found.'];
 
-    if (user === undefined || user.trim() === '') {
-      user = generateName();
-    }
+    const password = await keytar.getPassword('boson', program);
 
     if (!password) {
       this.connectionStatus |=
         ConnectionStatus.NoPassword | ConnectionStatus.AuthenticationFailed;
       this.disconnect();
       return [false, null];
+    }
+
+    let user = user_ ?? store.get('connection.user');
+
+    if (user === undefined || user.trim() === '') {
+      user = generateName();
     }
 
     log.info(`Trying to authorise user ${program.toUpperCase()}.${user}`);
@@ -169,6 +182,8 @@ export class TronConnection {
     }
 
     log.info('Logging in complete.');
+    this.user = user;
+    this.program = program;
     this.status = ConnectionStatus.Connected | ConnectionStatus.Authorised;
 
     return [true, null];
