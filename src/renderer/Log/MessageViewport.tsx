@@ -59,6 +59,7 @@ export default function MessageViewport() {
       })
       .catch(() => {});
 
+    window.electron.ipcRenderer.removeAllListeners('tron:received-reply');
     window.electron.ipcRenderer.on('tron:received-reply', addReplies);
     window.electron.tron.subscribe();
 
