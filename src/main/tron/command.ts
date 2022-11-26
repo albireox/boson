@@ -69,6 +69,7 @@ export default class Command {
 
   async awaitUntilDone() {
     await this.lock?.promise;
+    return this;
   }
 
   addReply(reply: Reply) {

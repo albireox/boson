@@ -18,9 +18,9 @@ import {
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import { ConnectionStatus } from 'main/tron/types';
 import * as React from 'react';
-import { useStore } from 'renderer/hooks';
-import { ConnectionStatus } from '../../main/tron/types';
+import { useConnectionStatus, useStore } from '../hooks';
 import Drawer from './Drawer';
 import MainStatus from './MainStatus';
 
@@ -89,6 +89,8 @@ export default function Main() {
   const [isConnected, setIsConnected] = React.useState(false);
   const [isConnecting, setIsConnecting] = React.useState(false);
 
+  const connectionStatus = useConnectionStatus();
+
   const [authenticationFailed, setAuthenticationFailed] = React.useState(false);
 
   const [reconnect, setReconnect] = React.useState(true);
@@ -119,42 +121,21 @@ export default function Main() {
   }, []);
 
   React.useEffect(() => {
-    const handleConnectionStatus = (status: ConnectionStatus) => {
-      if (status & ConnectionStatus.Authorised) {
-        setIsConnected(true);
-        setAuthenticationFailed(false);
-        setReconnect(true);
-        setShowPasswordModal(false);
-      } else if (status & ConnectionStatus.NoPassword) {
-        setIsConnected(true);
-        setShowPasswordModal(true);
-      } else if (status & ConnectionStatus.Connected) {
-        setIsConnected(true);
-      } else if (status & ConnectionStatus.AuthenticationFailed) {
-        setIsConnected(true);
-        setReconnect(false);
-      }
-    };
-
-    // First time, just in case tron doesn't emit the status on time.
-    window.electron.tron
-      .getStatus()
-      .then(handleConnectionStatus)
-      .catch(() => {});
-
-    // From now on just listen to the event.
-    window.electron.ipcRenderer.on(
-      'tron:connection-status',
-      handleConnectionStatus
-    );
-
-    return function cleanup() {
-      window.electron.ipcRenderer.removeListener(
-        'tron:connection-status',
-        handleConnectionStatus
-      );
-    };
-  }, []);
+    if (connectionStatus & ConnectionStatus.Authorised) {
+      setIsConnected(true);
+      setAuthenticationFailed(false);
+      setReconnect(true);
+      setShowPasswordModal(false);
+    } else if (connectionStatus & ConnectionStatus.NoPassword) {
+      setIsConnected(true);
+      setShowPasswordModal(true);
+    } else if (connectionStatus & ConnectionStatus.Connected) {
+      setIsConnected(true);
+    } else if (connectionStatus & ConnectionStatus.AuthenticationFailed) {
+      setIsConnected(true);
+      setReconnect(false);
+    }
+  }, [connectionStatus]);
 
   React.useEffect(() => {
     let timer: NodeJS.Timeout | number = 0;

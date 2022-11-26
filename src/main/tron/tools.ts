@@ -47,6 +47,8 @@ export default async function connectAndAuthorise({
         await tron.authorise();
       }
     }
+  } else {
+    tron.status |= ConnectionStatus.Ready;
   }
 
   // If we successfully connected, send a hub actors to update the list

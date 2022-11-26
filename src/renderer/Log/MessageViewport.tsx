@@ -6,9 +6,9 @@
  */
 
 import { Box, useTheme } from '@mui/material';
+import Reply from 'main/tron/reply';
 import React from 'react';
 import { Components, Virtuoso } from 'react-virtuoso';
-import Reply from '../../main/tron/reply';
 import { useLogConfig, useReplyFilter } from './hooks';
 import Message from './Message';
 

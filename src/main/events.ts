@@ -10,7 +10,8 @@ import { app, ipcMain } from 'electron';
 import * as keytar from 'keytar';
 import { createWindow } from './main';
 import store, { subscriptions as storeSubscriptions } from './store';
-import tron, { connectAndAuthorise } from './tron';
+import connectAndAuthorise from './tron/tools';
+import tron from './tron/tron';
 
 export default function loadEvents() {
   // app events
@@ -40,6 +41,26 @@ export default function loadEvents() {
   );
   ipcMain.handle('tron:unsubscribe', async (event) =>
     tron.unsubscribeWindow(event.sender)
+  );
+  ipcMain.handle(
+    'tron:subscribe-keywords',
+    async (
+      event,
+      channel: string,
+      actor: string,
+      keywords: string[],
+      getKeys: boolean
+    ) =>
+      tron.subscribeKeywordListener(
+        event.sender,
+        channel,
+        actor,
+        keywords,
+        getKeys
+      )
+  );
+  ipcMain.handle('tron:unsubscribe-keywords', async (event, channel: string) =>
+    tron.unsubscribeKeywordListener(channel)
   );
   ipcMain.handle('tron:all-replies', async () => tron.getReplies());
   ipcMain.handle('tron:send', async (event, command) => {

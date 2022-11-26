@@ -6,10 +6,10 @@
  */
 
 import { SxProps, Theme, Typography } from '@mui/material';
+import Reply from 'main/tron/reply';
+import { ReplyCode } from 'main/tron/types';
 import React from 'react';
 import Highlighter from 'react-highlight-words';
-import { Reply } from '../../main/tron';
-import { ReplyCode } from '../../main/tron/types';
 
 const MessageStyle: SxProps = {
   margin: 0,

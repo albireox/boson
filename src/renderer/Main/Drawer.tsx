@@ -9,6 +9,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotesIcon from '@mui/icons-material/Notes';
 import SettingsIcon from '@mui/icons-material/Settings';
+import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import {
   List,
   ListItem,
@@ -94,6 +95,12 @@ export default function Drawer() {
     <PersistentDrawer open={open}>
       <Stack direction='column' height='100%'>
         <Item name='log' icon={<NotesIcon />} text='New log window' />
+        <Item
+          name='snapshots'
+          icon={<SettingsOverscanIcon />}
+          text='Snapshots'
+        />
+
         <div style={{ flexGrow: 1 }} />
         <Footer open={open} setOpen={setOpen} openNewWindow={openNewWindow} />
       </Stack>

@@ -8,16 +8,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { ConnectionStatus, Reply } from './tron';
-
-export type Channels = 'tron:connection-status' | 'tron:received-reply';
+import { ConnectionStatus, Reply } from './tron/types';
 
 const ElectronAPI = {
   ipcRenderer: {
-    sendMessage(channel: Channels, args: unknown[]) {
+    sendMessage(channel: string, args: unknown[]) {
       ipcRenderer.send(channel, args);
     },
-    on(channel: Channels, func: (...args: any[]) => void) {
+    on(channel: string, func: (...args: any[]) => void) {
       const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
         func(...args);
       ipcRenderer.on(channel, subscription);
@@ -26,10 +24,10 @@ const ElectronAPI = {
         ipcRenderer.removeListener(channel, subscription);
       };
     },
-    once(channel: Channels, func: (...args: any[]) => void) {
+    once(channel: string, func: (...args: any[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
-    invoke(channel: Channels, args: any[]) {
+    invoke(channel: string, args: any[]) {
       return ipcRenderer.invoke(channel, args);
     },
     removeListener(channel: string, listener: (...args: any[]) => void) {
@@ -79,6 +77,23 @@ const ElectronAPI = {
     },
     unsubscribe() {
       return ipcRenderer.invoke('tron:unsubscribe');
+    },
+    subscribeKeywords(
+      channel: string,
+      actor: string,
+      keywords: string[],
+      getKeys: boolean
+    ) {
+      return ipcRenderer.invoke(
+        'tron:subscribe-keywords',
+        channel,
+        actor,
+        keywords,
+        getKeys
+      );
+    },
+    unsubscribeKeywords(channel: string) {
+      return ipcRenderer.invoke('tron:unsubscribe-keywords', channel);
     },
     getAllReplies(): Promise<Reply[]> {
       return ipcRenderer.invoke('tron:all-replies');

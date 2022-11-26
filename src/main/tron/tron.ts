@@ -26,7 +26,9 @@ export class TronConnection {
   private cmdsCommands: Map<number, [number, string, string, string]> =
     new Map();
 
-  private listeners: Map<number, WebContents> = new Map();
+  private loggers: Map<number, WebContents> = new Map();
+
+  private keywordListeners: Map<string, [WebContents, string[]]> = new Map();
 
   private replies: Reply[] = [];
 
@@ -184,7 +186,10 @@ export class TronConnection {
     log.info('Logging in complete.');
     this.user = user;
     this.program = program;
-    this.status = ConnectionStatus.Connected | ConnectionStatus.Authorised;
+    this.status =
+      ConnectionStatus.Connected |
+      ConnectionStatus.Authorised |
+      ConnectionStatus.Ready;
 
     return [true, null];
   }
@@ -277,7 +282,10 @@ export class TronConnection {
 
       this.replies.push(reply);
       this.commands.get(reply.commandId)?.addReply(reply);
-      this.listeners.forEach((win) => win.send('tron:received-reply', reply));
+
+      this.loggers.forEach((win) => win.send('tron:received-reply', reply));
+
+      this.emitKeywords(reply);
     });
   }
 
@@ -291,28 +299,70 @@ export class TronConnection {
       this.unsubscribeWindow(sender);
       return;
     }
-    if (this.listeners.has(id)) {
+    if (this.loggers.has(id)) {
       log.warn(`Window ${id} is already subscribed.`);
       return;
     }
-    this.listeners.set(id, sender);
+    this.loggers.set(id, sender);
     log.info(
       `Window ${id} has been subscribed. ` +
-        `${this.listeners.size} listeners connected.`
+        `${this.loggers.size} loggers connected.`
     );
   }
 
   unsubscribeWindow(sender: WebContents) {
     const { id } = sender;
-    if (!this.listeners.has(id)) {
+    if (!this.loggers.has(id)) {
       log.warn(`Window ${id} is not subscribed.`);
       return;
     }
-    this.listeners.delete(id);
+    this.loggers.delete(id);
     log.info(
       `Window ${id} has been unsubscribed. ` +
-        `${this.listeners.size} listeners still connected.`
+        `${this.loggers.size} loggers still connected.`
     );
+  }
+
+  async subscribeKeywordListener(
+    sender: WebContents,
+    channel: string,
+    actor: string,
+    keywords: string[],
+    getKeys = true
+  ) {
+    const keys = keywords.map((keyword) => `${actor}.${keyword}`);
+    this.keywordListeners.set(channel, [sender, keys]);
+
+    if (getKeys) {
+      const { replies } = await this.sendCommand(
+        `keys getFor=${actor} ${keywords.join(' ')}`
+      ).awaitUntilDone();
+      if (replies.length > 0) {
+        const keysReply = replies[0];
+        // Change sender so that it will appear as if coming from the actor.
+        keysReply.sender = actor;
+        this.emitKeywords(keysReply);
+      }
+    }
+  }
+
+  unsubscribeKeywordListener(channel: string) {
+    this.keywordListeners.delete(channel);
+  }
+
+  emitKeywords(reply: Reply) {
+    reply.keywords.forEach((keyword) => {
+      const name = `${reply.sender}.${keyword.name}`;
+      this.keywordListeners.forEach(([wC, keys], channel) => {
+        if (keys.includes(name)) {
+          try {
+            wC.send(channel, keyword);
+          } catch {
+            log.error(`Failed sending keyword to ${channel}`);
+          }
+        }
+      });
+    });
   }
 }
 

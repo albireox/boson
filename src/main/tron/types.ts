@@ -16,6 +16,8 @@ export enum ConnectionStatus {
   TimedOut = 1 << 7,
   NoPassword = 1 << 8,
   AuthenticationFailed = 1 << 9,
+  Ready = 1 << 10,
+  Unknown = 1 << 11,
 }
 
 export interface Credentials {

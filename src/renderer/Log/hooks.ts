@@ -5,9 +5,9 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import Reply from 'main/tron/reply';
+import { ReplyCodeMap } from 'main/tron/types';
 import React from 'react';
-import { Reply } from '../../main/tron';
-import { ReplyCodeMap } from '../../main/tron/types';
 import LogConfigContext from './config';
 
 const ACTORS = new Set<string>([]);

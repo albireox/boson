@@ -8,12 +8,12 @@
 import { Card, CardContent, Typography, useTheme } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { Box } from '@mui/system';
+import { ConnectionStatus } from 'main/tron/types';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useStore } from 'renderer/hooks';
 import { useElapsedTime } from 'use-elapsed-time';
 import icon from '../../../assets/icon.png';
-import { ConnectionStatus } from '../../main/tron/types';
 
 type StatusTextProps = { color?: string | undefined } & React.PropsWithChildren;
 
