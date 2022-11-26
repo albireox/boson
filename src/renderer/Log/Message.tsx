@@ -7,6 +7,7 @@
 
 import { SxProps, Theme, Typography } from '@mui/material';
 import React from 'react';
+import Highlighter from 'react-highlight-words';
 import { Reply } from '../../main/tron';
 import { ReplyCode } from '../../main/tron/types';
 
@@ -18,12 +19,15 @@ const MessageStyle: SxProps = {
   paddingLeft: '2em',
   textIndent: '-2em',
   whiteSpace: 'nowrap',
+  WebkitUserSelect: 'unset',
 };
 
 export interface MessageProps {
   reply: Reply;
   theme: Theme;
   style?: React.CSSProperties;
+  searchText: string | null;
+  searchUseRegEx: boolean;
 }
 
 function getMessageColor(theme: Theme, code: ReplyCode, sender: string) {
@@ -63,7 +67,7 @@ const CmdDoneRegex = new RegExp(
 );
 
 export default function Message(props: MessageProps) {
-  const { reply, style, theme } = props;
+  const { reply, style, theme, searchText, searchUseRegEx } = props;
 
   const getMessageColorMemo = React.useCallback(
     (code: ReplyCode, sender: string) => getMessageColor(theme, code, sender),
@@ -92,9 +96,23 @@ export default function Message(props: MessageProps) {
     }
   }
 
+  const fullText = `${formatDate(reply.date)} ${text}`;
+
+  let highlighted: React.ReactElement = <span>{fullText}</span>;
+
+  if (searchText) {
+    highlighted = (
+      <Highlighter
+        searchWords={[searchText]}
+        autoEscape={!searchUseRegEx}
+        textToHighlight={fullText}
+      />
+    );
+  }
+
   return (
     <Typography sx={{ ...MessageStyle, ...{ color } }} style={style}>
-      {`${formatDate(reply.date)} ${text}`}
+      {highlighted}
     </Typography>
   );
 }

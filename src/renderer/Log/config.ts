@@ -69,7 +69,6 @@ export function createLogConfig(
       }));
     },
     setShowMatched: (mode) => {
-      console.log('here', mode);
       setConfig((current) => ({
         ...current,
         ...{ searchShowMatched: mode },
