@@ -9,7 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, nativeTheme, shell } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
@@ -111,6 +111,7 @@ export async function createWindow(windowName: string) {
     show: false,
     icon: getAssetPath('icon.png'),
     titleBarStyle: 'hidden',
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#37393E' : '#FFFFFF',
     ...windowParams,
     webPreferences: {
       contextIsolation: true,
