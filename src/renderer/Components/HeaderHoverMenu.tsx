@@ -10,8 +10,8 @@ import HoverMenu from 'material-ui-popup-state/HoverMenu';
 
 const HeaderHoverMenu = styled((props: MenuProps) => (
   <HoverMenu
-    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+    anchorOrigin={{ vertical: 30, horizontal: 'center' }}
+    transformOrigin={{ vertical: 'top', horizontal: 'center' }}
     PaperProps={{
       elevation: 0,
       sx: (theme) => ({
@@ -20,7 +20,7 @@ const HeaderHoverMenu = styled((props: MenuProps) => (
         py: 0,
       }),
     }}
-    {...{ ...props }}
+    {...props}
   />
 ))({});
 
