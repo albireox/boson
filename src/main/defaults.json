@@ -15,6 +15,10 @@
       "closable": true,
       "resizable": true
     },
+    "log": {
+      "minWidth": 480,
+      "minHeight": 400
+    },
     "preferences": {
       "x": 876,
       "y": 160,
