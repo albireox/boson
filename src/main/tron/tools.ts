@@ -14,6 +14,7 @@ export default async function connectAndAuthorise({
   authorise = true,
   force = false,
   timeout = 5,
+  updateActors = true,
 }) {
   if (tron.status & ConnectionStatus.Connected && force) {
     tron.disconnect();
@@ -40,12 +41,22 @@ export default async function connectAndAuthorise({
     }
   }
 
-  if (!authorise) return tron.status;
-
-  if (!(tron.status & ConnectionStatus.Authorised)) {
-    if (!(tron.status & ConnectionStatus.Authorising)) {
-      await tron.authorise();
+  if (authorise) {
+    if (!(tron.status & ConnectionStatus.Authorised)) {
+      if (!(tron.status & ConnectionStatus.Authorising)) {
+        await tron.authorise();
+      }
     }
+  }
+
+  // If we successfully connected, send a hub actors to update the list
+  // of actors. This is mostly for the log windows.
+  if (
+    updateActors &&
+    (tron.status & ConnectionStatus.Authorised ||
+      (tron.status & ConnectionStatus.Connected && !authorise))
+  ) {
+    tron.sendCommand('hub actors');
   }
 
   return tron.status;
