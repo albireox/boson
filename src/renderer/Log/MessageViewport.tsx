@@ -114,7 +114,6 @@ export default function MessageViewport() {
       followOutput='auto'
       alignToBottom
       atBottomThreshold={400}
-      defaultItemHeight={22}
       context={{ showScrollBar: isScrolling && !isAtBottom }}
       components={{ Scroller }}
     />
