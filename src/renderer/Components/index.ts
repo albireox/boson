@@ -10,6 +10,7 @@ export {
   type CheckMenuItemProps,
 } from './CheckMenuItem';
 export { default as DrawerListItem } from './DrawerListItem';
+export { default as Header } from './Header';
 export { default as HeaderDivider } from './HeaderDivider';
 export { default as HeaderHoverMenu } from './HeaderHoverMenu';
 export { default as HeaderIconButton } from './HeaderIconButton';

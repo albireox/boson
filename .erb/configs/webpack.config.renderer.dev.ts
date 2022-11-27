@@ -1,6 +1,7 @@
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import chalk from 'chalk';
 import { execSync, spawn } from 'child_process';
+import CopyPlugin from 'copy-webpack-plugin';
 import fs from 'fs';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
@@ -149,6 +150,13 @@ const configuration: webpack.Configuration = {
 
     new ReactRefreshWebpackPlugin(),
 
+    new CopyPlugin({
+      patterns: [
+        { from: 'js9/**', context: 'node_modules' },
+        { from: '*.js', context: 'assets' },
+      ],
+    }),
+
     new HtmlWebpackPlugin({
       filename: path.join('index.html'),
       template: path.join(webpackPaths.srcRendererPath, 'index.ejs'),
@@ -179,6 +187,7 @@ const configuration: webpack.Configuration = {
     },
     historyApiFallback: {
       verbose: true,
+      disableDotRule: true,
     },
     setupMiddlewares(middlewares) {
       console.log('Starting preload.js builder...');

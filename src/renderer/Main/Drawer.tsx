@@ -5,6 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import InsightsIcon from '@mui/icons-material/Insights';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotesIcon from '@mui/icons-material/Notes';
@@ -100,7 +101,7 @@ export default function Drawer() {
           icon={<SettingsOverscanIcon />}
           text='Snapshots'
         />
-
+        <Item name='guider' icon={<InsightsIcon />} text='Guider' />
         <div style={{ flexGrow: 1 }} />
         <Footer open={open} setOpen={setOpen} openNewWindow={openNewWindow} />
       </Stack>

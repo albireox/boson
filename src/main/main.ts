@@ -87,9 +87,9 @@ export async function createWindow(windowName: string) {
     return;
   }
 
-  if (isDebug) {
-    await installExtensions();
-  }
+  // if (isDebug) {
+  await installExtensions();
+  // }
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')

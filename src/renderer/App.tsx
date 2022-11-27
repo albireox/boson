@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import { Guider } from './Guider';
 import { useStore } from './hooks';
 import Log from './Log';
 import Main from './Main';
@@ -132,6 +133,9 @@ export default function App() {
       break;
     case 'snapshots':
       view = <Snapshots />;
+      break;
+    case 'guider':
+      view = <Guider />;
       break;
     default:
       view = null;

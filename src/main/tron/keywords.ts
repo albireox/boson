@@ -9,9 +9,11 @@ import { Keyword } from './types';
 
 function evaluateKeyword(value: string) {
   switch (value) {
-    case 'f' || 'F':
+    case 'F':
+    case 'f':
       return false;
-    case 't' || 'T':
+    case 'T':
+    case 't':
       return true;
     default:
       break;

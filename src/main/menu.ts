@@ -161,6 +161,11 @@ export default class MenuBuilder {
           accelerator: 'Command+Shift+S',
           click: () => createWindow('snapshots'),
         },
+        {
+          label: 'Guider',
+          accelerator: 'Command+Shift+G',
+          click: () => createWindow('guider'),
+        },
       ],
     };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
@@ -212,7 +217,7 @@ export default class MenuBuilder {
       process.env.NODE_ENV === 'development' ||
       process.env.DEBUG_PROD === 'true'
         ? subMenuViewDev
-        : subMenuViewProd;
+        : subMenuViewDev;
 
     return [
       subMenuAbout,
