@@ -48,7 +48,7 @@ export default function Preferences() {
       position='absolute'
       top={0}
       display='grid'
-      gridTemplateColumns='minmax(150px, 250px) 1fr'
+      gridTemplateColumns='200px 1fr'
       gridAutoFlow='column'
     >
       <CssBaseline />

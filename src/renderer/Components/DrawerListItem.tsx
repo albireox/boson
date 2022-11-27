@@ -5,7 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Tooltip } from '@mui/material';
+import { Tooltip, Zoom } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -29,12 +29,15 @@ export default function DrawerListItem({
 }: DrawerListItemProps) {
   return (
     <ListItem key={name} disablePadding sx={{ display: 'block' }}>
-      <Tooltip title={text}>
+      <Tooltip title={text} placement='right' TransitionComponent={Zoom}>
         <ListItemButton
           sx={{
             minHeight: 48,
             justifyContent: open ? 'initial' : 'center',
             px: 2.5,
+            '&.MuiButtonBase-root:hover': {
+              bgcolor: 'transparent',
+            },
           }}
         >
           <ListItemIcon
