@@ -7,14 +7,14 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Box, Chip, CssBaseline, Stack } from '@mui/material';
-import { styled } from '@mui/system';
+import { Box, CssBaseline, Stack } from '@mui/material';
 import React from 'react';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import { useKeywords, useStore, useWindowSize } from 'renderer/hooks';
 import Header from './Header/Header';
 import PdfViewer from './PdfViewer';
+import StatusSnackBar from './StatusSnackbar';
 
 export default function Snapshots() {
   const keywords = useKeywords('jaeger', [
@@ -23,9 +23,10 @@ export default function Snapshots() {
     'folded',
     'locked',
     'locked_by',
+    'fps_status',
   ]);
 
-  const { locked, locked_by, fps_status } = keywords;
+  const { locked, locked_by, fps_status, folded } = keywords;
 
   const [httpHost] = useStore<string>('connection.httpHost');
   const [httpPort] = useStore<string>('connection.httpPort');
@@ -73,44 +74,12 @@ export default function Snapshots() {
   }, [snapshots, index]);
 
   React.useEffect(() => {
-    // if (!locked || !locked_by) return;
+    if (!locked || !locked_by) return;
 
-    // if (locked.values[0] === 'T' && locked_by.values.length > 0) {
-    //   setSearchText(locked_by.values[0].toString());
-    // }
-    setSearchText('56');
+    if (locked.values[0] === 'T' && locked_by.values.length > 0) {
+      setSearchText(locked_by.values[0].toString());
+    }
   }, [locked, locked_by]);
-
-  const FoldedChip = () => {
-    if (!keywords.folded || keywords.folded.values[0] === 'F') return null;
-    return <Chip variant='filled' label='Folded' color='success' />;
-  };
-
-  const StatusChip = () => {
-    const status_int = fps_status
-      ? parseInt(fps_status.values[0], 16)
-      : undefined;
-    const moving = status_int !== undefined && (status_int & 2) > 0;
-
-    const BlinkingChip = styled(Chip)({
-      animation: 'blinker 1s linear infinite',
-      '@keyframes blinker': {
-        '0%': { opacity: 0 },
-        '50%': { opacity: 0.6 },
-        '100%': { opacity: 1 },
-      },
-    });
-
-    if (locked && locked.values[0] === 'T') {
-      return <Chip variant='filled' label='Locked' color='error' />;
-    }
-
-    if (moving) {
-      return <BlinkingChip variant='filled' label='Moving' color='warning' />;
-    }
-
-    return null;
-  };
 
   return (
     <Box
@@ -140,6 +109,11 @@ export default function Snapshots() {
           searchText={searchText}
         />
       </Stack>
+      <StatusSnackBar
+        isLockedKw={locked}
+        fpsStatusKw={fps_status}
+        isFoldedKw={folded}
+      />
     </Box>
   );
 }

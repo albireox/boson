@@ -155,6 +155,12 @@ export default class MenuBuilder {
           accelerator: 'Command+N',
           click: () => createWindow('log'),
         },
+        { type: 'separator' },
+        {
+          label: 'Snapshots',
+          accelerator: 'Command+Shift+S',
+          click: () => createWindow('snapshots'),
+        },
       ],
     };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
