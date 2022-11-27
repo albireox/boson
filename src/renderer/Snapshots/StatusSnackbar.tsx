@@ -31,7 +31,7 @@ export default function StatusSnackBar(props: StatusSnackBarProps) {
     if (fpsStatusKw) {
       const value = fpsStatusKw.values[0];
 
-      if ((value & 4) > 0) {
+      if ((value & 2) > 0) {
         setIsMoving(true);
       } else {
         setIsMoving(false);
