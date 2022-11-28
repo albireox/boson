@@ -32,7 +32,11 @@ export class TronConnection {
 
   private replies: Reply[] = [];
 
+  private actors = new Set<string>([]);
+
   private client = new Socket();
+
+  private maxLogMessages: number;
 
   host: string | undefined = undefined;
 
@@ -45,6 +49,8 @@ export class TronConnection {
   lastConnected: Date | undefined = undefined;
 
   constructor() {
+    this.maxLogMessages = store.get('maxLogMessages', 10000);
+
     this.client.on('connect', () => {
       this.status = ConnectionStatus.Connected;
       log.info(`Connected to ${this.host}:${this.port}.`);
@@ -280,7 +286,18 @@ export class TronConnection {
         keywords
       );
 
+      this.replies = this.replies.slice(-this.maxLogMessages);
       this.replies.push(reply);
+
+      this.actors.add(reply.sender);
+      if (
+        reply.sender === 'hub' &&
+        reply.keywords.length > 0 &&
+        reply.keywords[0].name === 'Actors'
+      ) {
+        reply.keywords[0].values.forEach((actor) => this.actors.add(actor));
+      }
+
       this.commands.get(reply.commandId)?.addReply(reply);
 
       this.loggers.forEach((win) => win.send('tron:received-reply', reply));
@@ -291,6 +308,10 @@ export class TronConnection {
 
   getReplies() {
     return this.replies;
+  }
+
+  getActors() {
+    return this.actors;
   }
 
   subscribeWindow(sender: WebContents) {

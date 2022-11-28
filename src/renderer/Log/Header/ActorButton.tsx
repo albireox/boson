@@ -15,12 +15,7 @@ import { HeaderIconButtonProps } from 'renderer/Components/HeaderIconButton';
 import { useActors, useLogConfig } from '../hooks';
 
 export default function ActorButton() {
-  const popupState = usePopupState({
-    variant: 'popover',
-    popupId: 'reply-code-menu',
-  });
-
-  const [actors] = useActors();
+  const actors = useActors();
 
   const { config, toggleActor, clearActors } = useLogConfig();
 

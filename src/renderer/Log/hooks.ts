@@ -10,16 +10,30 @@ import { ReplyCodeMap } from 'main/tron/types';
 import React from 'react';
 import LogConfigContext from './config';
 
-const ACTORS = new Set<string>([]);
-
 export function useLogConfig() {
   const context = React.useContext(LogConfigContext);
 
   return context;
 }
 
-export function useActors(): [Set<string>, () => void] {
-  return [ACTORS, () => ACTORS.clear()];
+export function useActors(): string[] {
+  const [actors, setActors] = React.useState<string[]>([]);
+
+  const updateActors = React.useCallback(() => {
+    window.electron.tron
+      .getActors()
+      .then((newActors) => setActors(Array.from(newActors)))
+      .catch(() => {});
+  }, []);
+
+  React.useEffect(() => {
+    updateActors();
+    const interval = setInterval(updateActors, 30);
+
+    return () => clearInterval(interval);
+  }, [updateActors]);
+
+  return actors;
 }
 
 export function useReplyFilter() {
@@ -29,18 +43,6 @@ export function useReplyFilter() {
     (replies: Reply[]) =>
       replies.filter((reply) => {
         if (reply === undefined) return false;
-
-        ACTORS.add(reply.sender);
-
-        if (reply.sender === 'hub' && reply.rawLine.includes('Actors=')) {
-          reply.keywords.forEach((key) => {
-            if (key.name === 'Actors') {
-              key.values.forEach((actor: string) =>
-                ACTORS.add(actor.replace(/^"(.+(?="$))"$/, '$1'))
-              );
-            }
-          });
-        }
 
         const replyCodeLetter = ReplyCodeMap.get(reply.code);
         if (

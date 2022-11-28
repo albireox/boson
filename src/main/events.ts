@@ -63,6 +63,7 @@ export default function loadEvents() {
     tron.unsubscribeKeywordListener(channel)
   );
   ipcMain.handle('tron:all-replies', async () => tron.getReplies());
+  ipcMain.handle('tron:actors', async () => tron.getActors());
   ipcMain.handle('tron:send', async (event, command) => {
     const cmd = tron.sendCommand(command);
 

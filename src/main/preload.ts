@@ -98,6 +98,9 @@ const ElectronAPI = {
     getAllReplies(): Promise<Reply[]> {
       return ipcRenderer.invoke('tron:all-replies');
     },
+    getActors(): Promise<string[]> {
+      return ipcRenderer.invoke('tron:actors');
+    },
     send(command: string) {
       return ipcRenderer.invoke('tron:send', command);
     },
