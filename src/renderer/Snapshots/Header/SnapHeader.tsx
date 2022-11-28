@@ -7,7 +7,7 @@
 
 import OpenInBrowserIcon from '@mui/icons-material/OpenInBrowser';
 import { Box, Tooltip } from '@mui/material';
-import { Header, HeaderIconButton } from 'renderer/Components';
+import { BosonHeader, HeaderIconButton } from 'renderer/Components';
 import FileNavigation from './FileNavigation';
 import SnapSearchBox from './SnapSearchBox';
 import SnapSlider from './SnapSlider';
@@ -34,7 +34,7 @@ export default function SnapHeader(props: SnapHeaderProps) {
   } = props;
 
   return (
-    <Header>
+    <BosonHeader>
       <FileNavigation files={files} index={index} onClick={onUpdateIndex} />
       <Box flexGrow={1} />
       <SnapSlider onChange={onScaleChanged} />
@@ -50,6 +50,6 @@ export default function SnapHeader(props: SnapHeaderProps) {
         searchText={searchText}
         onSearchChanged={onSearchChanged}
       />
-    </Header>
+    </BosonHeader>
   );
 }

@@ -5,14 +5,14 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+export { default as BosonHeader } from './BosonHeader';
+export { default as HeaderHoverMenu } from './BosonHoverMenu';
 export {
   default as CheckMenuItem,
   type CheckMenuItemProps,
-} from './CheckMenuItem';
+} from './BosonMenuItem';
 export { default as DrawerListItem } from './DrawerListItem';
-export { default as Header } from './Header';
 export { default as HeaderDivider } from './HeaderDivider';
-export { default as HeaderHoverMenu } from './HeaderHoverMenu';
 export { default as HeaderIconButton } from './HeaderIconButton';
 export { default as IconButtonFlat } from './IconButtonFlat';
 export { default as IOSwitch } from './IOSwitch';

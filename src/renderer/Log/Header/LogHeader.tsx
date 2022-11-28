@@ -6,7 +6,7 @@
  */
 
 import { Divider, Stack, Typography } from '@mui/material';
-import { Header } from 'renderer/Components';
+import { BosonHeader } from 'renderer/Components';
 import { useLogConfig } from '../hooks';
 import ActorButton from './ActorButton';
 import LogSearchBox from './LogSearchBox';
@@ -51,7 +51,7 @@ export default function LogHeader(props: LogHeaderProps) {
   const { actors } = config;
 
   return (
-    <Header>
+    <BosonHeader>
       <Stack
         direction='row'
         alignItems='center'
@@ -83,6 +83,6 @@ export default function LogHeader(props: LogHeaderProps) {
         <ReplyCodeButton />
         <LogSearchBox />
       </Stack>
-    </Header>
+    </BosonHeader>
   );
 }
