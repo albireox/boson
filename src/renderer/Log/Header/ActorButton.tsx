@@ -7,16 +7,11 @@
 
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import { Divider } from '@mui/material';
-import {
-  bindHover,
-  bindMenu,
-  usePopupState,
-} from 'material-ui-popup-state/hooks';
-import {
-  CheckMenuItem,
-  HeaderHoverMenu,
-  HeaderIconButton,
-} from 'renderer/Components';
+import BosonIconMenu from 'renderer/Components/BosonIconMenu';
+import BosonMenuItem, {
+  BosonMenuItemCheckbox,
+} from 'renderer/Components/BosonMenuItem';
+import { HeaderIconButtonProps } from 'renderer/Components/HeaderIconButton';
 import { useActors, useLogConfig } from '../hooks';
 
 export default function ActorButton() {
@@ -29,7 +24,7 @@ export default function ActorButton() {
 
   const { config, toggleActor, clearActors } = useLogConfig();
 
-  const handleClick = (_: React.MouseEvent, item: string) => {
+  const handleClick = (item: string) => {
     if (item === 'All actors') {
       clearActors();
     } else {
@@ -37,31 +32,31 @@ export default function ActorButton() {
     }
   };
 
+  const IconButtonProps: HeaderIconButtonProps = {
+    sx: (theme) => ({
+      px: 0,
+      color: config.actors.size === 0 ? undefined : theme.palette.text.primary,
+    }),
+  };
+
   return (
-    <>
-      <HeaderIconButton
-        sx={(theme) => ({
-          px: 0,
-          color:
-            config.actors.size === 0 ? undefined : theme.palette.text.primary,
-        })}
-        {...bindHover(popupState)}
-        Icon={PlaylistAddIcon}
-      />
-      <HeaderHoverMenu {...bindMenu(popupState)}>
-        <CheckMenuItem text='All actors' onClick={handleClick} noCheckbox />
-        <Divider sx={{ my: '2px !important' }} />
-        {Array.from(actors)
-          .sort()
-          .map((actor) => (
-            <CheckMenuItem
-              key={actor}
-              text={actor}
-              onClick={handleClick}
-              checked={config.actors.has(actor)}
-            />
-          ))}
-      </HeaderHoverMenu>
-    </>
+    <BosonIconMenu
+      name='actorButton'
+      Icon={PlaylistAddIcon}
+      IconButtonProps={IconButtonProps}
+    >
+      <BosonMenuItem text='All actors' onClick={handleClick} />
+      <Divider sx={{ my: '2px !important' }} />
+      {actors.sort().map((actor) => (
+        <BosonMenuItem
+          key={actor}
+          text={actor}
+          onClick={handleClick}
+          endAdornment={
+            <BosonMenuItemCheckbox checked={config.actors.has(actor)} />
+          }
+        />
+      ))}
+    </BosonIconMenu>
   );
 }

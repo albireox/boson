@@ -6,53 +6,42 @@
  */
 
 import CodeIcon from '@mui/icons-material/Code';
-import {
-  bindHover,
-  bindMenu,
-  usePopupState,
-} from 'material-ui-popup-state/hooks';
 import React from 'react';
-import {
-  CheckMenuItem,
-  HeaderHoverMenu,
-  HeaderIconButton,
-} from 'renderer/Components';
+import BosonIconMenu from 'renderer/Components/BosonIconMenu';
+import BosonMenuItem, {
+  BosonMenuItemCheckbox,
+} from 'renderer/Components/BosonMenuItem';
 import { useLogConfig } from '../hooks';
 
 export default function ReplyCodeButton() {
-  const popupState = usePopupState({
-    variant: 'popover',
-    popupId: 'reply-code-menu',
-  });
-
   const codes = ['Debug', 'Info', 'Warning', 'Error'];
 
   const { config, toggleCode } = useLogConfig();
 
   const handleClick = React.useCallback(
-    (_: React.MouseEvent, item: string) => {
+    (item: string) => {
       toggleCode(item);
     },
     [toggleCode]
   );
 
   return (
-    <>
-      <HeaderIconButton
-        sx={{ px: 0 }}
-        {...bindHover(popupState)}
-        Icon={CodeIcon}
-      />
-      <HeaderHoverMenu {...bindMenu(popupState)}>
-        {codes.map((code) => (
-          <CheckMenuItem
+    <BosonIconMenu
+      name='replyCodeButton'
+      Icon={CodeIcon}
+      IconButtonProps={{ sx: { px: 0 } }}
+    >
+      {codes.map((code) => {
+        const selected = config.codes.has(code.toLowerCase()[0]);
+        return (
+          <BosonMenuItem
             key={code}
             text={code}
             onClick={handleClick}
-            checked={config.codes.has(code.toLowerCase()[0])}
+            endAdornment={<BosonMenuItemCheckbox checked={selected} />}
           />
-        ))}
-      </HeaderHoverMenu>
-    </>
+        );
+      })}
+    </BosonIconMenu>
   );
 }

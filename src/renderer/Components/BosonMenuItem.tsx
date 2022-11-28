@@ -1,28 +1,79 @@
 /*
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
  *  @Date: 2022-11-24
- *  @Filename: CheckMenuItem.tsx
+ *  @Filename: BosonMenuItem.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Checkbox, MenuItem, Stack, Typography } from '@mui/material';
+import {
+  Checkbox,
+  CheckboxProps,
+  MenuItem,
+  Radio,
+  RadioProps,
+  Stack,
+  styled,
+  Typography,
+} from '@mui/material';
+import { Box } from '@mui/system';
 import React from 'react';
 
-export interface CheckMenuItemProps {
+const BosonMenuItemCheckbox = styled((props: CheckboxProps) => (
+  <Checkbox
+    size='small'
+    disableFocusRipple
+    disableRipple
+    disableTouchRipple
+    {...props}
+  />
+))(({ theme }) => ({
+  padding: '0px',
+  '&.Mui-checked': {
+    color: theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD',
+  },
+  '&.Mui-checked:hover': {
+    color: theme.palette.text.primary,
+  },
+}));
+
+const BosonMenuItemRadio = styled((props: RadioProps) => (
+  <Radio
+    size='small'
+    disableFocusRipple
+    disableRipple
+    disableTouchRipple
+    {...props}
+  />
+))(({ theme }) => ({
+  padding: '0px',
+  '&.Mui-checked': {
+    color: theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD',
+  },
+  '&.Mui-checked:hover': {
+    color: theme.palette.text.primary,
+  },
+}));
+
+export interface BosonMenuItemProps {
   text: string;
-  noCheckbox?: boolean;
-  checked?: boolean;
   selected?: boolean;
   textAlign?: string;
   onClick?: (
-    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
-    text: string
+    text: string,
+    event?: React.MouseEvent<HTMLLIElement, MouseEvent>
   ) => void;
+  endAdornment?: JSX.Element;
 }
 
-export default function CheckMenuItem(props: CheckMenuItemProps) {
-  const { text, onClick, checked, noCheckbox, selected, textAlign, ...rest } =
-    props;
+export default function BosonMenuItem(props: BosonMenuItemProps) {
+  const {
+    text,
+    onClick,
+    endAdornment,
+    selected = false,
+    textAlign,
+    ...rest
+  } = props;
 
   return (
     <MenuItem
@@ -31,13 +82,12 @@ export default function CheckMenuItem(props: CheckMenuItemProps) {
       id={text}
       disableRipple
       disableTouchRipple
-      onClick={(event) => (onClick ? onClick(event, text) : undefined)}
+      onClick={(event) => (onClick ? onClick(text, event) : undefined)}
       sx={(theme) => {
         const bgColor = theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD';
-
         return {
-          px: '8px',
-          textAlign: textAlign ?? (noCheckbox ? 'center' : 'inherit'),
+          px: '12px',
+          textAlign: textAlign ?? (!endAdornment ? 'center' : 'inherit'),
           '&.Mui-focusVisible': {
             backgroundColor: 'transparent',
           },
@@ -59,28 +109,14 @@ export default function CheckMenuItem(props: CheckMenuItemProps) {
         <Typography variant='body2' width='100%'>
           {text}
         </Typography>
-        {!noCheckbox && (
+        {endAdornment && (
           <>
-            <div style={{ minWidth: '20px', flexGrow: 1 }} />
-            <Checkbox
-              sx={(theme) => ({
-                p: 0,
-                '&.Mui-checked': {
-                  color: theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD',
-                },
-                '&.Mui-checked:hover': {
-                  color: theme.palette.text.primary,
-                },
-              })}
-              checked={checked}
-              size='small'
-              disableFocusRipple
-              disableRipple
-              disableTouchRipple
-            />
+            <Box flexGrow={1} minWidth={25} /> {endAdornment}
           </>
         )}
       </Stack>
     </MenuItem>
   );
 }
+
+export { BosonMenuItemCheckbox, BosonMenuItemRadio };

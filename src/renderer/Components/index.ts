@@ -6,7 +6,7 @@
  */
 
 export { default as BosonHeader } from './BosonHeader';
-export { default as HeaderHoverMenu } from './BosonHoverMenu';
+export { BosonHoverMenu, BosonMenu } from './BosonMenu';
 export {
   default as CheckMenuItem,
   type CheckMenuItemProps,

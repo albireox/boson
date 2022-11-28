@@ -31,6 +31,9 @@ export default function DrawerListItem({
     <ListItem key={name} disablePadding sx={{ display: 'block' }}>
       <Tooltip title={text} placement='right' TransitionComponent={Zoom}>
         <ListItemButton
+          disableGutters
+          disableTouchRipple
+          disableRipple
           sx={{
             minHeight: 48,
             justifyContent: open ? 'initial' : 'center',

@@ -5,14 +5,15 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Menu, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import {
   bindMenu,
   bindTrigger,
   usePopupState,
 } from 'material-ui-popup-state/hooks';
 import React from 'react';
-import { CheckMenuItem } from 'renderer/Components';
+import { BosonMenu } from 'renderer/Components';
+import BosonMenuItem from 'renderer/Components/BosonMenuItem';
 
 interface FileNavigationProps {
   files: string[];
@@ -29,7 +30,7 @@ export default function FileNavigation(props: FileNavigationProps) {
   });
 
   const handleClick = React.useCallback(
-    (_: React.MouseEvent, text: string) => {
+    (text: string) => {
       let newIndex = -1;
       files.every((file, ii) => {
         if (file.includes(text)) {
@@ -57,36 +58,23 @@ export default function FileNavigation(props: FileNavigationProps) {
       >
         {files[index] ? files[index].split('/').reverse()[0] : 'Snapshots'}
       </Typography>
-      <Menu
-        {...bindMenu(popupState)}
-        anchorOrigin={{ vertical: 30, horizontal: 'center' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-        PaperProps={{
-          elevation: 0,
-          sx: (theme) => ({
-            backgroundColor: theme.palette.mode === 'dark' ? '#18191C' : '#fff',
-            px: 0.25,
-            py: 0,
-          }),
-        }}
-      >
+      <BosonMenu {...bindMenu(popupState)}>
         {Array.from(files)
           .reverse()
           .map((file, idx) => {
             const title = file.split('/').reverse()[0];
             const selected = idx === files.length - index - 1;
             return (
-              <CheckMenuItem
+              <BosonMenuItem
                 key={title}
                 selected={selected}
                 text={title}
                 textAlign='left'
                 onClick={handleClick}
-                noCheckbox
               />
             );
           })}
-      </Menu>
+      </BosonMenu>
     </>
   );
 }
