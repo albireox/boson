@@ -99,6 +99,7 @@
     "scalelim": "zscale",
     "titlebar_status": true
   },
+  "maxLogMessages": 10000,
   "savedState": {
     "windows": {
       "openWindows": ["main"]

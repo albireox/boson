@@ -53,6 +53,8 @@ export default function MessageViewport() {
   const [isScrolling, setIsScrolling] = React.useState<boolean>(false);
   const [isAtBottom, setIsAtBottom] = React.useState<boolean>(false);
 
+  const maxLogMessages: number = window.electron.store.get('maxLogMessages');
+
   React.useEffect(() => {
     const addReplies = (reply: Reply) => {
       setReplies((old) => [...old, reply]);
@@ -99,6 +101,18 @@ export default function MessageViewport() {
     setBuffer((b) => [...replies, ...b]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config]);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setReplies((reps) => reps.slice(-maxLogMessages));
+      setFiltered([]);
+      setBuffer((b) => [...replies, ...b]);
+    }, 10 * 60 * 1000);
+
+    return () => clearInterval(interval);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Virtuoso
