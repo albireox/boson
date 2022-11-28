@@ -1,11 +1,12 @@
 /*
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
  *  @Date: 2022-11-23
- *  @Filename: Header.tsx
+ *  @Filename: LogHeader.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
+import { Header } from 'renderer/Components';
 import { useLogConfig } from '../hooks';
 import ActorButton from './ActorButton';
 import LogSearchBox from './LogSearchBox';
@@ -39,24 +40,24 @@ function ActorInfo(props: ActorInfoProps) {
   );
 }
 
-export interface HeaderProps {
+export interface LogHeaderProps {
   logId: number;
 }
 
-export default function Header(props: HeaderProps) {
+export default function LogHeader(props: LogHeaderProps) {
   const { logId } = props;
 
   const { config } = useLogConfig();
   const { actors } = config;
 
   return (
-    <Box height='50px' pl={8}>
+    <Header>
       <Stack
         direction='row'
         alignItems='center'
         height='100%'
+        width='100%'
         spacing={2}
-        px={2}
       >
         <div>
           <Typography
@@ -82,6 +83,6 @@ export default function Header(props: HeaderProps) {
         <ReplyCodeButton />
         <LogSearchBox />
       </Stack>
-    </Box>
+    </Header>
   );
 }

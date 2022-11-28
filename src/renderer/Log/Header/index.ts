@@ -5,4 +5,4 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-export { default as Header, HeaderProps } from './Header';
+export { default as LogHeader, LogHeaderProps } from './LogHeader';

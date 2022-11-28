@@ -16,7 +16,7 @@ import LogConfigContext, {
   createLogConfig,
   defaultConfig,
 } from './config';
-import Header from './Header/Header';
+import LogHeader from './Header/LogHeader';
 import MessageViewport from './MessageViewport';
 
 export interface LogProps {
@@ -40,7 +40,7 @@ export default function Log(props: LogProps) {
     >
       <CssBaseline />
       <LogConfigContext.Provider value={logConfig}>
-        <Header logId={logId} />
+        <LogHeader logId={logId} />
         <HeaderDivider />
         <Stack
           height='100%'
