@@ -19,8 +19,17 @@ const Scroller: Components<{ showScrollBar: boolean }>['Scroller'] =
     return (
       <Box
         sx={{
-          '&::-webkit-scrollbar': {
-            display: context?.showScrollBar ? undefined : 'none',
+          // '&::-webkit-scrollbar': {
+          //   display: context?.showScrollBar ? undefined : 'none',
+          // },
+          // '&::-webkit-scrollbar': {
+          //   '-webkit-appearance': 'none',
+          //   width: '7px',
+          // },
+          '::-webkit-scrollbar-thumb': {
+            borderRadius: '4px',
+            backgroundColor: 'rgba(0, 0, 0, .5)',
+            boxShadow: '0 0 1px rgba(255, 255, 255, .5)',
           },
         }}
         style={style}
