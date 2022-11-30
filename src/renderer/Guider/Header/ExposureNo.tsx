@@ -18,8 +18,9 @@ export default function ExposureNo() {
 
   React.useEffect(() => {
     if (!filenameBundle || filenameBundle.values.length === 0) return;
+    if (!filenameBundle.values[0].includes('gfa')) return;
 
-    const match = filenameBundle.values[0].match(/.+gfa.+([0-9]{4})\.fits/);
+    const match = filenameBundle.values[0].match(/([0-9]{4})\.fits/);
     if (!match) {
       setExposureNo(-1);
       return;
