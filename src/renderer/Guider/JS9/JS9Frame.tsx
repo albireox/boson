@@ -106,6 +106,15 @@ function JS9FrameInner(
     zoom: handleZoom,
   }));
 
+  const updateParams = React.useCallback(() => {
+    if (!window.JS9) return;
+
+    window.JS9.SetColormap(guiderConfig.config.colormap, { display });
+    window.JS9.SetScale(guiderConfig.config.scale, { display });
+    window.JS9.SetScale(guiderConfig.config.scalelim, { display });
+    window.JS9.SetZoom('toFit', { display });
+  }, [guiderConfig, display]);
+
   const updateImage = React.useCallback(
     (filename: string | null) => {
       if (!filename) {
@@ -114,20 +123,16 @@ function JS9FrameInner(
       }
 
       const fullURL = `http://${host}:${port}${filename}`;
-      const snapURL = fullURL.replace('.fits', '-snap.fits');
+      if (fullURL === path) return; // Prevent re-render if updateParams changes
 
-      const updateParams = () => {
-        window.JS9.SetColormap(guiderConfig.config.colormap, { display });
-        window.JS9.SetScale(guiderConfig.config.scale, { display });
-        window.JS9.SetScale(guiderConfig.config.scalelim, { display });
-        window.JS9.SetZoom('toFit', { display });
-      };
+      const snapURL = fullURL.replace('.fits', '-snap.fits');
 
       try {
         // Load URL. Wait until the image has been loaded and the update
         // the scale, colormap, etc. If the guider config changes, this
         // will be called again but the image will only be redisplayed
         // (with the new parameters), not redownloaded.
+        window.JS9.CloseImage({ display });
         window.JS9.Load(snapURL, { onload: updateParams }, { display });
       } catch (err) {
         setPath(null);
@@ -136,8 +141,10 @@ function JS9FrameInner(
 
       setPath(fullURL);
     },
-    [host, port, display, guiderConfig]
+    [host, port, display, path, updateParams]
   );
+
+  React.useEffect(updateParams, [guiderConfig, updateParams]);
 
   React.useEffect(() => {
     if (!windowSize) return;
