@@ -1,13 +1,13 @@
 /*
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
  *  @Date: 2022-11-24
- *  @Filename: config.ts
+ *  @Filename: Context.ts
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
 import React from 'react';
 
-const defaultConfig = {
+const defaultLogConfig = {
   codes: new Set(['i', 'w', 'e', 'f', ':', 's']),
   actors: new Set([]),
   searchText: null,
@@ -35,7 +35,7 @@ export interface LogConfigIface {
 }
 
 const logConfig: LogConfigIface = {
-  config: defaultConfig,
+  config: defaultLogConfig,
   setConfig: () => {},
   toggleCode: () => {},
   setSearchText: () => {},
@@ -105,4 +105,4 @@ export function createLogConfig(
 }
 
 export default LogConfigContext;
-export { defaultConfig };
+export { defaultLogConfig };

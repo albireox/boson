@@ -13,8 +13,8 @@ import CommandInput from './CommandInput';
 import LogConfigContext, {
   ConfigIface,
   createLogConfig,
-  defaultConfig,
-} from './config';
+  defaultLogConfig,
+} from './Context';
 import LogHeader from './Header/LogHeader';
 import MessageViewport from './MessageViewport';
 
@@ -25,7 +25,7 @@ export interface LogProps {
 export default function Log(props: LogProps) {
   const { logId } = props;
 
-  const [config, setConfig] = React.useState<ConfigIface>(defaultConfig);
+  const [config, setConfig] = React.useState<ConfigIface>(defaultLogConfig);
   const logConfig = createLogConfig(config, setConfig);
 
   return (

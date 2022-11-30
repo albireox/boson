@@ -8,7 +8,7 @@
 import Reply from 'main/tron/reply';
 import { ReplyCodeMap } from 'main/tron/types';
 import React from 'react';
-import LogConfigContext from './config';
+import LogConfigContext from './Context';
 
 export function useLogConfig() {
   const context = React.useContext(LogConfigContext);
