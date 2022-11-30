@@ -23,9 +23,6 @@ export default function MessageViewport() {
 
   const filterReplies = useReplyFilter();
 
-  const [isScrolling, setIsScrolling] = React.useState<boolean>(false);
-  const [isAtBottom, setIsAtBottom] = React.useState<boolean>(false);
-
   const maxLogMessages: number = window.electron.store.get('maxLogMessages');
 
   React.useEffect(() => {
@@ -65,7 +62,10 @@ export default function MessageViewport() {
   React.useEffect(() => {
     if (buffer.length === 0) return;
 
-    setFiltered((old) => [...old, ...filterReplies(buffer)]);
+    const tmpFiltered = filterReplies(buffer);
+    if (tmpFiltered.length === 0) return;
+
+    setFiltered((old) => [...old, ...tmpFiltered]);
     setBuffer([]);
   }, [filterReplies, buffer]);
 
@@ -98,8 +98,6 @@ export default function MessageViewport() {
         width: '100%',
       }}
       totalCount={filtered.length}
-      atBottomStateChange={(aB) => setIsAtBottom(aB)}
-      isScrolling={(iS) => setIsScrolling(iS)}
       data={filtered}
       overscan={1000}
       itemContent={(index) => {
@@ -115,7 +113,6 @@ export default function MessageViewport() {
       followOutput='auto'
       alignToBottom
       atBottomThreshold={400}
-      context={{ showScrollBar: isScrolling && !isAtBottom }}
     />
   );
 }
