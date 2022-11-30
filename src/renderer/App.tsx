@@ -88,6 +88,7 @@ export default function App() {
             disableTouchRipple: true,
           },
         },
+        MuiInput: { defaultProps: { spellCheck: false } },
         MuiButton: {
           styleOverrides: {
             containedPrimary: {

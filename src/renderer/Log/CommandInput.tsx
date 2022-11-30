@@ -162,6 +162,7 @@ export default function CommandInput() {
         autoFocus
         inputRef={textRef}
         placeholder='Send command to tron'
+        spellCheck={false}
         startAdornment={
           <InputAdornment position='start'>
             <AdornmentIconButton onClick={handleClick}>
