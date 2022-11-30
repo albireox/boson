@@ -37,9 +37,17 @@ export default function Guider() {
     <Box component='main' display='flex' width='100%'>
       <CssBaseline />
       <GuiderContext.Provider value={boundContext}>
-        <Stack direction='column' height='100%' width='100%'>
-          <GuiderHeader guiderRef={ref} />
-          <Box position='absolute' top='50px' width='100%'>
+        <GuiderHeader guiderRef={ref} />
+
+        <Stack
+          direction='column'
+          height='100%'
+          width='100%'
+          pt={2}
+          px={2}
+          spacing={2}
+        >
+          <Box width='100%'>
             <JS9Grid
               guiderRef={(element: GuiderRefType | null) => {
                 if (element) {

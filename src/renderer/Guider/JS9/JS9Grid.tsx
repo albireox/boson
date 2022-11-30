@@ -24,13 +24,7 @@ export default function JS9Grid(props: JS9GridProps) {
   const frameProps = { filenameBundle, ref: guiderRef };
 
   return (
-    <Stack
-      direction='column'
-      spacing={0.5}
-      py={2}
-      overflow='hidden'
-      width='100%'
-    >
+    <Stack direction='column' spacing={0.5} overflow='hidden' width='100%'>
       <Stack direction='row' justifyContent='center' spacing={0.5} width='100%'>
         <JS9Frame display='gfa1' {...frameProps} />
         <JS9Frame display='gfa2' {...frameProps} />
