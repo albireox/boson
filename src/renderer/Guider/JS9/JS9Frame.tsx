@@ -89,7 +89,6 @@ function JS9FrameInner(
 
   const handleZoom = React.useCallback(
     (direction: string) => {
-      console.log(guiderConfig.config.selectedFrame);
       if (
         guiderConfig.config.selectedFrame !== '' &&
         guiderConfig.config.selectedFrame !== display
@@ -103,9 +102,6 @@ function JS9FrameInner(
 
   React.useImperativeHandle(ref, () => ({
     name: display,
-    fit: () => {
-      console.log('fitting', display);
-    },
     openInDS9: handleOpenInDS9,
     zoom: handleZoom,
   }));

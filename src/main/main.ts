@@ -79,7 +79,6 @@ export async function createWindow(windowName: string) {
   } else {
     name = windowName;
   }
-  console.log(windowName, name);
 
   if (windows.get(name) !== undefined && windows.get(name) !== null) {
     const window = windows.get(name);

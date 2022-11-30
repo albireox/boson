@@ -17,7 +17,6 @@ import { useLoadJS9 } from './tools';
 
 export type GuiderRefType = {
   name: string;
-  fit: () => void;
   openInDS9: () => void;
   zoom: (direction: string) => void;
 };
