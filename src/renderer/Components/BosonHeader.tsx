@@ -8,6 +8,8 @@
 import { Paper, Stack } from '@mui/material';
 
 interface BosonHeaderHeaderProps {
+  fixed?: boolean;
+  color?: string;
   children?: React.ReactNode;
   pl?: number;
   pr?: number;
@@ -15,20 +17,28 @@ interface BosonHeaderHeaderProps {
 }
 
 export default function BosonHeader(props: BosonHeaderHeaderProps) {
-  const { children, pl = 10, pr = 2, spacing = 2 } = props;
+  const {
+    fixed = false,
+    color,
+    children,
+    pl = 10,
+    pr = 2,
+    spacing = 2,
+  } = props;
   return (
     <Paper
-      sx={{
+      sx={(theme) => ({
         WebkitAppRegion: 'drag',
         height: '50px',
         minHeight: '50px',
-        position: 'fixed',
+        position: fixed ? 'fixed' : 'relative',
         top: 0,
         width: '100%',
         bgcolor: 'background.default',
         borderRadius: 0,
         zIndex: 1000,
-      }}
+        backgroundColor: color ?? theme.palette.background.paper,
+      })}
       elevation={1}
     >
       <Stack

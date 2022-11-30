@@ -18,7 +18,8 @@
   text-align: center;
   font-weight: 500;
   font-size: 11pt;
-  top: 0px
+  top: 0px;
+  position: fixed;
 }
 .titlebar else {
   -webkit-app-region: no-drag;

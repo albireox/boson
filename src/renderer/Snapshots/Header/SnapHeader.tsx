@@ -34,7 +34,7 @@ export default function SnapHeader(props: SnapHeaderProps) {
   } = props;
 
   return (
-    <BosonHeader>
+    <BosonHeader fixed>
       <FileNavigation files={files} index={index} onClick={onUpdateIndex} />
       <Box flexGrow={1} />
       <SnapSlider onChange={onScaleChanged} />

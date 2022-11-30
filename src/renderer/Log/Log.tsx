@@ -8,7 +8,6 @@
 import { Box, CssBaseline } from '@mui/material';
 import { Stack } from '@mui/system';
 import * as React from 'react';
-import { HeaderDivider } from 'renderer/Components';
 
 import CommandInput from './CommandInput';
 import LogConfigContext, {
@@ -30,26 +29,11 @@ export default function Log(props: LogProps) {
   const logConfig = createLogConfig(config, setConfig);
 
   return (
-    <Box
-      component='main'
-      display='flex'
-      position='absolute'
-      height='100%'
-      width='100%'
-      top={0}
-    >
+    <Box component='main' display='flex' width='100%'>
       <CssBaseline />
       <LogConfigContext.Provider value={logConfig}>
         <LogHeader logId={logId} />
-        <HeaderDivider />
-        <Stack
-          height='100%'
-          direction='column'
-          px={2}
-          pt={2}
-          pb={2}
-          spacing={2}
-        >
+        <Stack height='100%' direction='column' px={2} pb={2} spacing={2}>
           <MessageViewport />
           <CommandInput />
         </Stack>
