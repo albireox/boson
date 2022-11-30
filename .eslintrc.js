@@ -24,6 +24,10 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/no-array-index-key': 'off',
     'import/prefer-default-export': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      { args: 'all', argsIgnorePattern: '^_' },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2020,
