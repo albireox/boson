@@ -5,39 +5,12 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import Reply from 'main/tron/reply';
 import React from 'react';
-import { Components, Virtuoso } from 'react-virtuoso';
+import { Virtuoso } from 'react-virtuoso';
 import { useLogConfig, useReplyFilter } from './hooks';
 import Message from './Message';
-
-const Scroller: Components<{ showScrollBar: boolean }>['Scroller'] =
-  React.forwardRef(({ style, context, ...props }, ref) => {
-    // Scroller component that doesn't show the scrollbar while the
-    // scroll is at the bottom of the viewport.
-    return (
-      <Box
-        sx={{
-          // '&::-webkit-scrollbar': {
-          //   display: context?.showScrollBar ? undefined : 'none',
-          // },
-          // '&::-webkit-scrollbar': {
-          //   '-webkit-appearance': 'none',
-          //   width: '7px',
-          // },
-          '::-webkit-scrollbar-thumb': {
-            borderRadius: '4px',
-            backgroundColor: 'rgba(0, 0, 0, .5)',
-            boxShadow: '0 0 1px rgba(255, 255, 255, .5)',
-          },
-        }}
-        style={style}
-        ref={ref}
-        {...props}
-      />
-    );
-  });
 
 export default function MessageViewport() {
   const theme = useTheme();
@@ -143,7 +116,6 @@ export default function MessageViewport() {
       alignToBottom
       atBottomThreshold={400}
       context={{ showScrollBar: isScrolling && !isAtBottom }}
-      components={{ Scroller }}
     />
   );
 }
