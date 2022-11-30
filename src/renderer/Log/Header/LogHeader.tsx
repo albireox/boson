@@ -25,7 +25,7 @@ function ActorInfo(props: ActorInfoProps) {
     <>
       <Divider orientation='vertical' variant='middle' sx={{ height: '60%' }} />
       <Typography
-        variant='body1'
+        variant='h6'
         color='text.secondary'
         sx={{
           maxWidth: '100px',
