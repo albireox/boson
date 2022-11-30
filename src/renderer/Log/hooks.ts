@@ -59,8 +59,23 @@ export function useReplyFilter() {
           }
         }
 
-        if (config.actors.size > 0 && !config.actors.has(reply.sender))
-          return false;
+        if (config.actors.size > 0) {
+          if (reply.sender !== 'cmds' && !config.actors.has(reply.sender)) {
+            return false;
+          }
+          if (reply.sender === 'cmds') {
+            // TODO: this is not perfect and could cause some false positives.
+            let success = false;
+            Array.from(config.actors).some((actor) => {
+              if (reply.rawLine.includes(actor)) {
+                success = true;
+                return true;
+              }
+              return false;
+            });
+            if (!success) return false;
+          }
+        }
 
         return true;
       }),
