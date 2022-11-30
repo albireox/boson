@@ -99,14 +99,18 @@ export default function MessageViewport() {
   React.useEffect(() => {
     setFiltered([]);
     setBuffer((b) => [...replies, ...b]);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config]);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      setReplies((reps) => reps.slice(-maxLogMessages));
-      setFiltered([]);
-      setBuffer((b) => [...replies, ...b]);
+      setReplies((reps) => {
+        setFiltered([]);
+        setBuffer((b) => [...reps.slice(-maxLogMessages), ...b]);
+
+        return reps.slice(-maxLogMessages);
+      });
     }, 10 * 60 * 1000);
 
     return () => clearInterval(interval);
