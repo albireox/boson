@@ -14,16 +14,18 @@ export default function ExposureNo() {
     'filename_bundle',
   ]);
 
-  const [exposureNo, setExposureNo] = React.useState(0);
+  const [exposureNo, setExposureNo] = React.useState(-1);
 
   React.useEffect(() => {
     if (!filenameBundle || filenameBundle.values.length === 0) return;
 
-    const expNo = parseInt(
-      filenameBundle.values[0].match(/([0-9]{4})\.fits/)[0],
-      10
-    );
-    setExposureNo(expNo);
+    const match = filenameBundle.values[0].match(/.+gfa.+([0-9]{4})\.fits/);
+    if (!match) {
+      setExposureNo(-1);
+      return;
+    }
+
+    setExposureNo(parseInt(match[0], 10));
   }, [filenameBundle]);
 
   return (
@@ -38,7 +40,7 @@ export default function ExposureNo() {
         fontFamily='monospace'
         pl={0.5}
       >
-        #{exposureNo}
+        #{exposureNo === -1 ? '?' : exposureNo}
       </Typography>
     </Box>
   );
