@@ -365,7 +365,7 @@ export class TronConnection {
           // Change sender so that it will appear as if coming from the actor.
           reply.sender = actor;
           this.emitKeywords(reply);
-          return false;
+          return true;
         });
       }
     }

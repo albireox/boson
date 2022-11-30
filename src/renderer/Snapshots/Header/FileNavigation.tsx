@@ -32,12 +32,12 @@ export default function FileNavigation(props: FileNavigationProps) {
   const handleClick = React.useCallback(
     (text: string) => {
       let newIndex = -1;
-      files.every((file, ii) => {
+      files.some((file, ii) => {
         if (file.includes(text)) {
           newIndex = ii;
-          return false;
+          return true;
         }
-        return true;
+        return false;
       });
 
       if (newIndex !== index && newIndex < files.length && onClick) {
