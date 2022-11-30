@@ -137,6 +137,9 @@ const ElectronAPI = {
     openInBrowser: (path: string) => {
       shell.openExternal(path);
     },
+    openInApplication: (command: string) => {
+      return ipcRenderer.invoke('tools:open-in-application', command);
+    },
   },
 };
 

@@ -25,6 +25,15 @@
       "minWidth": 480,
       "minHeight": 400
     },
+    "guider": {
+      "trafficLightPosition": { "x": 10, "y": 15 },
+      "width": 965,
+      "height": 800,
+      "resizable": true,
+      "minWidth": 965,
+      "minHeight": 800,
+      "aspectRatio": 0.8296
+    },
     "preferences": {
       "x": 876,
       "y": 160,
@@ -92,12 +101,12 @@
     }
   },
   "guider": {
-    "xpaset": "/usr/bin/xpaset",
+    "xpaset": "/usr/local/bin/xpaset",
     "fullImage": false,
-    "colormap": "red",
-    "scale": "heat",
+    "colormap": "heat",
+    "scale": "log",
     "scalelim": "zscale",
-    "titlebar_status": true
+    "titlebarStatus": true
   },
   "maxLogMessages": 10000,
   "savedState": {

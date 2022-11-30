@@ -5,9 +5,11 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import { exec } from 'child_process';
 import { randomUUID } from 'crypto';
 import { app, ipcMain } from 'electron';
 import * as keytar from 'keytar';
+import { promisify } from 'util';
 import { createWindow } from './main';
 import store, { subscriptions as storeSubscriptions } from './store';
 import connectAndAuthorise from './tron/tools';
@@ -109,4 +111,18 @@ export default function loadEvents() {
   ipcMain.on('tools:get-uuid', async (event) => {
     event.returnValue = randomUUID();
   });
+  ipcMain.handle(
+    'tools:open-in-application',
+    async (event, command: string) => {
+      const execP = promisify(exec);
+
+      const { stdout, stderr } = await execP(command);
+
+      if (stderr) {
+        throw Error(stderr);
+      }
+
+      return stdout;
+    }
+  );
 }

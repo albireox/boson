@@ -5,13 +5,35 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box } from '@mui/material';
-import Header from 'renderer/Components/Header';
+import { Divider } from '@mui/material';
+import Header from 'renderer/Components/BosonHeader';
+import { GuiderRefMap } from '../Guider';
+import ColormapButton from './ColormapButton';
+import DS9Button from './DS9Button';
+import ExposureNo from './ExposureNo';
+import ExposureProgress from './ExposureProgress';
+import ScaleButton from './ScaleButton';
+import ScaleLimButton from './ScaleLimButton';
+import ZoomButtons from './ZoomButtons';
 
-export default function GuiderHeader() {
+export interface GuiderHeaderProps {
+  guiderRef: React.MutableRefObject<GuiderRefMap>;
+}
+
+export default function GuiderHeader(props: GuiderHeaderProps) {
+  const { guiderRef } = props;
+
   return (
-    <Header>
-      <Box />
+    <Header pr={4} spacing={3}>
+      <ExposureNo />
+      <ExposureProgress />
+      <ZoomButtons guiderRef={guiderRef} />
+      <Divider orientation='vertical' variant='middle' sx={{ height: '60%' }} />
+      <ScaleLimButton />
+      <ScaleButton />
+      <ColormapButton />
+      <Divider orientation='vertical' variant='middle' sx={{ height: '60%' }} />
+      <DS9Button guiderRef={guiderRef} />
     </Header>
   );
 }
