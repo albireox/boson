@@ -8,9 +8,12 @@
 export { default as BosonHeader } from './BosonHeader';
 export { BosonHoverMenu, BosonMenu } from './BosonMenu';
 export {
-  default as CheckMenuItem,
-  type CheckMenuItemProps,
+  BosonMenuItemCheckbox,
+  BosonMenuItemRadio,
+  default as BosonMenuItem,
+  type BosonMenuItemProps,
 } from './BosonMenuItem';
+export { default as CommandButton } from './CommandButton';
 export { default as DrawerListItem } from './DrawerListItem';
 export { default as HeaderDivider } from './HeaderDivider';
 export { default as HeaderIconButton } from './HeaderIconButton';
