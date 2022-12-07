@@ -114,7 +114,7 @@ export async function createWindow(windowName: string) {
     ...windowParams,
     webPreferences: {
       contextIsolation: true,
-      sandbox: false,
+      sandbox: true,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
