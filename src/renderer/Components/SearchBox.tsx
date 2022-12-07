@@ -53,15 +53,21 @@ interface SearchBoxProps extends Omit<InputBaseProps, 'endAdornment'> {
   expand?: boolean;
   expandedWidth?: number;
   defaultWidth?: number;
-  endAdornment?: JSX.Element;
+  endAdornment?: JSX.Element | null;
   doClear?: () => void;
 }
 
 export default function SearchBox(props: SearchBoxProps) {
-  const { value, expand, doClear, ...rest } = props;
-  const { expandedWidth, defaultWidth } = props;
+  const {
+    value,
+    expand,
+    doClear,
+    expandedWidth,
+    defaultWidth,
+    endAdornment: userEndAdornment,
+    ...rest
+  } = props;
 
-  const { endAdornment: userEndAdornment } = props;
   const endAdornment = userEndAdornment ?? (
     <DefaultAddornment doClear={doClear} />
   );
