@@ -8,6 +8,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { contextBridge, ipcRenderer, IpcRendererEvent, shell } from 'electron';
+import Command from './tron/command';
 import { ConnectionStatus, Reply } from './tron/types';
 
 const ElectronAPI = {
@@ -101,7 +102,7 @@ const ElectronAPI = {
     getActors(): Promise<string[]> {
       return ipcRenderer.invoke('tron:actors');
     },
-    send(command: string) {
+    send(command: string): Promise<Command> {
       return ipcRenderer.invoke('tron:send', command);
     },
   },
