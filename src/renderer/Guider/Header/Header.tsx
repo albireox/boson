@@ -12,6 +12,7 @@ import ColormapButton from './ColormapButton';
 import DS9Button from './DS9Button';
 import ExposureNo from './ExposureNo';
 import ExposureProgress from './ExposureProgress';
+import ResetButton from './ResetButton';
 import ScaleButton from './ScaleButton';
 import ScaleLimButton from './ScaleLimButton';
 import ZoomButtons from './ZoomButtons';
@@ -29,6 +30,7 @@ export default function GuiderHeader(props: GuiderHeaderProps) {
       <ExposureProgress />
       <ZoomButtons guiderRef={guiderRef} />
       <Divider orientation='vertical' variant='middle' sx={{ height: '60%' }} />
+      <ResetButton guiderRef={guiderRef} />
       <ScaleLimButton />
       <ScaleButton />
       <ColormapButton />

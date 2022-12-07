@@ -15,6 +15,7 @@ interface GuiderConfig {
   scalelim: string;
   zoom: number;
   selectedFrame: string;
+  expandedFrame: string;
 }
 
 const defaultGuiderConfig: GuiderConfig = {
@@ -23,6 +24,7 @@ const defaultGuiderConfig: GuiderConfig = {
   scalelim: window.electron.store.get('guider.scalelim'),
   zoom: 1,
   selectedFrame: '',
+  expandedFrame: '',
 };
 
 interface GuiderContextType {
@@ -30,6 +32,7 @@ interface GuiderContextType {
   setConfig: React.Dispatch<React.SetStateAction<GuiderConfig>>;
   setParam: (param: string, newValue: any, save: boolean) => void;
   setSelectedFrame: (frame: string) => void;
+  setExpandedFrame: (frame: string) => void;
 }
 
 const defaultContext: GuiderContextType = {
@@ -37,6 +40,7 @@ const defaultContext: GuiderContextType = {
   setConfig: () => {},
   setParam: () => {},
   setSelectedFrame: () => {},
+  setExpandedFrame: () => {},
 };
 
 const GuiderContext = React.createContext<GuiderContextType>(defaultContext);
@@ -59,6 +63,8 @@ function prepareGuiderContext(
     },
     setSelectedFrame: (frame: string) =>
       setConfig((current) => ({ ...current, selectedFrame: frame })),
+    setExpandedFrame: (frame: string) =>
+      setConfig((current) => ({ ...current, expandedFrame: frame })),
   };
 }
 

@@ -11,6 +11,7 @@ import GuiderContext, {
   defaultGuiderConfig,
   prepareGuiderContext,
 } from './Context';
+import ExposeRow from './Expose/ExposeRow';
 import { GuiderHeader } from './Header';
 import { JS9Grid } from './JS9';
 import { useLoadJS9 } from './tools';
@@ -19,6 +20,7 @@ export type GuiderRefType = {
   name: string;
   openInDS9: () => void;
   zoom: (direction: string) => void;
+  reset: () => void;
 };
 
 export type GuiderRefMap = {
@@ -43,9 +45,10 @@ export default function Guider() {
           direction='column'
           height='100%'
           width='100%'
-          pt={2}
+          pt={1}
+          pb={2}
           px={2}
-          spacing={2}
+          spacing={2.5}
         >
           <Box width='100%'>
             <JS9Grid
@@ -56,6 +59,7 @@ export default function Guider() {
               }}
             />
           </Box>
+          <ExposeRow />
         </Stack>
       </GuiderContext.Provider>
     </Box>

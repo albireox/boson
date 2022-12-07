@@ -62,6 +62,9 @@ function JS9FrameInner(
 
   const [path, setPath] = React.useState<string | null>(null);
   const [size, setSize] = React.useState(800 / 3.2);
+  const [expanded, setExpanded] = React.useState(false);
+
+  const [initialLoad, setInitialLoad] = React.useState(true);
 
   const [hovering, setHovering] = React.useState(false);
 
@@ -100,10 +103,26 @@ function JS9FrameInner(
     [guiderConfig, display]
   );
 
+  const handleReset = React.useCallback(() => {
+    if (
+      guiderConfig.config.selectedFrame !== '' &&
+      guiderConfig.config.selectedFrame !== display
+    )
+      return;
+
+    window.JS9.SetColormap('reset', { display });
+    window.JS9.SetZoom('toFit', { display });
+
+    // Recenter image.
+    const imdata = window.JS9.GetImageData({ display });
+    window.JS9.SetPan(imdata.width / 2, imdata.height / 2, { display });
+  }, [display, guiderConfig]);
+
   React.useImperativeHandle(ref, () => ({
     name: display,
     openInDS9: handleOpenInDS9,
     zoom: handleZoom,
+    reset: handleReset,
   }));
 
   const updateParams = React.useCallback(() => {
@@ -112,8 +131,12 @@ function JS9FrameInner(
     window.JS9.SetColormap(guiderConfig.config.colormap, { display });
     window.JS9.SetScale(guiderConfig.config.scale, { display });
     window.JS9.SetScale(guiderConfig.config.scalelim, { display });
-    window.JS9.SetZoom('toFit', { display });
-  }, [guiderConfig, display]);
+
+    if (initialLoad) {
+      window.JS9.SetZoom('toFit', { display });
+      setInitialLoad(false);
+    }
+  }, [guiderConfig, display, initialLoad]);
 
   const updateImage = React.useCallback(
     (filename: string | null) => {
@@ -148,8 +171,14 @@ function JS9FrameInner(
 
   React.useEffect(() => {
     if (!windowSize) return;
-    setSize(Math.round((windowSize.width || 800) / 3.2));
-  }, [windowSize]);
+
+    const factor = expanded ? 2 : 1;
+    setSize(Math.round(((windowSize.width || 800) / 3) * factor));
+  }, [windowSize, expanded, guiderConfig]);
+
+  React.useEffect(() => {
+    setExpanded(guiderConfig.config.expandedFrame === display);
+  }, [display, guiderConfig]);
 
   React.useEffect(() => {
     if (!filenameBundle || !host || !port) {
@@ -172,65 +201,54 @@ function JS9FrameInner(
   return (
     <>
       <Box
+        className='JS9'
+        id={display}
         style={{
           width: size,
           height: size,
+          display:
+            !expanded && guiderConfig.config.expandedFrame !== ''
+              ? 'none'
+              : 'block',
         }}
         sx={(theme) => ({
-          display: 'block',
-          outline: `solid 4px ${
-            guiderConfig.config.selectedFrame === display
-              ? theme.palette.info[theme.palette.mode]
-              : 'transparent'
-          }`,
-          width: size,
-          height: size,
-          zIndex: 10,
+          border: !expanded
+            ? `solid 4px ${
+                guiderConfig.config.selectedFrame === display
+                  ? theme.palette.info[theme.palette.mode]
+                  : 'transparent'
+              }`
+            : undefined,
+
+          boxSizing: 'border-box',
+          'div.JS9Container > canvas.JS9Image': {
+            backgroundColor: theme.palette.background.default,
+            backgroundImage: `url(SDSS-V.png)`,
+            backgroundSize: 'cover',
+            backgroundBlendMode: 'luminosity',
+            backgroundPosition: 'center',
+            width: size - 16,
+            height: size - 8,
+          },
+          '.JS9Container > .JS9Message': {
+            visibility: hovering ? 'initial' : 'hidden',
+          },
         })}
-      >
-        <Box
-          className='JS9'
-          id={display}
-          style={{
-            width: size,
-            height: size,
-          }}
-          sx={(theme) => ({
-            // display: 'block',
-            zIndex: 1000,
-            'div.JS9Container > canvas.JS9Image': {
-              backgroundColor: theme.palette.background.default,
-              backgroundImage: `url(SDSS-V.png)`,
-              backgroundSize: 'cover',
-              backgroundBlendMode: 'luminosity',
-              backgroundPosition: 'center',
-              // width: size,
-              // height: size,
-              zIndex: 10,
-            },
-            '.JS9Layer': {
-              width: size,
-              height: size,
-            },
-            ' .canvas-container': {
-              width: size,
-              height: size,
-            },
-            '.JS9Container > .JS9Message': {
-              visibility: hovering ? 'initial' : 'hidden',
-            },
-          })}
-          data-width={`${size}px`}
-          data-height={`${size}px`}
-          onClick={() =>
-            guiderConfig.setSelectedFrame(
-              guiderConfig.config.selectedFrame === display ? '' : display
-            )
-          }
-          onMouseEnter={() => setHovering(true)}
-          onMouseLeave={() => setHovering(false)}
-        />
-      </Box>
+        data-width={`${size}px`}
+        data-height={`${size}px`}
+        onClick={() =>
+          guiderConfig.setSelectedFrame(
+            guiderConfig.config.selectedFrame === display ? '' : display
+          )
+        }
+        onDoubleClick={() => {
+          const eD = guiderConfig.config.expandedFrame !== '' ? '' : display;
+          guiderConfig.setExpandedFrame(eD);
+          guiderConfig.setSelectedFrame(eD);
+        }}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+      />
       <DS9Dialog
         open={openDS9Dialog}
         close={() => setOpenDS9Dialog(false)}
