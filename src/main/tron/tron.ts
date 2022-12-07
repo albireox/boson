@@ -16,7 +16,12 @@ import { generateName } from '../util';
 import Command from './command';
 import parseLine from './keywords';
 import Reply from './reply';
-import { ConnectionStatus, ReplyCode, ReplyCodeReverseMap } from './types';
+import {
+  ConnectionStatus,
+  Keyword,
+  ReplyCode,
+  ReplyCodeReverseMap,
+} from './types';
 
 export class TronConnection {
   private connectionStatus: ConnectionStatus = ConnectionStatus.Disconnected;
@@ -29,6 +34,8 @@ export class TronConnection {
   private loggers: Map<number, WebContents> = new Map();
 
   private keywordListeners: Map<string, [WebContents, string[]]> = new Map();
+
+  private trackedKeywords: Map<string, Keyword | null> = new Map();
 
   private replies: Reply[] = [];
 
@@ -302,7 +309,7 @@ export class TronConnection {
 
       this.loggers.forEach((win) => win.send('tron:received-reply', reply));
 
-      this.emitKeywords(reply);
+      this.processReply(reply);
     });
   }
 
@@ -354,9 +361,21 @@ export class TronConnection {
     const keys = keywords.map((keyword) => `${actor}.${keyword}`);
     this.keywordListeners.set(channel, [sender, keys]);
 
-    if (getKeys) {
+    const untracked: string[] = [];
+
+    keys.forEach((key, idx) => {
+      const trackedKeyword = this.trackedKeywords.get(key);
+      if (!trackedKeyword) {
+        this.trackedKeywords.set(key, null);
+        untracked.push(keywords[idx]);
+      } else {
+        this.emitKeyword(key, trackedKeyword);
+      }
+    });
+
+    if (getKeys && untracked.length > 0) {
       const { replies } = await this.sendCommand(
-        `keys getFor=${actor} ${keywords.join(' ')}`
+        `keys getFor=${actor} ${untracked.join(' ')}`
       ).awaitUntilDone();
       if (replies.length > 0) {
         replies.every((reply) => {
@@ -364,7 +383,7 @@ export class TronConnection {
 
           // Change sender so that it will appear as if coming from the actor.
           reply.sender = actor;
-          this.emitKeywords(reply);
+          this.processReply(reply);
           return true;
         });
       }
@@ -375,18 +394,27 @@ export class TronConnection {
     this.keywordListeners.delete(channel);
   }
 
-  emitKeywords(reply: Reply) {
+  private emitKeyword(name: string, keyword: Keyword) {
+    this.keywordListeners.forEach(([wC, keys], channel) => {
+      if (keys.includes(name)) {
+        try {
+          wC.send(channel, keyword);
+        } catch {
+          log.error(`Failed sending keyword to ${channel}`);
+        }
+      }
+    });
+
+    // Update keywords that we are tracking.
+    if (this.trackedKeywords.has(name)) {
+      this.trackedKeywords.set(name, keyword);
+    }
+  }
+
+  processReply(reply: Reply) {
     reply.keywords.forEach((keyword) => {
       const name = `${reply.sender}.${keyword.name}`;
-      this.keywordListeners.forEach(([wC, keys], channel) => {
-        if (keys.includes(name)) {
-          try {
-            wC.send(channel, keyword);
-          } catch {
-            log.error(`Failed sending keyword to ${channel}`);
-          }
-        }
-      });
+      this.emitKeyword(name, keyword);
     });
   }
 }
