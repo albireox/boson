@@ -51,11 +51,7 @@ export function useLoadJS9() {
       loadExternalScript('js9/js9support.min.js')
         .then(() =>
           loadExternalScript('js9/js9.min.js')
-            .then(() =>
-              loadExternalScript('js9/js9plugins.js')
-                .then(() => setState(true))
-                .catch(() => {})
-            )
+            .then(() => setState(true))
             .catch(() => {})
         )
         .catch(() => {})
