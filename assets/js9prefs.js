@@ -17,6 +17,7 @@ var JS9Prefs = {
     clearImageMemory: 'always',
     // waitType: 'mouse',
     useWasm: false,
+    panWithinDisplay: true,
   },
   imageOpts: {
     colormap: 'grey',
