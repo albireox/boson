@@ -4,6 +4,7 @@ import React from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { Guider } from './Guider';
+import { HAL } from './HAL';
 import { useStore } from './hooks';
 import Log from './Log';
 import Main from './Main';
@@ -137,6 +138,9 @@ export default function App() {
       break;
     case 'guider':
       view = <Guider />;
+      break;
+    case 'HAL':
+      view = <HAL />;
       break;
     default:
       view = null;

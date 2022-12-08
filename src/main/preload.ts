@@ -7,7 +7,13 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { contextBridge, ipcRenderer, IpcRendererEvent, shell } from 'electron';
+import {
+  contextBridge,
+  ipcRenderer,
+  IpcRendererEvent,
+  MessageBoxOptions,
+  shell,
+} from 'electron';
 import Command from './tron/command';
 import { ConnectionStatus, Reply } from './tron/types';
 
@@ -102,8 +108,8 @@ const ElectronAPI = {
     getActors(): Promise<string[]> {
       return ipcRenderer.invoke('tron:actors');
     },
-    send(command: string): Promise<Command> {
-      return ipcRenderer.invoke('tron:send', command);
+    send(command: string, raise = false): Promise<Command> {
+      return ipcRenderer.invoke('tron:send', command, raise);
     },
   },
   store: {
@@ -141,6 +147,12 @@ const ElectronAPI = {
     openInApplication: (command: string) => {
       return ipcRenderer.invoke('tools:open-in-application', command);
     },
+  },
+  dialog: {
+    showMessageBox: async (options: MessageBoxOptions) =>
+      ipcRenderer.invoke('dialog:show-message-box', options),
+    showErrorBox: async (title: string, content: string) =>
+      ipcRenderer.invoke('dialog:show-error-box', title, content),
   },
 };
 

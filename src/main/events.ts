@@ -7,13 +7,14 @@
 
 import { exec } from 'child_process';
 import { randomUUID } from 'crypto';
-import { app, ipcMain } from 'electron';
+import { app, dialog, ipcMain, MessageBoxOptions } from 'electron';
 import * as keytar from 'keytar';
 import { promisify } from 'util';
 import { createWindow } from './main';
 import store, { config, subscriptions as storeSubscriptions } from './store';
 import connectAndAuthorise from './tron/tools';
 import tron from './tron/tron';
+import { CommandStatus } from './tron/types';
 
 export default function loadEvents() {
   // app events
@@ -66,11 +67,15 @@ export default function loadEvents() {
   );
   ipcMain.handle('tron:all-replies', async () => tron.getReplies());
   ipcMain.handle('tron:actors', async () => tron.getActors());
-  ipcMain.handle('tron:send', async (event, command) => {
+  ipcMain.handle('tron:send', async (event, command: string, raise = false) => {
     const cmd = tron.sendCommand(command);
 
     await cmd.awaitUntilDone();
     delete cmd.lock; // Lock cannot be serialised and anyway it's not needed.
+
+    if (cmd.status === CommandStatus.Failed && raise) {
+      throw Error(`Command ${cmd.rawCommand} failed.`);
+    }
 
     return cmd;
   });
@@ -133,6 +138,20 @@ export default function loadEvents() {
       }
 
       return stdout;
+    }
+  );
+
+  // Dialogs
+  ipcMain.handle(
+    'dialog:show-message-box',
+    async (event, options: MessageBoxOptions) => {
+      await dialog.showMessageBox(options);
+    }
+  );
+  ipcMain.handle(
+    'dialog:show-error-box',
+    async (event, title: string, content: string) => {
+      await dialog.showErrorBox(title, content);
     }
   );
 }

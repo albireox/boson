@@ -166,6 +166,11 @@ export default class MenuBuilder {
           accelerator: 'Command+Shift+G',
           click: () => createWindow('guider'),
         },
+        {
+          label: 'HAL',
+          accelerator: 'Command+Shift+H',
+          click: () => createWindow('HAL'),
+        },
       ],
     };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {

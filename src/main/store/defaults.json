@@ -40,6 +40,13 @@
       "height": 884,
       "minWidth": 685,
       "minHeight": 585
+    },
+    "HAL": {
+      "width": 600,
+      "height": 800,
+      "resizable": true,
+      "minWidth": 600,
+      "minHeight": 800
     }
   },
   "profiles": {
@@ -102,11 +109,19 @@
     "fliswarm.exposure_state",
     "fliswarm.filename_bundle",
     "jaeger.configuration_snapshot",
+    "jaeger.configuration_loaded",
     "jaeger.snapshot",
     "jaeger.folded",
     "jaeger.locked",
     "jaeger.locked_by",
-    "jaeger.fps_status"
+    "jaeger.fps_status",
+    "jaeger.design_preloaded",
+    "hal.running_macros",
+    "hal.stage_status",
+    "hal.stages",
+    "hal.available_scripts",
+    "hal.exposure_state_apogee",
+    "hal.exposure_state_boss"
   ],
   "maxLogMessages": 10000
 }
