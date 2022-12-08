@@ -280,7 +280,7 @@ export default function Header() {
   return (
     <Box pt={2}>
       <PreloadedDesign />
-      <Stack direction='row' pl={12} pr={4} pb={1} pt={1} width='100%'>
+      <Stack direction='row' pl={10} pr={4} pb={1} pt={1} width='100%'>
         <DesignInput />
         <Box flexGrow={1} />
         <img
