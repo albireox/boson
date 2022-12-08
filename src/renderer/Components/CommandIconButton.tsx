@@ -17,7 +17,7 @@ export interface CommandIconButtonProps {
 
 export default function CommandIconButton(props: CommandIconButtonProps) {
   const context = React.useContext(CommandWrapperContext);
-  const { handleClick, state, title } = context;
+  const { handleClick, state, tooltip, runningTooltip } = context;
 
   const { children, disabled = false, width = 33 } = props;
 
@@ -26,7 +26,7 @@ export default function CommandIconButton(props: CommandIconButtonProps) {
   );
 
   return (
-    <Tooltip title={title}>
+    <Tooltip title={state === 'running' ? runningTooltip : tooltip}>
       <IconButton
         onClick={handleClick}
         style={{ height: width, width }}

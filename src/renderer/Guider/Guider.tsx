@@ -12,6 +12,7 @@ import GuiderContext, {
   prepareGuiderContext,
 } from './Context';
 import ExposeRow from './Expose/ExposeRow';
+import GuideTable from './GuideTable/GuideTable';
 import { GuiderHeader } from './Header';
 import { JS9Grid } from './JS9';
 import { useLoadJS9 } from './tools';
@@ -49,6 +50,7 @@ export default function Guider() {
           pb={2}
           px={2}
           spacing={2.5}
+          sx={{ overflowY: 'scroll' }}
         >
           <Box width='100%'>
             <JS9Grid
@@ -60,6 +62,7 @@ export default function Guider() {
             />
           </Box>
           <ExposeRow />
+          <GuideTable />
         </Stack>
       </GuiderContext.Provider>
     </Box>

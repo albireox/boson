@@ -74,6 +74,13 @@ export class TronConnection {
     this.client.on('data', (buffer: Buffer) =>
       this.parseData(buffer.toString())
     );
+
+    this.initialiseKeywords();
+  }
+
+  private initialiseKeywords() {
+    const keywords = store.get('keywords');
+    keywords.forEach((keyword) => this.trackedKeywords.set(keyword, null));
   }
 
   get status(): ConnectionStatus {

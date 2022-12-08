@@ -45,7 +45,8 @@ export type CommandStatusValues = 'idle' | 'running' | 'error';
 export interface CommandContext {
   state: CommandStatusValues;
   handleClick: () => void;
-  title?: string;
+  tooltip?: string;
+  runningTooltip?: string;
 }
 
 export type CommandWrapperProps = {
@@ -55,7 +56,8 @@ export type CommandWrapperProps = {
   onStatusChange?: (event: string) => void;
   beforeCallback?: () => Promise<boolean>;
   isRunning?: boolean;
-  title?: string;
+  tooltip?: string;
+  runningTooltip?: string;
 };
 
 export const CommandWrapperContext = React.createContext<CommandContext>({
@@ -70,7 +72,8 @@ export default function CommandWrapper(props: CommandWrapperProps) {
     onStatusChange,
     beforeCallback,
     isRunning,
-    title,
+    tooltip,
+    runningTooltip,
     children,
   } = props;
 
@@ -143,7 +146,9 @@ export default function CommandWrapper(props: CommandWrapperProps) {
 
   return (
     <>
-      <CommandWrapperContext.Provider value={{ state, handleClick, title }}>
+      <CommandWrapperContext.Provider
+        value={{ state, handleClick, tooltip, runningTooltip }}
+      >
         {children}
       </CommandWrapperContext.Provider>
       <Dialog open={alertOpen}>

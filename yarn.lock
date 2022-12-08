@@ -2438,7 +2438,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.10.16":
+"@mui/utils@npm:^5.10.16, @mui/utils@npm:^5.10.3":
   version: 5.10.16
   resolution: "@mui/utils@npm:5.10.16"
   dependencies:
@@ -2450,6 +2450,57 @@ __metadata:
   peerDependencies:
     react: ^17.0.0 || ^18.0.0
   checksum: 2db4ac76544fe19856b5d456b2ddfb55baf505ce24f27f1d06900758d61067b74ceb94069d34cb82467e4be5fa33d613a0f2f947fc7b29315317090ac8cacbeb
+  languageName: node
+  linkType: hard
+
+"@mui/x-data-grid-pro@npm:^5.17.14":
+  version: 5.17.14
+  resolution: "@mui/x-data-grid-pro@npm:5.17.14"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@mui/utils": ^5.10.3
+    "@mui/x-data-grid": 5.17.14
+    "@mui/x-license-pro": 5.17.12
+    "@types/format-util": ^1.0.2
+    clsx: ^1.2.1
+    prop-types: ^15.8.1
+    reselect: ^4.1.6
+  peerDependencies:
+    "@mui/material": ^5.4.1
+    "@mui/system": ^5.4.1
+    react: ^17.0.2 || ^18.0.0
+    react-dom: ^17.0.2 || ^18.0.0
+  checksum: a36506238a6711090077f444d0271958418aa0a45b18e0865cdb663033472e31ad6b6286656cd953fe17943bfcef59c0a7f562695ad789facce202c409a831f5
+  languageName: node
+  linkType: hard
+
+"@mui/x-data-grid@npm:5.17.14":
+  version: 5.17.14
+  resolution: "@mui/x-data-grid@npm:5.17.14"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@mui/utils": ^5.10.3
+    clsx: ^1.2.1
+    prop-types: ^15.8.1
+    reselect: ^4.1.6
+  peerDependencies:
+    "@mui/material": ^5.4.1
+    "@mui/system": ^5.4.1
+    react: ^17.0.2 || ^18.0.0
+    react-dom: ^17.0.2 || ^18.0.0
+  checksum: 5bdc841debf6f288a49f960cb31cc98ff433fd321f4ac9c617f25b048c918c9fa7a5b90ceeda073377712273db7ff39c0518f3a64cd9cfe53abb6f7a1146d7a1
+  languageName: node
+  linkType: hard
+
+"@mui/x-license-pro@npm:5.17.12":
+  version: 5.17.12
+  resolution: "@mui/x-license-pro@npm:5.17.12"
+  dependencies:
+    "@babel/runtime": ^7.18.9
+    "@mui/utils": ^5.10.3
+  peerDependencies:
+    react: ^17.0.2 || ^18.0.0
+  checksum: 462197c1d7a4be0bd605a9aa3d0882946ef5d9cbc89d26cf03cc83df4534ccc7353eced38a8dc345bbeb6da9335281cbea1a8b6aab9c76dff891a59c949be1fd
   languageName: node
   linkType: hard
 
@@ -3057,6 +3108,13 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 15c1af46d02de834e4a225eccaa9d85c0370fdbb3ed4e1bc2d323d24872309961542b993ae236335aeb3e278630224a6ea002078d39e651d78a3b0356b1eaa79
+  languageName: node
+  linkType: hard
+
+"@types/format-util@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@types/format-util@npm:1.0.2"
+  checksum: 59b5d0f7d83cd64cd4ef57485db1f62d232c48e1d30b04f78386de974446ed57d3415134fcdaa2e8052baf0926b89148a34f6575ab21245fea77802a9f4de0a3
   languageName: node
   linkType: hard
 
@@ -4803,6 +4861,7 @@ __metadata:
     "@mui/icons-material": ^5.10.16
     "@mui/lab": ^5.0.0-alpha.111
     "@mui/material": ^5.10.17
+    "@mui/x-data-grid-pro": ^5.17.14
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
     "@svgr/webpack": ^6.5.1
     "@teamsupercell/typings-for-css-modules-loader": ^2.5.1
@@ -12658,6 +12717,13 @@ __metadata:
   version: 1.0.0
   resolution: "requires-port@npm:1.0.0"
   checksum: eee0e303adffb69be55d1a214e415cf42b7441ae858c76dfc5353148644f6fd6e698926fc4643f510d5c126d12a705e7c8ed7e38061113bdf37547ab356797ff
+  languageName: node
+  linkType: hard
+
+"reselect@npm:^4.1.6":
+  version: 4.1.7
+  resolution: "reselect@npm:4.1.7"
+  checksum: 738d8e2b8f0dca154ad29de6a209c9fbca2d70ae6788fd85df87f2c74b95a65bbf2d16d43a9e2faff39de34d17a29d706ba08a6b2ee5660c09589edbd19af7e1
   languageName: node
   linkType: hard
 

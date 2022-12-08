@@ -12,13 +12,13 @@ import { CommandWrapperContext } from './CommandWrapper';
 
 export default function CommandButton(props: LoadingButtonProps) {
   const context = React.useContext(CommandWrapperContext);
-  const { handleClick, state, title } = context;
+  const { handleClick, state, tooltip, runningTooltip } = context;
 
   const { disableElevation = true, ...other } = props;
 
   return (
     <Box alignSelf='center' onClick={handleClick}>
-      <Tooltip title={title}>
+      <Tooltip title={state === 'running' ? runningTooltip : tooltip}>
         <LoadingButton
           loading={state === 'running'}
           sx={{

@@ -108,6 +108,30 @@
     "scalelim": "zscale",
     "titlebarStatus": true
   },
+  "keywords": [
+    "cherno.acquisition_valid",
+    "cherno.astrometry_fit",
+    "cherno.enabled_axes",
+    "cherno.guide_rms",
+    "cherno.guider_status",
+    "cherno.pid_ra",
+    "cherno.pid_dec",
+    "cherno.pid_rot",
+    "cherno.pid_focus",
+    "cherno.correction_applied",
+    "cherno.did_correct",
+    "cherno.acquisition_valid",
+    "cherno.astrometry_fit",
+    "cherno.focus_fit",
+    "fliswarm.exposure_state",
+    "fliswarm.filename_bundle",
+    "jaeger.configuration_snapshot",
+    "jaeger.snapshot",
+    "jaeger.folded",
+    "jaeger.locked",
+    "jaeger.locked_by",
+    "jaeger.fps_status"
+  ],
   "maxLogMessages": 10000,
   "savedState": {
     "windows": {

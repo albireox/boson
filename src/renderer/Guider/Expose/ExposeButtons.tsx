@@ -64,7 +64,7 @@ export default function ExposeButtons() {
       />
       <CommandWrapper
         commandString={`fliswarm talk -c gfa expose ${expTime}`}
-        title='Single exposure'
+        tooltip='Single exposure'
       >
         <CommandIconButton disabled={isExposing}>
           <PhotoCameraIcon fontSize='medium' />
@@ -74,6 +74,7 @@ export default function ExposeButtons() {
         commandString={`cherno acquire -t ${expTime} -c`}
         isRunning={isGuiding}
         abortCommand='cherno stop'
+        runningTooltip='Stop guiding'
       >
         <CommandButton variant='contained' endIcon={<InsightsIcon />}>
           Guide
