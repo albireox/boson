@@ -54,7 +54,7 @@ export type CommandWrapperProps = {
   children: React.ReactNode;
   abortCommand?: string;
   onStatusChange?: (event: string) => void;
-  beforeCallback?: () => Promise<boolean>;
+  beforeCallback?: () => Promise<boolean | null>;
   isRunning?: boolean;
   tooltip?: string;
   runningTooltip?: string;
@@ -104,9 +104,11 @@ export default function CommandWrapper(props: CommandWrapperProps) {
             if (result === false) {
               handleChange('error');
               beforeCallbackSuccess = false;
-              return false;
+            } else if (result === null) {
+              handleChange('idle');
+              beforeCallbackSuccess = false;
             }
-            return false;
+            return true;
           })
           .catch(() => {
             handleChange('error');
