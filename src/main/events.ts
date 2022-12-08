@@ -11,7 +11,7 @@ import { app, ipcMain } from 'electron';
 import * as keytar from 'keytar';
 import { promisify } from 'util';
 import { createWindow } from './main';
-import store, { subscriptions as storeSubscriptions } from './store';
+import store, { config, subscriptions as storeSubscriptions } from './store';
 import connectAndAuthorise from './tron/tools';
 import tron from './tron/tron';
 
@@ -76,8 +76,18 @@ export default function loadEvents() {
   });
 
   // store
-  ipcMain.on('store:get', async (event, val) => {
-    event.returnValue = store.get(val);
+  ipcMain.on('store:get', async (event, val: string, mode = 'normal') => {
+    if (mode === 'normal') {
+      event.returnValue = store.get(val, config[val as keyof typeof config]);
+    } else if (mode === 'default') {
+      event.returnValue = config[val as keyof typeof config] ?? undefined;
+    } else if (mode === 'merge') {
+      const def = config[val as keyof typeof config] ?? {};
+      const user = store.get(val);
+      event.returnValue = Object.assign(def, user);
+    } else {
+      event.returnValue = undefined;
+    }
   });
   ipcMain.handle('store:set', async (event, key, val) => {
     store.set(key, val);

@@ -51,7 +51,7 @@ export interface TextInputProps {
 
 export default function TextInput(props: TextInputProps) {
   const { label, param, fullWidth = false } = props;
-  const [value, setValue] = useStore<string>(param, true);
+  const [value, setValue] = useStore<string>(param);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

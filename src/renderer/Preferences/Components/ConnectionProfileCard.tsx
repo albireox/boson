@@ -42,7 +42,7 @@ export default function ConnectionProfileCard(
   } = profile;
   const [openEdit, setOpenEdit] = React.useState<boolean>(false);
 
-  const [currentProfileName] = useStore('connection.name', true);
+  const [currentProfileName] = useStore('connection.name');
 
   const handleUse = () => {
     window.electron.store.set('connection', {

@@ -107,8 +107,8 @@ const ElectronAPI = {
     },
   },
   store: {
-    get(key: string) {
-      return ipcRenderer.sendSync('store:get', key);
+    get(key: string, mode: 'normal' | 'default' | 'merge' = 'normal') {
+      return ipcRenderer.sendSync('store:get', key, mode);
     },
     set(property: string, val: any) {
       return ipcRenderer.invoke('store:set', property, val);

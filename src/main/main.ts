@@ -15,8 +15,8 @@ import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import loadEvents from './events';
 import MenuBuilder from './menu';
-import store from './store';
-import { WindowParams } from './types';
+import store, { config } from './store';
+import { WindowNames, WindowParams } from './types';
 import { resolveHtmlPath } from './util';
 
 // For now disable log rotation
@@ -72,7 +72,7 @@ function getLogWindowName() {
   return 'log1';
 }
 
-export async function createWindow(windowName: string) {
+export async function createWindow(windowName: WindowNames) {
   let name: string;
   if (windowName === 'log') {
     name = getLogWindowName();
@@ -98,12 +98,11 @@ export async function createWindow(windowName: string) {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
-  let windowParams: WindowParams = store.get(`windows.${windowName}`) || {};
-  const savedWindowParams: WindowParams =
-    store.get(`savedState.windows.${name}`) || {};
+  let windowParams: WindowParams = config.windows[windowName] ?? {};
 
   if (saveWindows()) {
-    windowParams = { ...windowParams, ...savedWindowParams };
+    const savedWindowParams: WindowParams = store.get(`windows.${name}`) || {};
+    windowParams = Object.assign(windowParams, savedWindowParams);
   }
 
   const newWindow = new BrowserWindow({
@@ -136,11 +135,9 @@ export async function createWindow(windowName: string) {
       newWindow.show();
     }
 
-    const openWindows: string[] = store.get('savedState.windows.openWindows', [
-      'main',
-    ]);
+    const openWindows: string[] = store.get('windows.openWindows', ['main']);
     if (!openWindows.includes(name)) openWindows.push(name);
-    store.set('savedState.windows.openWindows', openWindows);
+    store.set('windows.openWindows', openWindows);
 
     // Force devtools to not show up on start.
     // newWindow.webContents.closeDevTools();
@@ -148,29 +145,23 @@ export async function createWindow(windowName: string) {
 
   newWindow.on('resized', () => {
     const size = newWindow.getSize();
-    store.set(`savedState.windows.${name}.width`, size[0]);
-    store.set(`savedState.windows.${name}.height`, size[1]);
+    store.set(`windows.${name}.width`, size[0]);
+    store.set(`windows.${name}.height`, size[1]);
   });
 
   newWindow.on('moved', () => {
     const position = newWindow.getPosition();
-    store.set(`savedState.windows.${name}.x`, position[0]);
-    store.set(`savedState.windows.${name}.y`, position[1]);
+    store.set(`windows.${name}.x`, position[0]);
+    store.set(`windows.${name}.y`, position[1]);
   });
 
   newWindow.on('closed', () => {
     windows.delete(name);
-    const openWindows: string[] = store.get(
-      'savedState.windows.openWindows',
-      []
-    );
+    const openWindows: string[] = store.get('windows.openWindows', []);
     const newOpenWindows = openWindows.filter((value) => {
       return value === 'main' || value !== name;
     });
-    setTimeout(
-      () => store.set('savedState.windows.openWindows', newOpenWindows),
-      3000
-    );
+    setTimeout(() => store.set('windows.openWindows', newOpenWindows), 3000);
   });
 
   if (name === 'main') {
@@ -207,9 +198,9 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    let openWindows = ['main'];
+    let openWindows: WindowNames[] = ['main'];
     if (saveWindows()) {
-      openWindows = store.get('savedState.windows.openWindows', ['main']);
+      openWindows = store.get('windows.openWindows', ['main']);
     }
 
     openWindows.map((key) => createWindow(key));

@@ -18,7 +18,7 @@ export interface SwitchProps {
 export default function Switch(props: SwitchProps) {
   const { param } = props;
 
-  const [value, setValue] = useStore<boolean>(param, true);
+  const [value, setValue] = useStore<boolean>(param);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>,

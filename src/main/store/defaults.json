@@ -31,8 +31,7 @@
       "height": 800,
       "resizable": true,
       "minWidth": 965,
-      "minHeight": 800,
-      "aspectRatio": 0.8296
+      "minHeight": 800
     },
     "preferences": {
       "x": 876,
@@ -42,21 +41,6 @@
       "minWidth": 685,
       "minHeight": 585
     }
-  },
-  "interface": {
-    "mode": "system",
-    "saveWindows": true
-  },
-  "connection": {
-    "name": "APO",
-    "observatory": "APO",
-    "program": "apo",
-    "user": "",
-    "host": "sdss5-hub.apo.nmsu.edu",
-    "port": 9877,
-    "needsAuthentication": true,
-    "httpHost": "sdss5-hub.apo.nmsu.edu",
-    "httpPort": 80
   },
   "profiles": {
     "APO": {
@@ -100,14 +84,6 @@
       "httpPort": 8080
     }
   },
-  "guider": {
-    "xpaset": "/usr/local/bin/xpaset",
-    "fullImage": false,
-    "colormap": "heat",
-    "scale": "log",
-    "scalelim": "zscale",
-    "titlebarStatus": true
-  },
   "keywords": [
     "cherno.acquisition_valid",
     "cherno.astrometry_fit",
@@ -132,10 +108,5 @@
     "jaeger.locked_by",
     "jaeger.fps_status"
   ],
-  "maxLogMessages": 10000,
-  "savedState": {
-    "windows": {
-      "openWindows": ["main"]
-    }
-  }
+  "maxLogMessages": 10000
 }

@@ -8,13 +8,16 @@
 import Store from 'electron-store';
 import EventEmitter from 'events';
 import default_config from './defaults.json';
+import user_config from './user.json';
 
-// Define the store
+// Define the store. Only load parameters that can be defined by the user.
+// We also export the default config which is the one that won't change
+// unless the version of boson changes.
 const store = new Store({
-  defaults: default_config,
+  defaults: user_config,
   watch: true,
 });
 
 const subscriptions = new Map<string, () => EventEmitter>();
 
-export { store as default, subscriptions };
+export { store as default, default_config, subscriptions };

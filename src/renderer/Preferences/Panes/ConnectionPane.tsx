@@ -31,10 +31,9 @@ import Switch from '../Components/Switch';
 import TextInput from '../Components/TextInput';
 
 function ConnectionDetails() {
-  const [program] = useStore<string>('connection.program', true);
+  const [program] = useStore<string>('connection.program');
   const [needsAuthentication] = useStore<boolean>(
-    'connection.needsAuthentication',
-    true
+    'connection.needsAuthentication'
   );
 
   return (
@@ -133,7 +132,7 @@ function ConnectionDetails() {
 }
 
 function ConnectionProfiles() {
-  const [profiles] = useStore<object>('profiles', true);
+  const [profiles] = useStore<object>('profiles', 'merge');
   const [openNewProfile, setOpenNewProfile] = React.useState<boolean>(false);
 
   return (

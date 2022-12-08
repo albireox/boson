@@ -11,7 +11,7 @@ import log from 'electron-log';
 import * as keytar from 'keytar';
 import { Socket } from 'net';
 import { arch, platform, release } from 'os';
-import store from '../store';
+import store, { config } from '../store';
 import { generateName } from '../util';
 import Command from './command';
 import parseLine from './keywords';
@@ -56,7 +56,7 @@ export class TronConnection {
   lastConnected: Date | undefined = undefined;
 
   constructor() {
-    this.maxLogMessages = store.get('maxLogMessages', 10000);
+    this.maxLogMessages = config.maxLogMessages ?? 10000;
 
     this.client.on('connect', () => {
       this.status = ConnectionStatus.Connected;
@@ -79,7 +79,7 @@ export class TronConnection {
   }
 
   private initialiseKeywords() {
-    const keywords = store.get('keywords');
+    const { keywords } = config;
     keywords.forEach((keyword) => this.trackedKeywords.set(keyword, null));
   }
 
