@@ -9,6 +9,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotesIcon from '@mui/icons-material/Notes';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import {
@@ -102,6 +103,7 @@ export default function Drawer() {
           text='Snapshots'
         />
         <Item name='guider' icon={<InsightsIcon />} text='Guider' />
+        <Item name='HAL' icon={<PrecisionManufacturingIcon />} text='HAL' />
         <div style={{ flexGrow: 1 }} />
         <Footer open={open} setOpen={setOpen} openNewWindow={openNewWindow} />
       </Stack>
