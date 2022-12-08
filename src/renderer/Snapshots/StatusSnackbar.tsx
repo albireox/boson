@@ -39,11 +39,11 @@ export default function StatusSnackBar(props: StatusSnackBarProps) {
     }
 
     if (isFoldedKw) {
-      setIsFolded(isFoldedKw.values[0] === 'T');
+      setIsFolded(isFoldedKw.values[0]);
     }
 
     if (isLockedKw) {
-      setIsLocked(isLockedKw.values[0] === 'T');
+      setIsLocked(isLockedKw.values[0]);
     }
   }, [fpsStatusKw, isFoldedKw, isLockedKw]);
 

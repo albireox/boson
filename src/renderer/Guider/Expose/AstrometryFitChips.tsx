@@ -73,7 +73,7 @@ export default function AstrometryFitChips() {
     }
 
     if (acquisitionValidKw) {
-      const didAcquire = acquisitionValidKw.values[0] === 'T';
+      const didAcquire = acquisitionValidKw.values[0];
 
       setSolved(didAcquire);
 
