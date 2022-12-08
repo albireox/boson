@@ -171,6 +171,11 @@ export default class MenuBuilder {
           accelerator: 'Command+Shift+H',
           click: () => createWindow('HAL'),
         },
+        { type: 'separator' },
+        {
+          label: 'Focus plot',
+          click: () => createWindow('focus_plot'),
+        },
       ],
     };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {

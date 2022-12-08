@@ -8,6 +8,7 @@ import { HAL } from './HAL';
 import { useStore } from './hooks';
 import Log from './Log';
 import Main from './Main';
+import FocusPlot from './Plots/Focus';
 import Preferences from './Preferences';
 import { Snapshots } from './Snapshots';
 
@@ -141,6 +142,9 @@ export default function App() {
       break;
     case 'HAL':
       view = <HAL />;
+      break;
+    case 'focus_plot':
+      view = <FocusPlot />;
       break;
     default:
       view = null;
