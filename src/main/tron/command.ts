@@ -8,36 +8,53 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { AsyncLock } from '../../utils/async';
-import { CommandStatus, Reply, ReplyCode } from './types';
+import CommandLock from './commandLock';
+import Reply from './reply';
+import { CommandStatus, ReplyCode } from './types';
 
 export default class Command {
   private static commandIdCounter = 0;
-  private _lock = new AsyncLock();
+
+  commandId: number;
+
+  lock: CommandLock<Command> | undefined;
 
   actor: string;
+
   command: string;
-  commandId: number;
+
   status: CommandStatus = CommandStatus.Ready;
 
-  replies: Reply[] = [];
   public readonly date = new Date();
 
+  public readonly replies: Reply[] = [];
+
   constructor(public rawCommand: string) {
-    let chunks = rawCommand
-      .trim()
-      .match(/(.+?)\s(.+)/)!
-      .slice(1, 3);
+    this.lock = new CommandLock(this);
+
+    const chunks: string[] =
+      rawCommand
+        .trim()
+        .match(/(.+?)\s(.+)/)
+        ?.slice(1, 3) ?? [];
+
+    if (chunks.length < 2) {
+      throw new Error('Invalid command.');
+    }
 
     [this.actor, this.command] = chunks;
+
     Command.commandIdCounter += 1;
     this.commandId = Command.commandIdCounter;
 
-    this._lock.enable();
+    this.lock.enable();
   }
 
   isDone() {
-    if (this.status === CommandStatus.Done || this.status === CommandStatus.Failed) {
+    if (
+      this.status === CommandStatus.Done ||
+      this.status === CommandStatus.Failed
+    ) {
       return true;
     }
     return false;
@@ -50,8 +67,9 @@ export default class Command {
     return false;
   }
 
-  async waitUntilDone() {
-    await this._lock.promise;
+  async awaitUntilDone() {
+    await this.lock?.promise;
+    return this;
   }
 
   addReply(reply: Reply) {
@@ -69,7 +87,7 @@ export default class Command {
         break;
     }
     if (this.isDone()) {
-      this._lock.disable();
+      this.lock?.disable();
     }
   }
 }

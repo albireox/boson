@@ -1,167 +1,157 @@
 /*
- * !/usr/bin/env python
- *  -*- coding: utf-8 -*-
- *
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
- *  @Date: 2020-12-27
+ *  @Date: 2022-11-23
  *  @Filename: events.ts
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { dialog, ipcMain, Menu, MessageBoxOptions, nativeTheme } from 'electron';
+import { exec } from 'child_process';
+import { randomUUID } from 'crypto';
+import { app, dialog, ipcMain, MessageBoxOptions } from 'electron';
 import * as keytar from 'keytar';
-import { createWindow, windows } from './main';
-import store from './store';
-import { CommandStatus, ConnectionStatus, Reply } from './tron';
-import TronConnection from './tron/connection';
-
-let tron = TronConnection.getInstance();
-
-export interface TronEventReplyIFace {
-  rawCommand: string;
-  commandId: number;
-  status: CommandStatus;
-  replies: Reply[];
-}
+import { promisify } from 'util';
+import { createWindow } from './main';
+import store, { config, subscriptions as storeSubscriptions } from './store';
+import connectAndAuthorise from './tron/tools';
+import tron from './tron/tron';
+import { CommandStatus } from './tron/types';
 
 export default function loadEvents() {
-  // Add events to ipcMain
+  // app events
+  ipcMain.handle('app:get-version', () => app.getVersion());
+  ipcMain.handle('app:is-packaged', () => app.isPackaged);
+  ipcMain.handle('app:new-window', async (event, name) => createWindow(name));
 
-  // Window handling
-  ipcMain.handle('window:open', async (event, name) => {
-    createWindow(name);
-  });
-
-  ipcMain.handle('window:close', async (event, name) => {
-    let win = windows.get(name)!;
-    win.close();
-  });
-
-  ipcMain.handle('window:get-size', async (event, name) => {
-    let win = windows.get(name)!;
-    return win.getSize();
-  });
-
-  ipcMain.handle('window:set-size', async (event, name, width, height, animate = false) => {
-    let win = windows.get(name);
-    if (win !== undefined) win.setSize(width, height, animate);
-  });
-
-  // Show alerts
+  // tron
+  ipcMain.handle('tron:get-status', () => tron.status);
+  ipcMain.handle('tron:get-last-connected', () => tron.lastConnected);
+  ipcMain.handle('tron:connect', () => tron.connect());
+  ipcMain.handle('tron:disconnect', () => tron.disconnect());
   ipcMain.handle(
-    'show-message-box',
-    async (event, options: MessageBoxOptions) => await dialog.showMessageBox(options)
+    'tron:connect-and-authorise',
+    async (event, authorise = true, force = false) =>
+      connectAndAuthorise({ authorise, force })
   );
-
+  ipcMain.handle('tron:get-credentials', async () => [
+    tron.status,
+    tron.user,
+    tron.program,
+    tron.host,
+    tron.port,
+  ]);
+  ipcMain.handle('tron:subscribe', async (event) =>
+    tron.subscribeWindow(event.sender)
+  );
+  ipcMain.handle('tron:unsubscribe', async (event) =>
+    tron.unsubscribeWindow(event.sender)
+  );
   ipcMain.handle(
-    'show-error-box',
-    async (event, title: string, content: string) => await dialog.showErrorBox(title, content)
+    'tron:subscribe-keywords',
+    async (
+      event,
+      channel: string,
+      actor: string,
+      keywords: string[],
+      getKeys: boolean
+    ) =>
+      tron.subscribeKeywordListener(
+        event.sender,
+        channel,
+        actor,
+        keywords,
+        getKeys
+      )
   );
+  ipcMain.handle('tron:unsubscribe-keywords', async (event, channel: string) =>
+    tron.unsubscribeKeywordListener(channel)
+  );
+  ipcMain.handle('tron:all-replies', async () => tron.getReplies());
+  ipcMain.handle('tron:actors', async () => tron.getActors());
+  ipcMain.handle('tron:send', async (event, command: string, raise = false) => {
+    const cmd = tron.sendCommand(command);
 
-  // Store
-  ipcMain.handle('store:get', async (event, key) => {
-    if (Array.isArray(key)) return key.map((k) => store.get(k));
-    return store.get(key);
+    await cmd.awaitUntilDone();
+    delete cmd.lock; // Lock cannot be serialised and anyway it's not needed.
+
+    if (cmd.status === CommandStatus.Failed && raise) {
+      throw Error(`Command ${cmd.rawCommand} failed.`);
+    }
+
+    return cmd;
   });
 
-  ipcMain.handle('store:set', async (event, key, value) => {
-    return store.set(key, value);
+  // store
+  ipcMain.on('store:get', async (event, val: string, mode = 'normal') => {
+    if (mode === 'normal') {
+      event.returnValue = store.get(val, config[val as keyof typeof config]);
+    } else if (mode === 'default') {
+      event.returnValue = config[val as keyof typeof config] ?? undefined;
+    } else if (mode === 'merge') {
+      const def = config[val as keyof typeof config] ?? {};
+      const user = store.get(val);
+      event.returnValue = Object.assign(def, user);
+    } else {
+      event.returnValue = undefined;
+    }
+  });
+  ipcMain.handle('store:set', async (event, key, val) => {
+    store.set(key, val);
+  });
+  ipcMain.handle('store:delete', async (event, key) => {
+    store.delete(key);
+  });
+  ipcMain.handle(
+    'store:subscribe',
+    async (event, property, channel: string) => {
+      const unsubscribe = store.onDidChange(property, (newValue) =>
+        event.sender.send(channel, newValue)
+      );
+      storeSubscriptions.set(channel, unsubscribe);
+    }
+  );
+  ipcMain.handle('store:unsubscribe', async (event, channel: string) => {
+    const unsubscribe = storeSubscriptions.get(channel);
+    if (unsubscribe) unsubscribe();
   });
 
   // keytar passwords
-  ipcMain.handle('password:get', async (event, service, account) => {
-    return await keytar.getPassword(service, account);
+  ipcMain.handle('keytar:get', async (event, key) => {
+    return keytar.getPassword('boson', key);
+  });
+  ipcMain.handle('keytar:set', async (event, key, value) => {
+    keytar.setPassword('boson', key, value);
   });
 
-  ipcMain.handle('password:set', async (event, service, account, value) => {
-    return await keytar.setPassword(service, account, value);
+  // tools
+  ipcMain.on('tools:get-uuid', async (event) => {
+    event.returnValue = randomUUID();
   });
-
-  // Tron
-  ipcMain.handle('tron:connect', async (event, host: string, port: number) => {
-    return await tron.connect(host, port);
-  });
-
-  ipcMain.handle('tron:authorise', async (event, credentials) => {
-    return await tron.authorise(credentials);
-  });
-
-  ipcMain.handle('tron:add-streamer-window', async (event, sendAll = false) => {
-    tron.addStreamerWindow(event.sender.id, event.sender, sendAll);
-  });
-
-  ipcMain.handle('tron:remove-streamer-window', async (event) => {
-    tron.removeStreamerWindow(event.sender.id);
-  });
-
   ipcMain.handle(
-    'tron:send-command',
-    async (event, commandString: string, raise: boolean = false) => {
-      let command = await tron.sendCommand(commandString).then();
-      if (command.status === CommandStatus.Failed && raise) {
-        throw Error(`Command ${command.rawCommand} failed.`);
+    'tools:open-in-application',
+    async (event, command: string) => {
+      const execP = promisify(exec);
+
+      const { stdout, stderr } = await execP(command);
+
+      if (stderr) {
+        throw Error(stderr);
       }
-      return {
-        rawCommand: command.rawCommand,
-        commandId: command.commandId,
-        status: command.status,
-        replies: command.replies
-      };
+
+      return stdout;
     }
   );
 
-  ipcMain.handle('tron:simulate-data', async (event, sender: string, line: string) =>
-    tron.parseData(`.${sender} 666 ${sender} d ${line}`)
-  );
-
+  // Dialogs
   ipcMain.handle(
-    'tron:register-model-listener',
-    async (event, keys: string[], listenOn, refresh = true) => {
-      tron.model.registerListener(keys, event, listenOn, true, refresh);
+    'dialog:show-message-box',
+    async (event, options: MessageBoxOptions) => {
+      await dialog.showMessageBox(options);
     }
   );
-
-  ipcMain.handle('tron:remove-model-listener', async (event, channel) => {
-    tron.model.removeListener(channel);
-  });
-
-  ipcMain.handle('tron:model-getall', async (event) => {
-    return tron.model.keywords;
-  });
-
-  // Handle connect/disconnect from tron.
-  function handleTronEvents(event: ConnectionStatus) {
-    const menu = Menu.getApplicationMenu();
-    const mainWindow = windows.get('main')!;
-    if (event === ConnectionStatus.Authorised) {
-      menu!.getMenuItemById('connect')!.enabled = false;
-      menu!.getMenuItemById('disconnect')!.enabled = true;
-    } else if (
-      event === ConnectionStatus.Disconnected ||
-      event === ConnectionStatus.Failed ||
-      event === ConnectionStatus.TimedOut
-    ) {
-      menu!.getMenuItemById('connect')!.enabled = true;
-      menu!.getMenuItemById('disconnect')!.enabled = false;
+  ipcMain.handle(
+    'dialog:show-error-box',
+    async (event, title: string, content: string) => {
+      await dialog.showErrorBox(title, content);
     }
-
-    if (mainWindow) {
-      mainWindow.webContents.send('tron:status', tron.status);
-    }
-  }
-
-  tron.registerCallback(handleTronEvents);
-
-  // Theme
-  function reportTheme() {
-    windows.forEach((win) =>
-      win.webContents.send('theme-updated', nativeTheme.shouldUseDarkColors)
-    );
-  }
-
-  nativeTheme.on('updated', () => reportTheme());
-
-  ipcMain.handle('theme:use-dark', () => {
-    return nativeTheme.shouldUseDarkColors;
-  });
+  );
 }

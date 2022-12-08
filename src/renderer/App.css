@@ -1,0 +1,52 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+
+
+ html, body, main, div#root {
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.titlebar {
+  -webkit-app-region: drag;
+  width: 100vw;
+  min-height: 30px;
+  height: 30px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 11pt;
+  top: 0px;
+  position: fixed;
+}
+.titlebar else {
+  -webkit-app-region: no-drag;
+}
+
+.snapshots::-webkit-scrollbar {
+  display:block;
+  -webkit-appearance: none;
+  width: 11px;
+}
+
+.snapshots::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid white;
+  background-color: rgba(0, 0, 0, .5);
+}
+
+/* source-code-pro-regular - latin */
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/source-code-pro-v18-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../fonts/source-code-pro-v18-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../fonts/source-code-pro-v18-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../fonts/source-code-pro-v18-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../fonts/source-code-pro-v18-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../fonts/source-code-pro-v18-latin-regular.svg#SourceCodePro') format('svg'); /* Legacy iOS */
+}

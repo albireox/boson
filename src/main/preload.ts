@@ -1,132 +1,161 @@
 /*
- * !/usr/bin/env python
- *  -*- coding: utf-8 -*-
- *
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
- *  @Date: 2020-12-21
+ *  @Date: 2022-11-05
  *  @Filename: preload.ts
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { contextBridge, dialog, ipcRenderer } from 'electron';
-import log from 'electron-log';
-import { TronEventReplyIFace } from './events';
-import store from './store';
-import { ConnectionStatus, KeywordMap } from './tron';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-export interface IElectronAPI {
-  log: log.LogFunctions;
-  window: {
-    open(name: string): Promise<void>;
-    close(name: string): Promise<void>;
-    getSize(name: string): Promise<number[]>;
-    setSize(name: string, width: number, height: number, animate?: boolean): Promise<void>;
-  };
-  store: {
-    get(key: string | string[]): Promise<any>;
-    set(key: string, value: any): Promise<any>;
-    get_sync(key: string): any;
-  };
-  password: {
-    get(service: string, account: string): Promise<any>;
-    set(service: string, account: string, value: any): Promise<void>;
-  };
-  tron: {
-    send(commandString: string, raise?: boolean): Promise<TronEventReplyIFace>;
-    simulateTronData(sender: string, line: string): Promise<void>;
-    registerModelListener(keywords: string[], channel: string, refresh?: boolean): Promise<void>;
-    removeModelListener(channel: string): Promise<void>;
-    subscribe(channel: string, callback: (keywords: KeywordMap) => void): Promise<void>;
-    addStreamerWindow(sendAll?: boolean): Promise<void>;
-    removeStreamerWindow(): Promise<void>;
-    connect(host: string, port: number): Promise<ConnectionStatus>;
-    authorise(credentials: {
-      program: string;
-      user: string;
-      password: string;
-    }): Promise<[boolean, string | null]>;
-    onStatus(callback: (status: ConnectionStatus) => void): Promise<void>;
-    onModelReceivedReply(callback: (replies: string[]) => void): Promise<void>;
-    onClearLogs(callback: () => void): Promise<void>;
-  };
-  openInBrowser(path: string): void;
-  openInApplication(command: string): Promise<string>;
-  dialog: {
-    showMessageBox: typeof dialog.showMessageBox;
-    showErrorBox(title: string, content: string): Promise<void>;
-  };
-}
+import {
+  contextBridge,
+  ipcRenderer,
+  IpcRendererEvent,
+  MessageBoxOptions,
+  shell,
+} from 'electron';
+import Command from './tron/command';
+import { ConnectionStatus, Reply } from './tron/types';
 
-const ElectronAPI: IElectronAPI = {
-  log: log.functions,
-  window: {
-    open: async (name) => ipcRenderer.invoke('window:open', name),
-    close: async (name) => ipcRenderer.invoke('window:close', name),
-    getSize: async (name) => ipcRenderer.invoke('window:get-size', name),
-    setSize: async (name, width, height, animate = false) =>
-      ipcRenderer.invoke('window:set-size', name, width, height, animate)
-  },
-  store: {
-    get: async (key) => ipcRenderer.invoke('store:get', key),
-    set: async (key, value) => ipcRenderer.invoke('store:set', key, value),
-    get_sync: (key) => store.get(key)
-  },
-  password: {
-    get: async (service, account) => ipcRenderer.invoke('password:get', service, account),
-    set: async (service, account, value) =>
-      ipcRenderer.invoke('password:set', service, account, value)
-  },
-  tron: {
-    send: async (commandString, raise = false) =>
-      ipcRenderer.invoke('tron:send-command', commandString, raise),
-    simulateTronData: async (sender, line) => {
-      ipcRenderer.invoke('tron:simulate-data', sender, line);
+const ElectronAPI = {
+  ipcRenderer: {
+    sendMessage(channel: string, args: unknown[]) {
+      ipcRenderer.send(channel, args);
     },
-    registerModelListener: async (...args) =>
-      ipcRenderer.invoke('tron:register-model-listener', ...args),
-    removeModelListener: async (channel) =>
-      ipcRenderer.invoke('tron:remove-model-listener', channel),
-    subscribe: async (channel, callback) => {
+    on(channel: string, func: (...args: any[]) => void) {
+      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
+        func(...args);
+      ipcRenderer.on(channel, subscription);
+
+      return () => {
+        ipcRenderer.removeListener(channel, subscription);
+      };
+    },
+    once(channel: string, func: (...args: any[]) => void) {
+      ipcRenderer.once(channel, (_event, ...args) => func(...args));
+    },
+    invoke(channel: string, args: any[]) {
+      return ipcRenderer.invoke(channel, args);
+    },
+    removeListener(channel: string, listener: (...args: any[]) => void) {
+      ipcRenderer.removeListener(channel, listener);
+    },
+    removeAllListeners(channel: string) {
       ipcRenderer.removeAllListeners(channel);
-      ipcRenderer.on(channel, (event, keywords) => callback(keywords));
     },
-    addStreamerWindow: async (sendAll = false) =>
-      ipcRenderer.invoke('tron:add-streamer-window', sendAll),
-    removeStreamerWindow: async () => ipcRenderer.invoke('tron:remove-streamer-window'),
-    connect: async (host, port) => ipcRenderer.invoke('tron:connect', host, port),
-    authorise: async (credentials) => ipcRenderer.invoke('tron:authorise', credentials),
-    onStatus: async (callback) => {
-      ipcRenderer.removeAllListeners('tron:status');
-      ipcRenderer.on('tron:status', (event, status) => callback(status));
-    },
-    onModelReceivedReply: async (callback) => {
-      ipcRenderer.removeAllListeners('tron:model-received-reply');
-      ipcRenderer.on('tron:model-received-reply', (event, replies) => callback(replies));
-    },
-    onClearLogs: async (callback) => {
-      ipcRenderer.removeAllListeners('tron:clear-logs');
-      ipcRenderer.on('tron:clear-logs', (event) => callback());
-    }
   },
-  openInBrowser: (path) => {
-    require('electron').shell.openExternal(path);
+  app: {
+    getVersion() {
+      return ipcRenderer.invoke('app:get-version');
+    },
+    isPackaged() {
+      return ipcRenderer.invoke('app:is-packaged');
+    },
+    openNewWindow(name: string) {
+      return ipcRenderer.invoke('app:new-window', name);
+    },
   },
-  openInApplication: async (command) => {
-    const util = require('util');
-    const exec = util.promisify(require('child_process').exec);
-
-    const { stdout, stderr } = await exec(command);
-
-    if (stderr) {
-      throw Error(stderr);
-    }
-
-    return stdout;
+  tron: {
+    getStatus() {
+      return ipcRenderer.invoke('tron:get-status');
+    },
+    getLastConnected() {
+      return ipcRenderer.invoke('tron:get-last-connected');
+    },
+    connectAndAuthorise(
+      authorise = true,
+      force = false
+    ): Promise<ConnectionStatus> {
+      return ipcRenderer.invoke('tron:connect-and-authorise', authorise, force);
+    },
+    connect() {
+      return ipcRenderer.invoke('tron:connect');
+    },
+    disconnect() {
+      return ipcRenderer.invoke('tron:disconnect');
+    },
+    getCredentials(): Promise<
+      [ConnectionStatus, string, string, string, number]
+    > {
+      return ipcRenderer.invoke('tron:get-credentials');
+    },
+    subscribe() {
+      return ipcRenderer.invoke('tron:subscribe');
+    },
+    unsubscribe() {
+      return ipcRenderer.invoke('tron:unsubscribe');
+    },
+    subscribeKeywords(
+      channel: string,
+      actor: string,
+      keywords: string[],
+      getKeys: boolean
+    ) {
+      return ipcRenderer.invoke(
+        'tron:subscribe-keywords',
+        channel,
+        actor,
+        keywords,
+        getKeys
+      );
+    },
+    unsubscribeKeywords(channel: string) {
+      return ipcRenderer.invoke('tron:unsubscribe-keywords', channel);
+    },
+    getAllReplies(): Promise<Reply[]> {
+      return ipcRenderer.invoke('tron:all-replies');
+    },
+    getActors(): Promise<string[]> {
+      return ipcRenderer.invoke('tron:actors');
+    },
+    send(command: string, raise = false): Promise<Command> {
+      return ipcRenderer.invoke('tron:send', command, raise);
+    },
+  },
+  store: {
+    get(key: string, mode: 'normal' | 'default' | 'merge' = 'normal') {
+      return ipcRenderer.sendSync('store:get', key, mode);
+    },
+    set(property: string, val: any) {
+      return ipcRenderer.invoke('store:set', property, val);
+    },
+    delete(key: string) {
+      return ipcRenderer.invoke('store:delete', key);
+    },
+    subscribe(property: string, channel: string) {
+      return ipcRenderer.invoke('store:subscribe', property, channel);
+    },
+    unsubscribe(channel: string) {
+      return ipcRenderer.invoke('store:unsubscribe', channel);
+    },
+  },
+  keytar: {
+    get(key: string) {
+      return ipcRenderer.invoke('keytar:get', key);
+    },
+    set(key: string, val: string) {
+      return ipcRenderer.invoke('keytar:set', key, val);
+    },
+  },
+  tools: {
+    getUUID() {
+      return ipcRenderer.sendSync('tools:get-uuid');
+    },
+    openInBrowser: (path: string) => {
+      shell.openExternal(path);
+    },
+    openInApplication: (command: string) => {
+      return ipcRenderer.invoke('tools:open-in-application', command);
+    },
   },
   dialog: {
-    showMessageBox: async (options) => ipcRenderer.invoke('show-message-box', options),
-    showErrorBox: async (title, content) => ipcRenderer.invoke('show-error-box', title, content)
-  }
+    showMessageBox: async (options: MessageBoxOptions) =>
+      ipcRenderer.invoke('dialog:show-message-box', options),
+    showErrorBox: async (title: string, content: string) =>
+      ipcRenderer.invoke('dialog:show-error-box', title, content),
+  },
 };
 
-contextBridge.exposeInMainWorld('api', ElectronAPI);
+contextBridge.exposeInMainWorld('electron', ElectronAPI);
+
+export default ElectronAPI;

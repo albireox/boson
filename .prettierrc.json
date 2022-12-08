@@ -1,9 +1,16 @@
 {
-    "trailingComma": "none",
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true,
-    "printWidth": 99,
-    "useTabs": false,
-    "jsxSingleQuote": true
+  "tabWidth": 2,
+  "semi": true,
+  "printWidth": 80,
+  "useTabs": false,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "overrides": [
+    {
+      "files": [".prettierrc", ".eslintrc"],
+      "options": {
+        "parser": "json"
+      }
+    }
+  ]
 }

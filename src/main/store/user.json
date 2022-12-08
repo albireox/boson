@@ -1,0 +1,30 @@
+{
+  "connection": {
+    "name": "APO",
+    "observatory": "APO",
+    "program": "apo",
+    "user": "",
+    "host": "sdss5-hub.apo.nmsu.edu",
+    "port": 9877,
+    "needsAuthentication": true,
+    "httpHost": "sdss5-hub.apo.nmsu.edu",
+    "httpPort": 80
+  },
+  "windows": {
+    "openWindows": ["main"]
+  },
+  "interface": {
+    "mode": "system",
+    "saveWindows": true
+  },
+  "guider": {
+    "xpaset": "/usr/local/bin/xpaset",
+    "fullImage": false,
+    "colormap": "heat",
+    "scale": "linear",
+    "scalelim": "zscale",
+    "titlebarStatus": true
+  },
+  "maxLogMessages": 50000,
+  "profiles": {}
+}
