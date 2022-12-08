@@ -46,14 +46,21 @@ function PreloadedDesign() {
       flexGrow={1}
       sx={{
         bgcolor: `${theme.palette.primary[theme.palette.mode]}`,
+        mt: -2,
         mb: 1,
         p: 1,
       }}
     >
-      <Typography variant='subtitle1' alignSelf='center' color='#fff' ml={1}>
+      <Typography
+        variant='subtitle1'
+        textAlign='center'
+        alignSelf='center'
+        color='#fff'
+        ml={1}
+        flexGrow={1}
+      >
         Design {preloaded} has been preloaded.
       </Typography>
-      <Stack flexGrow={1} />
       <Button
         variant='outlined'
         size='small'
@@ -91,7 +98,7 @@ function DesignInput() {
   const [configurationID, setConfigurationID] = React.useState(-999);
   const [designID, setDesignID] = React.useState(-999);
   const [fieldID, setFieldID] = React.useState(-999);
-  const [cloned, setCloned] = React.useState(-999);
+  const [cloned, setCloned] = React.useState(false);
 
   const [value, setValue] = React.useState('<none>');
   const [error, setError] = React.useState(false);
@@ -241,13 +248,26 @@ function DesignInput() {
         style={{ visibility: 'hidden', width: '0px', border: '0px' }}
       />
 
-      <Box ml={3} alignSelf='left'>
+      <Box ml={1} alignSelf='left'>
         {loading ? (
           <CircularProgress sx={{ ml: 2 }} size={40} />
         ) : (
           <Tooltip title='Preload from queue'>
-            <IconButton size='medium' onClick={loadFromQueue}>
-              <UpdateIcon fontSize='large' color='primary' />
+            <IconButton
+              size='medium'
+              onClick={loadFromQueue}
+              sx={(theme) => ({
+                color: theme.palette.text.secondary,
+                '&:hover': {
+                  backgroundColor: 'unset',
+                  color: theme.palette.text.primary,
+                },
+              })}
+              disableFocusRipple
+              disableRipple
+              disableTouchRipple
+            >
+              <UpdateIcon fontSize='large' />
             </IconButton>
           </Tooltip>
         )}
@@ -260,14 +280,15 @@ export default function Header() {
   return (
     <Box pt={2}>
       <PreloadedDesign />
-      <Stack direction='row' px={2} pb={1} pt={1} width='100%'>
+      <Stack direction='row' pl={12} pr={4} pb={1} pt={1} width='100%'>
+        <DesignInput />
+        <Box flexGrow={1} />
         <img
           src={hal9000logo}
           style={{ paddingTop: 10 }}
           height='80px'
           alt='HAL9000 logo'
         />
-        <DesignInput />
       </Stack>
     </Box>
   );
