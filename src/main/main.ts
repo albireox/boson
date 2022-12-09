@@ -36,6 +36,7 @@ class AppUpdater {
     autoUpdater.logger = log;
     autoUpdater.allowPrerelease = true;
     autoUpdater.channel = store.get('updateChannel');
+    autoUpdater.autoDownload = false;
   }
 }
 
@@ -243,6 +244,9 @@ app
 
 // Auto-updater
 autoUpdater.on('update-available', (info) => {
+  // For now this can only get triggered if the menu bar
+  // Check For Updated is used.
+
   const notification = new Notification({
     title: 'Update available',
     body: `Boson ${info.version} is now available.`,
@@ -277,7 +281,7 @@ autoUpdater.on('update-available', (info) => {
   notification.show();
 });
 
-autoUpdater.on('update-available', () => {
+autoUpdater.on('update-downloaded', () => {
   // We only allow a download if we're ready to intall it, so go for it.
   autoUpdater.quitAndInstall();
 });
