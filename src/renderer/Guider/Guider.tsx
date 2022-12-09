@@ -48,7 +48,7 @@ export default function Guider() {
           width='100%'
           pt={1}
           pb={2}
-          px={2}
+          px={3}
           spacing={2.5}
           sx={{ overflowY: 'scroll' }}
         >

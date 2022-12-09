@@ -64,7 +64,7 @@ function JS9FrameInner(
   const [size, setSize] = React.useState(800 / 3.2);
   const [expanded, setExpanded] = React.useState(false);
 
-  const [initialLoad, setInitialLoad] = React.useState(true);
+  const [zoomed, setZoomed] = React.useState(false);
 
   const [hovering, setHovering] = React.useState(false);
 
@@ -99,6 +99,7 @@ function JS9FrameInner(
         return;
 
       window.JS9.SetZoom(direction, { display });
+      setZoomed(direction !== 'toFit');
     },
     [guiderConfig, display]
   );
@@ -111,7 +112,9 @@ function JS9FrameInner(
       return;
 
     window.JS9.SetColormap('reset', { display });
+
     window.JS9.SetZoom('toFit', { display });
+    setZoomed(false);
 
     // Recenter image.
     const imdata = window.JS9.GetImageData({ display });
@@ -132,11 +135,10 @@ function JS9FrameInner(
     window.JS9.SetScale(guiderConfig.config.scale, { display });
     window.JS9.SetScale(guiderConfig.config.scalelim, { display });
 
-    if (initialLoad) {
+    if (!zoomed) {
       window.JS9.SetZoom('toFit', { display });
-      setInitialLoad(false);
     }
-  }, [guiderConfig, display, initialLoad]);
+  }, [guiderConfig, display, zoomed]);
 
   const updateImage = React.useCallback(
     (filename: string | null) => {
@@ -155,7 +157,7 @@ function JS9FrameInner(
         // the scale, colormap, etc. If the guider config changes, this
         // will be called again but the image will only be redisplayed
         // (with the new parameters), not redownloaded.
-        window.JS9.CloseImage({ display });
+        window.JS9.CloseImage({ display, clear: false });
         window.JS9.Load(snapURL, { onload: updateParams }, { display });
       } catch (err) {
         setPath(null);
@@ -173,7 +175,7 @@ function JS9FrameInner(
     if (!windowSize) return;
 
     const factor = expanded ? 2 : 1;
-    setSize(Math.round(((windowSize.width || 800) / 3) * factor));
+    setSize(Math.round(((windowSize.width || 800) / 3.2) * factor));
   }, [windowSize, expanded, guiderConfig]);
 
   React.useEffect(() => {
@@ -206,6 +208,7 @@ function JS9FrameInner(
         style={{
           width: size,
           height: size,
+          overflow: 'hidden',
           display:
             !expanded && guiderConfig.config.expandedFrame !== ''
               ? 'none'
@@ -227,8 +230,8 @@ function JS9FrameInner(
             backgroundSize: 'cover',
             backgroundBlendMode: 'luminosity',
             backgroundPosition: 'center',
-            width: size - 16,
-            height: size - 8,
+            width: size,
+            height: size,
           },
           '.JS9Container > .JS9Message': {
             visibility: hovering ? 'initial' : 'hidden',

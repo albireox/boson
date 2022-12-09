@@ -31,7 +31,7 @@ export default function JS9Grid(props: JS9GridProps) {
   React.useEffect(() => {
     if (!windowSize) return;
 
-    setSize(Math.round(((windowSize.width || 800) / 3) * 2));
+    setSize(Math.round(((windowSize.width || 800) / 3.2) * 2));
   }, [windowSize]);
 
   return (
