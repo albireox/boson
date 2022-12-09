@@ -98,7 +98,8 @@ export async function createWindow(windowName: WindowNames) {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
-  let windowParams: WindowParams = config.windows[windowName] ?? {};
+  let windowParams: WindowParams =
+    config.windows[windowName.startsWith('log') ? 'log' : windowName] ?? {};
 
   if (saveWindows()) {
     const savedWindowParams: WindowParams = store.get(`windows.${name}`) || {};
