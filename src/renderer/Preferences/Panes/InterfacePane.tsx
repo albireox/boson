@@ -72,12 +72,12 @@ function ThemeMode() {
           <Typography
             variant='body2'
             fontSize={14}
-            sx={(theme) => ({
+            sx={{
               minWidth: '150px',
               color: theme.palette.text.primary,
               userSelect: 'none',
               alignSelf: 'center',
-            })}
+            }}
             gutterBottom
           >
             Save window positions
