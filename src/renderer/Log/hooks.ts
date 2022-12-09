@@ -44,12 +44,17 @@ export function useReplyFilter() {
       replies.filter((reply) => {
         if (reply === undefined) return false;
 
-        const replyCodeLetter = ReplyCodeMap.get(reply.code);
-        if (
-          replyCodeLetter &&
-          (!replyCodeLetter || !config.codes.has(replyCodeLetter))
-        )
-          return false;
+        let replyCodeLetter = ReplyCodeMap.get(reply.code);
+        if (replyCodeLetter) {
+          if (['s', '>', ':'].includes(replyCodeLetter)) {
+            replyCodeLetter = 'i';
+          } else if (replyCodeLetter === 'f') {
+            replyCodeLetter = 'e';
+          }
+
+          if (!replyCodeLetter || !config.codes.has(replyCodeLetter))
+            return false;
+        }
 
         if (config.searchText && config.searchShowMatched) {
           if (!config.searchUseRegEx) {
