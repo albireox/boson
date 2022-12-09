@@ -19,14 +19,16 @@ export default function CommandButton(props: LoadingButtonProps) {
   return (
     <Box alignSelf='center' onClick={handleClick}>
       <Tooltip title={state === 'running' ? runningTooltip : tooltip}>
-        <LoadingButton
-          loading={state === 'running'}
-          sx={{
-            '&.Mui-disabled': { pointerEvents: 'auto', cursor: 'pointer' },
-          }}
-          disableElevation={disableElevation}
-          {...other}
-        />
+        <span>
+          <LoadingButton
+            loading={state === 'running'}
+            sx={{
+              '&.Mui-disabled': { pointerEvents: 'auto', cursor: 'pointer' },
+            }}
+            disableElevation={disableElevation}
+            {...other}
+          />
+        </span>
       </Tooltip>
     </Box>
   );

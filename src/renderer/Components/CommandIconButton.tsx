@@ -27,23 +27,25 @@ export default function CommandIconButton(props: CommandIconButtonProps) {
 
   return (
     <Tooltip title={state === 'running' ? runningTooltip : tooltip}>
-      <IconButton
-        onClick={handleClick}
-        style={{ height: width, width }}
-        sx={(theme) => ({
-          color: theme.palette.text.secondary,
-          '&:hover': {
-            backgroundColor: 'unset',
-            color: theme.palette.text.primary,
-          },
-        })}
-        disabled={disabled}
-        disableFocusRipple
-        disableRipple
-        disableTouchRipple
-      >
-        {state === 'running' ? <CircularProgressCommand /> : children}
-      </IconButton>
+      <span>
+        <IconButton
+          onClick={handleClick}
+          style={{ height: width, width }}
+          sx={(theme) => ({
+            color: theme.palette.text.secondary,
+            '&:hover': {
+              backgroundColor: 'unset',
+              color: theme.palette.text.primary,
+            },
+          })}
+          disabled={disabled}
+          disableFocusRipple
+          disableRipple
+          disableTouchRipple
+        >
+          {state === 'running' ? <CircularProgressCommand /> : children}
+        </IconButton>
+      </span>
     </Tooltip>
   );
 }
