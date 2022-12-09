@@ -11,7 +11,7 @@ boson
 Development
 -----------
 
-`boson` uses the [Create React App](https://create-react-app.dev) boilerplate. First, install the dependencies with [yarn](https://yarnpkg.com) (you can use `npm` but please do not commit the `package-lock.json` file)
+`boson` uses the [Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate) boilerplate. First, install the dependencies with [yarn](https://yarnpkg.com) (you can use `npm` but please do not commit the `package-lock.json` file)
 
 ```console
 yarn install
