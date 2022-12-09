@@ -45,7 +45,7 @@ function getMessageColor(theme: Theme, reply: Reply) {
     rawLine.includes('getFor=') &&
     rawLine.includes('keys')
   )
-    return theme.palette.text.disabled;
+    return undefined;
 
   switch (code) {
     case ReplyCode.Started:
