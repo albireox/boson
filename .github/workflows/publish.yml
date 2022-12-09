@@ -23,10 +23,15 @@ jobs:
           node-version: 18
           cache: npm
 
-      - name: Install and build
-        run: |
-          npm install
-          npm run build
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+
+      - name: Build
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build
 
       - name: Publish releases
         env:
