@@ -93,6 +93,8 @@
     "use-elapsed-time": "^3.0.4"
   },
   "devDependencies": {
+    "@electron/notarize": "^1.2.2",
+    "@electron/rebuild": "^3.2.9",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@svgr/webpack": "^6.5.1",
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.1",
@@ -122,8 +124,6 @@
     "electron": "^22.0.0",
     "electron-builder": "^23.6.0",
     "electron-devtools-installer": "^3.2.0",
-    "electron-notarize": "^1.2.2",
-    "electron-rebuild": "^3.2.9",
     "electronmon": "^2.0.2",
     "eslint": "^8.29.0",
     "eslint-config-airbnb-base": "^15.0.0",
