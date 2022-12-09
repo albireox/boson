@@ -30,7 +30,7 @@ export default function useStore<T>(
         setValue(newValue);
       } else if (mode === 'merge') {
         const DEFAULT_VALUE = window.electron.store.get(key, 'default') ?? {};
-        setValue(Object.assign(DEFAULT_VALUE, newValue));
+        setValue({ ...DEFAULT_VALUE, ...newValue });
       }
     };
 

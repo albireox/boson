@@ -6,6 +6,7 @@
  */
 
 import {
+  Box,
   Button,
   Divider,
   FormControl,
@@ -18,6 +19,7 @@ import { Stack } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid';
 import React from 'react';
 import { ColorModeValues } from 'renderer/App';
+import { useStore } from 'renderer/hooks';
 import Pane from '../Components/Pane';
 import PreferencesFormControlLabel from '../Components/PreferencesFormControlLabel';
 import PreferencesRadioGroup from '../Components/PreferencesRadioGroup';
@@ -32,16 +34,12 @@ function ThemeMode() {
     window.electron.store.set('interface.mode', event.target.value);
   };
 
-  const deleteSavedWindows = () => {
-    window.electron.store.delete('savedState.windows');
-  };
-
   return (
-    <Stack direction='column'>
+    <Stack>
       <Typography variant='button' color='text.secondary'>
         Theme mode
       </Typography>
-      <FormControl sx={{ paddingTop: 0.5 }}>
+      <FormControl sx={{ paddingTop: 1 }}>
         <PreferencesRadioGroup value={themeMode} onChange={handleChange}>
           <PreferencesFormControlLabel
             value='light'
@@ -63,38 +61,170 @@ function ThemeMode() {
           />
         </PreferencesRadioGroup>
       </FormControl>
-      <Divider sx={{ my: 3 }} />
-      <Typography variant='button' color='text.secondary'>
-        Window management
-      </Typography>
-      <Grid container pt={1} minHeight={50} alignContent='center'>
-        <Grid xs={6}>
-          <Typography
-            variant='body2'
-            fontSize={14}
-            sx={{
-              minWidth: '150px',
-              color: theme.palette.text.primary,
-              userSelect: 'none',
-              alignSelf: 'center',
-            }}
-            gutterBottom
-          >
-            Save window positions
-          </Typography>
+    </Stack>
+  );
+}
+
+function WindowManagement() {
+  const [saveOnlyOnRequest] = useStore<boolean>('interface.saveOnlyOnRequest');
+
+  const deleteSavedWindows = () => window.electron.store.delete('windows');
+
+  return (
+    <Stack direction='column' spacing={1}>
+      <Box>
+        <Typography variant='button' color='text.secondary'>
+          Window management
+        </Typography>
+
+        {/* Save window positions */}
+        <Grid container pt={1} minHeight={50} alignContent='center'>
+          <Grid xs={6}>
+            <Typography
+              variant='body2'
+              fontSize={14}
+              sx={(theme) => ({
+                minWidth: '150px',
+                color: theme.palette.text.primary,
+                userSelect: 'none',
+                alignSelf: 'center',
+              })}
+              gutterBottom
+            >
+              Save window positions
+            </Typography>
+          </Grid>
+          <Grid xs={6} alignItems='flex-end' textAlign='right'>
+            <Switch
+              disabled={saveOnlyOnRequest}
+              param='interface.saveWindows'
+            />
+          </Grid>
         </Grid>
-        <Grid xs={6} alignItems='flex-end' textAlign='right'>
-          <Switch param='interface.saveWindows' />
+        <Typography variant='body2' color='text.secondary' mt={-1}>
+          Remembers open windows, dimensions, and positions.
+        </Typography>
+      </Box>
+
+      {/* Save only when requested */}
+      <Box>
+        <Grid container pt={1} minHeight={50} alignContent='center'>
+          <Grid xs={6}>
+            <Typography
+              variant='body2'
+              fontSize={14}
+              sx={(theme) => ({
+                minWidth: '150px',
+                color: theme.palette.text.primary,
+                userSelect: 'none',
+                alignSelf: 'center',
+              })}
+              gutterBottom
+            >
+              Save only when requested
+            </Typography>
+          </Grid>
+          <Grid xs={6} alignItems='flex-end' textAlign='right'>
+            <Switch param='interface.saveOnlyOnRequest' />
+          </Grid>
         </Grid>
-      </Grid>
-      <Typography variant='body2' color='text.secondary' mt={-1}>
-        Remembers open windows, dimensions, and positions.
-      </Typography>
-      <Stack direction='row-reverse' pt={1.5}>
-        <Button variant='contained' onClick={deleteSavedWindows}>
-          Delete saved windows
-        </Button>
-      </Stack>
+        <Typography variant='body2' color='text.secondary' mt={-1}>
+          Windows will be saved only when manually requested
+        </Typography>
+      </Box>
+
+      {/* Delete window positions */}
+      <Box>
+        <Grid container pt={1} minHeight={50} alignContent='center'>
+          <Grid xs={6}>
+            <Typography
+              variant='body2'
+              fontSize={14}
+              sx={(theme) => ({
+                minWidth: '150px',
+                color: theme.palette.text.primary,
+                userSelect: 'none',
+                alignSelf: 'center',
+              })}
+              gutterBottom
+            >
+              Delete window positions
+            </Typography>
+          </Grid>
+          <Grid xs={6} alignItems='flex-end' textAlign='right'>
+            <Button
+              variant='contained'
+              color='error'
+              onClick={deleteSavedWindows}
+              disableElevation
+            >
+              Delete
+            </Button>
+          </Grid>
+        </Grid>
+        <Typography variant='body2' color='text.secondary' mt={-1}>
+          Removes all saved window position.
+        </Typography>
+      </Box>
+    </Stack>
+  );
+}
+
+function Configuration() {
+  const clearConfig = () => {
+    window.electron.dialog
+      .showMessageBox({
+        message: 'Confirm removal of user configuration?',
+        type: 'question',
+        buttons: ['Cancel', 'OK'],
+      })
+      .then(({ response }) => {
+        if (response === 1) {
+          window.electron.store.clear();
+        }
+        return true;
+      })
+      .catch(() => {});
+  };
+
+  return (
+    <Stack direction='column' spacing={1}>
+      <Box>
+        <Typography variant='button' color='text.secondary'>
+          User Configuration
+        </Typography>
+
+        <Grid container pt={1} minHeight={50} alignContent='center'>
+          <Grid xs={6}>
+            <Typography
+              variant='body2'
+              fontSize={14}
+              sx={(theme) => ({
+                minWidth: '150px',
+                color: theme.palette.text.primary,
+                userSelect: 'none',
+                alignSelf: 'center',
+              })}
+              gutterBottom
+            >
+              Reset configuration
+            </Typography>
+          </Grid>
+          <Grid xs={6} alignItems='flex-end' textAlign='right'>
+            <Button
+              variant='contained'
+              color='error'
+              onClick={clearConfig}
+              disableElevation
+            >
+              Reset
+            </Button>
+          </Grid>
+        </Grid>
+        <Typography variant='body2' color='text.secondary' mt={-1}>
+          Reverts to the default configuration. An app restart is required.
+        </Typography>
+      </Box>
     </Stack>
   );
 }
@@ -105,8 +235,12 @@ export default function InterfacePane() {
       <Stack direction='column'>
         <Grid container direction='row'>
           <Grid xs={9}>
-            <Stack>
+            <Stack width='100%' direction='column'>
               <ThemeMode />
+              <Divider sx={{ my: 4 }} />
+              <WindowManagement />
+              <Divider sx={{ my: 4 }} />
+              <Configuration />
             </Stack>
           </Grid>
         </Grid>

@@ -89,7 +89,7 @@ export default function loadEvents() {
     } else if (mode === 'merge') {
       const def = config[val as keyof typeof config] ?? {};
       const user = store.get(val);
-      event.returnValue = Object.assign(def, user);
+      event.returnValue = { ...def, ...user };
     } else {
       event.returnValue = undefined;
     }
@@ -99,6 +99,9 @@ export default function loadEvents() {
   });
   ipcMain.handle('store:delete', async (event, key) => {
     store.delete(key);
+  });
+  ipcMain.handle('store:clear', async () => {
+    store.clear();
   });
   ipcMain.handle(
     'store:subscribe',
@@ -145,7 +148,8 @@ export default function loadEvents() {
   ipcMain.handle(
     'dialog:show-message-box',
     async (event, options: MessageBoxOptions) => {
-      await dialog.showMessageBox(options);
+      const result = await dialog.showMessageBox(options);
+      return result;
     }
   );
   ipcMain.handle(

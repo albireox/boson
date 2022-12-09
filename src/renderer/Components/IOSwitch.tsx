@@ -47,6 +47,9 @@ const IOSSwitch = styled((props: SwitchProps) => (
         opacity: 1,
         border: 0,
       },
+      '&.Mui-disabled + .MuiSwitch-track': {
+        opacity: 0.5,
+      },
       '&:hover': {
         backgroundColor: theme.palette.mode === 'light' && 'white',
       },
@@ -54,6 +57,15 @@ const IOSSwitch = styled((props: SwitchProps) => (
     '&:hover': {
       backgroundColor: theme.palette.action.active,
     },
+  },
+  '&.Mui-disabled .MuiSwitch-thumb': {
+    color:
+      theme.palette.mode === 'light'
+        ? theme.palette.grey[100]
+        : theme.palette.grey[600],
+  },
+  '&.Mui-disabled + .MuiSwitch-track': {
+    opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
   },
   '& .MuiSwitch-track': {
     borderRadius: 26 / 2,

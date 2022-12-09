@@ -8,6 +8,7 @@ import {
   shell,
 } from 'electron';
 import { createWindow } from './main';
+import { saveWindows } from './util';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -68,6 +69,11 @@ export default class MenuBuilder {
           label: 'Preferences ...',
           accelerator: 'Command+,',
           click: () => createWindow('preferences'),
+        },
+        { type: 'separator' },
+        {
+          label: 'Save window positions',
+          click: saveWindows,
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },

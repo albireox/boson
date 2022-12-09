@@ -46,7 +46,10 @@ if (isDebug) {
 }
 
 function saveWindows() {
-  return store.get('interface.saveWindows', true);
+  const save = store.get('interface.saveWindows', true);
+  const onlyOnRequest = store.get('interface.saveOnlyOnRequest', false);
+
+  return save && !onlyOnRequest;
 }
 
 const installExtensions = async () => {
@@ -101,14 +104,13 @@ export async function createWindow(windowName: WindowNames) {
   let windowParams: WindowParams =
     config.windows[windowName.startsWith('log') ? 'log' : windowName] ?? {};
 
-  if (saveWindows()) {
-    const savedWindowParams: WindowParams = store.get(`windows.${name}`) || {};
-    windowParams = Object.assign(windowParams, savedWindowParams);
-  }
-
+  const savedWindowParams: WindowParams = store.get(`windows.${name}`) || {};
+  windowParams = { ...windowParams, ...savedWindowParams };
+  console.log(name, windowParams);
   const newWindow = new BrowserWindow({
     show: false,
     icon: getAssetPath('icon.png'),
+    title: name,
     titleBarStyle: 'hidden',
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#37393E' : '#FFFFFF',
     ...windowParams,
@@ -136,21 +138,35 @@ export async function createWindow(windowName: WindowNames) {
       newWindow.show();
     }
 
-    const openWindows: string[] = store.get('windows.openWindows', ['main']);
-    if (!openWindows.includes(name)) openWindows.push(name);
-    store.set('windows.openWindows', openWindows);
+    if (saveWindows()) {
+      const openWindows: string[] = store.get('windows.openWindows', ['main']);
+      if (!openWindows.includes(name)) openWindows.push(name);
+      store.set('windows.openWindows', openWindows);
+    }
 
     // Force devtools to not show up on start.
     // newWindow.webContents.closeDevTools();
+
+    // This won't show anything on the window itself, but that way we can
+    // generate a list of window name to BrowserWindow anywhere.
+    newWindow.setTitle(name);
   });
 
+  // newWindow.on('did-finish-load', () => {
+  //   newWindow.setTitle(name);
+  // });
+
   newWindow.on('resized', () => {
+    if (!saveWindows()) return;
+
     const size = newWindow.getSize();
     store.set(`windows.${name}.width`, size[0]);
     store.set(`windows.${name}.height`, size[1]);
   });
 
   newWindow.on('moved', () => {
+    if (!saveWindows()) return;
+
     const position = newWindow.getPosition();
     store.set(`windows.${name}.x`, position[0]);
     store.set(`windows.${name}.y`, position[1]);
@@ -158,11 +174,14 @@ export async function createWindow(windowName: WindowNames) {
 
   newWindow.on('closed', () => {
     windows.delete(name);
-    const openWindows: string[] = store.get('windows.openWindows', []);
-    const newOpenWindows = openWindows.filter((value) => {
-      return value === 'main' || value !== name;
-    });
-    setTimeout(() => store.set('windows.openWindows', newOpenWindows), 3000);
+
+    if (saveWindows()) {
+      const openWindows: string[] = store.get('windows.openWindows', []);
+      const newOpenWindows = openWindows.filter((value) => {
+        return value === 'main' || value !== name;
+      });
+      setTimeout(() => store.set('windows.openWindows', newOpenWindows), 3000);
+    }
   });
 
   if (name === 'main') {
@@ -199,11 +218,9 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    let openWindows: WindowNames[] = ['main'];
-    if (saveWindows()) {
-      openWindows = store.get('windows.openWindows', ['main']);
-    }
-
+    const openWindows: WindowNames[] = store.get('windows.openWindows', [
+      'main',
+    ]);
     openWindows.map((key) => createWindow(key));
 
     app.on('activate', () => {

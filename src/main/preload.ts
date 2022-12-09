@@ -12,6 +12,7 @@ import {
   ipcRenderer,
   IpcRendererEvent,
   MessageBoxOptions,
+  MessageBoxReturnValue,
   shell,
 } from 'electron';
 import Command from './tron/command';
@@ -122,6 +123,9 @@ const ElectronAPI = {
     delete(key: string) {
       return ipcRenderer.invoke('store:delete', key);
     },
+    clear() {
+      return ipcRenderer.invoke('store:clear');
+    },
     subscribe(property: string, channel: string) {
       return ipcRenderer.invoke('store:subscribe', property, channel);
     },
@@ -149,9 +153,11 @@ const ElectronAPI = {
     },
   },
   dialog: {
-    showMessageBox: async (options: MessageBoxOptions) =>
+    showMessageBox: async (
+      options: MessageBoxOptions
+    ): Promise<MessageBoxReturnValue> =>
       ipcRenderer.invoke('dialog:show-message-box', options),
-    showErrorBox: async (title: string, content: string) =>
+    showErrorBox: async (title: string, content: string): Promise<void> =>
       ipcRenderer.invoke('dialog:show-error-box', title, content),
   },
 };

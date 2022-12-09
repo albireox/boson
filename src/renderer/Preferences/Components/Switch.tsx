@@ -13,10 +13,11 @@ import { useStore } from 'renderer/hooks';
 
 export interface SwitchProps {
   param: string;
+  disabled?: boolean;
 }
 
 export default function Switch(props: SwitchProps) {
-  const { param } = props;
+  const { param, disabled = false } = props;
 
   const [value, setValue] = useStore<boolean>(param);
 
@@ -27,5 +28,7 @@ export default function Switch(props: SwitchProps) {
     setValue(checked);
   };
 
-  return <IOSSwitch checked={value} onChange={handleChange} />;
+  return (
+    <IOSSwitch disabled={disabled} checked={value} onChange={handleChange} />
+  );
 }

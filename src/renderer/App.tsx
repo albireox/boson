@@ -36,6 +36,11 @@ export default function App() {
         action: {
           boxBackground: prefersDarkMode ? '#40444B' : '#EBEDEF',
         },
+        error: {
+          dark: '#d32f2f',
+          light: '#e57373',
+          main: '#CC4B41',
+        },
       },
       typography: {
         fontSize: 12,

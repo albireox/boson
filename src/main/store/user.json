@@ -15,7 +15,8 @@
   },
   "interface": {
     "mode": "system",
-    "saveWindows": true
+    "saveWindows": true,
+    "saveOnlyOnRequest": false
   },
   "guider": {
     "xpaset": "/usr/local/bin/xpaset",
