@@ -9,12 +9,19 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 
-import { app, BrowserWindow, nativeTheme, shell } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  nativeTheme,
+  Notification,
+  shell,
+} from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import loadEvents from './events';
-import MenuBuilder from './menu';
+import MenuBuilder from './menu/menu';
 import store, { config } from './store';
 import { WindowNames, WindowParams } from './types';
 import { resolveHtmlPath } from './util';
@@ -27,11 +34,14 @@ class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.allowPrerelease = true;
+    autoUpdater.channel = store.get('updateChannel');
   }
 }
 
 const windows = new Map<string, BrowserWindow | null>([['main', null]]);
+
+const notifications: Notification[] = [];
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -106,7 +116,7 @@ export async function createWindow(windowName: WindowNames) {
 
   const savedWindowParams: WindowParams = store.get(`windows.${name}`) || {};
   windowParams = { ...windowParams, ...savedWindowParams };
-  console.log(name, windowParams);
+
   const newWindow = new BrowserWindow({
     show: false,
     icon: getAssetPath('icon.png'),
@@ -230,3 +240,52 @@ app
     });
   })
   .catch(console.log);
+
+// Auto-updater
+autoUpdater.on('update-available', (info) => {
+  const notification = new Notification({
+    title: 'Update available',
+    body: `Boson ${info.version} is now available.`,
+    silent: false,
+    actions: [
+      { type: 'button', text: 'Install and Restart' },
+      { type: 'button', text: 'Cancel' },
+    ],
+  });
+
+  notification.on('action', (e, i) => {
+    if (i === 0) autoUpdater.downloadUpdate();
+  });
+
+  notification.on('click', () => {
+    dialog
+      .showMessageBox({
+        message: 'Update available',
+        type: 'question',
+        detail: 'Do you want to install this update now?',
+        buttons: ['Yes', 'Not now'],
+      })
+      .then((response) => {
+        if (response.response === 0) {
+          autoUpdater.downloadUpdate();
+        }
+      })
+      .catch(() => {});
+  });
+
+  notifications.push(notification); // To prevent GC from removing it.
+  notification.show();
+});
+
+autoUpdater.on('update-available', () => {
+  // We only allow a download if we're ready to intall it, so go for it.
+  autoUpdater.quitAndInstall();
+});
+
+autoUpdater.on('update-not-available', () => {
+  dialog.showMessageBox({
+    message: 'You are up to date!',
+    type: 'info',
+    detail: `Boson ${app.getVersion()} is currently the newest version available.`,
+  });
+});

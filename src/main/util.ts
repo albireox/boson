@@ -1,9 +1,6 @@
 /* eslint import/prefer-default-export: off */
-import { BrowserWindow } from 'electron';
 import path from 'path';
 import { URL } from 'url';
-import store from './store';
-import { WindowParams } from './types';
 
 export function resolveHtmlPath(htmlFileName: string) {
   if (process.env.NODE_ENV === 'development') {
@@ -24,34 +21,6 @@ function capFirst(string: string) {
 
 function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
-}
-
-export function saveWindows() {
-  const openWindows = BrowserWindow.getAllWindows();
-
-  const windows: { [key: string]: WindowParams } = {};
-
-  openWindows.forEach((win) => {
-    const name = win.getTitle();
-
-    const size = win.getSize();
-    const position = win.getPosition();
-
-    windows[name] = {
-      x: position[0],
-      y: position[1],
-      width: size[0],
-      height: size[1],
-    };
-  });
-
-  store.set('windows', windows);
-
-  const openWindowsNames = openWindows.map((win) => win.getTitle());
-  if (!openWindowsNames.includes('main')) {
-    openWindowsNames.push('main');
-  }
-  store.set('windows.openWindows', openWindowsNames);
 }
 
 export function generateName() {

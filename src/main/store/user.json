@@ -27,5 +27,6 @@
     "titlebarStatus": true
   },
   "maxLogMessages": 50000,
+  "updateChannel": "beta",
   "profiles": {}
 }
