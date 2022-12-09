@@ -13,6 +13,10 @@ jobs:
       matrix:
         os: [macos-latest]
 
+    concurrency:
+      group: ${{ github.head_ref }}
+      cancel-in-progress: true
+
     steps:
       - name: Checkout git repo
         uses: actions/checkout@v3
