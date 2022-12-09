@@ -55,7 +55,7 @@ export default class MenuBuilder {
       label: 'Electron',
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: 'About Boson',
           selector: 'orderFrontStandardAboutPanel:',
         },
         {
