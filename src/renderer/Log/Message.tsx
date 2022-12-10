@@ -100,17 +100,13 @@ export default function Message(props: MessageProps) {
   // CmdQueued and CmdDone have some special handling. We parse them
   // and rearrange some of the text.
   if (reply.sender === 'cmds') {
-    if (reply.rawLine.includes('CmdQueued')) {
-      const match = reply.rawLine.match(CmdQueuedRegex);
-      if (match) {
-        text = `${match[3]} CmdStarted ${match[4]} ${match[5]} ${match[7]}`;
-      }
+    const matchS = reply.rawLine.match(CmdQueuedRegex);
+    if (matchS) {
+      text = `${matchS[3]} CmdStarted ${matchS[4]} ${matchS[5]} ${matchS[7]}`;
     }
-    if (reply.rawLine.includes('CmdDone')) {
-      const match = reply.rawLine.match(CmdDoneRegex);
-      if (match) {
-        text = `${match[3]} CmdDone ${match[2]} ${match[4]} ${match[5]}`;
-      }
+    const matchD = reply.rawLine.match(CmdDoneRegex);
+    if (matchD) {
+      text = `${matchD[3]} CmdDone ${matchD[2]} ${matchD[4]} ${matchD[5]}`;
     }
   }
 
