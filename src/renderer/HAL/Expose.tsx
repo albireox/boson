@@ -23,10 +23,12 @@ import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
+import { useStore } from 'renderer/hooks';
 import { ExposureTimeInput, HALContext } from '.';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import macros from './macros.json';
 import MacroStepper from './MacroStepper';
+import useIsMacroRunning from './useIsMacroRunning';
 
 function getTAITime() {
   // TODO: replace this with a proper TAI or with a useElapsedTime
@@ -89,6 +91,8 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
 }
 
 export default function Expose() {
+  const macroName = 'expose';
+
   const [apogeeReads, setApogeeReads] = React.useState<string>(
     macros.expose.defaults.apogee_reads.toString()
   );
@@ -101,6 +105,10 @@ export default function Expose() {
   const [pairs, setPairs] = React.useState<boolean>(
     macros.expose.defaults.pairs
   );
+
+  const isRunning = useIsMacroRunning(macroName);
+
+  const [observatory] = useStore<'APO' | 'LCO'>('connection.observatory');
 
   const [stages, setStages] = React.useState<string[]>([]);
   const [actorStages, setActorStages] = React.useState<string[]>([]);
@@ -150,6 +158,9 @@ export default function Expose() {
     let bossDetail = '';
     let apogeeDetail = '';
 
+    const bossOverhead = observatory === 'APO' ? 80 : 40;
+    const bossReadout = observatory === 'APO' ? 67 : 35;
+
     const type = pairs ? 'pair(s)' : 'exposure(s)';
 
     const nExp = parseInt(count || macros.expose.defaults.count.toString(), 10);
@@ -158,7 +169,7 @@ export default function Expose() {
       const bossExpTime = parseFloat(
         bossTime || macros.expose.defaults.boss_exptime.toString()
       );
-      const bossTotal = nExp * (bossExpTime + 80);
+      const bossTotal = nExp * (bossExpTime + bossOverhead);
 
       bossDetail = `BOSS: ~${round(bossTotal, 0)} s (${nExp}x${round(
         bossExpTime,
@@ -167,7 +178,7 @@ export default function Expose() {
 
       if (stages.length === 0 || stages.includes('expose_apogee')) {
         apogeeDetail = `APOGEE: ~${round(
-          bossTotal - 67,
+          bossTotal - bossReadout,
           0
         )} s (${nExp} ${type})`;
       }
@@ -198,7 +209,7 @@ export default function Expose() {
         )}
       </Grid>
     );
-  }, [stages, apogeeReads, bossTime, count, pairs]);
+  }, [stages, apogeeReads, bossTime, count, pairs, observatory]);
 
   React.useEffect(() => {
     if (stagesKw && stagesKw.values[0] === 'expose')
@@ -363,6 +374,7 @@ export default function Expose() {
           <CommandWrapper
             commandString={getCommandString()}
             abortCommand='hal expose --stop'
+            isRunning={isRunning}
           >
             <CommandButton variant='outlined' endIcon={<SendIcon />}>
               Run
@@ -384,7 +396,7 @@ export default function Expose() {
           spacing={2}
           overflow='scroll'
         >
-          <MacroStepper macroName='expose' />
+          <MacroStepper macroName={macroName} />
         </Stack>
       </Stack>
     </Paper>

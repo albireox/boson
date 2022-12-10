@@ -23,14 +23,19 @@ import { ExposureTimeInput } from '.';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import macros from './macros.json';
 import MacroStepper from './MacroStepper';
+import useIsMacroRunning from './useIsMacroRunning';
 
 export default function GotoField() {
+  const macroName = 'goto_field';
+
   const [guiderTime, setGuiderTime] = React.useState(
     macros.goto_field.defaults.guider_time.toString()
   );
-  const [fixedAltAz, setFixedAltAz] = React.useState<boolean>(false);
-  const [keepOffsets, setKeepOffsets] = React.useState<boolean>(true);
+  const [fixedAltAz, setFixedAltAz] = React.useState(false);
+  const [keepOffsets, setKeepOffsets] = React.useState(true);
   const [commandString, setCommandString] = React.useState('hal goto-field');
+
+  const isRunning = useIsMacroRunning(macroName);
 
   const { configuration_loaded: configurationLoadedKw } = useKeywords(
     'jaeger',
@@ -94,7 +99,7 @@ export default function GotoField() {
       <Stack
         direction='column'
         divider={<Divider variant='middle' sx={{ opacity: 0.8 }} />}
-        // width='100%'
+        width='100%'
         p={1}
         px={2}
         spacing={1}
@@ -140,6 +145,7 @@ export default function GotoField() {
           <CommandWrapper
             commandString={getCommandString()}
             beforeCallback={checkConfiguration}
+            isRunning={isRunning}
             abortCommand='hal goto-field --stop'
           >
             <CommandButton variant='outlined' endIcon={<SendIcon />}>
@@ -153,7 +159,7 @@ export default function GotoField() {
           spacing={2}
           overflow='scroll'
         >
-          <MacroStepper macroName='goto_field' />
+          <MacroStepper macroName={macroName} />
         </Stack>
       </Stack>
     </Paper>

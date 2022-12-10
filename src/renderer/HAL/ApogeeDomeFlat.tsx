@@ -12,8 +12,13 @@ import CommandWrapper from 'renderer/Components/CommandWrapper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import macros from './macros.json';
 import MacroStepper from './MacroStepper';
+import useIsMacroRunning from './useIsMacroRunning';
 
 export default function ApogeeDomeFlat() {
+  const macroName = 'apogee_dome_flat';
+
+  const isRunning = useIsMacroRunning(macroName);
+
   return (
     <Paper variant='outlined'>
       <Stack
@@ -35,6 +40,7 @@ export default function ApogeeDomeFlat() {
           <CommandWrapper
             commandString='hal calibrations apogee-dome-flat'
             abortCommand='hal calibrations apogee-dome-flat --stop'
+            isRunning={isRunning}
           >
             <CommandButton variant='outlined' endIcon={<SendIcon />}>
               Run
@@ -47,7 +53,7 @@ export default function ApogeeDomeFlat() {
           spacing={2}
           overflow='scroll'
         >
-          <MacroStepper macroName='apogee_dome_flat' />
+          <MacroStepper macroName={macroName} />
         </Stack>
       </Stack>
     </Paper>
