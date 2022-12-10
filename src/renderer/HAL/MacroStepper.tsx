@@ -152,7 +152,7 @@ export default function MacroStepper({
     initialStageState
   );
 
-  const stageStatusKw = halKeywords['hal.stage_status'];
+  const { stage_status: stageStatusKw } = halKeywords;
 
   // Here we just check if the keyword change has something useful and if so call the reducer.
   React.useEffect(() => {
