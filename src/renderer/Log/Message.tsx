@@ -15,7 +15,7 @@ const MessageStyle: SxProps = {
   margin: 0,
   padding: 0,
   fontFamily: 'Source Code Pro',
-  fontWeight: 600,
+  fontWeight: 500,
   paddingLeft: '2em',
   textIndent: '-2em',
   WebkitUserSelect: 'unset',
