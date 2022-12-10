@@ -32,21 +32,15 @@ const StatusText = ({ color = undefined, children }: StatusTextProps) => {
   );
 };
 
-const MainStatus = () => {
-  const theme = useTheme();
-  const { mode } = theme.palette;
+type ElapsedTimeProps = {
+  isPlaying: boolean;
+  initialTime: number;
+};
 
-  const connectionStatus = useConnectionStatus();
+function ElapsedTime(props: ElapsedTimeProps) {
+  const { isPlaying, initialTime } = props;
 
-  const [version, setVersion] = useState<string | undefined>(undefined);
-  const [isPackaged, setIsPackaged] = useState<boolean | undefined>(undefined);
-
-  const [connectionText, setConnectionText] = useState<React.ReactElement>(
-    <StatusText color={theme.palette.text.disabled}>Unknown</StatusText>
-  );
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const { elapsedTime, reset: resetElapsed } = useElapsedTime({
+  const { elapsedTime, reset } = useElapsedTime({
     isPlaying,
     updateInterval: 1,
   });
@@ -70,6 +64,29 @@ const MainStatus = () => {
     return prefix + date.toISOString().substring(11, 19);
   }, []);
 
+  React.useEffect(() => {
+    reset((Date.now() - initialTime) / 1000);
+  }, [reset, initialTime]);
+
+  return <span>{formatElapsedTime(isPlaying ? elapsedTime : 0)}</span>;
+}
+
+const MainStatus = () => {
+  const theme = useTheme();
+  const { mode } = theme.palette;
+
+  const connectionStatus = useConnectionStatus();
+
+  const [version, setVersion] = useState<string | undefined>(undefined);
+  const [isPackaged, setIsPackaged] = useState<boolean | undefined>(undefined);
+
+  const [connectionText, setConnectionText] = useState<React.ReactElement>(
+    <StatusText color={theme.palette.text.disabled}>Unknown</StatusText>
+  );
+
+  const [isElapsedRunning, setIsElapsedRunning] = useState(false);
+  const [connectionTime, setConnectionTime] = useState(-1);
+
   const [program, setProgram] = useState('N/A');
   const [host, setHost] = useState('N/A');
   const [port, setPort] = useState('N/A');
@@ -86,10 +103,10 @@ const MainStatus = () => {
       window.electron.tron
         .getLastConnected()
         .then((value: Date) => {
-          return resetElapsed((Date.now() - value.getTime()) / 1000);
+          return setConnectionTime(value.getTime());
         })
         .catch(() => {});
-      setIsPlaying(true);
+      setIsElapsedRunning(true);
     };
 
     const setCredentials = () => {
@@ -129,8 +146,7 @@ const MainStatus = () => {
       startTimer();
       setCredentials();
     } else {
-      resetElapsed();
-      setIsPlaying(false);
+      setIsElapsedRunning(false);
       resetCredentials();
 
       if (ConnectionStatus.Connected & connectionStatus) {
@@ -172,7 +188,7 @@ const MainStatus = () => {
         );
       }
     }
-  }, [mode, theme, resetElapsed, needsAuthentication, connectionStatus]);
+  }, [mode, theme, needsAuthentication, connectionStatus]);
 
   return (
     <>
@@ -199,7 +215,14 @@ const MainStatus = () => {
               <br />
               <StatusText>Host: {hostPort}</StatusText>
               <br />
-              <StatusText>Elapsed: {formatElapsedTime(elapsedTime)}</StatusText>
+              {/* <StatusText>Elapsed: {formatElapsedTime(elapsedTime)}</StatusText> */}
+              <StatusText>
+                Elapsed:{' '}
+                <ElapsedTime
+                  isPlaying={isElapsedRunning}
+                  initialTime={connectionTime}
+                />
+              </StatusText>
             </CardContent>
           </Card>
         </Box>
