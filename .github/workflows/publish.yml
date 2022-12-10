@@ -6,7 +6,7 @@ on:
       - main
 
 concurrency:
-  group: ${{ github.head_ref || github.run_id }}
+  group: boson-publish
   cancel-in-progress: true
 
 jobs:
