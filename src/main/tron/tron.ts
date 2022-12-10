@@ -56,7 +56,7 @@ export class TronConnection {
   lastConnected: Date | undefined = undefined;
 
   constructor() {
-    this.maxLogMessages = config.maxLogMessages ?? 10000;
+    this.maxLogMessages = store.get('maxLogMessages') ?? 50000;
 
     this.client.on('connect', () => {
       this.status = ConnectionStatus.Connected;
@@ -395,6 +395,10 @@ export class TronConnection {
         });
       }
     }
+  }
+
+  clearReplies() {
+    this.replies.length = 0;
   }
 
   unsubscribeKeywordListener(channel: string) {

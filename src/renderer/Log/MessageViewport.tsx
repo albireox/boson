@@ -9,6 +9,7 @@ import { useTheme } from '@mui/material';
 import Reply from 'main/tron/reply';
 import React from 'react';
 import { Virtuoso } from 'react-virtuoso';
+import { useEventListener } from 'renderer/hooks';
 import { useLogConfig, useReplyFilter } from './hooks';
 import Message from './Message';
 
@@ -24,6 +25,11 @@ export default function MessageViewport() {
   const filterReplies = useReplyFilter();
 
   const maxLogMessages: number = window.electron.store.get('maxLogMessages');
+
+  useEventListener('tron:clear-replies', () => {
+    setReplies([]);
+    setFiltered([]);
+  });
 
   React.useEffect(() => {
     const addReplies = (reply: Reply) => {

@@ -8,6 +8,7 @@
 import { BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import store from '../store';
+import tron from '../tron/tron';
 import { WindowParams } from '../types';
 
 export function saveWindows() {
@@ -40,4 +41,17 @@ export function saveWindows() {
 
 export function checkForUpdates() {
   autoUpdater.checkForUpdates();
+}
+
+export function clearLogs() {
+  // Sends an event to all windows asking them to clear their list of replies.
+  // Also tell tron to clear its cache of replies.
+
+  const channel = 'tron:clear-replies';
+
+  BrowserWindow.getAllWindows().forEach((win) => {
+    win.webContents.send(channel);
+  });
+
+  tron.clearReplies();
 }
