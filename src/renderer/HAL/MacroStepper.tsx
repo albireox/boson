@@ -112,6 +112,7 @@ export default function MacroStepper({
     ...thisMacroData.stages,
     ...(thisMacroData.cleanup_stages || []),
   ];
+
   allStages.forEach((stageName) => {
     let description: string;
     if (thisMacroData.descriptions && thisMacroData.descriptions[stageName]) {

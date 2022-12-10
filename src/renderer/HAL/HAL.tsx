@@ -65,6 +65,10 @@ export default function HALView() {
     'exposure_state_boss',
   ]);
 
+  React.useEffect(() => {
+    window.electron.tron.send('hal status --full');
+  }, []);
+
   return (
     <HALContext.Provider value={halKeywords}>
       <Box
