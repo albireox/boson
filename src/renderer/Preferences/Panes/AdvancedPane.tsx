@@ -12,6 +12,10 @@ import { useStore } from 'renderer/hooks';
 import Pane from '../Components/Pane';
 import PreferencesFormControlLabel from '../Components/PreferencesFormControlLabel';
 import PreferencesRadioGroup from '../Components/PreferencesRadioGroup';
+import {
+  TypographyDescription,
+  TypographyTitle,
+} from '../Components/TypographyTitle';
 
 function Configuration() {
   const clearConfig = () => {
@@ -39,22 +43,10 @@ function Configuration() {
 
         <Grid container pt={1} minHeight={50} alignContent='center'>
           <Grid xs={9}>
-            <Typography
-              variant='body2'
-              fontSize={14}
-              sx={(theme) => ({
-                minWidth: '150px',
-                color: theme.palette.text.primary,
-                userSelect: 'none',
-                alignSelf: 'center',
-              })}
-              gutterBottom
-            >
-              Reset configuration
-            </Typography>
-            <Typography variant='body2' color='text.secondary'>
+            <TypographyTitle>Reset configuration</TypographyTitle>
+            <TypographyDescription>
               Reverts to the default configuration. An app restart is required.
-            </Typography>
+            </TypographyDescription>
           </Grid>
           <Grid
             xs={3}
@@ -95,19 +87,16 @@ function AutoUpdateMode() {
             value='latest'
             control={<Radio />}
             label='Stable'
-            // gutterColor={theme.palette.grey[200]}
           />
           <PreferencesFormControlLabel
             value='beta'
             control={<Radio />}
             label='Beta'
-            // gutterColor={theme.palette.grey[600]}
           />
           <PreferencesFormControlLabel
             value='alpha'
             control={<Radio />}
             label='Alpha'
-            // gutterColor={blue[500]}
           />
         </PreferencesRadioGroup>
       </FormControl>

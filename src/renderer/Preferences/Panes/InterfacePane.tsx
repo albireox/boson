@@ -24,6 +24,10 @@ import Pane from '../Components/Pane';
 import PreferencesFormControlLabel from '../Components/PreferencesFormControlLabel';
 import PreferencesRadioGroup from '../Components/PreferencesRadioGroup';
 import Switch from '../Components/Switch';
+import {
+  TypographyDescription,
+  TypographyTitle,
+} from '../Components/TypographyTitle';
 
 function ThemeMode() {
   const theme = useTheme();
@@ -80,26 +84,10 @@ function WindowManagement() {
         {/* Save window positions */}
         <Grid container pt={1} minHeight={50} alignContent='center'>
           <Grid xs={9}>
-            <Typography
-              variant='body2'
-              fontSize={14}
-              sx={(theme) => ({
-                minWidth: '150px',
-                color: theme.palette.text.primary,
-                userSelect: 'none',
-                alignSelf: 'center',
-              })}
-              gutterBottom
-            >
-              Save window positions
-            </Typography>
-            <Typography
-              variant='body2'
-              color='text.secondary'
-              alignSelf='center'
-            >
+            <TypographyTitle>Save window positions</TypographyTitle>
+            <TypographyDescription>
               Remembers open windows, dimensions, and positions.
-            </Typography>
+            </TypographyDescription>
           </Grid>
           <Grid xs={3} alignItems='flex-end' textAlign='right'>
             <Switch
@@ -114,22 +102,10 @@ function WindowManagement() {
       <Box>
         <Grid container pt={1} minHeight={50} alignContent='center'>
           <Grid xs={9}>
-            <Typography
-              variant='body2'
-              fontSize={14}
-              sx={(theme) => ({
-                minWidth: '150px',
-                color: theme.palette.text.primary,
-                userSelect: 'none',
-                alignSelf: 'center',
-              })}
-              gutterBottom
-            >
-              Save only when requested
-            </Typography>
-            <Typography variant='body2' color='text.secondary'>
+            <TypographyTitle>Save only when requested</TypographyTitle>
+            <TypographyDescription>
               Windows will be saved only when manually requested
-            </Typography>
+            </TypographyDescription>
           </Grid>
           <Grid
             xs={3}
@@ -146,28 +122,17 @@ function WindowManagement() {
       <Box>
         <Grid container pt={1} minHeight={50} alignContent='center'>
           <Grid xs={9}>
-            <Typography
-              variant='body2'
-              fontSize={14}
-              sx={(theme) => ({
-                minWidth: '150px',
-                color: theme.palette.text.primary,
-                userSelect: 'none',
-                alignSelf: 'center',
-              })}
-              gutterBottom
-            >
-              Delete window positions
-            </Typography>
-            <Typography
-              variant='body2'
-              color='text.secondary'
-              alignSelf='center'
-            >
+            <TypographyTitle>Delete window positions</TypographyTitle>
+            <TypographyDescription>
               Removes all saved window position.
-            </Typography>
+            </TypographyDescription>
           </Grid>
-          <Grid xs={3} alignItems='flex-end' textAlign='right'>
+          <Grid
+            xs={3}
+            alignItems='flex-end'
+            textAlign='right'
+            alignSelf='center'
+          >
             <Button
               variant='contained'
               color='error'
