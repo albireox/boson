@@ -31,11 +31,17 @@ export default function useConnectionStatus() {
       handleConnectionStatus
     );
 
-    return function cleanup() {
+    const unload = () => {
       window.electron.ipcRenderer.removeListener(
         'tron:connection-status',
         handleConnectionStatus
       );
+    };
+
+    window.addEventListener('unload', unload);
+
+    return function cleanup() {
+      unload();
     };
   }, [handleConnectionStatus]);
 

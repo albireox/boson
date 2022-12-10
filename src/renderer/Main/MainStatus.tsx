@@ -11,7 +11,7 @@ import { Box } from '@mui/system';
 import { ConnectionStatus } from 'main/tron/types';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useStore } from 'renderer/hooks';
+import { useConnectionStatus, useStore } from 'renderer/hooks';
 import { useElapsedTime } from 'use-elapsed-time';
 import icon from '../../../assets/icon.png';
 
@@ -35,6 +35,8 @@ const StatusText = ({ color = undefined, children }: StatusTextProps) => {
 const MainStatus = () => {
   const theme = useTheme();
   const { mode } = theme.palette;
+
+  const connectionStatus = useConnectionStatus();
 
   const [version, setVersion] = useState<string | undefined>(undefined);
   const [isPackaged, setIsPackaged] = useState<boolean | undefined>(undefined);
@@ -120,80 +122,57 @@ const MainStatus = () => {
       .then((result) => setIsPackaged(result))
       .catch(() => {});
 
-    const handleConnectionStatus = (status: number) => {
-      if (ConnectionStatus.Authorised & status) {
-        setConnectionText(
-          <StatusText color={theme.palette.success[mode]}>
-            Authorised
-          </StatusText>
-        );
-        startTimer();
-        setCredentials();
-      } else {
-        resetElapsed();
-        setIsPlaying(false);
-        resetCredentials();
+    if (ConnectionStatus.Authorised & connectionStatus) {
+      setConnectionText(
+        <StatusText color={theme.palette.success[mode]}>Authorised</StatusText>
+      );
+      startTimer();
+      setCredentials();
+    } else {
+      resetElapsed();
+      setIsPlaying(false);
+      resetCredentials();
 
-        if (ConnectionStatus.Connected & status) {
-          if (needsAuthentication) {
-            setConnectionText(
-              <StatusText color={theme.palette.warning[mode]}>
-                Not authorised
-              </StatusText>
-            );
-          } else {
-            setConnectionText(
-              <StatusText color={theme.palette.success[mode]}>
-                Connected
-              </StatusText>
-            );
-            startTimer();
-            setCredentials();
-          }
-        } else if (ConnectionStatus.Connecting & status) {
+      if (ConnectionStatus.Connected & connectionStatus) {
+        if (needsAuthentication) {
           setConnectionText(
             <StatusText color={theme.palette.warning[mode]}>
-              Connecting
+              Not authorised
             </StatusText>
           );
-        } else if (
-          ConnectionStatus.AuthenticationFailed & status &&
-          !(ConnectionStatus.NoPassword & status)
-        ) {
+        } else {
           setConnectionText(
-            <StatusText color={theme.palette.error[mode]}>
-              Authentication failed (check password)
+            <StatusText color={theme.palette.success[mode]}>
+              Connected
             </StatusText>
           );
-        } else if (ConnectionStatus.Disconnected & status) {
-          setConnectionText(
-            <StatusText color={theme.palette.error[mode]}>
-              Disconnected
-            </StatusText>
-          );
+          startTimer();
+          setCredentials();
         }
+      } else if (ConnectionStatus.Connecting & connectionStatus) {
+        setConnectionText(
+          <StatusText color={theme.palette.warning[mode]}>
+            Connecting
+          </StatusText>
+        );
+      } else if (
+        ConnectionStatus.AuthenticationFailed & connectionStatus &&
+        !(ConnectionStatus.NoPassword & connectionStatus)
+      ) {
+        setConnectionText(
+          <StatusText color={theme.palette.error[mode]}>
+            Authentication failed (check password)
+          </StatusText>
+        );
+      } else if (ConnectionStatus.Disconnected & connectionStatus) {
+        setConnectionText(
+          <StatusText color={theme.palette.error[mode]}>
+            Disconnected
+          </StatusText>
+        );
       }
-    };
-
-    // First time, just in case tron doesn't emit the status on time.
-    window.electron.tron
-      .getStatus()
-      .then(handleConnectionStatus)
-      .catch(() => {});
-
-    // From now on just listen to the event.
-    window.electron.ipcRenderer.on(
-      'tron:connection-status',
-      handleConnectionStatus
-    );
-
-    return function cleanup() {
-      window.electron.ipcRenderer.removeListener(
-        'tron:connection-status',
-        handleConnectionStatus
-      );
-    };
-  }, [mode, theme, resetElapsed, needsAuthentication]);
+    }
+  }, [mode, theme, resetElapsed, needsAuthentication, connectionStatus]);
 
   return (
     <>

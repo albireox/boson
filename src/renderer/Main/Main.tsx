@@ -143,26 +143,25 @@ export default function Main() {
       timer = setTimeout(() => connect(needsAuthentication), 1000);
     }
 
-    const handleStatus = (status: ConnectionStatus) => {
-      if (status & ConnectionStatus.Disconnected) {
-        setIsConnected(false);
-        setIsConnecting(false);
-      }
-      if (status & ConnectionStatus.AuthenticationFailed) {
-        setAuthenticationFailed(true);
-      }
-    };
-
-    window.electron.ipcRenderer.on('tron:connection-status', handleStatus);
+    if (connectionStatus & ConnectionStatus.Disconnected) {
+      setIsConnected(false);
+      setIsConnecting(false);
+    }
+    if (connectionStatus & ConnectionStatus.AuthenticationFailed) {
+      setAuthenticationFailed(true);
+    }
 
     return () => {
-      window.electron.ipcRenderer.removeListener(
-        'tron:connection-status',
-        handleStatus
-      );
-      clearInterval(timer);
+      clearTimeout(timer);
     };
-  }, [connect, isConnected, isConnecting, reconnect, needsAuthentication]);
+  }, [
+    connect,
+    isConnected,
+    isConnecting,
+    reconnect,
+    needsAuthentication,
+    connectionStatus,
+  ]);
 
   const handlePassword = () => {
     if (password !== null) {
