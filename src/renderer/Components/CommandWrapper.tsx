@@ -128,14 +128,21 @@ export default function CommandWrapper(props: CommandWrapperProps) {
           },
         })
       );
-    } else if (subscription) {
+    } else if (subscription || isRunning) {
       setAlertOpen(true);
     } else {
       // This should never happen, except if somehow the command
       // has become zombie.
       handleChange('idle');
     }
-  }, [state, handleChange, beforeCallback, subscription, commandString]);
+  }, [
+    state,
+    handleChange,
+    beforeCallback,
+    subscription,
+    commandString,
+    isRunning,
+  ]);
 
   React.useEffect(() => {
     setState((current) => {
