@@ -79,7 +79,7 @@ function WindowManagement() {
 
         {/* Save window positions */}
         <Grid container pt={1} minHeight={50} alignContent='center'>
-          <Grid xs={6}>
+          <Grid xs={9}>
             <Typography
               variant='body2'
               fontSize={14}
@@ -93,23 +93,27 @@ function WindowManagement() {
             >
               Save window positions
             </Typography>
+            <Typography
+              variant='body2'
+              color='text.secondary'
+              alignSelf='center'
+            >
+              Remembers open windows, dimensions, and positions.
+            </Typography>
           </Grid>
-          <Grid xs={6} alignItems='flex-end' textAlign='right'>
+          <Grid xs={3} alignItems='flex-end' textAlign='right'>
             <Switch
               disabled={saveOnlyOnRequest}
               param='interface.saveWindows'
             />
           </Grid>
         </Grid>
-        <Typography variant='body2' color='text.secondary' mt={-1}>
-          Remembers open windows, dimensions, and positions.
-        </Typography>
       </Box>
 
       {/* Save only when requested */}
       <Box>
         <Grid container pt={1} minHeight={50} alignContent='center'>
-          <Grid xs={6}>
+          <Grid xs={9}>
             <Typography
               variant='body2'
               fontSize={14}
@@ -123,20 +127,25 @@ function WindowManagement() {
             >
               Save only when requested
             </Typography>
+            <Typography variant='body2' color='text.secondary'>
+              Windows will be saved only when manually requested
+            </Typography>
           </Grid>
-          <Grid xs={6} alignItems='flex-end' textAlign='right'>
+          <Grid
+            xs={3}
+            alignItems='flex-end'
+            textAlign='right'
+            alignSelf='center'
+          >
             <Switch param='interface.saveOnlyOnRequest' />
           </Grid>
         </Grid>
-        <Typography variant='body2' color='text.secondary' mt={-1}>
-          Windows will be saved only when manually requested
-        </Typography>
       </Box>
 
       {/* Delete window positions */}
       <Box>
         <Grid container pt={1} minHeight={50} alignContent='center'>
-          <Grid xs={6}>
+          <Grid xs={9}>
             <Typography
               variant='body2'
               fontSize={14}
@@ -150,8 +159,15 @@ function WindowManagement() {
             >
               Delete window positions
             </Typography>
+            <Typography
+              variant='body2'
+              color='text.secondary'
+              alignSelf='center'
+            >
+              Removes all saved window position.
+            </Typography>
           </Grid>
-          <Grid xs={6} alignItems='flex-end' textAlign='right'>
+          <Grid xs={3} alignItems='flex-end' textAlign='right'>
             <Button
               variant='contained'
               color='error'
@@ -162,9 +178,6 @@ function WindowManagement() {
             </Button>
           </Grid>
         </Grid>
-        <Typography variant='body2' color='text.secondary' mt={-1}>
-          Removes all saved window position.
-        </Typography>
       </Box>
     </Stack>
   );

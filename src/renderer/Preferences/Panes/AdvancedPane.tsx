@@ -38,7 +38,7 @@ function Configuration() {
         </Typography>
 
         <Grid container pt={1} minHeight={50} alignContent='center'>
-          <Grid xs={6}>
+          <Grid xs={9}>
             <Typography
               variant='body2'
               fontSize={14}
@@ -52,8 +52,16 @@ function Configuration() {
             >
               Reset configuration
             </Typography>
+            <Typography variant='body2' color='text.secondary'>
+              Reverts to the default configuration. An app restart is required.
+            </Typography>
           </Grid>
-          <Grid xs={6} alignItems='flex-end' textAlign='right'>
+          <Grid
+            xs={3}
+            alignItems='flex-end'
+            textAlign='right'
+            alignSelf='center'
+          >
             <Button
               variant='contained'
               color='error'
@@ -64,9 +72,6 @@ function Configuration() {
             </Button>
           </Grid>
         </Grid>
-        <Typography variant='body2' color='text.secondary' mt={-1}>
-          Reverts to the default configuration. An app restart is required.
-        </Typography>
       </Box>
     </Stack>
   );

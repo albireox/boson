@@ -5,11 +5,12 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, CssBaseline } from '@mui/material';
+import { Box, CssBaseline, Divider } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { Stack } from '@mui/system';
 import * as React from 'react';
 import { AdvancedPane, ConnectionPane, InterfacePane } from './Panes';
+import LogWindowPane from './Panes/Tools/LogWindowPane';
 import { MenuItem, Title } from './typography';
 
 export default function Preferences() {
@@ -25,6 +26,8 @@ export default function Preferences() {
         return <InterfacePane />;
       case 'advanced':
         return <AdvancedPane />;
+      case 'log_window':
+        return <LogWindowPane />;
       default:
         return null;
     }
@@ -50,7 +53,7 @@ export default function Preferences() {
       position='absolute'
       top={0}
       display='grid'
-      gridTemplateColumns='200px 1fr'
+      gridTemplateColumns='minmax(150px, 250px) 1fr'
       gridAutoFlow='column'
     >
       <CssBaseline />
@@ -68,6 +71,9 @@ export default function Preferences() {
             <MenuItemPreferences title='Connection' name='connection' />
             <MenuItemPreferences title='Interface' name='interface' />
             <MenuItemPreferences title='Advanced' name='advanced' />
+            <Divider sx={{ mt: 2, mb: 3 }} />
+            <Title>TOOLS</Title>
+            <MenuItemPreferences title='Log window' name='log_window' />
           </Stack>
         </Stack>
       </Paper>
