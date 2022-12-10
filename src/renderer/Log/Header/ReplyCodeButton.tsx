@@ -19,8 +19,8 @@ export default function ReplyCodeButton() {
   const { config, toggleCode } = useLogConfig();
 
   const handleClick = React.useCallback(
-    (item: string) => {
-      toggleCode(item);
+    (item: unknown) => {
+      toggleCode(item as string);
     },
     [toggleCode]
   );
@@ -37,7 +37,7 @@ export default function ReplyCodeButton() {
           <BosonMenuItem
             key={code}
             text={code}
-            onClick={handleClick}
+            onSelect={handleClick}
             endAdornment={<BosonMenuItemCheckbox checked={selected} />}
           />
         );

@@ -30,10 +30,10 @@ export default function FileNavigation(props: FileNavigationProps) {
   });
 
   const handleClick = React.useCallback(
-    (text: string) => {
+    (text: unknown) => {
       let newIndex = -1;
       files.some((file, ii) => {
-        if (file.includes(text)) {
+        if (file.includes(text as string)) {
           newIndex = ii;
           return true;
         }
@@ -70,7 +70,7 @@ export default function FileNavigation(props: FileNavigationProps) {
                 selected={selected}
                 text={title}
                 textAlign='left'
-                onClick={handleClick}
+                onSelect={handleClick}
               />
             );
           })}

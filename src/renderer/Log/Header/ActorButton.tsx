@@ -19,11 +19,11 @@ export default function ActorButton() {
 
   const { config, toggleActor, clearActors } = useLogConfig();
 
-  const handleClick = (item: string) => {
+  const handleClick = (item: unknown) => {
     if (item === 'All actors') {
       clearActors();
     } else {
-      toggleActor(item);
+      toggleActor(item as string);
     }
   };
 
@@ -40,13 +40,13 @@ export default function ActorButton() {
       Icon={PlaylistAddIcon}
       IconButtonProps={IconButtonProps}
     >
-      <BosonMenuItem text='All actors' onClick={handleClick} />
+      <BosonMenuItem text='All actors' onSelect={handleClick} />
       <Divider sx={{ my: '2px !important' }} />
       {actors.sort().map((actor) => (
         <BosonMenuItem
           key={actor}
           text={actor}
-          onClick={handleClick}
+          onSelect={handleClick}
           endAdornment={
             <BosonMenuItemCheckbox checked={config.actors.has(actor)} />
           }

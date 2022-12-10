@@ -33,7 +33,7 @@ export default function ScaleButton() {
         <BosonMenuItem
           key={scale}
           text={scale}
-          onClick={(item) => guiderConfig.setParam('scale', item, true)}
+          onSelect={(item) => guiderConfig.setParam('scale', item, true)}
           endAdornment={
             <BosonMenuItemRadio checked={guiderConfig.config.scale === scale} />
           }

@@ -6,16 +6,18 @@
  */
 
 import {
+  Box,
   Checkbox,
   CheckboxProps,
   MenuItem,
+  MenuItemProps,
   Radio,
   RadioProps,
   Stack,
   styled,
   Typography,
+  TypographyProps,
 } from '@mui/material';
-import { Box } from '@mui/system';
 import React from 'react';
 
 const BosonMenuItemCheckbox = styled((props: CheckboxProps) => (
@@ -54,69 +56,79 @@ const BosonMenuItemRadio = styled((props: RadioProps) => (
   },
 }));
 
-export interface BosonMenuItemProps {
-  text: string;
-  selected?: boolean;
+export interface BosonMenuItemProps extends MenuItemProps {
+  text?: string;
+  value?: string | number | readonly string[] | undefined;
   textAlign?: string;
-  onClick?: (
-    text: string,
+  fontVariant?: TypographyProps['variant'];
+  onSelect?: (
+    value: unknown,
     event?: React.MouseEvent<HTMLLIElement, MouseEvent>
   ) => void;
   endAdornment?: JSX.Element;
 }
+export type Ref = HTMLLIElement;
 
-export default function BosonMenuItem(props: BosonMenuItemProps) {
-  const {
-    text,
-    onClick,
-    endAdornment,
-    selected = false,
-    textAlign,
-    ...rest
-  } = props;
+const BosonMenuItem = React.forwardRef<Ref, BosonMenuItemProps>(
+  (props, ref) => {
+    const {
+      children,
+      value,
+      text,
+      endAdornment,
+      fontVariant = 'body2',
+      onSelect = () => {},
+      textAlign,
+      ...rest
+    } = props;
 
-  return (
-    <MenuItem
-      {...rest}
-      selected={selected}
-      id={text}
-      disableRipple
-      disableTouchRipple
-      onClick={(event) => (onClick ? onClick(text, event) : undefined)}
-      sx={(theme) => {
-        const bgColor = theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD';
-        return {
-          px: '12px',
-          textAlign: textAlign ?? (!endAdornment ? 'center' : 'inherit'),
-          '&.Mui-focusVisible': {
-            backgroundColor: 'transparent',
-          },
-          '&.Mui-selected,&.Mui-selected:hover,&.Mui-selected.Mui-focusVisible':
-            {
+    return (
+      <MenuItem
+        ref={ref}
+        value={value}
+        id={text}
+        disableRipple
+        disableTouchRipple
+        onClick={(event) => onSelect(value ?? text, event)}
+        sx={(theme) => {
+          const bgColor = theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD';
+          return {
+            px: '12px',
+            textAlign: textAlign ?? (!endAdornment ? 'center' : 'inherit'),
+            '&.Mui-focusVisible': {
+              backgroundColor: 'transparent',
+            },
+            '&.Mui-selected,&.Mui-selected:hover,&.Mui-selected.Mui-focusVisible':
+              {
+                backgroundColor: bgColor,
+              },
+            '&:hover': {
+              borderRadius: '4%',
               backgroundColor: bgColor,
+              '& > * > .MuiButtonBase-root ': {
+                color: theme.palette.text.primary,
+              },
             },
-          '&:hover': {
-            borderRadius: '4%',
-            backgroundColor: bgColor,
-            '& > * > .MuiButtonBase-root ': {
-              color: theme.palette.text.primary,
-            },
-          },
-        };
-      }}
-    >
-      <Stack direction='row' width='100%'>
-        <Typography variant='body2' width='100%'>
-          {text}
-        </Typography>
-        {endAdornment && (
-          <>
-            <Box flexGrow={1} minWidth={25} /> {endAdornment}
-          </>
+          };
+        }}
+        {...rest}
+      >
+        {children ?? (
+          <Stack direction='row' width='100%'>
+            <Typography variant={fontVariant} width='100%'>
+              {text}
+            </Typography>
+            {endAdornment && (
+              <>
+                <Box flexGrow={1} minWidth={25} /> {endAdornment}
+              </>
+            )}
+          </Stack>
         )}
-      </Stack>
-    </MenuItem>
-  );
-}
+      </MenuItem>
+    );
+  }
+);
 
 export { BosonMenuItemCheckbox, BosonMenuItemRadio };
+export default BosonMenuItem;

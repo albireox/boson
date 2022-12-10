@@ -24,7 +24,7 @@ export default function ScaleLimButton() {
         <BosonMenuItem
           key={limit}
           text={limit}
-          onClick={(item) => guiderConfig.setParam('scalelim', item, true)}
+          onSelect={(item) => guiderConfig.setParam('scalelim', item, true)}
           endAdornment={
             <BosonMenuItemRadio
               checked={guiderConfig.config.scalelim === limit}

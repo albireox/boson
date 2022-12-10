@@ -33,7 +33,7 @@ export default function ColormapButton() {
         <BosonMenuItem
           key={color}
           text={color}
-          onClick={(item) => guiderConfig.setParam('colormap', item, true)}
+          onSelect={(item) => guiderConfig.setParam('colormap', item, true)}
           endAdornment={
             <BosonMenuItemRadio
               checked={guiderConfig.config.colormap === color}
