@@ -13,6 +13,7 @@ export {
   default as BosonMenuItem,
   type BosonMenuItemProps,
 } from './BosonMenuItem';
+export { default as BosonSelect } from './BosonSelect';
 export { default as CommandButton } from './CommandButton';
 export { default as DrawerListItem } from './DrawerListItem';
 export { default as HeaderDivider } from './HeaderDivider';
