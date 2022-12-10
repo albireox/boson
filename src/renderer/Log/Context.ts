@@ -13,6 +13,7 @@ const defaultLogConfig = {
   searchText: null,
   searchShowMatched: false,
   searchUseRegEx: false,
+  wrap: false,
 };
 
 export interface ConfigIface {
@@ -21,6 +22,7 @@ export interface ConfigIface {
   searchText: string | null;
   searchShowMatched: boolean;
   searchUseRegEx: boolean;
+  wrap: boolean;
 }
 
 export interface LogConfigIface {
@@ -31,6 +33,7 @@ export interface LogConfigIface {
   setUseRegEx: (mode: boolean) => void;
   toggleCode: (code: string) => void;
   toggleActor: (actor: string) => void;
+  toggleWrap: () => void;
   clearActors: () => void;
 }
 
@@ -42,6 +45,7 @@ const logConfig: LogConfigIface = {
   setShowMatched: () => {},
   setUseRegEx: () => {},
   toggleActor: () => {},
+  toggleWrap: () => {},
   clearActors: () => {},
 };
 
@@ -97,6 +101,9 @@ export function createLogConfig(
           ...{ actors },
         };
       });
+    },
+    toggleWrap: () => {
+      setConfig((current) => ({ ...current, ...{ wrap: !current.wrap } }));
     },
     clearActors: () => {
       setConfig((current) => ({ ...current, ...{ actors: new Set() } }));

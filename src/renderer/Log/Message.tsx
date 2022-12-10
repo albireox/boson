@@ -18,7 +18,6 @@ const MessageStyle: SxProps = {
   fontWeight: 600,
   paddingLeft: '2em',
   textIndent: '-2em',
-  whiteSpace: 'nowrap',
   WebkitUserSelect: 'unset',
 };
 
@@ -28,6 +27,7 @@ export interface MessageProps {
   style?: React.CSSProperties;
   searchText: string | null;
   searchUseRegEx: boolean;
+  wrap: boolean;
 }
 
 function getMessageColor(theme: Theme, reply: Reply) {
@@ -78,7 +78,14 @@ const CmdDoneRegex = new RegExp(
 );
 
 export default function Message(props: MessageProps) {
-  const { reply, style, theme, searchText, searchUseRegEx } = props;
+  const {
+    reply,
+    style,
+    theme,
+    searchText = null,
+    searchUseRegEx = false,
+    wrap = false,
+  } = props;
 
   const getMessageColorMemo = React.useCallback(
     () => getMessageColor(theme, reply),
@@ -122,7 +129,14 @@ export default function Message(props: MessageProps) {
   }
 
   return (
-    <Typography sx={{ ...MessageStyle, ...{ color } }} style={style}>
+    <Typography
+      sx={{
+        ...MessageStyle,
+        ...{ color },
+        ...{ whiteSpace: wrap ? 'normal' : 'nowrap' },
+      }}
+      style={style}
+    >
       {highlighted}
     </Typography>
   );

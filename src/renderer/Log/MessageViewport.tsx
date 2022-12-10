@@ -119,6 +119,7 @@ export default function MessageViewport() {
             theme={theme}
             searchText={config.searchText}
             searchUseRegEx={config.searchUseRegEx}
+            wrap={config.wrap}
           />
         );
       }}

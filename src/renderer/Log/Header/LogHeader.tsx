@@ -11,6 +11,7 @@ import { useLogConfig } from '../hooks';
 import ActorButton from './ActorButton';
 import LogSearchBox from './LogSearchBox';
 import ReplyCodeButton from './ReplyCodeButton';
+import WrapButton from './WrapButton';
 
 interface ActorInfoProps {
   actors: Set<string>;
@@ -81,6 +82,7 @@ export default function LogHeader(props: LogHeaderProps) {
         <div style={{ flexGrow: 1 }} />
         <ActorButton />
         <ReplyCodeButton />
+        <WrapButton />
         <LogSearchBox />
       </Stack>
     </BosonHeader>
