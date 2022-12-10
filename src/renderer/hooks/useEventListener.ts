@@ -13,7 +13,8 @@ import React from 'react';
 
 export default function useEventListener(
   eventName: string,
-  handler: (...args: any[]) => void
+  handler: (...args: any[]) => void,
+  removeAllListeners = false
 ) {
   const savedHandler = React.useRef<(...args: any[]) => void>();
   // Update ref.current value if handler changes.
@@ -25,7 +26,8 @@ export default function useEventListener(
   }, [handler]);
 
   React.useEffect(() => {
-    window.electron.ipcRenderer.removeAllListeners(eventName);
+    if (removeAllListeners)
+      window.electron.ipcRenderer.removeAllListeners(eventName);
 
     const eventListener = (...args: any[]) => {
       if (!savedHandler || !savedHandler.current) return {};
@@ -38,5 +40,5 @@ export default function useEventListener(
     // Remove event listener on cleanup
     return () =>
       window.electron.ipcRenderer.removeListener(eventName, eventListener);
-  }, [eventName]);
+  }, [eventName, removeAllListeners]);
 }
