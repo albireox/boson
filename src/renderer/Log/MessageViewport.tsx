@@ -31,12 +31,16 @@ export default function MessageViewport() {
     setBuffer((old) => [...old, reply]);
   }, []);
 
-  useEventListener('tron:received-reply', addReplies);
+  useEventListener('tron:received-reply', addReplies, true);
 
-  useEventListener('tron:clear-replies', () => {
-    setReplies([]);
-    setFiltered([]);
-  });
+  useEventListener(
+    'tron:clear-replies',
+    () => {
+      setReplies([]);
+      setFiltered([]);
+    },
+    true
+  );
 
   React.useEffect(() => {
     window.electron.tron
