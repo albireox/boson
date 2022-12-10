@@ -7,6 +7,7 @@
 
 import { ConnectionStatus } from 'main/tron/types';
 import React from 'react';
+import useEventListener from './useEventListener';
 
 export default function useConnectionStatus() {
   const [connectionStatus, setConnectionStatus] = React.useState(
@@ -14,9 +15,13 @@ export default function useConnectionStatus() {
   );
 
   const handleConnectionStatus = React.useCallback(
-    (status: ConnectionStatus) => setConnectionStatus(status),
+    (status: ConnectionStatus) => {
+      setConnectionStatus(status);
+    },
     []
   );
+
+  useEventListener('tron:connection-status', handleConnectionStatus);
 
   React.useEffect(() => {
     // First time, just in case tron doesn't emit the status on time.
@@ -24,25 +29,6 @@ export default function useConnectionStatus() {
       .getStatus()
       .then(handleConnectionStatus)
       .catch(() => {});
-
-    // From now on just listen to the event.
-    window.electron.ipcRenderer.on(
-      'tron:connection-status',
-      handleConnectionStatus
-    );
-
-    const unload = () => {
-      window.electron.ipcRenderer.removeListener(
-        'tron:connection-status',
-        handleConnectionStatus
-      );
-    };
-
-    window.addEventListener('unload', unload);
-
-    return function cleanup() {
-      unload();
-    };
   }, [handleConnectionStatus]);
 
   return connectionStatus;
