@@ -6,6 +6,7 @@
  */
 
 export { default as BosonHeader } from './BosonHeader';
+export { default as BosonInputBase } from './BosonInputBase';
 export { BosonHoverMenu, BosonMenu } from './BosonMenu';
 export {
   BosonMenuItemCheckbox,

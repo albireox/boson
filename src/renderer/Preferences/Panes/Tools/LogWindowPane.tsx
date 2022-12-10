@@ -5,16 +5,14 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  FormControl,
-  Grid,
-  SelectChangeEvent,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { FormControl, Grid, SelectChangeEvent, Stack } from '@mui/material';
 import { BosonMenuItem, BosonSelect } from 'renderer/Components';
 import { useStore } from 'renderer/hooks';
 import Pane from 'renderer/Preferences/Components/Pane';
+import {
+  TypographyDescription,
+  TypographyTitle,
+} from 'renderer/Preferences/Components/TypographyTitle';
 
 function NumberLines() {
   const [maxLogMessages] = useStore<number>('maxLogMessages');
@@ -31,22 +29,10 @@ function NumberLines() {
   return (
     <Grid container pt={1} minHeight={50} alignContent='center'>
       <Grid item xs={9}>
-        <Typography
-          variant='body2'
-          fontSize={14}
-          sx={(theme) => ({
-            minWidth: '150px',
-            color: theme.palette.text.primary,
-            userSelect: 'none',
-            alignSelf: 'center',
-          })}
-          gutterBottom
-        >
-          Number of lines
-        </Typography>
-        <Typography variant='body2' color='text.secondary'>
+        <TypographyTitle>Number of lines</TypographyTitle>
+        <TypographyDescription>
           Keep this many lines in the log window. Requires an app restart.
-        </Typography>
+        </TypographyDescription>
       </Grid>
       <Grid
         item

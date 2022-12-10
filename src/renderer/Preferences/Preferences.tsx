@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import { Stack } from '@mui/system';
 import * as React from 'react';
 import { AdvancedPane, ConnectionPane, InterfacePane } from './Panes';
+import GuiderPane from './Panes/Tools/GuiderPane';
 import LogWindowPane from './Panes/Tools/LogWindowPane';
 import { MenuItem, Title } from './typography';
 
@@ -28,6 +29,8 @@ export default function Preferences() {
         return <AdvancedPane />;
       case 'log_window':
         return <LogWindowPane />;
+      case 'guider':
+        return <GuiderPane />;
       default:
         return null;
     }
@@ -74,6 +77,7 @@ export default function Preferences() {
             <Divider sx={{ mt: 2, mb: 3 }} />
             <Title>TOOLS</Title>
             <MenuItemPreferences title='Log window' name='log_window' />
+            <MenuItemPreferences title='Guider' name='guider' />
           </Stack>
         </Stack>
       </Paper>

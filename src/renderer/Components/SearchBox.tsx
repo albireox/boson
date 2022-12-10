@@ -7,9 +7,10 @@
 
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Fade, InputBase, InputBaseProps } from '@mui/material';
+import { Box, Fade, InputBaseProps } from '@mui/material';
 import React from 'react';
 import { IconButtonFlat } from 'renderer/Components';
+import BosonInputBase from './BosonInputBase';
 
 interface DefaultAddornmentProps {
   value?: string;
@@ -75,24 +76,18 @@ export default function SearchBox(props: SearchBoxProps) {
   const [focused, setFocused] = React.useState(false);
 
   return (
-    <InputBase
-      sx={(theme) => ({
-        borderRadius: '4px',
-        position: 'relative',
-        backgroundColor: theme.palette.mode === 'light' ? '#E3E5E8' : '#202225',
-        color: theme.palette.action.active,
-        border: 'none',
-        padding: '0px 6px',
+    <BosonInputBase
+      sx={{
         fontWeight: 500,
-        transition: 'all 0.5s ease 0s',
         width:
           !expand || (!focused && !value)
             ? `${defaultWidth ?? 150}px`
             : `${expandedWidth ?? 250}px`,
+        transition: 'all 0.5s ease 0s',
         '& .MuiInputBase-input': {
           padding: '2.5px',
         },
-      })}
+      }}
       value={value}
       placeholder='Search'
       onFocus={() => setFocused(true)}
