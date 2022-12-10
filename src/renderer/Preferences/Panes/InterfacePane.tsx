@@ -36,7 +36,7 @@ function ThemeMode() {
 
   return (
     <Stack>
-      <Typography variant='button' color='text.secondary'>
+      <Typography variant='button' color='text.secondary' fontSize='13px'>
         Theme mode
       </Typography>
       <FormControl sx={{ paddingTop: 1 }}>
@@ -73,7 +73,7 @@ function WindowManagement() {
   return (
     <Stack direction='column' spacing={1}>
       <Box>
-        <Typography variant='button' color='text.secondary'>
+        <Typography variant='button' color='text.secondary' fontSize='13px'>
           Window management
         </Typography>
 
@@ -170,65 +170,6 @@ function WindowManagement() {
   );
 }
 
-function Configuration() {
-  const clearConfig = () => {
-    window.electron.dialog
-      .showMessageBox({
-        message: 'Confirm removal of user configuration?',
-        type: 'question',
-        buttons: ['Cancel', 'OK'],
-      })
-      .then(({ response }) => {
-        if (response === 1) {
-          window.electron.store.clear();
-        }
-        return true;
-      })
-      .catch(() => {});
-  };
-
-  return (
-    <Stack direction='column' spacing={1}>
-      <Box>
-        <Typography variant='button' color='text.secondary'>
-          User Configuration
-        </Typography>
-
-        <Grid container pt={1} minHeight={50} alignContent='center'>
-          <Grid xs={6}>
-            <Typography
-              variant='body2'
-              fontSize={14}
-              sx={(theme) => ({
-                minWidth: '150px',
-                color: theme.palette.text.primary,
-                userSelect: 'none',
-                alignSelf: 'center',
-              })}
-              gutterBottom
-            >
-              Reset configuration
-            </Typography>
-          </Grid>
-          <Grid xs={6} alignItems='flex-end' textAlign='right'>
-            <Button
-              variant='contained'
-              color='error'
-              onClick={clearConfig}
-              disableElevation
-            >
-              Reset
-            </Button>
-          </Grid>
-        </Grid>
-        <Typography variant='body2' color='text.secondary' mt={-1}>
-          Reverts to the default configuration. An app restart is required.
-        </Typography>
-      </Box>
-    </Stack>
-  );
-}
-
 export default function InterfacePane() {
   return (
     <Pane title='Interface'>
@@ -239,8 +180,6 @@ export default function InterfacePane() {
               <ThemeMode />
               <Divider sx={{ my: 4 }} />
               <WindowManagement />
-              <Divider sx={{ my: 4 }} />
-              <Configuration />
             </Stack>
           </Grid>
         </Grid>

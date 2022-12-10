@@ -9,7 +9,7 @@ import { Box, CssBaseline } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { Stack } from '@mui/system';
 import * as React from 'react';
-import { ConnectionPane, InterfacePane } from './Panes';
+import { AdvancedPane, ConnectionPane, InterfacePane } from './Panes';
 import { MenuItem, Title } from './typography';
 
 export default function Preferences() {
@@ -23,6 +23,8 @@ export default function Preferences() {
         return <ConnectionPane />;
       case 'interface':
         return <InterfacePane />;
+      case 'advanced':
+        return <AdvancedPane />;
       default:
         return null;
     }
@@ -65,6 +67,7 @@ export default function Preferences() {
             <Title>USER SETTINGS</Title>
             <MenuItemPreferences title='Connection' name='connection' />
             <MenuItemPreferences title='Interface' name='interface' />
+            <MenuItemPreferences title='Advanced' name='advanced' />
           </Stack>
         </Stack>
       </Paper>
