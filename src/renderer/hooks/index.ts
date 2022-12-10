@@ -10,5 +10,6 @@
 export { default as useConnectionStatus } from './useConnectionStatus';
 export { default as useEventListener } from './useEventListener';
 export { default as useKeywords } from './useKeywords';
+export { default as useKeywordValue } from './useKeywordValue';
 export { default as useStore } from './useStore';
 export { default as useWindowSize } from './useWindowSize';
