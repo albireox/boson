@@ -26,17 +26,19 @@ export default function MessageViewport() {
 
   const maxLogMessages: number = window.electron.store.get('maxLogMessages');
 
+  const addReplies = React.useCallback((reply: Reply) => {
+    setReplies((old) => [...old, reply]);
+    setBuffer((old) => [...old, reply]);
+  }, []);
+
+  useEventListener('tron:received-reply', addReplies);
+
   useEventListener('tron:clear-replies', () => {
     setReplies([]);
     setFiltered([]);
   });
 
   React.useEffect(() => {
-    const addReplies = (reply: Reply) => {
-      setReplies((old) => [...old, reply]);
-      setBuffer((old) => [...old, reply]);
-    };
-
     window.electron.tron
       .getAllReplies()
       .then((reps) => {
@@ -46,17 +48,9 @@ export default function MessageViewport() {
       })
       .catch(() => {});
 
-    window.electron.ipcRenderer.removeAllListeners('tron:received-reply');
-    window.electron.ipcRenderer.on('tron:received-reply', addReplies);
     window.electron.tron.subscribe();
 
-    const unload = () => {
-      window.electron.ipcRenderer.removeListener(
-        'tron:received-reply',
-        addReplies
-      );
-      window.electron.tron.unsubscribe();
-    };
+    const unload = () => window.electron.tron.unsubscribe();
 
     window.addEventListener('unload', unload);
 
