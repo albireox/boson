@@ -120,6 +120,7 @@ export default function MessageViewport() {
       followOutput='auto'
       alignToBottom
       atBottomThreshold={400}
+      increaseViewportBy={500}
     />
   );
 }
