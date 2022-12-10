@@ -5,15 +5,17 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React from 'react';
 
 // Adapted from https://usehooks.com/useEventListener/
 
 export default function useEventListener(
   eventName: string,
-  handler: () => void
+  handler: (...args: any[]) => void
 ) {
-  const savedHandler = React.useRef<() => void>();
+  const savedHandler = React.useRef<(...args: any[]) => void>();
   // Update ref.current value if handler changes.
   // This allows our effect below to always get latest handler ...
   // ... without us needing to pass it in effect deps array ...
@@ -25,9 +27,9 @@ export default function useEventListener(
   React.useEffect(() => {
     window.electron.ipcRenderer.removeAllListeners(eventName);
 
-    const eventListener = () => {
+    const eventListener = (...args: any[]) => {
       if (!savedHandler || !savedHandler.current) return {};
-      return savedHandler.current();
+      return savedHandler.current(...args);
     };
 
     // Add event listener
