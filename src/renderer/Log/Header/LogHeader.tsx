@@ -82,6 +82,11 @@ export default function LogHeader(props: LogHeaderProps) {
         <div style={{ flexGrow: 1 }} />
         <ActorButton />
         <ReplyCodeButton />
+        <Divider
+          orientation='vertical'
+          variant='middle'
+          sx={{ height: '60%' }}
+        />
         <WrapButton />
         <LogSearchBox />
       </Stack>

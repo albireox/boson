@@ -6,6 +6,7 @@
  */
 
 import WrapTextIcon from '@mui/icons-material/WrapText';
+import { Tooltip } from '@mui/material';
 import HeaderIconButton from 'renderer/Components/HeaderIconButton';
 import { useLogConfig } from '../hooks';
 
@@ -18,8 +19,11 @@ export default function WrapButton() {
         px: 0,
         color: config.wrap ? theme.palette.text.primary : undefined,
       })}
-      Icon={WrapTextIcon}
       onClick={toggleWrap}
-    />
+    >
+      <Tooltip title='Wrap lines'>
+        <WrapTextIcon sx={{ fontSize: '20px' }} />
+      </Tooltip>
+    </HeaderIconButton>
   );
 }
