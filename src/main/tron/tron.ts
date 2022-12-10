@@ -11,8 +11,12 @@ import log from 'electron-log';
 import * as keytar from 'keytar';
 import { Socket } from 'net';
 import { arch, platform, release } from 'os';
+import {
+  adjectives,
+  animals,
+  uniqueNamesGenerator,
+} from 'unique-names-generator';
 import store, { config } from '../store';
-import { generateName } from '../util';
 import Command from './command';
 import parseLine from './keywords';
 import Reply from './reply';
@@ -139,7 +143,11 @@ export class TronConnection {
     let user = user_ ?? store.get('connection.user');
 
     if (user === undefined || user.trim() === '') {
-      user = generateName();
+      user = uniqueNamesGenerator({
+        dictionaries: [adjectives, animals],
+        separator: '',
+        style: 'capital',
+      });
     }
 
     log.info(`Trying to authorise user ${program.toUpperCase()}.${user}`);
