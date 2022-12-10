@@ -65,14 +65,10 @@ export default function MessageViewport() {
     const tmpFiltered = filterReplies(buffer);
     if (tmpFiltered.length === 0) return () => {};
 
-    const timeout = setTimeout(() => {
-      setFiltered((old) => [...old, ...tmpFiltered]);
-      setBuffer([]);
-    }, 500);
+    setFiltered((old) => [...old, ...tmpFiltered]);
+    setBuffer([]);
 
-    return () => {
-      clearTimeout(timeout);
-    };
+    return () => {};
   }, [filterReplies, buffer]);
 
   React.useEffect(() => {
