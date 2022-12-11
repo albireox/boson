@@ -81,7 +81,7 @@ export default class MenuBuilder {
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide ElectronReact',
+          label: 'Hide Boson',
           accelerator: 'Command+H',
           selector: 'hide:',
         },
