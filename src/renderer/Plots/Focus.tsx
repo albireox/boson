@@ -112,6 +112,9 @@ export default function FocusPlot() {
         type: 'x',
       },
     },
+    tooltip: {
+      shape: 'square',
+    },
     xAxis: {
       title: {
         text: 'Offset',
@@ -167,6 +170,11 @@ export default function FocusPlot() {
           symbol: 'circle',
           radius: 6,
           fillColor: '#f47560',
+          states: {
+            hover: {
+              lineWidth: 0,
+            },
+          },
         },
         yAxis: 0,
         zIndex: 10,
@@ -198,6 +206,7 @@ export default function FocusPlot() {
       {
         type: 'line',
         name: 'Fit',
+        visible: offset !== undefined,
         yAxis: 0,
         data: [
           { x: offset, y: 0 },
