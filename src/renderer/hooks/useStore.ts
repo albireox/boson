@@ -7,11 +7,19 @@
 
 import React from 'react';
 
+interface UseStoreOptions {
+  mode: 'normal' | 'default' | 'merge';
+  subscribe: boolean;
+}
+
+type ReturnType<T> = [T, (newValue: T) => void];
+
 export default function useStore<T>(
   key: string,
-  mode: 'normal' | 'default' | 'merge' = 'normal',
-  subscribe = true
-): [T, (newValue: T) => void] {
+  opts?: UseStoreOptions
+): ReturnType<T> {
+  const { mode = 'normal', subscribe = true } = opts ?? {};
+
   const INITIAL_VALUE = window.electron.store.get(key, mode);
   const [value, setValue] = React.useState<T>(INITIAL_VALUE);
 

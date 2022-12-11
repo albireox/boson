@@ -132,7 +132,7 @@ function ConnectionDetails() {
 }
 
 function ConnectionProfiles() {
-  const [profiles] = useStore<object>('profiles', 'merge');
+  const [profiles] = useStore<object>('profiles', { mode: 'merge' });
   const [openNewProfile, setOpenNewProfile] = React.useState<boolean>(false);
 
   return (
