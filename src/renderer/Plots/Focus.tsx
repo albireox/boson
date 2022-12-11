@@ -8,6 +8,7 @@
 import { Box, CssBaseline, useTheme } from '@mui/material';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { round } from 'lodash';
 import React from 'react';
 import { useKeywords, useWindowSize } from 'renderer/hooks';
 
@@ -20,7 +21,11 @@ function makeArr(startValue: number, stopValue: number, cardinality: number) {
   return arr;
 }
 
-type DataType = Highcharts.PointOptionsObject[];
+type DataType = {
+  x: number;
+  y: number;
+  camera: string;
+};
 
 export default function FocusPlot() {
   const [seriesData, setSeriesData] = React.useState<DataType[]>([]);
@@ -50,7 +55,7 @@ export default function FocusPlot() {
       setOffset(undefined);
     }
 
-    const tempSeriesData: Highcharts.PointOptionsObject[] = [];
+    const tempSeriesData: DataType[] = [];
 
     let xMin = 0.0;
     let xMax = 0.0;
@@ -64,7 +69,7 @@ export default function FocusPlot() {
       const y = focusData.values[ii + 1];
 
       tempSeriesData.push({
-        name: `GFA${focusData.values[ii]}`,
+        camera: `GFA${focusData.values[ii]}`,
         x,
         y,
       });
@@ -88,7 +93,7 @@ export default function FocusPlot() {
     const b: number = focusFit.values[3];
     const c: number = focusFit.values[4];
 
-    const x = makeArr(xMinMax[0] - xBuffer, xMinMax[1] + xBuffer, 1000);
+    const x = makeArr(xMinMax[0] - xBuffer, xMinMax[1] + xBuffer, 100);
     const yMicro = x.map((v) => a * v * v + b * v + c);
 
     setFocusCurve(x.map((_, idx) => [x[idx], yMicro[idx]]));
@@ -120,14 +125,6 @@ export default function FocusPlot() {
           color: theme.palette.text.primary,
         },
       },
-      plotLines: [
-        {
-          color: theme.palette.text.disabled,
-          width: 2,
-          dashStyle: 'LongDash',
-          value: offset,
-        },
-      ],
       min: xMinMax[0] - xBuffer,
       max: xMinMax[1] + xBuffer,
     },
@@ -148,6 +145,7 @@ export default function FocusPlot() {
         },
         min: yMinMax[0],
         max: yMinMax[1] + yBuffer,
+        gridLineWidth: 0.1,
       },
     ],
 
@@ -166,28 +164,61 @@ export default function FocusPlot() {
       {
         type: 'scatter',
         marker: {
-          symbol: 'diamond',
-          radius: 8,
-          fillColor: theme.palette.primary.main,
+          symbol: 'circle',
+          radius: 6,
+          fillColor: '#f47560',
         },
         yAxis: 0,
-        name: 'Focus data',
+        zIndex: 10,
         tooltip: {
+          headerFormat: '',
           pointFormat:
-            'Camera: <b>{point.name}</b><br/>x: <b>{point.x}</b><br/>y: <b>{point.y}</b><br/>',
+            'Camera: <b>{point.camera}</b><br/>Offset: ' +
+            '<b>{point.x}</b><br/>FWHM: <b>{point.y}</b><br/>',
         },
+        stickyTracking: false,
         data: seriesData,
       },
       {
         type: 'line',
         name: 'Focus',
         yAxis: 0,
-        color: theme.palette.secondary.main,
+        color: '#7cb5ec',
         data: focusCurve,
+        lineWidth: 2,
         marker: { enabled: false },
+        enableMouseTracking: false,
+        zIndex: 5,
+        states: {
+          inactive: {
+            opacity: 1,
+          },
+        },
+      },
+      {
+        type: 'line',
+        name: 'Fit',
+        yAxis: 0,
+        data: [
+          { x: offset, y: 0 },
+          { x: offset, y: 1000 },
+        ],
+        color: '#d2980d',
+        lineWidth: 2,
+        dashStyle: 'LongDash',
+        marker: { enabled: false, states: { hover: { enabled: false } } },
+        enableMouseTracking: true,
+        stickyTracking: false,
         tooltip: {
-          valueDecimals: 2,
-          valueSuffix: ' arcsec',
+          headerFormat: '',
+          pointFormat: `Offset: ${round(offset ?? -999, 2)} microns`,
+          followPointer: true,
+        },
+        zIndex: 1,
+        states: {
+          inactive: {
+            opacity: 1,
+          },
         },
       },
     ],
@@ -196,7 +227,7 @@ export default function FocusPlot() {
   return (
     <Box component='main' height='100%'>
       <CssBaseline />
-      <Box p={4} height='100%'>
+      <Box px={1} py={3} mt={2} height='100%'>
         <HighchartsReact highcharts={Highcharts} options={options} />
       </Box>
     </Box>
