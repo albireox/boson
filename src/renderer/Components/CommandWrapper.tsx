@@ -146,10 +146,9 @@ export default function CommandWrapper(props: CommandWrapperProps) {
 
   React.useEffect(() => {
     setState((current) => {
-      if (isRunning !== undefined && isRunning && current !== 'running')
-        return 'running';
+      if (isRunning === undefined) return current;
 
-      return current;
+      return isRunning ? 'running' : 'idle';
     });
   }, [isRunning]);
 

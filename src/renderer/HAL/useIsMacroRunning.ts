@@ -10,5 +10,5 @@ import { useKeywordValue } from 'renderer/hooks';
 export default function useIsMacroRunning(macroName: string) {
   const runningMacros = useKeywordValue<string>('hal', 'running_macros');
 
-  return runningMacros && runningMacros.includes(macroName);
+  return runningMacros !== undefined && runningMacros.includes(macroName);
 }
