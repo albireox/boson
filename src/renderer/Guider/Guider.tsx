@@ -54,6 +54,17 @@ export default function Guider() {
 
   const ref = React.useRef<GuiderRefMap>({});
 
+  React.useEffect(() => {
+    // Reload window every 10 minutes to prevent JS9 failing GC from using
+    // too much memory.
+    const interval = setInterval(() => {
+      window.electron.app.reloadWindow();
+    }, 10 * 60 * 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <Box component='main' display='flex' width='100%'>
       <CssBaseline />
