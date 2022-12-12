@@ -168,7 +168,7 @@ export class TronConnection {
     await kkCommand.awaitUntilDone();
 
     if (kkCommand.didFail()) {
-      const reason = (kkCommand.replies[0].get('why')?.values[0] ??
+      const reason = (kkCommand.replies[0].getKeyword('why')?.values[0] ??
         'unknown') as string;
       log.error(`Failed getting nonce: ${reason}.`);
       this.connectionStatus |= ConnectionStatus.AuthenticationFailed;
@@ -176,7 +176,7 @@ export class TronConnection {
       return [false, reason];
     }
 
-    const nonceKw = kkCommand.replies[0].get('nonce');
+    const nonceKw = kkCommand.replies[0].getKeyword('nonce');
     if (nonceKw === undefined) {
       const reason = 'Nonce not received.';
       log.error(`Failed getting nonce: ${reason}.`);
@@ -203,7 +203,7 @@ export class TronConnection {
     await loginCommand.awaitUntilDone();
 
     if (loginCommand.didFail()) {
-      const reason = (loginCommand.replies[0].get('why')?.values[0] ??
+      const reason = (loginCommand.replies[0].getKeyword('why')?.values[0] ??
         'unknown') as string;
       log.error(`Failed to log in: ${reason}.`);
       this.connectionStatus |= ConnectionStatus.AuthenticationFailed;

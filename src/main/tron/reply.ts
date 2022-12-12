@@ -21,7 +21,7 @@ export default class Reply {
     this.date = Date.now();
   }
 
-  get(name: string) {
+  public getKeyword(name: string) {
     // Returns the last keyword that matches name.
 
     // Use .slice() to reverse without modifying the order of the
