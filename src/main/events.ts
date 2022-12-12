@@ -143,6 +143,9 @@ export default function loadEvents() {
       return stdout;
     }
   );
+  ipcMain.handle('tools:open-in-browser', async (event, path: string) =>
+    shell.openExternal(path)
+  );
 
   // Dialogs
   ipcMain.handle(

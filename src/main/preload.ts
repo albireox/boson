@@ -146,7 +146,7 @@ const ElectronAPI = {
       return ipcRenderer.sendSync('tools:get-uuid');
     },
     openInBrowser: (path: string) => {
-      shell.openExternal(path);
+      return ipcRenderer.invoke('tools:open-in-browser', path);
     },
     openInApplication: (command: string) => {
       return ipcRenderer.invoke('tools:open-in-application', command);
