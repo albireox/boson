@@ -237,7 +237,7 @@ app
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (windows.get('main') === null) createWindow('main');
+      if (windows.get('main') === undefined) createWindow('main');
     });
   })
   .catch(console.log);
