@@ -7,7 +7,14 @@
 
 import { exec } from 'child_process';
 import { randomUUID } from 'crypto';
-import { app, dialog, ipcMain, MessageBoxOptions, shell } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  MessageBoxOptions,
+  shell,
+} from 'electron';
 import * as keytar from 'keytar';
 import { promisify } from 'util';
 import { createWindow } from './main';
@@ -21,6 +28,10 @@ export default function loadEvents() {
   ipcMain.handle('app:get-version', () => app.getVersion());
   ipcMain.handle('app:is-packaged', () => app.isPackaged);
   ipcMain.handle('app:new-window', async (event, name) => createWindow(name));
+  ipcMain.handle('app:reload-window', async (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    window?.reload();
+  });
 
   // tron
   ipcMain.handle('tron:get-status', () => tron.status);

@@ -55,6 +55,9 @@ const ElectronAPI = {
     openNewWindow(name: string) {
       return ipcRenderer.invoke('app:new-window', name);
     },
+    reloadWindow() {
+      return ipcRenderer.invoke('app:reload-window');
+    },
   },
   tron: {
     getStatus() {
