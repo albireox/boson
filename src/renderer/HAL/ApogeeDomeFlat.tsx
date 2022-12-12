@@ -51,7 +51,10 @@ export default function ApogeeDomeFlat() {
           alignItems='center'
           direction='row'
           spacing={2}
-          overflow='scroll'
+          sx={{
+            overflowX: 'auto',
+            overflowY: 'hidden',
+          }}
         >
           <MacroStepper macroName={macroName} />
         </Stack>

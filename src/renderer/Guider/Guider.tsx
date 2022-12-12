@@ -50,7 +50,7 @@ export default function Guider() {
           pb={2}
           px={3}
           spacing={2.5}
-          sx={{ overflowY: 'scroll' }}
+          sx={{ overflowY: 'auto' }}
         >
           <Box width='100%'>
             <JS9Grid

@@ -167,7 +167,7 @@ export default function MacroStepper({
 
   return (
     <Box
-      overflow='scroll'
+      overflow='auto'
       width='100%'
       pt={1}
       sx={{
@@ -176,7 +176,13 @@ export default function MacroStepper({
         },
       }}
     >
-      <Stepper alternativeLabel {...props}>
+      <Stepper
+        alternativeLabel
+        sx={{
+          overflowY: 'hidden',
+        }}
+        {...props}
+      >
         {stageState.map((step) => {
           if (!step.disabled) {
             return (
@@ -189,7 +195,10 @@ export default function MacroStepper({
               >
                 <StepLabel
                   error={step.failed}
-                  sx={{ '& .MuiStepLabel-label': { mt: 0.75 } }}
+                  sx={{
+                    '& .MuiStepLabel-label': { mt: 0.75 },
+                    WebkitUserSelect: 'none',
+                  }}
                 >
                   {step.description}
                 </StepLabel>

@@ -81,7 +81,15 @@ export default function Preferences() {
           </Stack>
         </Stack>
       </Paper>
-      <Box overflow='scroll' minWidth={500} px={4} py={5}>
+      <Box
+        sx={{
+          overflowX: 'hidden',
+          overflowY: 'auto',
+        }}
+        minWidth={500}
+        px={4}
+        py={5}
+      >
         {getPane(selectedPane)}
       </Box>
     </Box>

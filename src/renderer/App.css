@@ -50,3 +50,7 @@
        url('../fonts/source-code-pro-v18-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
        url('../fonts/source-code-pro-v18-latin-regular.svg#SourceCodePro') format('svg'); /* Legacy iOS */
 }
+
+:root {
+  color-scheme: light dark;
+}

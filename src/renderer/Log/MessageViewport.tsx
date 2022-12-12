@@ -102,6 +102,8 @@ export default function MessageViewport() {
       style={{
         height: '100%',
         width: '100%',
+        overflowX: 'auto',
+        overflowY: 'auto',
       }}
       totalCount={filtered.length}
       data={filtered}

@@ -67,7 +67,7 @@ export default function ConnectionProfileCard(
     <>
       <Card
         variant='outlined'
-        sx={{ width: 250, height: 220, overflow: 'scroll' }}
+        sx={{ width: 250, height: 220, overflow: 'hidden' }}
       >
         <CardContent>
           <Stack direction='row'>

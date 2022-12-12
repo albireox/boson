@@ -85,7 +85,7 @@ export default function PdfViewer(props: PdfViewerProps) {
       height='100%'
       sx={{ backgroundColor: '#fff' }}
       position='relative'
-      overflow='scroll'
+      overflow='auto'
     >
       <Document
         file={files[index]}
@@ -98,7 +98,7 @@ export default function PdfViewer(props: PdfViewerProps) {
           pageNumber={1}
           scale={scale}
           width={width}
-          customTextRenderer={renderHighlight as unknown as FakeTextLayerItem}
+          customTextRenderer={renderHighlight}
           renderAnnotationLayer
           renderTextLayer
         />
