@@ -42,14 +42,47 @@ export default function Snapshots() {
 
   const winSize = useWindowSize();
 
+  const getPath = React.useCallback(
+    (snap: string) => {
+      let path = `${httpHost}:${httpPort}/${snap}`;
+      if (~path.startsWith('http')) path = `http://${path}`;
+      return path;
+    },
+    [httpHost, httpPort]
+  );
+
+  React.useEffect(() => {
+    // Read last 10,000 replies and get all the keywords with
+    // snapshot or configuration_snapshot.
+
+    window.electron.tron
+      .getAllReplies(10000)
+      .then((replies) => {
+        const snapValues: string[] = [];
+        replies.forEach((reply) => {
+          reply.keywords.forEach((kw) => {
+            if (
+              kw.name === 'configuration_snapshot' ||
+              kw.name === 'snapshot'
+            ) {
+              snapValues.push(getPath(kw.values[0]));
+            }
+          });
+        });
+        setSnapshots(snapValues);
+        setIndex(snapValues.length - 1);
+        return true;
+      })
+      .catch(() => {});
+  }, [getPath]);
+
   React.useEffect(() => {
     const { configuration_snapshot, snapshot } = keywords;
 
     [configuration_snapshot, snapshot].forEach((snapKey) => {
       if (!snapKey) return;
 
-      let path = `${httpHost}:${httpPort}/${snapKey.values[0]}`;
-      if (~path.startsWith('http')) path = `http://${path}`;
+      const path = getPath(snapKey.values[0]);
 
       setSnapshots((snaps) => {
         if (snaps.includes(path)) {
@@ -59,7 +92,7 @@ export default function Snapshots() {
         return [...snaps, path];
       });
     });
-  }, [keywords, httpHost, httpPort]);
+  }, [keywords, httpHost, httpPort, getPath]);
 
   React.useEffect(() => {
     // This prevents an issue in which if we have scrolled while zoommed in and then set
