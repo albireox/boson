@@ -8,8 +8,8 @@
 import React from 'react';
 
 interface UseStoreOptions {
-  mode: 'normal' | 'default' | 'merge';
-  subscribe: boolean;
+  mode?: 'normal' | 'default' | 'merge';
+  subscribe?: boolean;
 }
 
 type ReturnType<T> = [T, (newValue: T) => void];
