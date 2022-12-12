@@ -20,13 +20,6 @@ interface PdfViewerProps {
   searchText?: string;
 }
 
-// Seems to be a problem with the typing of renderHighlight because
-// react-pdf v6 requires the function to return a string but the typing
-// seems to require a JSX.Element, so we force it.
-interface FakeTextLayerItem {
-  (layer: TextLayerItemInternal): JSX.Element;
-}
-
 export default function PdfViewer(props: PdfViewerProps) {
   const { files, index, scale, width, onLoadProgress, searchText } = props;
 
