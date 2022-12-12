@@ -8,7 +8,7 @@
 import { Box } from '@mui/system';
 import { DataGridPro, GridColDef, LicenseInfo } from '@mui/x-data-grid-pro';
 import React from 'react';
-import { useKeywords } from 'renderer/hooks';
+import { useKeywordContext } from 'renderer/hooks';
 import AxisOffsetInput from './AxisOffsetInput';
 
 LicenseInfo.setLicenseKey(
@@ -20,17 +20,7 @@ function Sep() {
 }
 
 export default function GuideTable() {
-  const keywords = useKeywords('cherno', [
-    'pid_ra',
-    'pid_dec',
-    'pid_rot',
-    'pid_focus',
-    'correction_applied',
-    'did_correct',
-    'acquisition_valid',
-    'astrometry_fit',
-    'focus_fit',
-  ]);
+  const keywords = useKeywordContext();
 
   const [pidRA, setPidRA] = React.useState([0.0, 0.0, 0.0]);
   const [pidDec, setPidDec] = React.useState([0.0, 0.0, 0.0]);

@@ -19,13 +19,11 @@ import {
 } from '@mui/material';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
-import { useKeywords } from 'renderer/hooks';
+import { useKeywordContext } from 'renderer/hooks';
 import hal9000logo from './images/hal9000.png';
 
 function PreloadedDesign() {
-  const { design_preloaded: designPreloadedKw } = useKeywords('jaeger', [
-    'design_preloaded',
-  ]);
+  const { design_preloaded: designPreloadedKw } = useKeywordContext();
 
   const theme = useTheme();
 
@@ -93,7 +91,7 @@ function PreloadedDesign() {
 }
 
 function DesignInput() {
-  const keywords = useKeywords('jaeger', ['configuration_loaded']);
+  const keywords = useKeywordContext();
 
   const [configurationID, setConfigurationID] = React.useState(-999);
   const [designID, setDesignID] = React.useState(-999);

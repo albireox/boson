@@ -13,7 +13,6 @@ import {
   IpcRendererEvent,
   MessageBoxOptions,
   MessageBoxReturnValue,
-  shell,
 } from 'electron';
 import Command from './tron/command';
 import { ConnectionStatus, Reply } from './tron/types';
@@ -86,22 +85,11 @@ const ElectronAPI = {
     unsubscribe() {
       return ipcRenderer.invoke('tron:unsubscribe');
     },
-    subscribeKeywords(
-      channel: string,
-      actor: string,
-      keywords: string[],
-      getKeys: boolean
-    ) {
-      return ipcRenderer.invoke(
-        'tron:subscribe-keywords',
-        channel,
-        actor,
-        keywords,
-        getKeys
-      );
+    subscribeKeywords(keywords: string[], getKeys: boolean) {
+      return ipcRenderer.invoke('tron:subscribe-keywords', keywords, getKeys);
     },
-    unsubscribeKeywords(channel: string) {
-      return ipcRenderer.invoke('tron:unsubscribe-keywords', channel);
+    unsubscribeKeywords() {
+      return ipcRenderer.invoke('tron:unsubscribe-keywords');
     },
     getAllReplies(): Promise<Reply[]> {
       return ipcRenderer.invoke('tron:all-replies');

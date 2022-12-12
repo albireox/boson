@@ -8,7 +8,7 @@
 import { LinearProgress } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
-import { useKeywords } from 'renderer/hooks';
+import { useKeywordContext } from 'renderer/hooks';
 import { useElapsedTime } from 'use-elapsed-time';
 
 export default function ExposureProgress() {
@@ -17,9 +17,7 @@ export default function ExposureProgress() {
   const [isUndefined, setIsUndefined] = React.useState(true);
   const [exposureTime, setExposureTime] = React.useState(15);
 
-  const { exposure_state: exposureState } = useKeywords('fliswarm', [
-    'exposure_state',
-  ]);
+  const { exposure_state: exposureState } = useKeywordContext();
 
   const { elapsedTime, reset } = useElapsedTime({
     isPlaying: isExposing,

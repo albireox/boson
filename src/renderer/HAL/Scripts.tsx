@@ -11,11 +11,11 @@ import { CommandStatus, ReplyCode } from 'main/tron/types';
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
+import { useKeywordContext } from 'renderer/hooks';
 import BorderLinearProgress from './Components/BorderLinealProgress';
-import { HALContext } from './HAL';
 
 export default function Scripts() {
-  const halKeywords = React.useContext(HALContext);
+  const halKeywords = useKeywordContext();
 
   const { available_scripts: availableScriptsKw, scrip_step: scripStepKw } =
     halKeywords;

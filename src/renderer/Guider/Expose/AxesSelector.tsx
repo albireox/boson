@@ -7,12 +7,10 @@
 
 import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import React from 'react';
-import { useKeywords } from 'renderer/hooks';
+import { useKeywordContext } from 'renderer/hooks';
 
 export default function AxesSelector() {
-  const { enabled_axes: enabledAxesKw } = useKeywords('cherno', [
-    'enabled_axes',
-  ]);
+  const { enabled_axes: enabledAxesKw } = useKeywordContext();
 
   const [enabledAxes, setEnabledAxes] = React.useState<string[]>([]);
 

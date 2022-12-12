@@ -8,7 +8,7 @@
 import { Chip, Tooltip } from '@mui/material';
 import { round } from 'lodash';
 import React from 'react';
-import { useKeywords } from 'renderer/hooks';
+import { useKeywordContext } from 'renderer/hooks';
 
 type ValidColors =
   | 'default'
@@ -24,11 +24,7 @@ export default function AstrometryFitChips() {
     astrometry_fit: astrometryFitKw,
     guide_rms: guideRMSKw,
     acquisition_valid: acquisitionValidKw,
-  } = useKeywords('cherno', [
-    'astrometry_fit',
-    'guide_rms',
-    'acquisition_valid',
-  ]);
+  } = useKeywordContext();
 
   const [FWHM, setFWHM] = React.useState('');
   const [FWHMColor, setFWHMColor] = React.useState<ValidColors>('default');

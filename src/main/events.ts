@@ -7,7 +7,7 @@
 
 import { exec } from 'child_process';
 import { randomUUID } from 'crypto';
-import { app, dialog, ipcMain, MessageBoxOptions } from 'electron';
+import { app, dialog, ipcMain, MessageBoxOptions, shell } from 'electron';
 import * as keytar from 'keytar';
 import { promisify } from 'util';
 import { createWindow } from './main';
@@ -47,23 +47,11 @@ export default function loadEvents() {
   );
   ipcMain.handle(
     'tron:subscribe-keywords',
-    async (
-      event,
-      channel: string,
-      actor: string,
-      keywords: string[],
-      getKeys: boolean
-    ) =>
-      tron.subscribeKeywordListener(
-        event.sender,
-        channel,
-        actor,
-        keywords,
-        getKeys
-      )
+    async (event, keywords: string[], getKeys: boolean) =>
+      tron.subscribeKeywordListener(event.sender, keywords, getKeys)
   );
-  ipcMain.handle('tron:unsubscribe-keywords', async (event, channel: string) =>
-    tron.unsubscribeKeywordListener(channel)
+  ipcMain.handle('tron:unsubscribe-keywords', async (event) =>
+    tron.unsubscribeKeywordListener(event.sender)
   );
   ipcMain.handle('tron:all-replies', async () => tron.getReplies());
   ipcMain.handle('tron:actors', async () => tron.getActors());
@@ -88,7 +76,7 @@ export default function loadEvents() {
       event.returnValue = config[val as keyof typeof config] ?? undefined;
     } else if (mode === 'merge') {
       const def = config[val as keyof typeof config] ?? {};
-      const user = store.get(val);
+      const user: { [key: string]: any } = store.get(val);
       event.returnValue = { ...def, ...user };
     } else {
       event.returnValue = undefined;

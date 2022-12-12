@@ -23,8 +23,8 @@ import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
-import { useStore } from 'renderer/hooks';
-import { ExposureTimeInput, HALContext } from '.';
+import { useKeywordContext, useStore } from 'renderer/hooks';
+import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import macros from './macros.json';
 import MacroStepper from './MacroStepper';
@@ -118,7 +118,7 @@ export default function Expose() {
 
   const [detail, setDetail] = React.useState(<span />);
 
-  const halKeywords = React.useContext(HALContext);
+  const halKeywords = useKeywordContext();
 
   const { exposure_state_apogee: apogeeStateKw } = halKeywords;
   const { exposure_state_boss: bossStateKw } = halKeywords;

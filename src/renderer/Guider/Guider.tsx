@@ -7,6 +7,7 @@
 
 import { Box, CssBaseline, Stack } from '@mui/material';
 import React from 'react';
+import { KeywordContext, useKeywords } from 'renderer/hooks';
 import GuiderContext, {
   defaultGuiderConfig,
   prepareGuiderContext,
@@ -34,36 +35,55 @@ export default function Guider() {
   const [config, setConfig] = React.useState(defaultGuiderConfig);
   const boundContext = prepareGuiderContext(config, setConfig);
 
+  const keywords = useKeywords([
+    'cherno.astrometry_fit',
+    'cherno.guide_rms',
+    'cherno.acquisition_valid',
+    'cherno.enabled_axes',
+    'cherno.guider_status',
+    'fliswarm.exposure_state',
+    'fliswarm.filename_bundle',
+    'cherno.pid_ra',
+    'cherno.pid_dec',
+    'cherno.pid_rot',
+    'cherno.pid_focus',
+    'cherno.correction_applied',
+    'cherno.did_correct',
+    'cherno.focus_fit',
+  ]);
+
   const ref = React.useRef<GuiderRefMap>({});
 
   return (
     <Box component='main' display='flex' width='100%'>
       <CssBaseline />
       <GuiderContext.Provider value={boundContext}>
-        <GuiderHeader guiderRef={ref} />
+        <KeywordContext.Provider value={keywords}>
+          <GuiderHeader guiderRef={ref} />
 
-        <Stack
-          direction='column'
-          height='100%'
-          width='100%'
-          pt={1}
-          pb={2}
-          px={3}
-          spacing={2.5}
-          sx={{ overflowY: 'auto' }}
-        >
-          <Box width='100%'>
-            <JS9Grid
-              guiderRef={(element: GuiderRefType | null) => {
-                if (element) {
-                  ref.current[element.name] = element;
-                }
-              }}
-            />
-          </Box>
-          <ExposeRow />
-          <GuideTable />
-        </Stack>
+          <Stack
+            direction='column'
+            height='100%'
+            width='100%'
+            pt={1}
+            pb={2}
+            px={3}
+            spacing={2.5}
+            sx={{ overflowY: 'auto' }}
+          >
+            <Box width='100%'>
+              <JS9Grid
+                guiderRef={(element: GuiderRefType | null) => {
+                  if (element) {
+                    ref.current[element.name] = element;
+                  }
+                }}
+              />
+            </Box>
+            <ExposeRow />
+            <GuideTable />
+          </Stack>
+        </KeywordContext.Provider>
       </GuiderContext.Provider>
     </Box>
   );

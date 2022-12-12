@@ -17,13 +17,13 @@ import PdfViewer from './PdfViewer';
 import StatusSnackBar from './StatusSnackbar';
 
 export default function Snapshots() {
-  const keywords = useKeywords('jaeger', [
-    'configuration_snapshot',
-    'snapshot',
-    'folded',
-    'locked',
-    'locked_by',
-    'fps_status',
+  const keywords = useKeywords([
+    'jaeger.configuration_snapshot',
+    'jaeger.snapshot',
+    'jaeger.folded',
+    'jaeger.locked',
+    'jaeger.locked_by',
+    'jaeger.fps_status',
   ]);
 
   const { locked, locked_by, fps_status, folded } = keywords;

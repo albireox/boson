@@ -7,12 +7,10 @@
 
 import { Box, Typography } from '@mui/material';
 import React from 'react';
-import { useKeywords } from 'renderer/hooks';
+import { useKeywordContext } from 'renderer/hooks';
 
 export default function ExposureNo() {
-  const { filename_bundle: filenameBundle } = useKeywords('fliswarm', [
-    'filename_bundle',
-  ]);
+  const { filename_bundle: filenameBundle } = useKeywordContext();
 
   const [exposureNo, setExposureNo] = React.useState(-1);
 

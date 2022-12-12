@@ -8,7 +8,7 @@
 import { Box } from '@mui/material';
 import { Stack } from '@mui/system';
 import React from 'react';
-import { useKeywords, useWindowSize } from 'renderer/hooks';
+import { useKeywordContext, useWindowSize } from 'renderer/hooks';
 import { GuiderRefType } from '../Guider';
 import JS9Frame from './JS9Frame';
 
@@ -17,9 +17,7 @@ export interface JS9GridProps {
 }
 
 export default function JS9Grid(props: JS9GridProps) {
-  const { filename_bundle: filenameBundle } = useKeywords('fliswarm', [
-    'filename_bundle',
-  ]);
+  const { filename_bundle: filenameBundle } = useKeywordContext();
 
   const { guiderRef } = props;
 

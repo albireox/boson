@@ -12,7 +12,7 @@ import React from 'react';
 import { CommandButton, SearchBox } from 'renderer/Components';
 import CommandIconButton from 'renderer/Components/CommandIconButton';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
-import { useKeywords } from 'renderer/hooks';
+import { useKeywordContext } from 'renderer/hooks';
 import { GuiderStatus } from './ExposureStatusChip';
 
 export default function ExposeButtons() {
@@ -20,13 +20,9 @@ export default function ExposeButtons() {
   const [isGuiding, setIsGuiding] = React.useState(false);
   const [isExposing, setIsExposing] = React.useState(false);
 
-  const { guider_status: guiderStatus } = useKeywords('cherno', [
-    'guider_status',
-  ]);
-
-  const { exposure_state: exposureState } = useKeywords('fliswarm', [
-    'exposure_state',
-  ]);
+  const guiderKeywords = useKeywordContext();
+  const { guider_status: guiderStatus, exposure_state: exposureState } =
+    guiderKeywords;
 
   React.useEffect(() => {
     if (!guiderStatus) return;

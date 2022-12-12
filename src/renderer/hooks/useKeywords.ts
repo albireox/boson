@@ -10,18 +10,16 @@
 import { ConnectionStatus, Keyword } from 'main/tron/types';
 import React from 'react';
 import useConnectionStatus from './useConnectionStatus';
+import useEventListener from './useEventListener';
 
 interface ReturnType {
   [key: string]: Keyword;
 }
 export default function useKeywords(
-  actor: string,
   keywords: string[],
   getKeys = true
 ): ReturnType {
-  const [channel] = React.useState<string>(
-    `tron-keywords-${window.electron.tools.getUUID()}`
-  );
+  const channel = 'tron-keywords';
 
   const connectionStatus = useConnectionStatus();
 
@@ -29,7 +27,7 @@ export default function useKeywords(
     Object.fromEntries(keywords.map((k) => [k, undefined]))
   );
 
-  const ref = React.useRef({ actor, keywords, getKeys });
+  const ref = React.useRef({ keywords, getKeys });
 
   const handleEvent = React.useCallback((keyword: Keyword) => {
     const update: { [key: string]: any } = {};
@@ -37,27 +35,16 @@ export default function useKeywords(
     setKeys((previous) => ({ ...previous, ...update }));
   }, []);
 
+  useEventListener(channel, handleEvent);
+
   React.useEffect(() => {
-    if (!(connectionStatus & ConnectionStatus.Ready)) return () => {};
+    if (!(connectionStatus & ConnectionStatus.Ready)) return;
 
     window.electron.tron.subscribeKeywords(
-      channel,
-      ref.current.actor,
       ref.current.keywords,
       ref.current.getKeys
     );
-
-    window.electron.ipcRenderer.on(channel, handleEvent);
-
-    const unload = () => {
-      window.electron.tron.unsubscribeKeywords(channel);
-    };
-    window.addEventListener('unload', unload);
-
-    return function cleanup() {
-      unload();
-    };
-  }, [channel, handleEvent, connectionStatus]);
+  }, [channel, connectionStatus]);
 
   if (keywords.length === 0) return {};
 

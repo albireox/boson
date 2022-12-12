@@ -7,7 +7,7 @@
 
 import { Chip, Tooltip } from '@mui/material';
 import React from 'react';
-import { useKeywords } from 'renderer/hooks';
+import { useKeywordContext } from 'renderer/hooks';
 
 export enum GuiderStatus {
   IDLE = 1 << 0,
@@ -29,9 +29,7 @@ type ValidColors =
   | 'warning';
 
 export default function ExposureStatusChip() {
-  const { guider_status: guiderStatus } = useKeywords('cherno', [
-    'guider_status',
-  ]);
+  const { guider_status: guiderStatus } = useKeywordContext();
 
   const [status, setStatus] = React.useState('Idle');
   const [color, setColor] = React.useState<ValidColors>('default');

@@ -18,8 +18,8 @@ import {
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
-import { useKeywords } from 'renderer/hooks';
-import { ExposureTimeInput } from '.';
+import { useKeywordContext } from 'renderer/hooks';
+import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import macros from './macros.json';
 import MacroStepper from './MacroStepper';
@@ -37,10 +37,8 @@ export default function GotoField() {
 
   const isRunning = useIsMacroRunning(macroName);
 
-  const { configuration_loaded: configurationLoadedKw } = useKeywords(
-    'jaeger',
-    ['configuration_loaded']
-  );
+  const halKeywords = useKeywordContext();
+  const { configuration_loaded: configurationLoadedKw } = halKeywords;
 
   const updateCommandString = (stages: string[]) => {
     if (stages.length === 0) {

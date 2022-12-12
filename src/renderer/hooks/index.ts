@@ -7,6 +7,7 @@
 
 /* eslint-disable import/prefer-default-export */
 
+export { KeywordContext, useKeywordContext } from './keywordContext';
 export { default as useConnectionStatus } from './useConnectionStatus';
 export { default as useEventListener } from './useEventListener';
 export { default as useKeywords } from './useKeywords';

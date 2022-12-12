@@ -42,9 +42,9 @@ export default function FocusPlot() {
   const yBuffer = 0.5;
 
   const theme = useTheme();
-  const { focus_data: focusData, focus_fit: focusFit } = useKeywords('cherno', [
-    'focus_data',
-    'focus_fit',
+  const { focus_data: focusData, focus_fit: focusFit } = useKeywords([
+    'cherno.focus_data',
+    'cherno.focus_fit',
   ]);
 
   React.useEffect(() => {

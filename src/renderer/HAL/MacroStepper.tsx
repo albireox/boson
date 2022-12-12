@@ -10,7 +10,7 @@
 import { Box, Step, StepLabel, Stepper, StepperProps } from '@mui/material';
 import { capitalize } from 'lodash';
 import React from 'react';
-import { HALContext } from '.';
+import { useKeywordContext } from 'renderer/hooks';
 import macroData from './macros.json';
 
 export type MacroStepperProps = {
@@ -101,7 +101,8 @@ export default function MacroStepper({
   macroName,
   ...props
 }: MacroStepperProps) {
-  const halKeywords = React.useContext(HALContext);
+  const halKeywords = useKeywordContext();
+
   const thisMacroData = (macroData as IMacroData)[macroName];
 
   const initialStageState: StageState[] = [];

@@ -5,10 +5,12 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { useKeywordValue } from 'renderer/hooks';
+import { useKeywordContext } from 'renderer/hooks';
 
 export default function useIsMacroRunning(macroName: string) {
-  const runningMacros = useKeywordValue<string>('hal', 'running_macros');
+  const { 'hal.runningMacros': runningMacros } = useKeywordContext();
 
-  return runningMacros !== undefined && runningMacros.includes(macroName);
+  return (
+    runningMacros !== undefined && runningMacros.values.includes(macroName)
+  );
 }

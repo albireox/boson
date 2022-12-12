@@ -5,16 +5,9 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  Box,
-  CssBaseline,
-  InputAdornment,
-  Stack,
-  TextField,
-} from '@mui/material';
-import { Keyword } from 'main/tron/types';
+import { Box, CssBaseline, Stack } from '@mui/material';
 import React from 'react';
-import { useKeywords } from 'renderer/hooks';
+import { KeywordContext, useKeywords } from 'renderer/hooks';
 import ApogeeDomeFlat from './ApogeeDomeFlat';
 import Expose from './Expose';
 import GotoField from './GotoField';
@@ -22,47 +15,15 @@ import HALHeader from './Header';
 import hal9000logo from './images/hal9000.png';
 import Scripts from './Scripts';
 
-export const HALContext = React.createContext<{ [key: string]: Keyword }>({});
-
-export type ExposureTimeInputType = {
-  label: string;
-  value: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-export const ExposureTimeInput = ({
-  label,
-  value,
-  onChange,
-}: ExposureTimeInputType) => (
-  <TextField
-    label={label}
-    size='small'
-    type='number'
-    InputProps={{
-      endAdornment: <InputAdornment position='end'>s</InputAdornment>,
-    }}
-    variant='standard'
-    value={value}
-    onChange={onChange}
-    InputLabelProps={{
-      shrink: true,
-    }}
-    sx={{
-      width: '80px',
-      '& .MuiInputBase-root': { marginTop: 1 },
-    }}
-  />
-);
-
-export default function HALView() {
-  const halKeywords = useKeywords('hal', [
-    'running_macros',
-    'stage_status',
-    'stages',
-    'available_scripts',
-    'exposure_state_apogee',
-    'exposure_state_boss',
+export default function HAL() {
+  const halKeywords = useKeywords([
+    'hal.running_macros',
+    'hal.stage_status',
+    'hal.stages',
+    'hal.available_scripts',
+    'hal.exposure_state_apogee',
+    'hal.exposure_state_boss',
+    'jaeger.configuration_loaded',
   ]);
 
   React.useEffect(() => {
@@ -70,7 +31,7 @@ export default function HALView() {
   }, []);
 
   return (
-    <HALContext.Provider value={halKeywords}>
+    <KeywordContext.Provider value={halKeywords}>
       <Box
         id='background-image'
         sx={{
@@ -104,6 +65,6 @@ export default function HALView() {
           <Scripts />
         </Stack>
       </Box>
-    </HALContext.Provider>
+    </KeywordContext.Provider>
   );
 }

@@ -8,11 +8,8 @@
 import React from 'react';
 import useKeywords from './useKeywords';
 
-export default function useKeywordValue<T = unknown>(
-  actor: string,
-  keyword: string
-) {
-  const keywords = useKeywords(actor, [keyword]);
+export default function useKeywordValue<T = unknown>(keyword: string) {
+  const keywords = useKeywords([keyword]);
 
   const [values, setValues] = React.useState<T[] | undefined>(undefined);
 
