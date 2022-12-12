@@ -157,7 +157,8 @@ function JS9FrameInner(
         // the scale, colormap, etc. If the guider config changes, this
         // will be called again but the image will only be redisplayed
         // (with the new parameters), not redownloaded.
-        window.JS9.CloseImage({ display, clear: false });
+        window.JS9.cleanupFITSFile({ display });
+        window.JS9.CloseImage({ display, clear: true });
         window.JS9.Load(snapURL, { onload: updateParams }, { display });
       } catch (err) {
         setPath(null);
@@ -185,10 +186,10 @@ function JS9FrameInner(
   React.useEffect(() => {
     if (!filenameBundle || !host || !port) {
       setPath(null);
-      return;
+      return () => {};
     }
 
-    let filename;
+    let filename: string;
     filenameBundle.values.some((fn: string) => {
       if (fn.includes(display)) {
         filename = fn;
@@ -197,7 +198,10 @@ function JS9FrameInner(
       return false;
     });
 
-    updateImage(filename ?? null);
+    const delay = parseInt(display[3], 10) * 100;
+    const timeout = setTimeout(() => updateImage(filename ?? null), delay);
+
+    return () => clearTimeout(timeout);
   }, [filenameBundle, host, port, display, updateImage]);
 
   return (
