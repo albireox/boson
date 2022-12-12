@@ -15,7 +15,8 @@ import {
   MessageBoxReturnValue,
 } from 'electron';
 import Command from './tron/command';
-import { ConnectionStatus, Reply } from './tron/types';
+import Reply from './tron/reply';
+import { ConnectionStatus } from './tron/types';
 
 const ElectronAPI = {
   ipcRenderer: {
@@ -91,8 +92,8 @@ const ElectronAPI = {
     unsubscribeKeywords() {
       return ipcRenderer.invoke('tron:unsubscribe-keywords');
     },
-    getAllReplies(): Promise<Reply[]> {
-      return ipcRenderer.invoke('tron:all-replies');
+    getAllReplies(last?: number): Promise<Reply[]> {
+      return ipcRenderer.invoke('tron:all-replies', last);
     },
     getActors(): Promise<string[]> {
       return ipcRenderer.invoke('tron:actors');

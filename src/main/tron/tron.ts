@@ -328,8 +328,11 @@ export class TronConnection {
     });
   }
 
-  getReplies() {
-    return this.replies;
+  getReplies(last?: number) {
+    if (!last) {
+      return this.replies;
+    }
+    return this.replies.slice(-last);
   }
 
   getActors() {
