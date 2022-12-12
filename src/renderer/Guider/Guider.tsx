@@ -7,7 +7,7 @@
 
 import { Box, CssBaseline, Stack } from '@mui/material';
 import React from 'react';
-import { KeywordContext, useKeywords } from 'renderer/hooks';
+import { KeywordContext, useKeywords, useStore } from 'renderer/hooks';
 import GuiderContext, {
   defaultGuiderConfig,
   prepareGuiderContext,
@@ -35,6 +35,8 @@ export default function Guider() {
   const [config, setConfig] = React.useState(defaultGuiderConfig);
   const boundContext = prepareGuiderContext(config, setConfig);
 
+  const [refreshInterval] = useStore<number>('guider.refreshInterval');
+
   const keywords = useKeywords([
     'cherno.astrometry_fit',
     'cherno.guide_rms',
@@ -55,15 +57,18 @@ export default function Guider() {
   const ref = React.useRef<GuiderRefMap>({});
 
   React.useEffect(() => {
-    // Reload window every 10 minutes to prevent JS9 failing GC from using
+    // Reload window every N minutes to prevent JS9 failing GC from using
     // too much memory.
+
+    if (refreshInterval === 0) return () => {};
+
     const interval = setInterval(() => {
       window.electron.app.reloadWindow();
-    }, 10 * 60 * 1000);
+    }, refreshInterval * 60 * 1000);
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [refreshInterval]);
 
   return (
     <Box component='main' display='flex' width='100%'>

@@ -24,7 +24,8 @@
     "colormap": "heat",
     "scale": "linear",
     "scalelim": "zscale",
-    "titlebarStatus": true
+    "titlebarStatus": true,
+    "refreshInterval": 10
   },
   "maxLogMessages": 50000,
   "updateChannel": "beta",

@@ -16,6 +16,11 @@ import user_config from './user.json';
 const store = new Store({
   defaults: user_config,
   watch: true,
+  migrations: {
+    '>=0.2.0-beta.8': (st) => {
+      st.set('guider.refreshInterval', 20);
+    },
+  },
 });
 
 const subscriptions = new Map<string, () => EventEmitter>();
