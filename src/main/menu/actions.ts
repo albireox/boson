@@ -55,3 +55,12 @@ export function clearLogs() {
 
   tron.clearReplies();
 }
+
+export function reloadWindow() {
+  const allWindows = BrowserWindow.getAllWindows();
+  const focusedWindow = allWindows.find((win) => win.isFocused());
+
+  if (!focusedWindow) return;
+
+  focusedWindow.reload();
+}

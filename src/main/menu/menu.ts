@@ -2,7 +2,12 @@
 
 import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
 import { createWindow } from '../main';
-import { checkForUpdates, clearLogs, saveWindows } from './actions';
+import {
+  checkForUpdates,
+  clearLogs,
+  reloadWindow,
+  saveWindows,
+} from './actions';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -72,6 +77,10 @@ export default class MenuBuilder {
         {
           label: 'Save window positions',
           click: saveWindows,
+        },
+        {
+          label: 'Reload window',
+          click: reloadWindow,
         },
         {
           label: 'Clear logs',
