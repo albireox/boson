@@ -9,48 +9,58 @@ import { LinearProgress } from '@mui/material';
 import { Box } from '@mui/system';
 import React from 'react';
 import { useKeywordContext } from 'renderer/hooks';
-import { useElapsedTime } from 'use-elapsed-time';
 
 export default function ExposureProgress() {
   const [isExposing, setIsExposing] = React.useState(false);
   const [isReading, setIsReading] = React.useState(false);
   const [isUndefined, setIsUndefined] = React.useState(true);
   const [exposureTime, setExposureTime] = React.useState(15);
+  const [elapsedTime, setElapsedTime] = React.useState(15);
 
   const { exposure_state: exposureState } = useKeywordContext();
 
-  const { elapsedTime, reset } = useElapsedTime({
-    isPlaying: isExposing,
-    duration: exposureTime,
-    updateInterval: 0.1,
-    onComplete: () => {
-      reset();
-    },
-  });
+  const elapsedTimeInterval = React.useRef<NodeJS.Timer | null>(null);
+  const currentState = React.useRef<string>('idle');
 
   React.useEffect(() => {
-    if (exposureState && exposureState.values[0].startsWith('gfa')) {
-      const currentState = exposureState.values[2];
-      const expTime: number = exposureState.values[4];
-      const stackTotal: number = exposureState.values[7];
+    if (!isExposing) {
+      setElapsedTime(0);
+      elapsedTimeInterval.current && clearInterval(elapsedTimeInterval.current);
+      return;
+    }
 
-      if (isUndefined && currentState === 'idle') {
+    elapsedTimeInterval.current = setInterval(
+      () => setElapsedTime((current) => current + 0.2),
+      200
+    );
+  }, [isExposing, exposureTime]);
+
+  React.useEffect(() => {
+    if (exposureState && exposureState.values[1].startsWith('gfa')) {
+      if (isUndefined && exposureState.values[2] === 'idle') {
         setIsUndefined(false);
       }
 
-      if (currentState === 'integrating' && !isExposing) {
+      if (currentState.current === exposureState.values[2]) return;
+
+      // eslint-disable-next-line prefer-destructuring
+      currentState.current = exposureState.values[2];
+
+      const expTime: number = exposureState.values[4];
+      const stackTotal: number = exposureState.values[7];
+
+      if (currentState.current === 'integrating' && !isExposing) {
         setIsExposing(true);
         setExposureTime(expTime * stackTotal);
-        reset();
-      } else if (currentState === 'reading') {
+      } else if (currentState.current === 'reading') {
         setIsExposing(false);
         setIsReading(true);
-      } else if (currentState === 'idle') {
+      } else if (currentState.current === 'idle') {
         setIsExposing(false);
         setIsReading(false);
       }
     }
-  }, [exposureState, isExposing, isReading, isUndefined, reset]);
+  }, [exposureState, isExposing, isReading, isUndefined]);
 
   return isExposing || isReading ? (
     <LinearProgress
