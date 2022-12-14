@@ -51,7 +51,7 @@ const IOSSwitch = styled((props: SwitchProps) => (
         opacity: 0.5,
       },
       '&:hover': {
-        backgroundColor: theme.palette.mode === 'light' && 'white',
+        backgroundColor: 'white',
       },
     },
     '&:hover': {
