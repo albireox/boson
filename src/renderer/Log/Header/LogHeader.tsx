@@ -6,11 +6,14 @@
  */
 
 import { Divider, Stack, Typography } from '@mui/material';
+import React from 'react';
 import { BosonHeader } from 'renderer/Components';
+import { ViewportRefType } from '..';
 import { useLogConfig } from '../hooks';
 import ActorButton from './ActorButton';
 import LogSearchBox from './LogSearchBox';
 import ReplyCodeButton from './ReplyCodeButton';
+import ToBottomButton from './ToBottomButton';
 import WrapButton from './WrapButton';
 
 interface ActorInfoProps {
@@ -43,10 +46,11 @@ function ActorInfo(props: ActorInfoProps) {
 
 export interface LogHeaderProps {
   logId: number;
+  viewportRef: React.RefObject<ViewportRefType>;
 }
 
 export default function LogHeader(props: LogHeaderProps) {
-  const { logId } = props;
+  const { logId, viewportRef } = props;
 
   const { config } = useLogConfig();
   const { actors } = config;
@@ -88,6 +92,7 @@ export default function LogHeader(props: LogHeaderProps) {
           sx={{ height: '60%' }}
         />
         <WrapButton />
+        <ToBottomButton viewportRef={viewportRef} />
         <LogSearchBox />
       </Stack>
     </BosonHeader>

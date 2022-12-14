@@ -10,10 +10,15 @@ import Reply from 'main/tron/reply';
 import React from 'react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { useEventListener, usePrevious } from 'renderer/hooks';
+import { ViewportRefType } from '.';
 import { useLogConfig, useReplyFilter } from './hooks';
 import Message from './Message';
 
-export default function MessageViewport() {
+function MessageViewportInner(
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  props: {},
+  ref: React.ForwardedRef<ViewportRefType>
+) {
   const theme = useTheme();
 
   const [filtered, setFiltered] = React.useState<Reply[]>([]);
@@ -51,6 +56,10 @@ export default function MessageViewport() {
 
   // Emitted when the user click on clear replies on the menu bar.
   useEventListener('tron:clear-replies', () => setFiltered([]), true);
+
+  React.useImperativeHandle(ref, () => ({
+    gotoBottom: () => virtuoso.current?.scrollToIndex(nFiltered.current),
+  }));
 
   React.useEffect(() => {
     // Get all replies when something changes. Since this effect depends on
@@ -130,3 +139,6 @@ export default function MessageViewport() {
     />
   );
 }
+
+const MessageViewport = React.forwardRef<ViewportRefType>(MessageViewportInner);
+export default MessageViewport;

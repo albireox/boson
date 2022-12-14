@@ -7,4 +7,8 @@
 
 import Log from './Log';
 
+export type ViewportRefType = {
+  gotoBottom: () => void;
+};
+
 export default Log;
