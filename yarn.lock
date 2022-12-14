@@ -5012,7 +5012,6 @@ __metadata:
     typescript: ^4.9.4
     unique-names-generator: ^4.7.1
     url-loader: ^4.1.1
-    use-elapsed-time: ^3.0.4
     webpack: ^5.75.0
     webpack-bundle-analyzer: ^4.7.0
     webpack-cli: ^5.0.1
@@ -14587,15 +14586,6 @@ __metadata:
     querystringify: ^2.1.1
     requires-port: ^1.0.0
   checksum: fbdba6b1d83336aca2216bbdc38ba658d9cfb8fc7f665eb8b17852de638ff7d1a162c198a8e4ed66001ddbf6c9888d41e4798912c62b4fd777a31657989f7bdf
-  languageName: node
-  linkType: hard
-
-"use-elapsed-time@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "use-elapsed-time@npm:3.0.4"
-  peerDependencies:
-    react: ">=16.8.0"
-  checksum: 8608eab2f1eb4ce7404c212548b3eb8f03446ca71850b4521a6018f118b46fb7ecef987ba0662559164de499ad5cff85dd5e2a48824432696d76af8ffdf9af27
   languageName: node
   linkType: hard
 
