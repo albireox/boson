@@ -35,7 +35,9 @@ export class TronConnection {
   private cmdsCommands: Map<number, [number, string, string, string]> =
     new Map();
 
-  private loggers: Map<number, WebContents> = new Map();
+  private loggers: Map<number, WebContents> = new Map([]);
+
+  private buffer: Reply[] = [];
 
   private keywordListeners: Map<WebContents, Set<string>> = new Map();
 
@@ -80,6 +82,8 @@ export class TronConnection {
     );
 
     this.initialiseKeywords();
+
+    setInterval(() => this.emitToLoggers(), 500);
   }
 
   private initialiseKeywords() {
@@ -322,7 +326,7 @@ export class TronConnection {
 
       this.commands.get(reply.commandId)?.addReply(reply);
 
-      this.loggers.forEach((win) => win.send('tron:received-reply', reply));
+      this.buffer.push(reply);
 
       this.processReply(reply);
     });
@@ -337,6 +341,16 @@ export class TronConnection {
 
   getActors() {
     return this.actors;
+  }
+
+  emitToLoggers() {
+    if (this.buffer.length === 0) return;
+
+    this.loggers.forEach(
+      (win) => win && win.send('tron:received-replies', this.buffer)
+    );
+
+    this.buffer.length = 0;
   }
 
   subscribeWindow(sender: WebContents) {

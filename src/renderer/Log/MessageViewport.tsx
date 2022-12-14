@@ -8,17 +8,19 @@
 import { useTheme } from '@mui/material';
 import Reply from 'main/tron/reply';
 import React from 'react';
-import { Virtuoso } from 'react-virtuoso';
-import { useEventListener } from 'renderer/hooks';
+import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import { useEventListener, usePrevious } from 'renderer/hooks';
 import { useLogConfig, useReplyFilter } from './hooks';
 import Message from './Message';
 
 export default function MessageViewport() {
   const theme = useTheme();
 
-  const [replies, setReplies] = React.useState<Reply[]>([]);
-  const [buffer, setBuffer] = React.useState<Reply[]>([]);
   const [filtered, setFiltered] = React.useState<Reply[]>([]);
+
+  // const nFiltered = usePrevious(filtered.length);
+
+  const virtuoso = React.useRef<VirtuosoHandle>(null);
 
   const { config } = useLogConfig();
 
@@ -26,79 +28,60 @@ export default function MessageViewport() {
 
   const maxLogMessages: number = window.electron.store.get('maxLogMessages');
 
-  const addReplies = React.useCallback((reply: Reply) => {
-    setReplies((old) => [...old, reply]);
-    setBuffer((old) => [...old, reply]);
-  }, []);
+  const nFiltered = usePrevious<number>(filtered.length);
 
-  useEventListener('tron:received-reply', addReplies, true);
-
-  useEventListener(
-    'tron:clear-replies',
-    () => {
-      setReplies([]);
-      setFiltered([]);
+  const addReplies = React.useCallback(
+    (newReplies: Reply[], clear = false) => {
+      if (clear) {
+        setFiltered(filterReplies(newReplies));
+      } else {
+        setFiltered((old) => [...old, ...filterReplies(newReplies)]);
+      }
     },
-    true
+    [filterReplies]
   );
 
-  React.useEffect(() => {
+  const getAllReplies = React.useCallback(() => {
     window.electron.tron
-      .getAllReplies()
-      .then((reps) => {
-        setReplies(reps);
-        setBuffer(reps);
-        return true;
-      })
+      .getAllReplies(maxLogMessages)
+      .then((reps) => addReplies(reps, true))
       .catch(() => {});
+  }, [addReplies, maxLogMessages]);
 
+  useEventListener('tron:received-replies', addReplies, true);
+
+  useEventListener('tron:clear-replies', () => setFiltered([]), true);
+
+  React.useEffect(() => {
+    getAllReplies();
     window.electron.tron.subscribe();
 
     const unload = () => window.electron.tron.unsubscribe();
-
     window.addEventListener('unload', unload);
 
     return () => {
       unload();
     };
-  }, []);
+  }, [getAllReplies]);
 
   React.useEffect(() => {
-    if (buffer.length === 0) return () => {};
-
-    const tmpFiltered = filterReplies(buffer);
-    if (tmpFiltered.length === 0) return () => {};
-
-    setFiltered((old) => [...old, ...tmpFiltered]);
-    setBuffer([]);
-
-    return () => {};
-  }, [filterReplies, buffer]);
-
-  React.useEffect(() => {
-    setFiltered([]);
-    setBuffer((b) => [...replies, ...b]);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [config]);
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setReplies((reps) => {
-        setFiltered([]);
-        setBuffer((b) => [...reps.slice(-maxLogMessages), ...b]);
-
-        return reps.slice(-maxLogMessages);
-      });
-    }, 10 * 60 * 1000);
-
+    const interval = setInterval(getAllReplies, 10 * 60 * 1000);
     return () => clearInterval(interval);
+  }, [getAllReplies]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      virtuoso.current?.scrollToIndex(nFiltered.current);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+
+    // Although it's included here, nFiltered won't trigger a re-render.
+  }, [nFiltered]);
 
   return (
     <Virtuoso
+      ref={virtuoso}
       style={{
         height: '100%',
         width: '100%',
