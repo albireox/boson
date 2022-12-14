@@ -18,8 +18,6 @@ export default function MessageViewport() {
 
   const [filtered, setFiltered] = React.useState<Reply[]>([]);
 
-  // const nFiltered = usePrevious(filtered.length);
-
   const virtuoso = React.useRef<VirtuosoHandle>(null);
 
   const { config } = useLogConfig();
