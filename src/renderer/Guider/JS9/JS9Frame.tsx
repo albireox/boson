@@ -186,22 +186,16 @@ function JS9FrameInner(
   React.useEffect(() => {
     if (!filenameBundle || !host || !port) {
       setPath(null);
-      return () => {};
+      return;
     }
 
-    let filename: string;
     filenameBundle.values.some((fn: string) => {
       if (fn.includes(display)) {
-        filename = fn;
+        updateImage(fn ?? null);
         return true;
       }
       return false;
     });
-
-    const delay = parseInt(display[3], 10) * 100;
-    const timeout = setTimeout(() => updateImage(filename ?? null), delay);
-
-    return () => clearTimeout(timeout);
   }, [filenameBundle, host, port, display, updateImage]);
 
   return (
