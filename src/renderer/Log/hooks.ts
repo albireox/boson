@@ -28,7 +28,7 @@ export function useActors(): string[] {
 
   React.useEffect(() => {
     updateActors();
-    const interval = setInterval(updateActors, 30);
+    const interval = setInterval(updateActors, 1000);
 
     return () => clearInterval(interval);
   }, [updateActors]);
