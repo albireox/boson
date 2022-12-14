@@ -12,7 +12,6 @@ import { ConnectionStatus } from 'main/tron/types';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useConnectionStatus, useStore } from 'renderer/hooks';
-import { useElapsedTime } from 'use-elapsed-time';
 import icon from '../../../assets/icon.png';
 
 type StatusTextProps = { color?: string | undefined } & React.PropsWithChildren;
@@ -40,10 +39,7 @@ type ElapsedTimeProps = {
 function ElapsedTime(props: ElapsedTimeProps) {
   const { isPlaying, initialTime } = props;
 
-  const { elapsedTime, reset } = useElapsedTime({
-    isPlaying,
-    updateInterval: 1,
-  });
+  const [elapsedTime, setElapsedTime] = React.useState(0);
 
   const formatElapsedTime = React.useCallback((elap_: number) => {
     let elap = elap_;
@@ -65,8 +61,16 @@ function ElapsedTime(props: ElapsedTimeProps) {
   }, []);
 
   React.useEffect(() => {
-    reset((Date.now() - initialTime) / 1000);
-  }, [reset, initialTime]);
+    setElapsedTime((Date.now() - initialTime) / 1000);
+  }, [initialTime]);
+
+  React.useEffect(() => {
+    const interval = setInterval(
+      () => setElapsedTime((current) => current + 1),
+      1000
+    );
+    return () => clearInterval(interval);
+  }, []);
 
   return <span>{formatElapsedTime(isPlaying ? elapsedTime : 0)}</span>;
 }
@@ -215,7 +219,6 @@ const MainStatus = () => {
               <br />
               <StatusText>Host: {hostPort}</StatusText>
               <br />
-              {/* <StatusText>Elapsed: {formatElapsedTime(elapsedTime)}</StatusText> */}
               <StatusText>
                 Elapsed:{' '}
                 <ElapsedTime
