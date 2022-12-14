@@ -27,6 +27,9 @@
     "titlebarStatus": true,
     "refreshInterval": 10
   },
+  "hal": {
+    "useAutoMode": false
+  },
   "maxLogMessages": 50000,
   "updateChannel": "beta",
   "profiles": {}

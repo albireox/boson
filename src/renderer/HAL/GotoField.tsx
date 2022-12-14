@@ -18,7 +18,7 @@ import {
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
-import { useKeywordContext } from 'renderer/hooks';
+import { useKeywordContext, useStore } from 'renderer/hooks';
 import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import macros from './macros.json';
@@ -28,10 +28,13 @@ import useIsMacroRunning from './useIsMacroRunning';
 export default function GotoField() {
   const macroName = 'goto_field';
 
+  const [useAutoMode] = useStore<boolean>('hal.useAutoMode');
+
   const [guiderTime, setGuiderTime] = React.useState(
     macros.goto_field.defaults.guider_time.toString()
   );
   const [fixedAltAz, setFixedAltAz] = React.useState(false);
+  const [hartmann, setHartmann] = React.useState(false);
   const [keepOffsets, setKeepOffsets] = React.useState(true);
   const [commandString, setCommandString] = React.useState('hal goto-field');
 
@@ -40,16 +43,18 @@ export default function GotoField() {
   const halKeywords = useKeywordContext();
   const { configuration_loaded: configurationLoadedKw } = halKeywords;
 
-  const updateCommandString = (stages: string[]) => {
+  const updateCommandString = React.useCallback((stages: string[]) => {
     if (stages.length === 0) {
       setCommandString('hal goto-field');
+    } else if (stages.includes('auto')) {
+      setCommandString('hal goto-field --auto');
     } else {
       const joinedStages = stages.join(',');
       setCommandString(`hal goto-field -s ${joinedStages}`);
     }
-  };
+  }, []);
 
-  const getCommandString = () => {
+  const getCommandString = React.useCallback(() => {
     let cmdString = `${commandString} --guider-time ${guiderTime || 15}`;
     if (fixedAltAz) {
       cmdString += ' --fixed-altaz';
@@ -59,10 +64,13 @@ export default function GotoField() {
     } else {
       cmdString += ' --no-keep-offsets';
     }
+    if (hartmann) {
+      cmdString += ' --with-hartmann';
+    }
     return cmdString;
-  };
+  }, [guiderTime, fixedAltAz, keepOffsets, hartmann, commandString]);
 
-  const checkConfiguration = async () => {
+  const checkConfiguration = React.useCallback(async () => {
     // If the design is cloned, show a confirmation dialog.
 
     if (!configurationLoadedKw) {
@@ -90,7 +98,7 @@ export default function GotoField() {
     }
 
     return true;
-  };
+  }, [configurationLoadedKw]);
 
   return (
     <Paper variant='outlined'>
@@ -106,6 +114,7 @@ export default function GotoField() {
           <Typography variant='h6'>Goto Field</Typography>
           <MacroStageSelect
             stages={macros.goto_field.stages}
+            autoMode={useAutoMode}
             maxWidth={200}
             minWidth={100}
             onStagesSelected={updateCommandString}
@@ -117,15 +126,25 @@ export default function GotoField() {
           />
           <FormControlLabel
             control={
-              <Checkbox
-                sx={{ pl: 0 }}
-                checked={fixedAltAz}
-                disableRipple
-                onChange={(e) => setFixedAltAz(e.target.checked)}
-                size='small'
-              />
+              useAutoMode ? (
+                <Checkbox
+                  sx={{ pl: 0 }}
+                  checked={hartmann}
+                  disableRipple
+                  onChange={(e) => setHartmann(e.target.checked)}
+                  size='small'
+                />
+              ) : (
+                <Checkbox
+                  sx={{ pl: 0 }}
+                  checked={fixedAltAz}
+                  disableRipple
+                  onChange={(e) => setFixedAltAz(e.target.checked)}
+                  size='small'
+                />
+              )
             }
-            label='Fix Alt/Az'
+            label={useAutoMode ? 'Hartmann' : 'Fix Alt/Az'}
           />
           <FormControlLabel
             control={

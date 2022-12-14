@@ -11,6 +11,7 @@ import { Stack } from '@mui/system';
 import * as React from 'react';
 import { AdvancedPane, ConnectionPane, InterfacePane } from './Panes';
 import GuiderPane from './Panes/Tools/GuiderPane';
+import HALPane from './Panes/Tools/HALPane';
 import LogWindowPane from './Panes/Tools/LogWindowPane';
 import { MenuItem, Title } from './typography';
 
@@ -31,6 +32,8 @@ export default function Preferences() {
         return <LogWindowPane />;
       case 'guider':
         return <GuiderPane />;
+      case 'HAL':
+        return <HALPane />;
       default:
         return null;
     }
@@ -78,6 +81,7 @@ export default function Preferences() {
             <Title>TOOLS</Title>
             <MenuItemPreferences title='Log window' name='log_window' />
             <MenuItemPreferences title='Guider' name='guider' />
+            <MenuItemPreferences title='HAL' name='HAL' />
           </Stack>
         </Stack>
       </Paper>

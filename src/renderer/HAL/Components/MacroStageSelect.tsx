@@ -21,26 +21,40 @@ type MacroStageSelectProps = {
   maxWidth?: number;
   minWidth?: number;
   onStagesSelected?: (selected: string[]) => void;
+  autoMode?: boolean;
 };
 
 export function MacroStageSelect({
   stages,
   maxWidth = 300,
   minWidth = 300,
+  autoMode = false,
   onStagesSelected,
 }: MacroStageSelectProps): JSX.Element {
   const [selectedStages, setSelectedStages] = React.useState<string[]>([]);
+  const [autoSelected, setAutoSelected] = React.useState(autoMode);
 
   const handleChange = (e: SelectChangeEvent<typeof selectedStages>) => {
     const selected = e.target.value as string[];
-    if (selected.includes('all')) {
+    if (selected.includes('auto')) {
       setSelectedStages([]);
-      if (onStagesSelected) onStagesSelected([]);
+      setAutoSelected(true);
+      onStagesSelected && onStagesSelected(['auto']);
+    } else if (selected.includes('all')) {
+      setSelectedStages([]);
+      setAutoSelected(false);
+      onStagesSelected && onStagesSelected([]);
     } else {
       setSelectedStages(selected);
-      if (onStagesSelected) onStagesSelected(selected);
+      setAutoSelected(false);
+      onStagesSelected && onStagesSelected(selected);
     }
   };
+
+  React.useEffect(() => {
+    // Emit the stages on load.
+    onStagesSelected && onStagesSelected(autoMode ? ['auto'] : []);
+  }, [onStagesSelected, autoMode]);
 
   return (
     <div>
@@ -51,6 +65,7 @@ export function MacroStageSelect({
           value={selectedStages}
           onChange={handleChange}
           renderValue={(selected) => {
+            if (autoSelected) return 'Auto';
             if (selected.length === 0) {
               return 'All stages';
             }
@@ -63,6 +78,7 @@ export function MacroStageSelect({
             );
           }}
         >
+          {autoMode && <MenuItem value='auto'>Auto</MenuItem>}
           <MenuItem value='all'>All stages</MenuItem>
           {stages.map((name) => (
             <MenuItem key={name} value={name} dense>
