@@ -46,12 +46,25 @@ export default function MessageViewport() {
       .catch(() => {});
   }, [addReplies, maxLogMessages]);
 
+  // New replies from tron.
   useEventListener('tron:received-replies', addReplies, true);
 
+  // Emitted when the user click on clear replies on the menu bar.
   useEventListener('tron:clear-replies', () => setFiltered([]), true);
 
   React.useEffect(() => {
+    // Get all replies when something changes. Since this effect depends on
+    // getAllReplies, which depends on addReplies, whic depens on filterReplies,
+    // which depends on the config, a change in the config will trigger a full
+    // reply reload.
+
     getAllReplies();
+  }, [getAllReplies]);
+
+  React.useEffect(() => {
+    // When the component loads, subscribe the window to new replies from tron.
+    // The event listener on tron:received-replies listens to them.
+
     window.electron.tron.subscribe();
 
     const unload = () => window.electron.tron.unsubscribe();
@@ -60,21 +73,31 @@ export default function MessageViewport() {
     return () => {
       unload();
     };
-  }, [getAllReplies]);
+  }, []);
 
   React.useEffect(() => {
+    // Reset the replies on a time. Since tron in main only keeps
+    // maxLogMessages, this effectively ensures that the number of
+    // lines doesn't grow too much.
     const interval = setInterval(getAllReplies, 10 * 60 * 1000);
     return () => clearInterval(interval);
   }, [getAllReplies]);
 
   React.useEffect(() => {
+    // When the initial messages load the scroll does not always go to the bottom.
+    // This seems to happen mostly when the client is disconnected and there are
+    // no new messages. This runs only once when the window loads, after a delay,
+    // and sends the viewport to the bottom.
     const timeout = setTimeout(() => {
       virtuoso.current?.scrollToIndex(nFiltered.current);
     }, 1000);
 
     return () => clearTimeout(timeout);
 
-    // Although it's included here, nFiltered won't trigger a re-render.
+    // Although it's included here, nFiltered won't trigger a re-render since it's
+    // a ref. I think this is a bug in the eslint. If the same code in usePrevious
+    // is copied inside the component, it's not necessary to add nFiltered to the
+    // dependency list.
   }, [nFiltered]);
 
   return (
