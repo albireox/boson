@@ -21,6 +21,7 @@ import {
   styled,
 } from '@mui/material';
 import React from 'react';
+import { ViewportRefType } from '.';
 
 const AdornmentIconButton = styled((props: IconButtonProps) => (
   <IconButton
@@ -68,9 +69,14 @@ function HistoryMenu(props: HistoryMenuProps) {
   );
 }
 
-export default function CommandInput() {
+interface CommandInputProps {
+  viewportRef?: React.RefObject<ViewportRefType>;
+}
+
+export default function CommandInput(props: CommandInputProps) {
+  const { viewportRef } = props;
+
   const [value, setValue] = React.useState('');
-  const [error, setError] = React.useState(false);
 
   const [historyIndex, setHistoryIndex] = React.useState(0);
   const [history, setHistory] = React.useState<string[]>(['']);
@@ -87,55 +93,63 @@ export default function CommandInput() {
     setHistoryMenuAnchor(event.currentTarget);
   };
 
-  const closeHistoryMenu = () => {
+  const closeHistoryMenu = React.useCallback(() => {
     setHistoryMenuAnchor(null);
-  };
+  }, []);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError(false);
-    setValue(event.target.value);
-  };
+  const handleChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(event.target.value);
+    },
+    []
+  );
 
-  const sendCommand = (command: string) => {
-    if (history[1] !== command) {
-      setHistory((current) => [current[0], command, ...current.slice(1)]);
-    }
-    window.electron.tron.send(command).catch(() => {});
-    setValue('');
-    setHistoryIndex(0);
-  };
+  const sendCommand = React.useCallback(
+    (command: string) => {
+      if (history[1] !== command) {
+        setHistory((current) => [current[0], command, ...current.slice(1)]);
+      }
+      window.electron.tron.send(command).catch(() => {});
+      setValue('');
+      setHistoryIndex(0);
+    },
+    [history]
+  );
 
-  const handleCommand = () => {
-    if (value.length > 0) {
+  const handleCommand = React.useCallback(() => {
+    if (value.trim().length > 0) {
       sendCommand(value);
     } else {
-      setError(true);
+      viewportRef && viewportRef.current?.gotoBottom();
     }
-  };
+  }, [value, sendCommand, viewportRef]);
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      handleCommand();
-    } else if (event.key === 'ArrowUp') {
-      const newIndex = historyIndex + 1;
-      if (history.length >= newIndex + 1) {
-        setValue(history[newIndex]);
-        setHistoryIndex(newIndex);
+  const handleKeyPress = React.useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        handleCommand();
+      } else if (event.key === 'ArrowUp') {
+        const newIndex = historyIndex + 1;
+        if (history.length >= newIndex + 1) {
+          setValue(history[newIndex]);
+          setHistoryIndex(newIndex);
+        }
+      } else if (event.key === 'ArrowDown') {
+        if (historyIndex > 0) {
+          const newIndex = historyIndex - 1;
+          setValue(history[newIndex]);
+          setHistoryIndex(newIndex);
+        }
       }
-    } else if (event.key === 'ArrowDown') {
-      if (historyIndex > 0) {
-        const newIndex = historyIndex - 1;
-        setValue(history[newIndex]);
-        setHistoryIndex(newIndex);
+      if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && textRef) {
+        setTimeout(() => {
+          const selection = textRef.current?.value.length ?? 0;
+          textRef.current?.setSelectionRange(selection, selection);
+        }, 10);
       }
-    }
-    if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && textRef) {
-      setTimeout(() => {
-        const selection = textRef.current?.value.length ?? 0;
-        textRef.current?.setSelectionRange(selection, selection);
-      }, 10);
-    }
-  };
+    },
+    [handleCommand, history, historyIndex]
+  );
 
   const handleMenuClick = (
     event: React.MouseEvent<HTMLLIElement, MouseEvent>
@@ -148,7 +162,6 @@ export default function CommandInput() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
       <OutlinedInput
-        error={error}
         onChange={handleChange}
         onKeyDown={handleKeyPress}
         sx={(theme) => ({

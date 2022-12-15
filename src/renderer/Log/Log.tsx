@@ -42,7 +42,7 @@ export default function Log(props: LogProps) {
         <LogHeader logId={logId} viewportRef={viewportRef} />
         <Stack height='100%' direction='column' px={2} pb={2} spacing={3}>
           <MessageViewport ref={viewportRef} />
-          <CommandInput />
+          <CommandInput viewportRef={viewportRef} />
         </Stack>
       </LogConfigContext.Provider>
     </Box>
