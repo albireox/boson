@@ -22,7 +22,12 @@ export function useActors(): string[] {
   const updateActors = React.useCallback(() => {
     window.electron.tron
       .getActors()
-      .then((newActors) => setActors(Array.from(newActors)))
+      .then((newActors) =>
+        setActors(
+          // Prevent keys_<actor> from showing up.
+          Array.from(newActors).filter((act) => !act.startsWith('keys_'))
+        )
+      )
       .catch(() => {});
   }, []);
 
