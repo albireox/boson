@@ -130,7 +130,7 @@ function JS9FrameInner(
 
   const updateParams = React.useCallback(() => {
     if (!window.JS9) return;
-    console.log('here', display);
+
     window.JS9.SetColormap(guiderConfig.config.colormap, { display });
     window.JS9.SetScale(guiderConfig.config.scale, { display });
     window.JS9.SetScale(guiderConfig.config.scalelim, { display });
