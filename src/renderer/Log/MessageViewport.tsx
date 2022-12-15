@@ -23,6 +23,10 @@ function MessageViewportInner(
 
   const [filtered, setFiltered] = React.useState<Reply[]>([]);
 
+  const [isScrolling, setIsScrolling] = React.useState(false);
+  const [isAtBottom, setIsAtBottom] = React.useState(true);
+  const [triggerToBottom, setTriggerToBottom] = React.useState(true);
+
   const virtuoso = React.useRef<VirtuosoHandle>(null);
 
   const { config } = useLogConfig();
@@ -40,6 +44,7 @@ function MessageViewportInner(
       } else {
         setFiltered((old) => [...old, ...filterReplies(newReplies)]);
       }
+      setTriggerToBottom(true);
     },
     [filterReplies]
   );
@@ -88,18 +93,42 @@ function MessageViewportInner(
     // Reset the replies on a time. Since tron in main only keeps
     // maxLogMessages, this effectively ensures that the number of
     // lines doesn't grow too much.
+
     const interval = setInterval(getAllReplies, 10 * 60 * 1000);
+
     return () => clearInterval(interval);
   }, [getAllReplies]);
+
+  React.useEffect(() => {
+    // When new messages are added react-virtuoso sometimes doesn't fully scroll to
+    // bottom and the last line is slightly trimmed. I think this is due to imperfect
+    // calculation of the items height and how that fits the viewport.
+    // This checks if a new message has been added (which sets triggerToBottom to true)
+    // and if we are at bottom and not scrolling, forces a new go to bottom after a
+    // short delay. That effectively keeps the viewport at real bottom, but the extra
+    // scroll to bottom is slightly noticeable. Still, better than not being able to
+    // see half of the last line.
+
+    if (!isAtBottom || isScrolling || !triggerToBottom) return () => {};
+
+    const timeout = setTimeout(() => {
+      virtuoso.current?.scrollToIndex(nFiltered.current);
+    }, 30);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [isAtBottom, isScrolling, nFiltered, triggerToBottom]);
 
   React.useEffect(() => {
     // When the initial messages load the scroll does not always go to the bottom.
     // This seems to happen mostly when the client is disconnected and there are
     // no new messages. This runs only once when the window loads, after a delay,
     // and sends the viewport to the bottom.
+
     const timeout = setTimeout(() => {
       virtuoso.current?.scrollToIndex(nFiltered.current);
-    }, 1000);
+    }, 300);
 
     return () => clearTimeout(timeout);
 
@@ -136,6 +165,8 @@ function MessageViewportInner(
       alignToBottom
       atBottomThreshold={400}
       increaseViewportBy={400}
+      isScrolling={(scrolling) => setIsScrolling(scrolling)}
+      atBottomStateChange={(atBottom) => setIsAtBottom(atBottom)}
     />
   );
 }
