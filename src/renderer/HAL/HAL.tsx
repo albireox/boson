@@ -24,6 +24,7 @@ export default function HAL() {
     'hal.exposure_state_apogee',
     'hal.exposure_state_boss',
     'jaeger.configuration_loaded',
+    'jaeger.design_preloaded',
   ]);
 
   React.useEffect(() => {
