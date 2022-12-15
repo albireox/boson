@@ -16,13 +16,19 @@ import {
 function AutoMode() {
   return (
     <Grid container pt={1} minHeight={50} alignContent='center'>
-      <Grid xs={9}>
+      <Grid item xs={9}>
         <TypographyTitle>Allow goto-field auto mode</TypographyTitle>
         <TypographyDescription>
           Enable the auto mode for the goto-field macro
         </TypographyDescription>
       </Grid>
-      <Grid xs={3} alignItems='flex-end' textAlign='right' alignSelf='center'>
+      <Grid
+        item
+        xs={3}
+        alignItems='flex-end'
+        textAlign='right'
+        alignSelf='center'
+      >
         <Switch param='hal.useAutoMode' />
       </Grid>
     </Grid>
