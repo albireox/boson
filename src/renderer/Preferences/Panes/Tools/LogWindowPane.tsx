@@ -8,6 +8,7 @@
 import { FormControl, Grid, SelectChangeEvent, Stack } from '@mui/material';
 import { BosonMenuItem, BosonSelect } from 'renderer/Components';
 import { useStore } from 'renderer/hooks';
+import BooleanOption from 'renderer/Preferences/Components/BooleanOption';
 import Pane from 'renderer/Preferences/Components/Pane';
 import {
   TypographyDescription,
@@ -67,6 +68,11 @@ export default function LogWindowPane() {
         <Grid item xs={9}>
           <Stack width='100%' direction='column' spacing={5}>
             <NumberLines />
+            <BooleanOption
+              title='Wrap lines'
+              description='Wrap long lines and disable horizontal scrolling'
+              param='log.wrap'
+            />
           </Stack>
         </Grid>
       </Grid>

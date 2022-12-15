@@ -30,6 +30,9 @@
   "hal": {
     "useAutoMode": false
   },
+  "log": {
+    "wrap": false
+  },
   "maxLogMessages": 50000,
   "updateChannel": "beta",
   "profiles": {}

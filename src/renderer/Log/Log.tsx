@@ -8,6 +8,7 @@
 import { Box, CssBaseline } from '@mui/material';
 import { Stack } from '@mui/system';
 import * as React from 'react';
+import { useStore } from 'renderer/hooks';
 import { ViewportRefType } from '.';
 
 import CommandInput from './CommandInput';
@@ -26,7 +27,10 @@ export interface LogProps {
 export default function Log(props: LogProps) {
   const { logId } = props;
 
-  const [config, setConfig] = React.useState<ConfigIface>(defaultLogConfig);
+  const [wrap] = useStore<boolean>('log.wrap');
+  const initialConfig = { ...defaultLogConfig, wrap };
+
+  const [config, setConfig] = React.useState<ConfigIface>(initialConfig);
   const logConfig = createLogConfig(config, setConfig);
 
   const viewportRef = React.useRef<ViewportRefType>(null);
