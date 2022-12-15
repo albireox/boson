@@ -17,6 +17,13 @@ export default function SnapSearchBox(props: SnapSearchBoxProps) {
 
   return (
     <SearchBox
+      sx={{
+        minWidth: 100,
+        fontWeight: 500,
+        '& .MuiInputBase-input': {
+          padding: '2.5px',
+        },
+      }}
       placeholder='Positioner'
       value={searchText}
       onChange={(event) => {
