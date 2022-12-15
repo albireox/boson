@@ -29,9 +29,12 @@ export default function useKeywords(
 
   const ref = React.useRef({ keywords, getKeys });
 
-  const handleEvent = React.useCallback((keyword: Keyword) => {
+  const handleEvent = React.useCallback((name: string, keyword: Keyword) => {
     const update: { [key: string]: any } = {};
+    // For convenience, we store the keyword as its name (without the actor prefix)
+    // and as the actor.keyword name.
     update[keyword.name] = keyword;
+    update[name] = keyword;
     setKeys((previous) => ({ ...previous, ...update }));
   }, []);
 

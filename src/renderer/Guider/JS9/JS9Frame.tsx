@@ -130,7 +130,7 @@ function JS9FrameInner(
 
   const updateParams = React.useCallback(() => {
     if (!window.JS9) return;
-
+    console.log('here', display);
     window.JS9.SetColormap(guiderConfig.config.colormap, { display });
     window.JS9.SetScale(guiderConfig.config.scale, { display });
     window.JS9.SetScale(guiderConfig.config.scalelim, { display });
@@ -138,7 +138,7 @@ function JS9FrameInner(
     if (!zoomed) {
       window.JS9.SetZoom('toFit', { display });
     }
-  }, [guiderConfig, display, zoomed]);
+  }, [guiderConfig.config, display, zoomed]);
 
   const updateImage = React.useCallback(
     (filename: string | null) => {
@@ -170,7 +170,9 @@ function JS9FrameInner(
     [host, port, display, path, updateParams]
   );
 
-  React.useEffect(updateParams, [guiderConfig, updateParams]);
+  React.useEffect(() => {
+    updateParams();
+  }, [updateParams, guiderConfig.config]);
 
   React.useEffect(() => {
     if (!windowSize) return;
@@ -181,7 +183,7 @@ function JS9FrameInner(
 
   React.useEffect(() => {
     setExpanded(guiderConfig.config.expandedFrame === display);
-  }, [display, guiderConfig]);
+  }, [display, guiderConfig.config]);
 
   React.useEffect(() => {
     if (!filenameBundle || !host || !port) {
@@ -224,7 +226,7 @@ function JS9FrameInner(
           boxSizing: 'border-box',
           'div.JS9Container > canvas.JS9Image': {
             backgroundColor: theme.palette.background.default,
-            backgroundImage: `url(SDSS-V.png)`,
+            backgroundImage: path ? null : `url(SDSS-V.png)`,
             backgroundSize: 'cover',
             backgroundBlendMode: 'luminosity',
             backgroundPosition: 'center',

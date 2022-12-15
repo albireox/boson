@@ -8,7 +8,7 @@
 import { useKeywordContext } from 'renderer/hooks';
 
 export default function useIsMacroRunning(macroName: string) {
-  const { 'hal.running_macros': runningMacros } = useKeywordContext();
+  const { running_macros: runningMacros } = useKeywordContext();
 
   return (
     runningMacros !== undefined && runningMacros.values.includes(macroName)

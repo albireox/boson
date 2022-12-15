@@ -451,9 +451,9 @@ export class TronConnection {
         }
 
         try {
-          wC.send('tron-keywords', keyword);
+          wC.send('tron-keywords', name, keyword);
         } catch {
-          log.error(`Failed sending keyword to ${'tron-keywords'}`);
+          log.error(`Failed sending keyword ${name} to tron-keywords.`);
         }
       }
     });
