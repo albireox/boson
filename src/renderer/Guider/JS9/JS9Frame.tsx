@@ -101,7 +101,7 @@ function JS9FrameInner(
       window.JS9.SetZoom(direction, { display });
       setZoomed(direction !== 'toFit');
     },
-    [guiderConfig, display]
+    [guiderConfig.config, display]
   );
 
   const handleReset = React.useCallback(() => {
@@ -119,7 +119,7 @@ function JS9FrameInner(
     // Recenter image.
     const imdata = window.JS9.GetImageData({ display });
     window.JS9.SetPan(imdata.width / 2, imdata.height / 2, { display });
-  }, [display, guiderConfig]);
+  }, [display, guiderConfig.config]);
 
   React.useImperativeHandle(ref, () => ({
     name: display,
@@ -179,7 +179,7 @@ function JS9FrameInner(
 
     const factor = expanded ? 2 : 1;
     setSize(Math.round(((windowSize.width || 800) / 3.2) * factor));
-  }, [windowSize, expanded, guiderConfig]);
+  }, [windowSize, expanded]);
 
   React.useEffect(() => {
     setExpanded(guiderConfig.config.expandedFrame === display);
