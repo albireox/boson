@@ -302,7 +302,10 @@ export default function Expose() {
             stages={macros.expose.stages}
             maxWidth={200}
             minWidth={100}
-            onStagesSelected={(stgs) => setStages(stgs)}
+            onStagesSelected={React.useCallback(
+              (stgs: string[]) => setStages(stgs),
+              []
+            )}
           />
           <Stack
             alignItems='center'

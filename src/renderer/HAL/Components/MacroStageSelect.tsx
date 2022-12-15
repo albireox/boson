@@ -34,22 +34,25 @@ export function MacroStageSelect({
   const [selectedStages, setSelectedStages] = React.useState<string[]>([]);
   const [autoSelected, setAutoSelected] = React.useState(autoMode);
 
-  const handleChange = (e: SelectChangeEvent<typeof selectedStages>) => {
-    const selected = e.target.value as string[];
-    if (selected.includes('auto')) {
-      setSelectedStages([]);
-      setAutoSelected(true);
-      onStagesSelected && onStagesSelected(['auto']);
-    } else if (selected.includes('all')) {
-      setSelectedStages([]);
-      setAutoSelected(false);
-      onStagesSelected && onStagesSelected([]);
-    } else {
-      setSelectedStages(selected);
-      setAutoSelected(false);
-      onStagesSelected && onStagesSelected(selected);
-    }
-  };
+  const handleChange = React.useCallback(
+    (e: SelectChangeEvent<typeof selectedStages>) => {
+      const selected = e.target.value as string[];
+      if (selected.includes('auto')) {
+        setSelectedStages([]);
+        setAutoSelected(true);
+        onStagesSelected && onStagesSelected(['auto']);
+      } else if (selected.includes('all')) {
+        setSelectedStages([]);
+        setAutoSelected(false);
+        onStagesSelected && onStagesSelected([]);
+      } else {
+        setSelectedStages(selected);
+        setAutoSelected(false);
+        onStagesSelected && onStagesSelected(selected);
+      }
+    },
+    []
+  );
 
   React.useEffect(() => {
     // Emit the stages on load.
