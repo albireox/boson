@@ -43,7 +43,7 @@ function PreloadedDesign() {
       direction='row'
       flexGrow={1}
       sx={{
-        bgcolor: `${theme.palette.primary[theme.palette.mode]}`,
+        bgcolor: theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8',
         mt: -2,
         mb: 1,
         p: 1,
