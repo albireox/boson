@@ -163,10 +163,6 @@ export async function createWindow(windowName: WindowNames) {
     newWindow.setTitle(name);
   });
 
-  // newWindow.on('did-finish-load', () => {
-  //   newWindow.setTitle(name);
-  // });
-
   newWindow.on('resized', () => {
     if (!saveWindows()) return;
 
