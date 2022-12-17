@@ -128,7 +128,7 @@ function MessageViewportInner(
 
     const timeout = setTimeout(() => {
       virtuoso.current?.scrollToIndex(nFiltered.current);
-    }, 300);
+    }, 1000);
 
     return () => clearTimeout(timeout);
 
