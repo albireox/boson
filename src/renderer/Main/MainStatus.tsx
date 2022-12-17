@@ -203,7 +203,7 @@ const MainStatus = () => {
         alignItems='center'
         height='100%'
       >
-        <img width='150' alt='icon' src={icon} />
+        <img width='30%' alt='icon' src={icon} />
         <Typography variant='h3'>
           boson {isPackaged !== undefined && isPackaged ? version : 'dev'}
         </Typography>

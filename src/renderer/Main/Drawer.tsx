@@ -19,6 +19,7 @@ import {
   ListItemIcon,
   Stack,
 } from '@mui/material';
+import { Box } from '@mui/system';
 import React from 'react';
 import { DrawerListItem, PersistentDrawer } from 'renderer/Components';
 
@@ -96,14 +97,16 @@ export default function Drawer() {
   return (
     <PersistentDrawer open={open}>
       <Stack direction='column' height='100%'>
-        <Item name='log' icon={<NotesIcon />} text='New log window' />
-        <Item
-          name='snapshots'
-          icon={<SettingsOverscanIcon />}
-          text='Snapshots'
-        />
-        <Item name='guider' icon={<InsightsIcon />} text='Guider' />
-        <Item name='HAL' icon={<PrecisionManufacturingIcon />} text='HAL' />
+        <Box sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
+          <Item name='log' icon={<NotesIcon />} text='New log window' />
+          <Item
+            name='snapshots'
+            icon={<SettingsOverscanIcon />}
+            text='Snapshots'
+          />
+          <Item name='guider' icon={<InsightsIcon />} text='Guider' />
+          <Item name='HAL' icon={<PrecisionManufacturingIcon />} text='HAL' />
+        </Box>
         <div style={{ flexGrow: 1 }} />
         <Footer open={open} setOpen={setOpen} openNewWindow={openNewWindow} />
       </Stack>

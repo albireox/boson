@@ -64,7 +64,7 @@ export default function PersistentDrawer({
     <Drawer
       variant='permanent'
       open={open}
-      sx={{ '& .MuiPaper-root': { paddingTop: 3 } }}
+      sx={{ minWidth: 72, '& .MuiPaper-root': { paddingTop: 3, minWidth: 72 } }}
     >
       {children}
     </Drawer>
