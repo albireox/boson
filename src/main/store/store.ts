@@ -23,6 +23,17 @@ const store = new Store({
   },
 });
 
+// Just a sanity check.
+if (!store.get('windows.openWindows')) {
+  store.set('windows.openWindows', ['main']);
+}
+if (!(store.get('windows.openWindows') as string[]).includes('main')) {
+  store.set(
+    'windows.openWindows',
+    (store.get('windows.openWindows', []) as string[]).push('main')
+  );
+}
+
 const subscriptions = new Map<string, () => EventEmitter>();
 
 export { store as default, default_config, subscriptions };
