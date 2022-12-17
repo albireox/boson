@@ -23,7 +23,10 @@ import { useKeywordContext } from 'renderer/hooks';
 import hal9000logo from './images/hal9000.png';
 
 function PreloadedDesign() {
-  const { design_preloaded: designPreloadedKw } = useKeywordContext();
+  const {
+    'jaeger.design_preloaded': designPreloadedKw,
+    'jaeger.preloaded_is_cloned': preloadedIsClonedKw,
+  } = useKeywordContext();
 
   const theme = useTheme();
 
@@ -31,10 +34,22 @@ function PreloadedDesign() {
     undefined
   );
 
+  const [clonedText, setClonedText] = React.useState('');
+
   React.useEffect(() => {
     if (!designPreloadedKw) return;
     setPreloaded(designPreloadedKw.values[0]);
   }, [designPreloadedKw]);
+
+  React.useEffect(() => {
+    if (!preloadedIsClonedKw) return;
+
+    if (preloadedIsClonedKw.values[0]) {
+      setClonedText(' (CLONED)');
+    } else {
+      setClonedText('');
+    }
+  }, [preloadedIsClonedKw]);
 
   if (!preloaded || preloaded < 0) return null;
 
@@ -50,14 +65,16 @@ function PreloadedDesign() {
       }}
     >
       <Typography
-        variant='subtitle1'
+        fontSize={16}
+        fontWeight={400}
         textAlign='center'
-        alignSelf='center'
+        alignSelf='end'
         color='#fff'
         ml={1}
         flexGrow={1}
       >
-        Design {preloaded} has been preloaded.
+        Design {preloaded}
+        {clonedText} has been preloaded.
       </Typography>
       <Button
         variant='outlined'
