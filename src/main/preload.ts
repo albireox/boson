@@ -16,7 +16,7 @@ import {
 } from 'electron';
 import Command from './tron/command';
 import Reply from './tron/reply';
-import { ConnectionStatus } from './tron/types';
+import { ConnectionStatus, Keyword } from './tron/types';
 
 const ElectronAPI = {
   ipcRenderer: {
@@ -100,6 +100,9 @@ const ElectronAPI = {
     },
     getActors(): Promise<string[]> {
       return ipcRenderer.invoke('tron:actors');
+    },
+    getAllKeywords(keyword: string): Promise<Keyword[]> {
+      return ipcRenderer.invoke('tron:get-all-keywords', keyword);
     },
     send(command: string, raise = false): Promise<Command> {
       return ipcRenderer.invoke('tron:send', command, raise);

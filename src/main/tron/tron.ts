@@ -41,8 +41,6 @@ export class TronConnection {
 
   private keywordListeners: Map<WebContents, Set<string>> = new Map();
 
-  private trackedKeywords: Map<string, Keyword | null> = new Map();
-
   private replies: Reply[] = [];
 
   private actors = new Set<string>([]);
@@ -50,6 +48,10 @@ export class TronConnection {
   private client = new Socket();
 
   private maxLogMessages: number;
+
+  public trackedKeywords: Map<string, Keyword | null> = new Map();
+
+  public trackedKeywordsAll: Map<string, Keyword[]> = new Map();
 
   host: string | undefined = undefined;
 
@@ -88,7 +90,10 @@ export class TronConnection {
 
   private initialiseKeywords() {
     const { keywords } = config;
-    keywords.forEach((keyword) => this.trackedKeywords.set(keyword, null));
+    const { trackAll, trackLast } = keywords;
+
+    trackLast.forEach((keyword) => this.trackedKeywords.set(keyword, null));
+    trackAll.forEach((keyword) => this.trackedKeywordsAll.set(keyword, []));
   }
 
   get status(): ConnectionStatus {
@@ -214,6 +219,9 @@ export class TronConnection {
       this.disconnect();
       return [false, reason];
     }
+
+    log.info('Getting list of users.');
+    this.sendCommand('hub commanders');
 
     log.info('Logging in complete.');
     this.user = user;
@@ -461,6 +469,12 @@ export class TronConnection {
     // Update keywords that we are tracking.
     if (this.trackedKeywords.has(name)) {
       this.trackedKeywords.set(name, keyword);
+    }
+
+    if (this.trackedKeywordsAll.has(name)) {
+      const current = this.trackedKeywordsAll.get(name) ?? [];
+      current.push(keyword);
+      this.trackedKeywordsAll.set(name, current);
     }
   }
 
