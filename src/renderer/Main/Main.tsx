@@ -22,7 +22,7 @@ import { ConnectionStatus } from 'main/tron/types';
 import * as React from 'react';
 import { useConnectionStatus, useStore } from '../hooks';
 import Drawer from './Drawer';
-import MainStatus from './MainStatus';
+import MainTabs from './Tabs';
 
 type ConnectStackbarProps = {
   open: boolean;
@@ -176,8 +176,13 @@ export default function Main() {
       <Box sx={{ display: 'flex', height: '100%' }}>
         <CssBaseline />
         <Drawer />
-        <Box sx={{ flexGrow: 1, p: 3, height: '100%' }}>
-          <MainStatus />
+        <Box
+          sx={{
+            flexGrow: 1,
+            height: '100%',
+          }}
+        >
+          <MainTabs />
         </Box>
       </Box>
       <Dialog
