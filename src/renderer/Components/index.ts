@@ -15,6 +15,7 @@ export {
   type BosonMenuItemProps,
 } from './BosonMenuItem';
 export { default as BosonSelect } from './BosonSelect';
+export { BosonTab, BosonTabs } from './BosonTabs';
 export { default as CommandButton } from './CommandButton';
 export { default as DrawerListItem } from './DrawerListItem';
 export { default as HeaderDivider } from './HeaderDivider';
