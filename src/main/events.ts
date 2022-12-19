@@ -32,6 +32,9 @@ export default function loadEvents() {
     const window = BrowserWindow.fromWebContents(event.sender);
     window?.reload();
   });
+  ipcMain.handle('app:is-focused', async () => {
+    return BrowserWindow.getAllWindows().some((win) => win.isFocused());
+  });
 
   // tron
   ipcMain.handle('tron:get-status', () => tron.status);

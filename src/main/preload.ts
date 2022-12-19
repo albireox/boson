@@ -58,6 +58,9 @@ const ElectronAPI = {
     reloadWindow() {
       return ipcRenderer.invoke('app:reload-window');
     },
+    isFocused(): Promise<boolean> {
+      return ipcRenderer.invoke('app:is-focused');
+    },
   },
   tron: {
     getStatus() {
