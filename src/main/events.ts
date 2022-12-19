@@ -71,10 +71,9 @@ export default function loadEvents() {
     tron.getReplies(last)
   );
   ipcMain.handle('tron:actors', async () => tron.getActors());
-  ipcMain.handle(
-    'tron:get-all-keywords',
-    async (_, keyword) => tron.trackedKeywordsAll.get(keyword) ?? []
-  );
+  ipcMain.handle('tron:get-all-keywords', async (_, keyword) => {
+    return tron.trackedKeywordsAll.get(keyword) ?? [];
+  });
   ipcMain.handle('tron:send', async (event, command: string, raise = false) => {
     const cmd = tron.sendCommand(command);
 
