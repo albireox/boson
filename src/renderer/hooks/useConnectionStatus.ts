@@ -9,14 +9,16 @@ import { ConnectionStatus } from 'main/tron/types';
 import React from 'react';
 import useEventListener from './useEventListener';
 
-export default function useConnectionStatus() {
+export default function useConnectionStatus(): [ConnectionStatus, boolean] {
   const [connectionStatus, setConnectionStatus] = React.useState(
     ConnectionStatus.Unknown
   );
+  const [isReady, setIsReady] = React.useState(false);
 
   const handleConnectionStatus = React.useCallback(
     (status: ConnectionStatus) => {
       setConnectionStatus(status);
+      if (status & ConnectionStatus.Ready) setIsReady(true);
     },
     []
   );
@@ -31,5 +33,5 @@ export default function useConnectionStatus() {
       .catch(() => {});
   }, [handleConnectionStatus]);
 
-  return connectionStatus;
+  return [connectionStatus, isReady];
 }

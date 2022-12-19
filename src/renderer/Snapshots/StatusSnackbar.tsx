@@ -25,7 +25,7 @@ export default function StatusSnackBar(props: StatusSnackBarProps) {
   const [isLocked, setIsLocked] = React.useState(false);
   const [severity, setSeverity] = React.useState<AlertColor>('success');
 
-  const connectionStatus = useConnectionStatus();
+  const [connectionStatus] = useConnectionStatus();
 
   React.useEffect(() => {
     if (fpsStatusKw) {

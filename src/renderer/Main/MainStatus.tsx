@@ -79,7 +79,7 @@ const MainStatus = () => {
   const theme = useTheme();
   const { mode } = theme.palette;
 
-  const connectionStatus = useConnectionStatus();
+  const [connectionStatus] = useConnectionStatus();
 
   const [version, setVersion] = useState<string | undefined>(undefined);
   const [isPackaged, setIsPackaged] = useState<boolean | undefined>(undefined);

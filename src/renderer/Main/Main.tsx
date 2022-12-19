@@ -89,7 +89,7 @@ export default function Main() {
   const [isConnected, setIsConnected] = React.useState(false);
   const [isConnecting, setIsConnecting] = React.useState(false);
 
-  const connectionStatus = useConnectionStatus();
+  const [connectionStatus] = useConnectionStatus();
 
   const [authenticationFailed, setAuthenticationFailed] = React.useState(false);
 
