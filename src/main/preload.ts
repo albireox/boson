@@ -81,10 +81,8 @@ const ElectronAPI = {
     disconnect() {
       return ipcRenderer.invoke('tron:disconnect');
     },
-    getCredentials(): Promise<
-      [ConnectionStatus, string, string, string, number]
-    > {
-      return ipcRenderer.invoke('tron:get-credentials');
+    getCredentials(): [ConnectionStatus, string, string, string, number] {
+      return ipcRenderer.sendSync('tron:get-credentials');
     },
     subscribe() {
       return ipcRenderer.invoke('tron:subscribe');
