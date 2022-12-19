@@ -28,6 +28,8 @@ export interface Credentials {
 
 export interface Keyword {
   name: string;
+  commander: string | undefined;
+  sender: string | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   values: any[];
 }

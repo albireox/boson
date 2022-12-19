@@ -65,6 +65,8 @@ export default function parseLine(
       const rawValues = values.matchAll(/[^,"']+|"([^"]*)"|'([^']*)'/g);
       const keyword: Keyword = {
         name: key,
+        sender: lineMatched.groups?.sender,
+        commander: lineMatched.groups?.commander,
         values: [...rawValues].map((value) => {
           return evaluateKeyword(value[0]);
         }),
