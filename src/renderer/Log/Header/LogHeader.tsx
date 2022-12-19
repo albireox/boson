@@ -13,6 +13,7 @@ import { useLogConfig } from '../hooks';
 import ActorButton from './ActorButton';
 import LogSearchBox from './LogSearchBox';
 import ReplyCodeButton from './ReplyCodeButton';
+import ResetButton from './ResetButton';
 import ToBottomButton from './ToBottomButton';
 import WrapButton from './WrapButton';
 
@@ -86,6 +87,7 @@ export default function LogHeader(props: LogHeaderProps) {
         <div style={{ flexGrow: 1 }} />
         <ActorButton />
         <ReplyCodeButton />
+        <ResetButton />
         <Divider
           orientation='vertical'
           variant='middle'
