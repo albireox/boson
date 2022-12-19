@@ -157,9 +157,18 @@ export default function Users() {
   const UserList = () => {
     return (
       <Stack direction='column' spacing={1} pb={2}>
-        {users.sort().map((user) => (
-          <UserInfo key={user} data={userInfo[user]} isMe={user === myUser} />
-        ))}
+        {users.sort().map((user) => {
+          if (userInfo[user]) {
+            return (
+              <UserInfo
+                key={user}
+                data={userInfo[user]}
+                isMe={user === myUser}
+              />
+            );
+          }
+          return null;
+        })}
       </Stack>
     );
   };
