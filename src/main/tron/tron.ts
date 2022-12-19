@@ -220,6 +220,14 @@ export class TronConnection {
       return [false, reason];
     }
 
+    loginCommand.replies.every((reply) => {
+      if (reply.getKeyword('cmdrID')) {
+        user = reply.getKeyword('cmdrID')?.values[0].split('.').slice(-1)[0];
+        return false;
+      }
+      return true;
+    });
+
     log.info('Getting list of users.');
     this.sendCommand('hub commanders');
 
