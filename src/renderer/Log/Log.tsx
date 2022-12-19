@@ -20,6 +20,20 @@ import LogConfigContext, {
 import LogHeader from './Header/LogHeader';
 import MessageViewport from './MessageViewport';
 
+interface StoredConfigIface extends Omit<ConfigIface, 'actors' | 'codes'> {
+  actors: string[];
+  codes: string[];
+}
+
+function parseStoredConfig(sConfig: StoredConfigIface) {
+  if (!sConfig) return {};
+
+  return {
+    actors: new Set(sConfig.actors),
+    codes: new Set(sConfig.codes),
+  };
+}
+
 export interface LogProps {
   logId: number;
 }
@@ -28,12 +42,30 @@ export default function Log(props: LogProps) {
   const { logId } = props;
 
   const [wrap] = useStore<boolean>('log.wrap');
-  const initialConfig = { ...defaultLogConfig, wrap };
+  const [saveState] = useStore<boolean>('log.saveState');
+  const [storedConfig] = useStore<StoredConfigIface>(`log.config.${logId}`);
+
+  const initialConfig = {
+    ...defaultLogConfig,
+    ...parseStoredConfig(storedConfig),
+    wrap,
+  };
 
   const [config, setConfig] = React.useState<ConfigIface>(initialConfig);
   const logConfig = createLogConfig(config, setConfig);
 
   const viewportRef = React.useRef<ViewportRefType>(null);
+
+  React.useEffect(() => {
+    if (!saveState) return;
+
+    const toStoreConfig = {
+      actors: Array.from(config.actors),
+      codes: Array.from(config.codes),
+    };
+
+    window.electron.store.set(`log.config.${logId}`, toStoreConfig);
+  }, [saveState, config, logId]);
 
   return (
     <Box component='main' display='flex' width='100%'>

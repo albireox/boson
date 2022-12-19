@@ -31,7 +31,8 @@
     "useAutoMode": false
   },
   "log": {
-    "wrap": false
+    "wrap": false,
+    "saveState": true
   },
   "chat": {
     "notifications": true

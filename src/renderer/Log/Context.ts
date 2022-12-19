@@ -35,6 +35,7 @@ export interface LogConfigIface {
   toggleActor: (actor: string) => void;
   toggleWrap: () => void;
   clearActors: () => void;
+  reset: () => void;
 }
 
 const logConfig: LogConfigIface = {
@@ -47,6 +48,7 @@ const logConfig: LogConfigIface = {
   toggleActor: () => {},
   toggleWrap: () => {},
   clearActors: () => {},
+  reset: () => {},
 };
 
 const LogConfigContext = React.createContext<LogConfigIface>(logConfig);
@@ -107,6 +109,9 @@ export function createLogConfig(
     },
     clearActors: () => {
       setConfig((current) => ({ ...current, ...{ actors: new Set() } }));
+    },
+    reset: () => {
+      setConfig(defaultLogConfig);
     },
   };
 }

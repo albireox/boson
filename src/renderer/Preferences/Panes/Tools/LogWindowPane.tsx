@@ -69,6 +69,11 @@ export default function LogWindowPane() {
           <Stack width='100%' direction='column' spacing={5}>
             <NumberLines />
             <BooleanOption
+              title='Save state'
+              description='Store the state of each log window when it closes'
+              param='log.saveState'
+            />
+            <BooleanOption
               title='Wrap lines'
               description='Wrap long lines and disable horizontal scrolling'
               param='log.wrap'

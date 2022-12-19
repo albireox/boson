@@ -20,6 +20,9 @@ const store = new Store({
     '>=0.2.0-beta.8': (st) => {
       st.set('guider.refreshInterval', 20);
     },
+    '>=0.2.0-beta.14': (st) => {
+      st.set('log.saveState', true);
+    },
   },
 });
 
