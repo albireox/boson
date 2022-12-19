@@ -93,7 +93,6 @@ export default function Chat() {
 
   const handleMsg = React.useCallback(
     (name: string, keyword: Keyword) => {
-      console.log(initialised, name, keyword);
       if (!initialised) return;
       if (name === 'msg.msg') addMessage(keyword);
     },
@@ -102,11 +101,6 @@ export default function Chat() {
 
   useKeywords(['msg.msg'], false);
   useEventListener('tron-keywords', handleMsg);
-
-  // React.useEffect(() => {
-  //   if (!initialised) return;
-  //   if (msg) addMessage(msg);
-  // }, [msg, addMessage, initialised]);
 
   return (
     <Box
