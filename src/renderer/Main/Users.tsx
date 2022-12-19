@@ -95,15 +95,18 @@ export default function Users() {
   const [users, setUsers] = React.useState<string[]>([]);
   const [userInfo, setUserInfo] = React.useState<{ [k: string]: string[] }>({});
 
-  window.electron.tron.getCredentials();
+  const [connectionStatus] = useConnectionStatus();
+
+  React.useEffect(() => {
+    if (initialised && !(connectionStatus & ConnectionStatus.Ready))
+      setInitialised(false);
+  }, [connectionStatus, initialised]);
 
   React.useEffect(() => {
     if (initialised) return;
 
-    window.electron.tron
-      .getCredentials()
-      .then((credentials) => setMyUser(credentials[1]))
-      .catch(() => {});
+    const [, us] = window.electron.tron.getCredentials();
+    setMyUser(us);
 
     window.electron.tron
       .getAllKeywords('hub.user')

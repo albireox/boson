@@ -114,16 +114,11 @@ const MainStatus = () => {
     };
 
     const setCredentials = () => {
-      window.electron.tron
-        .getCredentials()
-        .then((credentials) => {
-          setUser(credentials[1]);
-          setProgram(credentials[2]);
-          setHost(credentials[3]);
-          setPort(credentials[4].toString());
-          return true;
-        })
-        .catch(() => {});
+      const [, us, pr, ho, po] = window.electron.tron.getCredentials();
+      setUser(us);
+      setProgram(pr);
+      setHost(ho);
+      setPort(po.toString());
     };
 
     const resetCredentials = () => {

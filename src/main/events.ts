@@ -46,13 +46,15 @@ export default function loadEvents() {
     async (event, authorise = true, force = false) =>
       connectAndAuthorise({ authorise, force })
   );
-  ipcMain.handle('tron:get-credentials', async () => [
-    tron.status,
-    tron.user,
-    tron.program,
-    tron.host,
-    tron.port,
-  ]);
+  ipcMain.on('tron:get-credentials', async (event) => {
+    event.returnValue = [
+      tron.status,
+      tron.user,
+      tron.program,
+      tron.host,
+      tron.port,
+    ];
+  });
   ipcMain.handle('tron:subscribe', async (event) =>
     tron.subscribeWindow(event.sender)
   );
