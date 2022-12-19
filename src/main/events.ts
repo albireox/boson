@@ -111,8 +111,9 @@ export default function loadEvents() {
   ipcMain.handle(
     'store:subscribe',
     async (event, property, channel: string) => {
-      const unsubscribe = store.onDidChange(property, (newValue) =>
-        event.sender.send(channel, newValue)
+      const unsubscribe = store.onDidChange(
+        property,
+        (newValue) => event.sender && event.sender.send(channel, newValue)
       );
       storeSubscriptions.set(channel, unsubscribe);
     }
