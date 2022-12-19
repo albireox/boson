@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import { Chat } from './Chat';
 import { Guider } from './Guider';
 import { HAL } from './HAL';
 import { useStore } from './hooks';
@@ -150,6 +151,9 @@ export default function App() {
       break;
     case 'focus_plot':
       view = <FocusPlot />;
+      break;
+    case 'chat':
+      view = <Chat />;
       break;
     default:
       view = null;

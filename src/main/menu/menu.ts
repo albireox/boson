@@ -188,6 +188,11 @@ export default class MenuBuilder {
           accelerator: 'Command+Shift+H',
           click: () => createWindow('HAL'),
         },
+        {
+          label: 'Chat',
+          click: () => createWindow('chat'),
+        },
+
         { type: 'separator' },
         {
           label: 'Focus plot',

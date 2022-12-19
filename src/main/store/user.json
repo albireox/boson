@@ -33,6 +33,9 @@
   "log": {
     "wrap": false
   },
+  "chat": {
+    "notifications": true
+  },
   "maxLogMessages": 50000,
   "updateChannel": "beta",
   "profiles": {}

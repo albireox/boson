@@ -5,6 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import ChatIcon from '@mui/icons-material/Chat';
 import InsightsIcon from '@mui/icons-material/Insights';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -106,6 +107,7 @@ export default function Drawer() {
           />
           <Item name='guider' icon={<InsightsIcon />} text='Guider' />
           <Item name='HAL' icon={<PrecisionManufacturingIcon />} text='HAL' />
+          <Item name='chat' icon={<ChatIcon />} text='Chat' />
         </Box>
         <div style={{ flexGrow: 1 }} />
         <Footer open={open} setOpen={setOpen} openNewWindow={openNewWindow} />
