@@ -99,6 +99,12 @@ export default function Chat() {
     [initialised, addMessage]
   );
 
+  // Chat is special in that we don't want to get the last value of a keyword
+  // but all the keywords. If we use the normal approach for msg.msg, every
+  // time the window reloads (for example when the notifications are turned on
+  // or off) the last message will be added again. With this we add a
+  // subscription for msg.msg without generating an event for the last
+  // keyword seen (which may be old) and manually handle the event.
   useKeywords(['msg.msg'], false);
   useEventListener('tron-keywords', handleMsg);
 
