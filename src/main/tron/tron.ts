@@ -408,7 +408,7 @@ export class TronConnection {
       if (!trackedKeyword) {
         this.trackedKeywords.set(key, null);
         untracked.push(keywords[idx]);
-      } else {
+      } else if (getKeys) {
         this.emitKeyword(key, trackedKeyword);
       }
     });

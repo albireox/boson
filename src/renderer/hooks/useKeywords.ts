@@ -17,22 +17,22 @@ interface ReturnType {
 }
 export default function useKeywords(
   keywords: string[],
-  getKeys = true
+  getLast = true
 ): ReturnType {
   const channel = 'tron-keywords';
 
-  const connectionStatus = useConnectionStatus();
+  const [connectionStatus] = useConnectionStatus();
 
   const [keys, setKeys] = React.useState<{ [key: string]: any }>(
     Object.fromEntries(keywords.map((k) => [k, undefined]))
   );
 
-  const ref = React.useRef({ keywords, getKeys });
+  const ref = React.useRef({ keywords, getLast });
 
   const handleEvent = React.useCallback((name: string, keyword: Keyword) => {
     const update: { [key: string]: any } = {};
-    // For convenience, we store the keyword as its name (without the actor prefix)
-    // and as the actor.keyword name.
+    // For convenience, we store the keyword as its name
+    // (without the actor prefix) and as the actor.keyword name.
     update[keyword.name] = keyword;
     update[name] = keyword;
     setKeys((previous) => ({ ...previous, ...update }));
@@ -45,7 +45,7 @@ export default function useKeywords(
 
     window.electron.tron.subscribeKeywords(
       ref.current.keywords,
-      ref.current.getKeys
+      ref.current.getLast
     );
   }, [channel, connectionStatus]);
 
