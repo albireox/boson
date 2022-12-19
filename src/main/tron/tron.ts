@@ -427,9 +427,6 @@ export class TronConnection {
             if (replies.length > 0) {
               replies.every((reply) => {
                 if (reply.code !== ReplyCode.Info) return true;
-
-                // Change sender so that it will appear as if coming from the actor.
-                reply.sender = actor;
                 this.processReply(reply);
                 return true;
               });
@@ -450,8 +447,13 @@ export class TronConnection {
   }
 
   private emitKeyword(name: string, keyword: Keyword) {
+    let pName = name;
+    if (name.startsWith('keys_')) {
+      pName = name.slice(5);
+    }
+
     this.keywordListeners.forEach((keys, wC) => {
-      if (keys.has(name)) {
+      if (keys.has(pName)) {
         if (wC.isDestroyed()) {
           this.unsubscribeKeywordListener(wC);
           log.debug(`Removing keyword event for window ${wC.id}.`);
@@ -459,22 +461,22 @@ export class TronConnection {
         }
 
         try {
-          wC.send('tron-keywords', name, keyword);
+          wC.send('tron-keywords', pName, keyword);
         } catch {
-          log.error(`Failed sending keyword ${name} to tron-keywords.`);
+          log.error(`Failed sending keyword ${pName} to tron-keywords.`);
         }
       }
     });
 
     // Update keywords that we are tracking.
-    if (this.trackedKeywords.has(name)) {
-      this.trackedKeywords.set(name, keyword);
+    if (this.trackedKeywords.has(pName)) {
+      this.trackedKeywords.set(pName, keyword);
     }
 
-    if (this.trackedKeywordsAll.has(name)) {
-      const current = this.trackedKeywordsAll.get(name) ?? [];
+    if (this.trackedKeywordsAll.has(pName) && !name.startsWith('keys_')) {
+      const current = this.trackedKeywordsAll.get(pName) ?? [];
       current.push(keyword);
-      this.trackedKeywordsAll.set(name, current);
+      this.trackedKeywordsAll.set(pName, current);
     }
   }
 
