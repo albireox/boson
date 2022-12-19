@@ -117,7 +117,8 @@ export default function loadEvents() {
     async (event, property, channel: string) => {
       const unsubscribe = store.onDidChange(
         property,
-        (newValue) => event.sender && event.sender.send(channel, newValue)
+        (newValue) =>
+          !event.sender.isDestroyed() && event.sender.send(channel, newValue)
       );
       storeSubscriptions.set(channel, unsubscribe);
     }
