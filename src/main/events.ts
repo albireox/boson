@@ -97,7 +97,7 @@ export default function loadEvents() {
       event.returnValue = config[val as keyof typeof config] ?? undefined;
     } else if (mode === 'merge') {
       const def = config[val as keyof typeof config] ?? {};
-      const user: { [key: string]: any } = store.get(val);
+      const user: { [key: string]: unknown } = store.get(val);
       event.returnValue = { ...def, ...user };
     } else {
       event.returnValue = undefined;
