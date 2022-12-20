@@ -33,6 +33,8 @@ const AdornmentIconButton = styled((props: IconButtonProps) => (
   '&:hover': { color: theme.palette.text.primary },
 }));
 
+type EmojiType = { native: string };
+
 export default function Input() {
   const [value, setValue] = React.useState('');
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement>();
@@ -71,7 +73,7 @@ export default function Input() {
   );
 
   const handleEmoji = React.useCallback(
-    (emoji: { native: string }) => {
+    (emoji: EmojiType) => {
       const { current } = inputRef;
       if (emoji && current) {
         current.focus();
@@ -131,7 +133,7 @@ export default function Input() {
           horizontal: 'left',
         }}
       >
-        <Picker data={data} onEmojiSelect={(emoji) => handleEmoji(emoji)} />
+        <Picker data={data} onEmojiSelect={handleEmoji} />
       </Popover>
     </Box>
   );
