@@ -21,7 +21,7 @@ function evaluateKeyword(value: string) {
   if (!Number.isNaN(Number(value))) {
     return Number(value);
   }
-  const match = value.match(/^["]+(.*?)["]+$|^(?!")(.+?)(?<!")$/);
+  const match = value.match(/^["]+(.*)["]+$|^(?!")(.+)(?<!")$/);
   if (match) {
     return match[1] || match[2];
   }
@@ -48,31 +48,33 @@ export default function parseLine(
   if (lineMatched.groups.keywords) {
     const matchedKeywords = lineMatched.groups.keywords;
 
-    const keywords = matchedKeywords.split(/\s*;\s*/).map((kw: string) => {
-      let key: string;
-      let values: string;
+    const keywords = matchedKeywords
+      .split(/;(?=(?:[^"]*"[^"]*")*[^"]*$)/)
+      .map((kw: string) => {
+        let key: string;
+        let values: string;
 
-      const kwMatched = kw.trim().match(/(?<key>\w+)=(?<values>.+)/);
-      if (!kwMatched || !kwMatched.groups) {
-        // Case where the keyword does not have a value (e.g. loggedIn).
-        key = kw;
-        values = '';
-      } else {
-        key = kwMatched.groups.key;
-        values = kwMatched.groups.values;
-      }
-      // Select all groups split by , except when the comma is inside quotes.
-      const rawValues = values.matchAll(/[^,"']+|"([^"]*)"|'([^']*)'/g);
-      const keyword: Keyword = {
-        name: key,
-        sender: lineMatched.groups?.sender,
-        commander: lineMatched.groups?.commander,
-        values: [...rawValues].map((value) => {
-          return evaluateKeyword(value[0]);
-        }),
-      };
-      return keyword;
-    });
+        const kwMatched = kw.trim().match(/(?<key>\w+)=(?<values>.+)/);
+        if (!kwMatched || !kwMatched.groups) {
+          // Case where the keyword does not have a value (e.g. loggedIn).
+          key = kw;
+          values = '';
+        } else {
+          key = kwMatched.groups.key;
+          values = kwMatched.groups.values;
+        }
+        // Select all groups split by , except when the comma is inside quotes.
+        const rawValues = values.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+        const keyword: Keyword = {
+          name: key,
+          sender: lineMatched.groups?.sender,
+          commander: lineMatched.groups?.commander,
+          values: rawValues.map((value) => {
+            return evaluateKeyword(value);
+          }),
+        };
+        return keyword;
+      });
 
     return [lineMatched, keywords];
   }
