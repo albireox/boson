@@ -95,8 +95,11 @@ export default function Input() {
         onChange={handleChange}
         onKeyDown={(event) => event.key === 'Enter' && sendCommand()}
         sx={(theme) => ({
-          height: '40px',
           backgroundColor: theme.palette.action.boxBackground,
+          '&.MuiOutlinedInput-root': {
+            py: 1.5,
+            px: 1.5,
+          },
           '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
         })}
         value={value}
@@ -104,6 +107,7 @@ export default function Input() {
         fullWidth
         margin='none'
         autoFocus
+        multiline
         placeholder='Message'
         startAdornment={
           <InputAdornment position='start'>
