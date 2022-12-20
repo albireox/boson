@@ -61,8 +61,9 @@ export default function Input() {
   };
 
   const sendCommand = React.useCallback(() => {
-    window.electron.tron.send(`msg ${value}`).catch(() => {});
     setValue('');
+
+    window.electron.tron.send(`msg ${value}`).catch(() => {});
   }, [value]);
 
   const handleChange = React.useCallback(
@@ -89,11 +90,21 @@ export default function Input() {
     [value]
   );
 
+  const handleKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        sendCommand();
+      }
+    },
+    [sendCommand]
+  );
+
   return (
     <Box display='flex' flexDirection='row' px={2} pb={2}>
       <OutlinedInput
         onChange={handleChange}
-        onKeyDown={(event) => event.key === 'Enter' && sendCommand()}
+        onKeyDown={handleKeyDown}
         sx={(theme) => ({
           backgroundColor: theme.palette.action.boxBackground,
           '&.MuiOutlinedInput-root': {
