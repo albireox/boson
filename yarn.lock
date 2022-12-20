@@ -1522,6 +1522,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emoji-mart/data@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@emoji-mart/data@npm:1.1.0"
+  checksum: 6adf2bf746a7b46de31ac0f6f5b80b9beef8b9d75f22396730f57ba3edd02bdbaccccb970fa3af4dba78c34c517e6403b401ab23a17227f15ffa3e7274a149f4
+  languageName: node
+  linkType: hard
+
+"@emoji-mart/react@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@emoji-mart/react@npm:1.1.0"
+  peerDependencies:
+    emoji-mart: ^5.2
+    react: ^16.8 || ^17 || ^18
+  checksum: 7ac5f13ce2adb3363af624d3d51896c36ac46237113ec1d0ec3833188ce2926311c946df8fd877aa53451b97d6a5ee006baf165a1334468c64571cf7a664d165
+  languageName: node
+  linkType: hard
+
 "@emotion/babel-plugin@npm:^11.10.5":
   version: 11.10.5
   resolution: "@emotion/babel-plugin@npm:11.10.5"
@@ -2908,6 +2925,15 @@ __metadata:
   dependencies:
     "@types/ms": "*"
   checksum: 0a7b89d8ed72526858f0b61c6fd81f477853e8c4415bb97f48b1b5545248d2ae389931680b94b393b993a7cfe893537a200647d93defe6d87159b96812305adc
+  languageName: node
+  linkType: hard
+
+"@types/emoji-mart@npm:^3.0.9":
+  version: 3.0.9
+  resolution: "@types/emoji-mart@npm:3.0.9"
+  dependencies:
+    "@types/react": "*"
+  checksum: 97e22728985e1542975b5d9ec43fc2bb9bfd1952640be177799a52f3cb5785def80ab59c23c34ac2310604c7097f2c1d24cebf4dd6a17706fceda6725c6d8150
   languageName: node
   linkType: hard
 
@@ -4589,6 +4615,8 @@ __metadata:
   dependencies:
     "@electron/notarize": ^1.2.3
     "@electron/rebuild": ^3.2.10
+    "@emoji-mart/data": ^1.1.0
+    "@emoji-mart/react": ^1.1.0
     "@emotion/react": ^11.10.5
     "@emotion/styled": ^11.10.5
     "@fontsource/roboto": ^4.5.8
@@ -4601,6 +4629,7 @@ __metadata:
     "@teamsupercell/typings-for-css-modules-loader": ^2.5.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
+    "@types/emoji-mart": ^3.0.9
     "@types/jest": ^29.2.4
     "@types/lodash": ^4.14.191
     "@types/node": 18.11.17
@@ -4630,6 +4659,7 @@ __metadata:
     electron-store: ^8.1.0
     electron-updater: ^5.3.0
     electronmon: ^2.0.2
+    emoji-mart: ^5.4.0
     eslint: ^8.30.0
     eslint-config-airbnb-base: ^15.0.0
     eslint-config-erb: ^4.0.3
@@ -6439,6 +6469,13 @@ __metadata:
   version: 0.13.1
   resolution: "emittery@npm:0.13.1"
   checksum: 2b089ab6306f38feaabf4f6f02792f9ec85fc054fda79f44f6790e61bbf6bc4e1616afb9b232e0c5ec5289a8a452f79bfa6d905a6fd64e94b49981f0934001c6
+  languageName: node
+  linkType: hard
+
+"emoji-mart@npm:^5.4.0":
+  version: 5.4.0
+  resolution: "emoji-mart@npm:5.4.0"
+  checksum: fe51dcd5afd29f01e923f64d85cdb78d43729e65daa9beae764783fef92d6133976120c9d78a816be45b10aa756f5df9df6bd2bc72e3efc67b5757349784db08
   languageName: node
   linkType: hard
 
