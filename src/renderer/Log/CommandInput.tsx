@@ -165,10 +165,7 @@ export default function CommandInput(props: CommandInputProps) {
         onChange={handleChange}
         onKeyDown={handleKeyPress}
         sx={(theme) => ({
-          '&.MuiOutlinedInput-root': {
-            py: 1.5,
-            px: 1.5,
-          },
+          height: 40,
           backgroundColor: theme.palette.action.boxBackground,
           '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
         })}
@@ -176,7 +173,6 @@ export default function CommandInput(props: CommandInputProps) {
         fullWidth
         margin='none'
         autoFocus
-        multiline
         inputRef={textRef}
         placeholder='Send command to tron'
         spellCheck={false}
