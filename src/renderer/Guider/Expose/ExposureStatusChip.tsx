@@ -16,7 +16,7 @@ export enum GuiderStatus {
   CORRECTING = 1 << 3,
   STOPPING = 1 << 4,
   FAILED = 1 << 5,
-  NON_IDLE = EXPOSING | PROCESSING | CORRECTING | STOPPING,
+  WAITING = 1 << 6,
 }
 
 type ValidColors =
@@ -54,6 +54,9 @@ export default function ExposureStatusChip() {
     } else if (bits & GuiderStatus.PROCESSING) {
       setStatus('Processing');
       setColor('success');
+    } else if (bits & GuiderStatus.WAITING) {
+      setStatus('Waiting');
+      setColor('default');
     } else if (bits & GuiderStatus.IDLE) {
       setStatus('Idle');
       setColor('default');
