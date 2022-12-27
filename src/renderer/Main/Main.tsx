@@ -45,6 +45,7 @@ const ReconnectSnackbar = ({
   return (
     <Snackbar
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      sx={{ margin: 1 }}
       open={open}
     >
       <Alert severity='warning'>
