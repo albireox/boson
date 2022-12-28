@@ -163,7 +163,7 @@ function MessageViewportInner(
       }}
       followOutput='auto'
       alignToBottom
-      atBottomThreshold={400}
+      atBottomThreshold={100}
       increaseViewportBy={400}
       isScrolling={(scrolling) => setIsScrolling(scrolling)}
       atBottomStateChange={(atBottom) => setIsAtBottom(atBottom)}
