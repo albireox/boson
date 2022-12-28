@@ -5,6 +5,7 @@
       "reconfigure",
       "fvc",
       "reslew",
+      "lamps",
       "boss_flat",
       "boss_hartmann",
       "boss_arcs",
@@ -13,7 +14,10 @@
     ],
     "precondition_stages": ["prepare"],
     "cleanup_stages": ["cleanup"],
-    "concurrent": [["slew", "reconfigure"]],
+    "concurrent": [
+      ["slew", "reconfigure"],
+      ["reslew", "lamps"]
+    ],
     "descriptions": {
       "reconfigure": "Reconf.",
       "boss_hartmann": "Hartmann",
@@ -51,6 +55,5 @@
       "pairs": true,
       "count": 1
     }
-
   }
 }
