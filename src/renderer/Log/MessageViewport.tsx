@@ -5,7 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import Reply from 'main/tron/reply';
 import React from 'react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
@@ -14,12 +14,17 @@ import { ViewportRefType } from '.';
 import { useLogConfig, useReplyFilter } from './hooks';
 import Message from './Message';
 
+interface MessageViewportProps {
+  mode: 'virtuoso' | 'column-reverse';
+}
+
 function MessageViewportInner(
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  props: {},
+  props: MessageViewportProps,
   ref: React.ForwardedRef<ViewportRefType>
 ) {
   const theme = useTheme();
+
+  const { mode } = props;
 
   const [filtered, setFiltered] = React.useState<Reply[]>([]);
 
@@ -109,6 +114,8 @@ function MessageViewportInner(
     // bottom, but the extra scroll to bottom is slightly noticeable. Still,
     // better than not being able to see half of the last line.
 
+    if (mode !== 'virtuoso') return () => {};
+
     if (!isAtBottom || isScrolling || !triggerToBottom) return () => {};
 
     const timeout = setTimeout(() => {
@@ -118,13 +125,15 @@ function MessageViewportInner(
     return () => {
       clearTimeout(timeout);
     };
-  }, [isAtBottom, isScrolling, nFiltered, triggerToBottom]);
+  }, [isAtBottom, isScrolling, nFiltered, triggerToBottom, mode]);
 
   React.useEffect(() => {
     // When the initial messages load the scroll does not always go to the
     // bottom. This seems to happen mostly when the client is disconnected and
     // there are no new messages. This runs only once when the window loads,
     // after a delay, and sends the viewport to the bottom.
+
+    if (mode !== 'virtuoso') return () => {};
 
     const timeout = setTimeout(() => {
       virtuoso.current?.scrollToIndex(nFiltered.current);
@@ -136,7 +145,34 @@ function MessageViewportInner(
     // it's a ref. I think this is a bug in the eslint. If the same code in
     // usePrevious is copied inside the component, it's not necessary to add
     // nFiltered to the dependency list.
-  }, [nFiltered]);
+  }, [nFiltered, mode]);
+
+  if (mode === 'column-reverse') {
+    return (
+      <Box
+        component='div'
+        width='100%'
+        flexGrow={1}
+        flexDirection='column-reverse'
+        display='flex'
+        overflow='scroll'
+      >
+        {filtered
+          .slice(0)
+          .reverse()
+          .map((reply, index) => (
+            <Message
+              key={index}
+              reply={reply}
+              theme={theme}
+              searchText={config.searchText}
+              searchUseRegEx={config.searchUseRegEx}
+              wrap={config.wrap}
+            />
+          ))}
+      </Box>
+    );
+  }
 
   return (
     <Virtuoso
@@ -171,5 +207,5 @@ function MessageViewportInner(
   );
 }
 
-const MessageViewport = React.forwardRef<ViewportRefType>(MessageViewportInner);
+const MessageViewport = React.forwardRef(MessageViewportInner);
 export default MessageViewport;

@@ -72,8 +72,15 @@ export default function Log(props: LogProps) {
       <CssBaseline />
       <LogConfigContext.Provider value={logConfig}>
         <LogHeader logId={logId} viewportRef={viewportRef} />
-        <Stack height='100%' direction='column' px={2} pb={2} spacing={3}>
-          <MessageViewport ref={viewportRef} />
+        <Stack
+          height='100%'
+          direction='column'
+          px={2}
+          pb={2}
+          spacing={3}
+          overflow='hidden'
+        >
+          <MessageViewport mode='virtuoso' ref={viewportRef} />
           <CommandInput viewportRef={viewportRef} />
         </Stack>
       </LogConfigContext.Provider>
