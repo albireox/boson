@@ -4902,7 +4902,7 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
     react-highlight-words: ^0.18.0
-    react-pdf: ^6.2.0
+    react-pdf: ^6.2.1
     react-refresh: ^0.14.0
     react-router-dom: ^6.6.1
     react-test-renderer: ^18.2.0
@@ -12194,9 +12194,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-pdf@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "react-pdf@npm:6.2.0"
+"react-pdf@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "react-pdf@npm:6.2.1"
   dependencies:
     "@babel/runtime": ^7.0.0
     clsx: ^1.2.1
@@ -12214,7 +12214,7 @@ __metadata:
   peerDependenciesMeta:
     file-loader:
       optional: true
-  checksum: 9504fbcf5a206927630687f06e5bfcf3000780d8780c6fce3ab8309957c3c9a1036c122a600fc898a31c0f70b8d5d27844141fd450e587eb00b65686490a7a94
+  checksum: eba9b904c0ba1e6d2056e282e941216a11bd19d9abc975d3ddd567b21aa8f06efb6fdfe4104c89977dd0486693bd6b1f786ac73a58ecb8f2a427b0dfd2b43c56
   languageName: node
   linkType: hard
 
