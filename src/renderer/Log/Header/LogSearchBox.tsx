@@ -141,6 +141,7 @@ export default function LogSearchBox() {
 
   return (
     <SearchBox
+      value={value}
       expand
       onChange={handleChange}
       onKeyDown={handleKeyDown}
