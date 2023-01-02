@@ -85,7 +85,7 @@ export class TronConnection {
 
     this.initialiseKeywords();
 
-    setInterval(() => this.emitToLoggers(), 500);
+    setInterval(() => this.emitToLoggers(), 1000);
   }
 
   private initialiseKeywords() {
