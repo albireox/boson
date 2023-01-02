@@ -19,6 +19,7 @@ export default function SnapSearchBox(props: SnapSearchBoxProps) {
     <SearchBox
       sx={{
         minWidth: 100,
+        maxWidth: 150,
         fontWeight: 500,
         '& .MuiInputBase-input': {
           padding: '2.5px',

@@ -17,8 +17,8 @@
     },
     "snapshots": {
       "trafficLightPosition": { "x": 10, "y": 15 },
-      "minWidth": 480,
-      "minHeight": 400
+      "minWidth": 600,
+      "minHeight": 580
     },
     "log": {
       "trafficLightPosition": { "x": 10, "y": 15 },

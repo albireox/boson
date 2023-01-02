@@ -6,6 +6,7 @@
  */
 
 import { Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import {
   bindMenu,
   bindTrigger,
@@ -51,13 +52,16 @@ export default function FileNavigation(props: FileNavigationProps) {
 
   return (
     <>
-      <Typography
-        variant='h6'
-        {...bindTrigger(popupState)}
-        sx={{ cursor: 'pointer' }}
-      >
-        {files[index] ? files[index].split('/').reverse()[0] : 'Snapshots'}
-      </Typography>
+      <Box textOverflow='ellipsis' minWidth={100}>
+        <Typography
+          noWrap
+          variant='h6'
+          {...bindTrigger(popupState)}
+          sx={{ cursor: 'pointer' }}
+        >
+          {files[index] ? files[index].split('/').reverse()[0] : 'Snapshots'}
+        </Typography>
+      </Box>
       <BosonMenu {...bindMenu(popupState)}>
         {Array.from(files)
           .reverse()
