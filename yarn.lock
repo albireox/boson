@@ -1531,20 +1531,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emoji-mart/data@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@emoji-mart/data@npm:1.1.0"
-  checksum: 6adf2bf746a7b46de31ac0f6f5b80b9beef8b9d75f22396730f57ba3edd02bdbaccccb970fa3af4dba78c34c517e6403b401ab23a17227f15ffa3e7274a149f4
+"@emoji-mart/data@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@emoji-mart/data@npm:1.1.1"
+  checksum: 705d8021c62f8d22f8ed3fa2a106b11eea58610cb8899a401a104be59e83e4ba18e57b06e34d0b3a967fa8e5fbee5f6646162c2ee540db06cb757a5e4370e92e
   languageName: node
   linkType: hard
 
-"@emoji-mart/react@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@emoji-mart/react@npm:1.1.0"
+"@emoji-mart/react@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@emoji-mart/react@npm:1.1.1"
   peerDependencies:
     emoji-mart: ^5.2
     react: ^16.8 || ^17 || ^18
-  checksum: 7ac5f13ce2adb3363af624d3d51896c36ac46237113ec1d0ec3833188ce2926311c946df8fd877aa53451b97d6a5ee006baf165a1334468c64571cf7a664d165
+  checksum: def4dddaa01ce88c396510d84d1878b881fe0f9c484a836a50e3db784a91ab98edf94816cff503b4d1cab7b00400a01c87e32d19dee2d950f64ef9243f79101e
   languageName: node
   linkType: hard
 
@@ -1703,9 +1703,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@eslint/eslintrc@npm:1.4.0"
+"@eslint/eslintrc@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "@eslint/eslintrc@npm:1.4.1"
   dependencies:
     ajv: ^6.12.4
     debug: ^4.3.2
@@ -1716,7 +1716,7 @@ __metadata:
     js-yaml: ^4.1.0
     minimatch: ^3.1.2
     strip-json-comments: ^3.1.1
-  checksum: 73e39c833deafde8d8706e6fa9b52b6d99927c094ead8e405ea4174e8197ec24aac9ba88ae38cc8ad32eaccf07b9c7fc5dc70761d1fba6da41a928691447305f
+  checksum: cd3e5a8683db604739938b1c1c8b77927dc04fce3e28e0c88e7f2cd4900b89466baf83dfbad76b2b9e4d2746abdd00dd3f9da544d3e311633d8693f327d04cd7
   languageName: node
   linkType: hard
 
@@ -3209,13 +3209,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*, @types/jest@npm:^29.2.4":
+"@types/jest@npm:*":
   version: 29.2.4
   resolution: "@types/jest@npm:29.2.4"
   dependencies:
     expect: ^29.0.0
     pretty-format: ^29.0.0
   checksum: 9deb4756fe1b438d41ff1aae7d6c216c9e49e5fe60f539f8edb6698ffeb530ff7b25d37e223439b03602ca3a7397c9c2e53e1a39c7bd616353472fce0cc04107
+  languageName: node
+  linkType: hard
+
+"@types/jest@npm:^29.2.5":
+  version: 29.2.5
+  resolution: "@types/jest@npm:29.2.5"
+  dependencies:
+    expect: ^29.0.0
+    pretty-format: ^29.0.0
+  checksum: d668470f00ec4cb8b8457f1fd90f7358fad8f22d74b85006dad6be522d6b9bf10f49f597e88d1d1a518d211c1b65be32a1f27f0e49ce0658d110a9206b8ea310
   languageName: node
   linkType: hard
 
@@ -3844,24 +3854,6 @@ __metadata:
     "@typescript-eslint/types": 5.47.1
     eslint-visitor-keys: ^3.3.0
   checksum: b4d1f4daa67e962d22c41325d9dcb6b2efde1caf354a2edb5bf682b92ab8c6205435d0b12f39ce9771955250e26f2a6f03adabb37e62e5aac8225691a59ef153
-  languageName: node
-  linkType: hard
-
-"@virtuoso.dev/react-urx@npm:^0.2.12":
-  version: 0.2.13
-  resolution: "@virtuoso.dev/react-urx@npm:0.2.13"
-  dependencies:
-    "@virtuoso.dev/urx": ^0.2.13
-  peerDependencies:
-    react: ">=16"
-  checksum: 173e91c21f6a8cd506ad3b72af10656897fe1951124ed9eeb1fd85575534993bea2f97cba3f81c08ae1e88a2613df348e2c80d0ceecb3021f8c8c8fe0e053ee2
-  languageName: node
-  linkType: hard
-
-"@virtuoso.dev/urx@npm:^0.2.12, @virtuoso.dev/urx@npm:^0.2.13":
-  version: 0.2.13
-  resolution: "@virtuoso.dev/urx@npm:0.2.13"
-  checksum: 682a99cf40ccc429241268dd37495cd1ed4695ae58b5a1169c75df1630d5dc3fd8eb3aaa655f71c37f39ba9c23c0aaf4401b76d8a986986d1a38a422d596a6ba
   languageName: node
   linkType: hard
 
@@ -4826,8 +4818,8 @@ __metadata:
   dependencies:
     "@electron/notarize": ^1.2.3
     "@electron/rebuild": ^3.2.10
-    "@emoji-mart/data": ^1.1.0
-    "@emoji-mart/react": ^1.1.0
+    "@emoji-mart/data": ^1.1.1
+    "@emoji-mart/react": ^1.1.1
     "@emotion/react": ^11.10.5
     "@emotion/styled": ^11.10.5
     "@fontsource/roboto": ^4.5.8
@@ -4841,7 +4833,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
     "@types/emoji-mart": ^3.0.9
-    "@types/jest": ^29.2.4
+    "@types/jest": ^29.2.5
     "@types/lodash": ^4.14.191
     "@types/node": 18.11.18
     "@types/react": ^18.0.26
@@ -4857,7 +4849,7 @@ __metadata:
     chalk: ^4.1.2
     concurrently: ^7.6.0
     copy-webpack-plugin: ^11.0.0
-    core-js: ^3.27.0
+    core-js: ^3.27.1
     cross-env: ^7.0.3
     css-loader: ^6.7.3
     css-minimizer-webpack-plugin: ^4.2.2
@@ -4871,14 +4863,14 @@ __metadata:
     electron-updater: ^5.3.0
     electronmon: ^2.0.2
     emoji-mart: ^5.4.0
-    eslint: ^8.30.0
+    eslint: ^8.31.0
     eslint-config-airbnb-base: ^15.0.0
     eslint-config-erb: ^4.0.3
     eslint-import-resolver-typescript: ^3.5.2
     eslint-import-resolver-webpack: ^0.13.2
     eslint-plugin-compat: ^4.0.2
     eslint-plugin-import: ^2.26.0
-    eslint-plugin-jest: ^27.1.7
+    eslint-plugin-jest: ^27.2.0
     eslint-plugin-jsx: ^0.1.0
     eslint-plugin-jsx-a11y: ^6.6.1
     eslint-plugin-promise: ^6.1.1
@@ -4906,7 +4898,7 @@ __metadata:
     react-refresh: ^0.14.0
     react-router-dom: ^6.6.1
     react-test-renderer: ^18.2.0
-    react-virtuoso: ^3.1.5
+    react-virtuoso: ^4.0.1
     rimraf: ^3.0.2
     sass: ^1.57.1
     sass-loader: ^13.2.0
@@ -5733,10 +5725,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.27.0":
-  version: 3.27.0
-  resolution: "core-js@npm:3.27.0"
-  checksum: 14bf6772e1c73a1cb3848ff63cae8d8f28354195e95ff550f2c4a7ae04650987691e37d6c9fe73789ffd97055b024fc7df825c203965f9a9b9aa6fb9f26f8571
+"core-js@npm:^3.27.1":
+  version: 3.27.1
+  resolution: "core-js@npm:3.27.1"
+  checksum: d50b5f88aea4302512ad9446c18e90f4d35dea1e6d8d3f87337690677061565ff11a670f1e0c87de57aa6074375fbb25ed5784076c040d3c4de8b4bce7d2ebeb
   languageName: node
   linkType: hard
 
@@ -7230,9 +7222,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:^27.1.7":
-  version: 27.1.7
-  resolution: "eslint-plugin-jest@npm:27.1.7"
+"eslint-plugin-jest@npm:^27.2.0":
+  version: 27.2.0
+  resolution: "eslint-plugin-jest@npm:27.2.0"
   dependencies:
     "@typescript-eslint/utils": ^5.10.0
   peerDependencies:
@@ -7243,7 +7235,7 @@ __metadata:
       optional: true
     jest:
       optional: true
-  checksum: 1173e60450d8fa7a913d654e80e26176cc64c35f287d680d6fe4187a53974fd8c6883749924c8ea2a9328e295cba4d1be0b3047492653270e9341da1a3fec580
+  checksum: 83554bb8eed289f903e2e03871a42a9b7b37b5e443d4a1501a42e004db49cddad894592ccec9840221b412ea3d2388428a1b11938031e5628d21c5a3210f1240
   languageName: node
   linkType: hard
 
@@ -7421,11 +7413,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.30.0":
-  version: 8.30.0
-  resolution: "eslint@npm:8.30.0"
+"eslint@npm:^8.31.0":
+  version: 8.31.0
+  resolution: "eslint@npm:8.31.0"
   dependencies:
-    "@eslint/eslintrc": ^1.4.0
+    "@eslint/eslintrc": ^1.4.1
     "@humanwhocodes/config-array": ^0.11.8
     "@humanwhocodes/module-importer": ^1.0.1
     "@nodelib/fs.walk": ^1.2.8
@@ -7466,7 +7458,7 @@ __metadata:
     text-table: ^0.2.0
   bin:
     eslint: bin/eslint.js
-  checksum: b7525bb465b342665c3b8bab7e114d514ef1bc4e79f211c919863f9c71767e7412ec82383a22614a92d159783f91101018817000f7c61ce69a5e7015280cafaf
+  checksum: 5e5688bb864edc6b12d165849994812eefa67fb3fc44bb26f53659b63edcd8bcc68389d27cc6cc9e5b79ee22f24b6f311fa3ed047bddcafdec7d84c1b5561e4f
   languageName: node
   linkType: hard
 
@@ -12289,16 +12281,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-virtuoso@npm:^3.1.5":
-  version: 3.1.5
-  resolution: "react-virtuoso@npm:3.1.5"
-  dependencies:
-    "@virtuoso.dev/react-urx": ^0.2.12
-    "@virtuoso.dev/urx": ^0.2.12
+"react-virtuoso@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "react-virtuoso@npm:4.0.1"
   peerDependencies:
     react: ">=16 || >=17 || >= 18"
     react-dom: ">=16 || >=17 || >= 18"
-  checksum: c6dd6921e73ec1f88ae99c0eb002df24cdd73eb9154d71be43ea957b613ca9e976d6b0625b78f25a4dafc415ac680c6de576466847887d1da57bb3313cce7ec8
+  checksum: ef95ab503780014364760fe5956946fa10b9918889df5794468def49ebd1fa4902f0545727b30185a0a2d68b8ac1d1a57829c321fc67b70feb9df01b1f6f3eb3
   languageName: node
   linkType: hard
 
