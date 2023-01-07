@@ -5,8 +5,6 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import {
   contextBridge,
   ipcRenderer,
@@ -38,7 +36,7 @@ const ElectronAPI = {
     invoke(channel: string, args: any[]) {
       return ipcRenderer.invoke(channel, args);
     },
-    removeListener(channel: string, listener: (...args: any[]) => void) {
+    removeListener(channel: string, listener: () => void) {
       ipcRenderer.removeListener(channel, listener);
     },
     removeAllListeners(channel: string) {

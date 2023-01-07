@@ -1,6 +1,6 @@
 module.exports = {
   extends: 'erb',
-  plugins: ['jsx'],
+  plugins: ['jsx', '@typescript-eslint'],
   rules: {
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
@@ -11,19 +11,27 @@ module.exports = {
     'jsx-quotes': [2, 'prefer-single'],
     'react/no-multi-comp': [2, { ignoreStateless: true }],
     'react/forbid-prop-types': 'error',
-    'react/jsx-filename-extension': 'error',
+    'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
     'react/jsx-pascal-case': 'error',
     'react/prop-types': 'off', // Since we do not use prop-types
     'react/require-default-props': 'off', // Since we do not use prop-types
     'no-bitwise': 'off',
     'promise/catch-or-return': [2, { allowFinally: true }],
-    '@typescript-eslint/no-unused-expressions': [
-      'error',
-      { allowShortCircuit: true, allowTernary: true },
-    ],
     'react/jsx-props-no-spreading': 'off',
     'react/no-array-index-key': 'off',
     'import/prefer-default-export': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
   },
   parserOptions: {
     ecmaVersion: 2020,
