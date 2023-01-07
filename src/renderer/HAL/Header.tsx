@@ -123,10 +123,6 @@ function DesignInput() {
   const [loading, setLoading] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
 
-  // This is a ref to an empty and hidden textarea that we use to easily steal the focus from
-  // the design input.
-  const ref = React.useRef<HTMLTextAreaElement>(null);
-
   React.useEffect(() => {
     const { configuration_loaded: configurationLoaded } = keywords;
 
@@ -152,8 +148,6 @@ function DesignInput() {
     setFocused(false);
     setError(false);
     setLoading(false);
-
-    if (ref.current) ref.current.focus();
   }, [updateValue]);
 
   React.useEffect(() => {
@@ -217,7 +211,7 @@ function DesignInput() {
                 '& input': {
                   padding: focused ? '2px 8px' : '0px',
                   width: '80px',
-                  typography: 'h5',
+                  fontSize: focused ? '18px' : '21px',
                   color: focused ? 'text.primary' : color,
                 },
                 '& .MuiOutlinedInput-notchedOutline': {
@@ -257,11 +251,6 @@ function DesignInput() {
           {fieldID ? `Field ${fieldID}` : ''}
         </Typography>
       </Stack>
-
-      <textarea
-        ref={ref}
-        style={{ visibility: 'hidden', width: '0px', border: '0px' }}
-      />
 
       <Box ml={1} alignSelf='left'>
         {loading ? (
