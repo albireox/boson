@@ -52,7 +52,9 @@ export default function Scripts() {
 
   const checkRunning = async () => {
     const command = await window.electron.tron.send('hal script running');
-    const runningCommands = command.replies.reverse()[0].get('running_scripts');
+    const runningCommands = command.replies
+      .reverse()[0]
+      .getKeyword('running_scripts');
     if (runningCommands && runningCommands.values.includes(selectedScript))
       return false;
     setProgress(0);
@@ -60,7 +62,7 @@ export default function Scripts() {
   };
 
   const handleScriptEvent = (event: string) => {
-    event === 'running'
+    return event === 'running'
       ? setSelectorDisabled(true)
       : setSelectorDisabled(false);
   };

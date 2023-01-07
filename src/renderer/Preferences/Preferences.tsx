@@ -15,6 +15,25 @@ import HALPane from './Panes/Tools/HALPane';
 import LogWindowPane from './Panes/Tools/LogWindowPane';
 import { MenuItem, Title } from './typography';
 
+function MenuItemPreferences(props: {
+  name: string;
+  title: string;
+  selectedPane: string;
+  setSelectedPane: (string) => void;
+}) {
+  const { name, title, selectedPane, setSelectedPane } = props;
+  const DEFAULT_PANE = 'connection';
+
+  return (
+    <MenuItem
+      name={name}
+      title={title}
+      active={name === selectedPane}
+      onClick={(pane) => setSelectedPane(pane ?? DEFAULT_PANE)}
+    />
+  );
+}
+
 export default function Preferences() {
   const DEFAULT_PANE = 'connection';
 
@@ -39,17 +58,7 @@ export default function Preferences() {
     }
   };
 
-  const MenuItemPreferences = (props: { name: string; title: string }) => {
-    const { name, title } = props;
-    return (
-      <MenuItem
-        name={name}
-        title={title}
-        active={name === selectedPane}
-        onClick={(pane) => setSelectedPane(pane ?? DEFAULT_PANE)}
-      />
-    );
-  };
+  const props = { selectedPane, setSelectedPane };
 
   return (
     <Box
@@ -74,14 +83,26 @@ export default function Preferences() {
           <div style={{ flexGrow: 1 }} />
           <Stack direction='column'>
             <Title>USER SETTINGS</Title>
-            <MenuItemPreferences title='Connection' name='connection' />
-            <MenuItemPreferences title='Interface' name='interface' />
-            <MenuItemPreferences title='Advanced' name='advanced' />
+            <MenuItemPreferences
+              title='Connection'
+              name='connection'
+              {...props}
+            />
+            <MenuItemPreferences
+              title='Interface'
+              name='interface'
+              {...props}
+            />
+            <MenuItemPreferences title='Advanced' name='advanced' {...props} />
             <Divider sx={{ mt: 2, mb: 3 }} />
             <Title>TOOLS</Title>
-            <MenuItemPreferences title='Log window' name='log_window' />
-            <MenuItemPreferences title='Guider' name='guider' />
-            <MenuItemPreferences title='HAL' name='HAL' />
+            <MenuItemPreferences
+              title='Log window'
+              name='log_window'
+              {...props}
+            />
+            <MenuItemPreferences title='Guider' name='guider' {...props} />
+            <MenuItemPreferences title='HAL' name='HAL' {...props} />
           </Stack>
         </Stack>
       </Paper>

@@ -13,27 +13,29 @@ export type ExposureTimeInputType = {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const ExposureTimeInput = ({
+export function ExposureTimeInput({
   label,
   value,
   onChange,
-}: ExposureTimeInputType) => (
-  <TextField
-    label={label}
-    size='small'
-    type='number'
-    InputProps={{
-      endAdornment: <InputAdornment position='end'>s</InputAdornment>,
-    }}
-    variant='standard'
-    value={value}
-    onChange={onChange}
-    InputLabelProps={{
-      shrink: true,
-    }}
-    sx={{
-      width: '80px',
-      '& .MuiInputBase-root': { marginTop: 1 },
-    }}
-  />
-);
+}: ExposureTimeInputType) {
+  return (
+    <TextField
+      label={label}
+      size='small'
+      type='number'
+      InputProps={{
+        endAdornment: <InputAdornment position='end'>s</InputAdornment>,
+      }}
+      variant='standard'
+      value={value}
+      onChange={onChange}
+      InputLabelProps={{
+        shrink: true,
+      }}
+      sx={{
+        width: '80px',
+        '& .MuiInputBase-root': { marginTop: 1 },
+      }}
+    />
+  );
+}

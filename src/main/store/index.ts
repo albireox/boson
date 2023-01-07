@@ -5,4 +5,4 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-export { default, default_config as config, subscriptions } from './store';
+export { defaultConfig as config, store, subscriptions } from './store';

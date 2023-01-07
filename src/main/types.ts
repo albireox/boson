@@ -23,4 +23,4 @@ export type WindowParams = {
   trafficLightPosition?: { x: number; y: number };
 };
 
-export type WindowNames = keyof typeof config['windows'];
+export type WindowNames = keyof (typeof config)['windows'];

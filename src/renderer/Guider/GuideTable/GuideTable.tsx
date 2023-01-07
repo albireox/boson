@@ -57,11 +57,11 @@ export default function GuideTable() {
       focus_fit: focusFit,
     } = keywords;
 
-    pidRAKw && setPidRA(pidRAKw.values);
-    pidDecKw && setPidDec(pidDecKw.values);
-    pidRotKw && setPidRot(pidRotKw.values);
-    pidFocusKw && setPidFocus(pidFocusKw.values);
-    focusFit && setFocusMeasured(focusFit.values[6]);
+    if (pidRAKw) setPidRA(pidRAKw.values);
+    if (pidDecKw) setPidDec(pidDecKw.values);
+    if (pidRotKw) setPidRot(pidRotKw.values);
+    if (pidFocusKw) setPidFocus(pidFocusKw.values);
+    if (focusFit) setFocusMeasured(focusFit.values[6]);
   }, [keywords]);
 
   const columns: GridColDef[] = [

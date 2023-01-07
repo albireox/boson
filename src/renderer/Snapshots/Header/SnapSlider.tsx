@@ -8,12 +8,11 @@
 import { Box, Slider, SliderProps, Tooltip } from '@mui/material';
 
 interface SnapSliderProps extends Omit<SliderProps, 'onChange'> {
-  setScale?: (search: string) => void;
   onChange?: (newValue: number) => void;
 }
 
 export default function SnapSlider(props: SnapSliderProps) {
-  const { setScale, onChange, ...rest } = props;
+  const { onChange, ...rest } = props;
 
   return (
     <Tooltip title='Scale'>
@@ -35,7 +34,7 @@ export default function SnapSlider(props: SnapSliderProps) {
             },
           })}
           onChange={(event, newValue) => {
-            onChange &&
+            if (onChange)
               onChange(Array.isArray(newValue) ? newValue[0] : newValue);
           }}
           defaultValue={1}

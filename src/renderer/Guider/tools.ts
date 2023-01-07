@@ -16,7 +16,7 @@ export const loadExternalScript = (url: string) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleScript = (e: any) => {
-      e.type === 'load'
+      return e.type === 'load'
         ? resolve(true)
         : reject(new Error('Failed loading script'));
     };

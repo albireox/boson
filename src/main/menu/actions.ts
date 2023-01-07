@@ -7,8 +7,8 @@
 
 import { BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import store from '../store';
-import tron from '../tron/tron';
+import { store } from '../store';
+import { tron } from '../tron/tron';
 import { WindowParams } from '../types';
 
 export function saveWindows() {

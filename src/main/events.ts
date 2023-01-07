@@ -18,9 +18,9 @@ import {
 import * as keytar from 'keytar';
 import { promisify } from 'util';
 import { createWindow } from './main';
-import store, { config, subscriptions as storeSubscriptions } from './store';
+import { config, store, subscriptions as storeSubscriptions } from './store';
 import connectAndAuthorise from './tron/tools';
-import tron from './tron/tron';
+import { tron } from './tron/tron';
 import { CommandStatus } from './tron/types';
 
 export default function loadEvents() {

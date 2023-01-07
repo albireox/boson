@@ -14,7 +14,7 @@ interface TextAvatarProps {
   mine: boolean;
 }
 
-const TextAvatar = (props: TextAvatarProps) => {
+function TextAvatar(props: TextAvatarProps) {
   const { user, mine } = props;
   return (
     <Tooltip title={user}>
@@ -32,7 +32,23 @@ const TextAvatar = (props: TextAvatarProps) => {
       </Avatar>
     </Tooltip>
   );
-};
+}
+
+function ThisAvatar(props: { user: string; mine: boolean }) {
+  const { user, mine } = props;
+  return <TextAvatar user={user} mine={mine} />;
+}
+
+function UserLabel(props: { first: boolean; user: string }) {
+  const { user, first } = props;
+  return (
+    <Box display={first ? 'block' : 'none'}>
+      <Typography variant='body2' style={{ paddingBottom: 0 }}>
+        {user}
+      </Typography>
+    </Box>
+  );
+}
 
 interface BubbleProps {
   data: MessageType;
@@ -61,15 +77,6 @@ export default function Bubble(props: BubbleProps) {
 
   if (!message) return null;
 
-  const ThisAvatar = () => <TextAvatar user={user} mine={mine} />;
-  const UserLabel = () => (
-    <Box display={first ? 'block' : 'none'}>
-      <Typography variant='body2' style={{ paddingBottom: 0 }}>
-        {user}
-      </Typography>
-    </Box>
-  );
-
   return (
     <Stack
       direction='row'
@@ -77,10 +84,14 @@ export default function Bubble(props: BubbleProps) {
       spacing={0.75}
       marginBottom={last ? '5px' : undefined}
     >
-      {!mine && last ? <ThisAvatar /> : <Box width={25} />}
+      {!mine && last ? (
+        <ThisAvatar user={user} mine={mine} />
+      ) : (
+        <Box width={25} />
+      )}
       <Box flexGrow={1} sx={{ textAlign: mine ? '-webkit-right' : 'left' }}>
         <Stack direction='column'>
-          <UserLabel />
+          <UserLabel user={user} first={first} />
           <Tooltip title={date.toUTCString()}>
             <Box
               component='p'
@@ -99,7 +110,11 @@ export default function Bubble(props: BubbleProps) {
           </Tooltip>
         </Stack>
       </Box>
-      {mine && last ? <ThisAvatar /> : <Box width={25} />}
+      {mine && last ? (
+        <ThisAvatar user={user} mine={mine} />
+      ) : (
+        <Box width={25} />
+      )}
     </Stack>
   );
 }

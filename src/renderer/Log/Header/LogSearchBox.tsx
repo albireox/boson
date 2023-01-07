@@ -14,7 +14,7 @@ import React from 'react';
 import { IconButtonFlat, SearchBox } from 'renderer/Components';
 import { useLogConfig } from '../hooks';
 
-const NoSearchIcon = (props: { value: string }) => {
+function NoSearchIcon(props: { value: string }) {
   const { value } = props;
 
   return (
@@ -27,14 +27,14 @@ const NoSearchIcon = (props: { value: string }) => {
       />
     </Fade>
   );
-};
+}
 
-const SearchingIcons = (props: {
+function SearchingIcons(props: {
   value: string;
   clear: () => void;
   onShowMatchesChanged?: (mode: boolean) => void;
   onRegExChanged?: (mode: boolean) => void;
-}) => {
+}) {
   const { value, clear, onShowMatchesChanged, onRegExChanged } = props;
 
   const [regEx, setRegEx] = React.useState(false);
@@ -42,14 +42,14 @@ const SearchingIcons = (props: {
 
   const handleShowMatches = () => {
     setShowMatches((current) => {
-      onShowMatchesChanged && onShowMatchesChanged(!current);
+      if (onShowMatchesChanged) onShowMatchesChanged(!current);
       return !current;
     });
   };
 
   const handleRegEx = () => {
     setRegEx((current) => {
-      onRegExChanged && onRegExChanged(!current);
+      if (onRegExChanged) onRegExChanged(!current);
       return !current;
     });
   };
@@ -95,7 +95,7 @@ const SearchingIcons = (props: {
       </Stack>
     </Fade>
   );
-};
+}
 
 export default function LogSearchBox() {
   const [value, setValue] = React.useState('');

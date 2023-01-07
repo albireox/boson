@@ -28,7 +28,7 @@ export default function SnapSearchBox(props: SnapSearchBoxProps) {
       placeholder='Positioner'
       value={searchText}
       onChange={(event) => {
-        onSearchChanged && onSearchChanged(event.target.value);
+        if (onSearchChanged) onSearchChanged(event.target.value);
       }}
       doClear={() => onSearchChanged && onSearchChanged('')}
     />

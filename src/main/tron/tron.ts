@@ -16,7 +16,7 @@ import {
   animals,
   uniqueNamesGenerator,
 } from 'unique-names-generator';
-import store, { config } from '../store';
+import { config, store } from '../store';
 import Command from './command';
 import parseLine from './keywords';
 import Reply from './reply';
@@ -272,9 +272,8 @@ export class TronConnection {
   }
 
   parseData(data: string) {
-    const CmdQueuedRegex = new RegExp(
-      'CmdQueued=([0-9]+),([0-9.]+),"(.+?)",([0-9]+),"(.+?)",([0-9]+),"(.+?)"'
-    );
+    const CmdQueuedRegex =
+      /CmdQueued=([0-9]+),([0-9.]+),"(.+?)",([0-9]+),"(.+?)",([0-9]+),"(.+?)"'/;
 
     const newLines = data.trim().split(/\r|\n/);
 
@@ -498,4 +497,4 @@ export class TronConnection {
 
 const tron = new TronConnection();
 
-export { tron as default };
+export { tron };

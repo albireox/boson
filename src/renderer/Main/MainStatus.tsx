@@ -16,7 +16,7 @@ import icon from '../../../assets/icon.png';
 
 type StatusTextProps = { color?: string | undefined } & React.PropsWithChildren;
 
-const StatusText = ({ color = undefined, children }: StatusTextProps) => {
+function StatusText({ color = undefined, children }: StatusTextProps) {
   return (
     <Typography
       variant='h6'
@@ -29,7 +29,7 @@ const StatusText = ({ color = undefined, children }: StatusTextProps) => {
       {children}
     </Typography>
   );
-};
+}
 
 type ElapsedTimeProps = {
   isPlaying: boolean;
@@ -75,7 +75,7 @@ function ElapsedTime(props: ElapsedTimeProps) {
   return <span>{formatElapsedTime(isPlaying ? elapsedTime : 0)}</span>;
 }
 
-const MainStatus = () => {
+function MainStatus() {
   const theme = useTheme();
   const { mode } = theme.palette;
 
@@ -190,43 +190,41 @@ const MainStatus = () => {
   }, [mode, theme, needsAuthentication, connectionStatus]);
 
   return (
-    <>
-      <Stack
-        direction='column'
-        spacing={1}
-        width='100%'
-        alignItems='center'
-        height='100%'
-      >
-        <img width='30%' alt='icon' src={icon} />
-        <Typography variant='h3'>
-          boson {isPackaged !== undefined && isPackaged ? version : 'dev'}
-        </Typography>
-        <Box width='100%' paddingTop={2}>
-          <Card variant='outlined'>
-            <CardContent>
-              <StatusText>Status: </StatusText>
-              {connectionText}
-              <br />
-              <StatusText>User: {user}</StatusText>
-              <br />
-              <StatusText>Program: {program.toUpperCase()}</StatusText>
-              <br />
-              <StatusText>Host: {hostPort}</StatusText>
-              <br />
-              <StatusText>
-                Elapsed:{' '}
-                <ElapsedTime
-                  isPlaying={isElapsedRunning}
-                  initialTime={connectionTime}
-                />
-              </StatusText>
-            </CardContent>
-          </Card>
-        </Box>
-      </Stack>
-    </>
+    <Stack
+      direction='column'
+      spacing={1}
+      width='100%'
+      alignItems='center'
+      height='100%'
+    >
+      <img width='30%' alt='icon' src={icon} />
+      <Typography variant='h3'>
+        boson {isPackaged !== undefined && isPackaged ? version : 'dev'}
+      </Typography>
+      <Box width='100%' paddingTop={2}>
+        <Card variant='outlined'>
+          <CardContent>
+            <StatusText>Status: </StatusText>
+            {connectionText}
+            <br />
+            <StatusText>User: {user}</StatusText>
+            <br />
+            <StatusText>Program: {program.toUpperCase()}</StatusText>
+            <br />
+            <StatusText>Host: {hostPort}</StatusText>
+            <br />
+            <StatusText>
+              Elapsed:{' '}
+              <ElapsedTime
+                isPlaying={isElapsedRunning}
+                initialTime={connectionTime}
+              />
+            </StatusText>
+          </CardContent>
+        </Card>
+      </Box>
+    </Stack>
   );
-};
+}
 
 export default MainStatus;

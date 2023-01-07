@@ -7,14 +7,14 @@
 
 import Store from 'electron-store';
 import EventEmitter from 'events';
-import default_config from './defaults.json';
-import user_config from './user.json';
+import defaultConfig from './defaults.json';
+import userConfig from './user.json';
 
 // Define the store. Only load parameters that can be defined by the user.
 // We also export the default config which is the one that won't change
 // unless the version of boson changes.
 const store = new Store({
-  defaults: user_config,
+  defaults: userConfig,
   watch: true,
   migrations: {
     '>=0.2.0-beta.8': (st) => {
@@ -39,4 +39,4 @@ if (!(store.get('windows.openWindows') as string[]).includes('main')) {
 
 const subscriptions = new Map<string, () => EventEmitter>();
 
-export { store as default, default_config, subscriptions };
+export { store, defaultConfig, subscriptions };

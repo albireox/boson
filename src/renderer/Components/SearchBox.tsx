@@ -34,7 +34,7 @@ function DefaultAddornment(props: DefaultAddornmentProps) {
         <Box display={value === '' ? 'none' : undefined}>
           <IconButtonFlat
             onClick={() => {
-              doClear && doClear();
+              if (doClear) doClear();
             }}
           >
             <ClearIcon

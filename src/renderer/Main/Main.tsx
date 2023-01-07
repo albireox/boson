@@ -31,12 +31,12 @@ type ConnectStackbarProps = {
   handleStopConnecting: () => void;
 };
 
-const ReconnectSnackbar = ({
+function ReconnectSnackbar({
   open,
   isReconnecting,
   handleConnect,
   handleStopConnecting,
-}: ConnectStackbarProps): JSX.Element => {
+}: ConnectStackbarProps): JSX.Element {
   // Show a reconnect snackbar
 
   const handleAction = () =>
@@ -58,16 +58,19 @@ const ReconnectSnackbar = ({
       </Alert>
     </Snackbar>
   );
-};
+}
 
-const AuthenticationFailedSnackbar = ({
-  open,
-  handleRetry,
-}: {
+type AuthenticationFailedSnackbarProps = {
   open: boolean;
   handleRetry: () => void;
-}): JSX.Element => {
+};
+
+function AuthenticationFailedSnackbar(
+  props: AuthenticationFailedSnackbarProps
+) {
   // Show a snackbar when the authorisation failed.
+
+  const { open, handleRetry } = props;
 
   return (
     <Snackbar
@@ -84,7 +87,7 @@ const AuthenticationFailedSnackbar = ({
       </Alert>
     </Snackbar>
   );
-};
+}
 
 export default function Main() {
   const [isConnected, setIsConnected] = React.useState(false);

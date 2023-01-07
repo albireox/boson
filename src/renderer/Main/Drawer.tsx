@@ -71,29 +71,24 @@ function Footer(props: FooterProps) {
   );
 }
 
+type ItemProps = {
+  name: string;
+  icon: React.ReactElement;
+  text?: string;
+};
+
+function Item(props: ItemProps) {
+  const { name, icon, text } = props;
+
+  return <DrawerListItem name={name} icon={icon} text={text ?? ''} />;
+}
+
 export default function Drawer() {
   const [open, setOpen] = React.useState(false);
 
-  const openNewWindow = (name: string) => {
+  const openNewWindow = React.useCallback((name: string) => {
     window.electron.app.openNewWindow(name);
-  };
-
-  const Item = (props: {
-    name: string;
-    icon: React.ReactElement;
-    text?: string;
-  }) => {
-    const { name, icon, text } = props;
-    return (
-      <DrawerListItem
-        name={name}
-        icon={icon}
-        text={text ?? ''}
-        onClick={openNewWindow}
-        open={open}
-      />
-    );
-  };
+  }, []);
 
   return (
     <PersistentDrawer open={open}>

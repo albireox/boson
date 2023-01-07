@@ -17,7 +17,7 @@ export default class Command {
 
   commandId: number;
 
-  lock: CommandLock<Command> | undefined;
+  lock: CommandLock<this> | undefined;
 
   actor: string;
 

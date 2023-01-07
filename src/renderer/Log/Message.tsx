@@ -69,13 +69,10 @@ function formatDate(date: number) {
   return new Date(date).toString().split(' ')[4];
 }
 
-const CmdQueuedRegex = new RegExp(
-  'CmdQueued=([0-9]+),([0-9.]+),"(.+?)",([0-9]+),"(.+?)",([0-9]+),"(.+?)"'
-);
+const CmdQueuedRegex =
+  /CmdQueued=([0-9]+),([0-9.]+),"(.+?)",([0-9]+),"(.+?)",([0-9]+),"(.+?)"/;
 
-const CmdDoneRegex = new RegExp(
-  'CmdDone=([0-9]+),"[:f]",([0-9]+),"(.+)","(.+?)","(.+?)"'
-);
+const CmdDoneRegex = /CmdDone=([0-9]+),"[:f]",([0-9]+),"(.+)","(.+?)","(.+?)"/;
 
 export default function Message(props: MessageProps) {
   const {

@@ -22,7 +22,7 @@ import { autoUpdater } from 'electron-updater';
 import path from 'path';
 import loadEvents from './events';
 import MenuBuilder from './menu/menu';
-import store, { config } from './store';
+import { config, store } from './store';
 import { WindowNames, WindowParams } from './types';
 import { resolveHtmlPath } from './util';
 

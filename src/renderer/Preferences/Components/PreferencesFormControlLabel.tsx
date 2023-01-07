@@ -14,6 +14,11 @@ import {
   useRadioGroup,
 } from '@mui/material';
 
+export interface PreferencesFormControlLabelProps
+  extends FormControlLabelProps {
+  gutterColor?: string;
+}
+
 const StyledFormControlLabel = styled(FormControlLabel, {
   shouldForwardProp: (prop) => prop !== 'gutterColor',
 })<PreferencesFormControlLabelProps>(({ theme, checked, gutterColor }) => ({
@@ -24,11 +29,6 @@ const StyledFormControlLabel = styled(FormControlLabel, {
   borderTopLeftRadius: gutterColor && '3px',
   borderBottomLeftRadius: gutterColor && '3px',
 }));
-
-export interface PreferencesFormControlLabelProps
-  extends FormControlLabelProps {
-  gutterColor?: string;
-}
 
 export default function PreferencesFormControlLabel(
   props: PreferencesFormControlLabelProps

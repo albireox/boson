@@ -30,8 +30,17 @@ module.exports = {
         tsx: 'never',
       },
     ],
+    'no-unused-expressions': ['error', { allowTernary: true }],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
+    'react/no-unstable-nested-components': [
+      'error',
+      {
+        allowAsProps: true,
+      },
+    ],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': 'error',
   },
   parserOptions: {
     ecmaVersion: 2020,
@@ -40,6 +49,14 @@ module.exports = {
     tsconfigRootDir: __dirname,
     createDefaultProgram: true,
   },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        'no-undef': 'off',
+      },
+    },
+  ],
   settings: {
     'import/resolver': {
       // See https://github.com/benmosher/eslint-plugin-import/issues/1396#issuecomment-575727774 for line below

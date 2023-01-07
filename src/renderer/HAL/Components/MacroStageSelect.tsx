@@ -40,23 +40,23 @@ export function MacroStageSelect({
       if (selected.includes('auto')) {
         setSelectedStages([]);
         setAutoSelected(true);
-        onStagesSelected && onStagesSelected(['auto']);
+        if (onStagesSelected) onStagesSelected(['auto']);
       } else if (selected.includes('all')) {
         setSelectedStages([]);
         setAutoSelected(false);
-        onStagesSelected && onStagesSelected([]);
+        if (onStagesSelected) onStagesSelected([]);
       } else {
         setSelectedStages(selected);
         setAutoSelected(false);
-        onStagesSelected && onStagesSelected(selected);
+        if (onStagesSelected) onStagesSelected(selected);
       }
     },
-    []
+    [onStagesSelected]
   );
 
   React.useEffect(() => {
     // Emit the stages on load.
-    onStagesSelected && onStagesSelected(autoMode ? ['auto'] : []);
+    if (onStagesSelected) onStagesSelected(autoMode ? ['auto'] : []);
   }, [onStagesSelected, autoMode]);
 
   return (

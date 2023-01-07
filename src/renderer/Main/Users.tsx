@@ -24,13 +24,13 @@ interface UserInfoProps {
   isMe?: boolean;
 }
 
-const SystemInfoTypo = (props: TypographyProps) => (
-  <Typography variant='body1' color='text.secondary' {...props} />
-);
+function SystemInfoTypo(props: TypographyProps) {
+  return <Typography variant='body1' color='text.secondary' {...props} />;
+}
 
-const Separator = () => (
-  <Divider orientation='vertical' variant='middle' flexItem />
-);
+function Separator() {
+  return <Divider orientation='vertical' variant='middle' flexItem />;
+}
 
 function UserInfo(props: UserInfoProps) {
   const { data, isMe = false } = props;
@@ -64,6 +64,45 @@ function UserInfo(props: UserInfoProps) {
         </Stack>
       </Stack>
     </Card>
+  );
+}
+
+function NoUsers() {
+  return (
+    <div
+      style={{
+        textShadow: '0px -1px 0px rgba(0,0,0,.5)',
+        textAlign: 'center',
+        position: 'relative',
+        top: '40%',
+        fontFamily: 'sans-serif',
+        color: '#666',
+        fontSize: '50px',
+      }}
+    >
+      No users
+    </div>
+  );
+}
+
+function UserList(props: {
+  users: string[];
+  userInfo: { [k: string]: string[] };
+  myUser: string;
+}) {
+  const { users, userInfo, myUser } = props;
+
+  return (
+    <Stack direction='column' spacing={1} pb={2}>
+      {users.sort().map((user) => {
+        if (userInfo[user]) {
+          return (
+            <UserInfo key={user} data={userInfo[user]} isMe={user === myUser} />
+          );
+        }
+        return null;
+      })}
+    </Stack>
   );
 }
 
@@ -120,42 +159,9 @@ export default function Users() {
     }
   }, [keywords]);
 
-  const NoUsers = () => (
-    <div
-      style={{
-        textShadow: '0px -1px 0px rgba(0,0,0,.5)',
-        textAlign: 'center',
-        position: 'relative',
-        top: '40%',
-        fontFamily: 'sans-serif',
-        color: '#666',
-        fontSize: '50px',
-      }}
-    >
-      No users
-    </div>
+  const userList = (
+    <UserList users={users} myUser={myUser} userInfo={userInfo} />
   );
 
-  const UserList = () => {
-    return (
-      <Stack direction='column' spacing={1} pb={2}>
-        {users.sort().map((user) => {
-          if (userInfo[user]) {
-            return (
-              <UserInfo
-                key={user}
-                data={userInfo[user]}
-                isMe={user === myUser}
-              />
-            );
-          }
-          return null;
-        })}
-      </Stack>
-    );
-  };
-
-  return (
-    <Box height='100%'>{users.length === 0 ? <NoUsers /> : <UserList />}</Box>
-  );
+  return <Box height='100%'>{users.length === 0 ? <NoUsers /> : userList}</Box>;
 }

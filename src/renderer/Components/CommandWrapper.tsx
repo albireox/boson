@@ -87,7 +87,7 @@ export default function CommandWrapper(props: CommandWrapperProps) {
   const handleChange = React.useCallback(
     (event: CommandStatusValues) => {
       setState(event);
-      onStatusChange && onStatusChange(event);
+      if (onStatusChange) onStatusChange(event);
     },
     [onStatusChange]
   );
@@ -152,11 +152,14 @@ export default function CommandWrapper(props: CommandWrapperProps) {
     });
   }, [isRunning]);
 
+  const wrapperValue = React.useMemo(
+    () => ({ state, handleClick, tooltip, runningTooltip }),
+    [state, handleClick, tooltip, runningTooltip]
+  );
+
   return (
     <>
-      <CommandWrapperContext.Provider
-        value={{ state, handleClick, tooltip, runningTooltip }}
-      >
+      <CommandWrapperContext.Provider value={wrapperValue}>
         {children}
       </CommandWrapperContext.Provider>
       <Dialog open={alertOpen}>

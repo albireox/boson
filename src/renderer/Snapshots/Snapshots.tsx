@@ -26,7 +26,12 @@ export default function Snapshots() {
     'jaeger.fps_status',
   ]);
 
-  const { locked, locked_by, fps_status, folded } = keywords;
+  const {
+    locked,
+    locked_by: lockedBy,
+    fps_status: fpsStatus,
+    folded,
+  } = keywords;
 
   const [httpHost] = useStore<string>('connection.httpHost');
   const [httpPort] = useStore<string>('connection.httpPort');
@@ -77,9 +82,10 @@ export default function Snapshots() {
   }, [getPath]);
 
   React.useEffect(() => {
-    const { configuration_snapshot, snapshot } = keywords;
+    const { configuration_snapshot: configurationSnapshot, snapshot } =
+      keywords;
 
-    [configuration_snapshot, snapshot].forEach((snapKey) => {
+    [configurationSnapshot, snapshot].forEach((snapKey) => {
       if (!snapKey) return;
 
       const path = getPath(snapKey.values[0]);
@@ -107,12 +113,12 @@ export default function Snapshots() {
   }, [snapshots, index]);
 
   React.useEffect(() => {
-    if (!locked || !locked_by) return;
+    if (!locked || !lockedBy) return;
 
-    if (locked.values[0] && locked_by.values.length > 0) {
-      setSearchText(locked_by.values[0].toString());
+    if (locked.values[0] && lockedBy.values.length > 0) {
+      setSearchText(lockedBy.values[0].toString());
     }
-  }, [locked, locked_by]);
+  }, [locked, lockedBy]);
 
   return (
     <Box
@@ -144,7 +150,7 @@ export default function Snapshots() {
       </Stack>
       <StatusSnackBar
         isLockedKw={locked}
-        fpsStatusKw={fps_status}
+        fpsStatusKw={fpsStatus}
         isFoldedKw={folded}
       />
     </Box>

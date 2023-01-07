@@ -10,7 +10,7 @@ import { useStore } from './hooks';
 import Log from './Log';
 import Main from './Main';
 import FocusPlot from './Plots/Focus';
-import Preferences from './Preferences';
+import Preferences from './Preferences/Preferences';
 import { Snapshots } from './Snapshots';
 
 export type ColorModeValues = 'bright' | 'dark' | 'system';

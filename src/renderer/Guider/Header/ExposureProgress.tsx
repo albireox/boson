@@ -25,7 +25,8 @@ export default function ExposureProgress() {
   React.useEffect(() => {
     if (!isExposing) {
       setElapsedTime(0);
-      elapsedTimeInterval.current && clearInterval(elapsedTimeInterval.current);
+      if (elapsedTimeInterval.current)
+        clearInterval(elapsedTimeInterval.current);
       return;
     }
 

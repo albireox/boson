@@ -186,17 +186,15 @@ function MessageViewportInner(
       totalCount={filtered.length}
       data={filtered}
       overscan={1000}
-      itemContent={(index) => {
-        return (
-          <Message
-            reply={filtered[index]}
-            theme={theme}
-            searchText={config.searchText}
-            searchUseRegEx={config.searchUseRegEx}
-            wrap={config.wrap}
-          />
-        );
-      }}
+      itemContent={(index) => (
+        <Message
+          reply={filtered[index]}
+          theme={theme}
+          searchText={config.searchText}
+          searchUseRegEx={config.searchUseRegEx}
+          wrap={config.wrap}
+        />
+      )}
       followOutput='auto'
       alignToBottom
       atBottomThreshold={100}

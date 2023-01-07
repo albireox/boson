@@ -15,15 +15,15 @@ export interface CommandIconButtonProps {
   disabled?: boolean;
 }
 
+function CircularProgressCommand() {
+  return <CircularProgress sx={{ p: 0 }} style={{ height: 16, width: 16 }} />;
+}
+
 export default function CommandIconButton(props: CommandIconButtonProps) {
   const context = React.useContext(CommandWrapperContext);
   const { handleClick, state, tooltip, runningTooltip } = context;
 
   const { children, disabled = false, width = 33 } = props;
-
-  const CircularProgressCommand = () => (
-    <CircularProgress sx={{ p: 0 }} style={{ height: 16, width: 16 }} />
-  );
 
   return (
     <Tooltip title={state === 'running' ? runningTooltip : tooltip}>

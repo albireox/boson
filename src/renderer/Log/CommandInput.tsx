@@ -120,7 +120,7 @@ export default function CommandInput(props: CommandInputProps) {
     if (value.trim().length > 0) {
       sendCommand(value);
     } else {
-      viewportRef && viewportRef.current?.gotoBottom();
+      viewportRef?.current?.gotoBottom();
     }
   }, [value, sendCommand, viewportRef]);
 

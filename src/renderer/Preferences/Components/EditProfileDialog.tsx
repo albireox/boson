@@ -112,7 +112,7 @@ export default function EditProfileDialog(props: EditProfileDialogProps) {
       window.electron.keytar.set(program, password);
     }
 
-    closer && closer();
+    if (closer) closer();
   };
 
   return (

@@ -7,7 +7,7 @@
 
 import { Typography, TypographyProps, useTheme } from '@mui/material';
 
-const Title = ({ children }: React.PropsWithChildren) => {
+function Title({ children }: React.PropsWithChildren) {
   const theme = useTheme();
   return (
     <Typography
@@ -23,7 +23,7 @@ const Title = ({ children }: React.PropsWithChildren) => {
       {children}
     </Typography>
   );
-};
+}
 
 interface MenuItemProps extends Omit<TypographyProps, 'onClick'> {
   name: string;
@@ -32,7 +32,7 @@ interface MenuItemProps extends Omit<TypographyProps, 'onClick'> {
   onClick: (name: string) => void;
 }
 
-const MenuItem = (props: MenuItemProps) => {
+function MenuItem(props: MenuItemProps) {
   const theme = useTheme();
 
   const { title, name, onClick, active } = props;
@@ -58,6 +58,6 @@ const MenuItem = (props: MenuItemProps) => {
       {title}
     </Typography>
   );
-};
+}
 
 export { Title, MenuItem };

@@ -5,10 +5,13 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import tron from './tron';
+import { tron } from './tron';
 import { ConnectionStatus } from './types';
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 
 export default async function connectAndAuthorise({
   authorise = true,
