@@ -63,8 +63,15 @@ export default function parseLine(
           key = kwMatched.groups.key;
           values = kwMatched.groups.values;
         }
-        // Select all groups split by , except when the comma is inside quotes.
-        const rawValues = values.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+
+        // Select all groups split by , except when the comma is inside quotes,
+        // but be careful about strings that contain quotes as a single
+        // character (yes, it's messy). This regex seems to produce empty
+        // matches so filter out undefined values.
+        const rawValues = values
+          .split(/(?!\B(")[^(")]*),(?![^(")]*(")\B)/)
+          .filter((x) => x !== undefined);
+
         const keyword: Keyword = {
           name: key,
           sender: lineMatched.groups?.sender,
