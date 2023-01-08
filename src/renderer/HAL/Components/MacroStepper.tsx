@@ -11,7 +11,7 @@ import { Box, Step, StepLabel, Stepper, StepperProps } from '@mui/material';
 import { capitalize } from 'lodash';
 import React from 'react';
 import { useKeywordContext } from 'renderer/hooks';
-import macroData from './macros.json';
+import macroData from '../macros.json';
 
 export type MacroStepperProps = {
   macroName: string;

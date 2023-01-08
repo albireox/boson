@@ -61,6 +61,7 @@ export interface BosonMenuItemProps extends MenuItemProps {
   value?: string | number | readonly string[] | undefined;
   textAlign?: string;
   fontVariant?: TypographyProps['variant'];
+  showBackground?: boolean;
   onSelect?: (
     value: unknown,
     event?: React.MouseEvent<HTMLLIElement, MouseEvent>
@@ -77,10 +78,19 @@ const BosonMenuItem = React.forwardRef<Ref, BosonMenuItemProps>(
       text,
       endAdornment,
       fontVariant = 'body2',
-      onSelect = () => {},
+      showBackground = true,
+      onSelect,
       textAlign,
       ...rest
     } = props;
+
+    let extraProps = {};
+    if (onSelect) {
+      extraProps = {
+        onClick: (event: React.MouseEvent<HTMLLIElement, MouseEvent>) =>
+          onSelect(value ?? text, event),
+      };
+    }
 
     return (
       <MenuItem
@@ -89,7 +99,6 @@ const BosonMenuItem = React.forwardRef<Ref, BosonMenuItemProps>(
         id={text}
         disableRipple
         disableTouchRipple
-        onClick={(event) => onSelect(value ?? text, event)}
         sx={(theme) => {
           const bgColor = theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD';
           return {
@@ -98,10 +107,12 @@ const BosonMenuItem = React.forwardRef<Ref, BosonMenuItemProps>(
             '&.Mui-focusVisible': {
               backgroundColor: 'transparent',
             },
-            '&.Mui-selected,&.Mui-selected:hover,&.Mui-selected.Mui-focusVisible':
-              {
-                backgroundColor: bgColor,
-              },
+            '&.Mui-selected:hover': {
+              backgroundColor: bgColor,
+            },
+            '&.Mui-selected,&.Mui-selected.Mui-focusVisible': {
+              backgroundColor: showBackground ? bgColor : 'transparent',
+            },
             '&:hover': {
               borderRadius: '4%',
               backgroundColor: bgColor,
@@ -111,6 +122,7 @@ const BosonMenuItem = React.forwardRef<Ref, BosonMenuItemProps>(
             },
           };
         }}
+        {...extraProps}
         {...rest}
       >
         {children ?? (

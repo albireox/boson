@@ -26,8 +26,8 @@ import CommandWrapper from 'renderer/Components/CommandWrapper';
 import { useKeywordContext, useStore } from 'renderer/hooks';
 import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import { MacroStageSelect } from './Components/MacroStageSelect';
+import MacroStepper from './Components/MacroStepper';
 import macros from './macros.json';
-import MacroStepper from './MacroStepper';
 import useIsMacroRunning from './useIsMacroRunning';
 
 function getTAITime() {

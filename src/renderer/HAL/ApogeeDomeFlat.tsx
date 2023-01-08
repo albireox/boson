@@ -10,8 +10,8 @@ import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
+import MacroStepper from './Components/MacroStepper';
 import macros from './macros.json';
-import MacroStepper from './MacroStepper';
 import useIsMacroRunning from './useIsMacroRunning';
 
 export default function ApogeeDomeFlat() {
