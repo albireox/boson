@@ -5,8 +5,6 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Box, Step, StepLabel, Stepper, StepperProps } from '@mui/material';
 import { capitalize } from 'lodash';
 import React from 'react';

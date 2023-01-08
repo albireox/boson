@@ -18,6 +18,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import { round } from 'lodash';
 import React from 'react';
@@ -92,6 +93,8 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
 
 export default function Expose() {
   const macroName = 'expose';
+
+  const isLarge = useMediaQuery('(min-width: 630px)');
 
   const [apogeeReads, setApogeeReads] = React.useState<string>(
     macros.expose.defaults.apogee_reads.toString()
@@ -371,6 +374,7 @@ export default function Expose() {
                 />
               }
               label='Pairs'
+              sx={{ display: isLarge ? 'inherit' : 'none' }}
             />
           </Stack>
           <Box flexGrow={1} />

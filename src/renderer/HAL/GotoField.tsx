@@ -14,6 +14,7 @@ import {
   Paper,
   Stack,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
@@ -37,6 +38,8 @@ export default function GotoField() {
   const [hartmann, setHartmann] = React.useState(false);
   const [keepOffsets, setKeepOffsets] = React.useState(true);
   const [commandString, setCommandString] = React.useState('hal goto-field');
+
+  const isLarge = useMediaQuery('(min-width: 720px)');
 
   const isRunning = useIsMacroRunning(macroName);
 
@@ -111,7 +114,9 @@ export default function GotoField() {
         spacing={1}
       >
         <Stack alignItems='center' direction='row' spacing={2}>
-          <Typography variant='h6'>Goto Field</Typography>
+          <Typography variant='h6' whiteSpace='nowrap'>
+            Goto Field
+          </Typography>
           <MacroStageSelect
             stages={macros.goto_field.stages}
             autoMode={useAutoMode}
@@ -145,6 +150,7 @@ export default function GotoField() {
               )
             }
             label={useAutoMode ? 'Hartmann' : 'Fix Alt/Az'}
+            sx={{ display: isLarge ? 'inherit' : 'none' }}
           />
           <FormControlLabel
             control={
@@ -157,6 +163,7 @@ export default function GotoField() {
               />
             }
             label='Keep Offsets'
+            sx={{ '& .MuiFormControlLabel-label': { whiteSpace: 'nowrap' } }}
           />
           <Box flexGrow={1} />
           <CommandWrapper
