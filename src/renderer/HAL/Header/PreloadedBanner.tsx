@@ -60,12 +60,12 @@ export function PreloadedBanner() {
           <Button
             variant='outlined'
             size='small'
-            sx={{
+            sx={(theme) => ({
               '&.MuiButton-root': {
-                color: 'text.primary',
-                border: `1px solid #fff`,
+                color: 'text.secondary',
+                border: `1px solid ${theme.palette.text.secondary}`,
               },
-            }}
+            })}
             onClick={loadDesign}
           >
             Load
