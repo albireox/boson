@@ -146,6 +146,7 @@ export function DesignInput() {
               color={focused ? 'text.primary' : color}
               padding={focused ? '2px 8px' : '0px'}
               contentEditable
+              suppressContentEditableWarning
               onKeyPress={handleKeyDown}
               onFocus={() => {
                 setInputValue(designID.toString());
