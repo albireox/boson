@@ -20,6 +20,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
+import Grid2 from '@mui/material/Unstable_Grid2';
 import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
@@ -31,13 +32,8 @@ import MacroStepper from './Components/MacroStepper';
 import macros from './macros.json';
 import useIsMacroRunning from './useIsMacroRunning';
 
-function getTAITime() {
-  // TODO: replace this with a proper TAI or with a useElapsedTime
-  const now = new Date();
-  return new Date(now.getTime() + 37000);
-}
-
 interface LinearProgressWithLabelProps extends LinearProgressProps {
+  running: boolean;
   total: number;
   etr?: number;
   header?: string;
@@ -45,20 +41,22 @@ interface LinearProgressWithLabelProps extends LinearProgressProps {
 }
 
 function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
-  const { total, etr, header, suffix } = props;
+  const { running, total, etr, header, suffix } = props;
 
   const [etrDisplay, setEtrDisplay] = React.useState(etr || total);
   const [value, setValue] = React.useState(0);
 
   React.useEffect(() => {
-    const interval = setInterval(
-      () => setEtrDisplay((etrD) => (etrD - 1 <= 0 ? 0 : etrD - 1)),
-      1000
-    );
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+    let interval: NodeJS.Timer | undefined;
+    if (running) {
+      interval = setInterval(
+        () => setEtrDisplay((etrD) => (etrD - 1 <= 0 ? 0 : etrD - 1)),
+        1000
+      );
+    }
+
+    return () => clearInterval(interval);
+  }, [running]);
 
   React.useEffect(() => {
     setEtrDisplay(!etr || etr <= 0 ? 0 : etr);
@@ -72,22 +70,27 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
   }, [etrDisplay, total]);
 
   return (
-    <Stack direction='row' alignItems='center' spacing={1}>
-      <Stack>
+    <Grid2 direction='row' alignItems='center' columns={12} container>
+      <Grid2 xs={2} md={1}>
         <Typography variant='body2' color='text.secondary'>
           {header}
         </Typography>
-      </Stack>
-      <Stack flexGrow={1}>
-        <LinearProgress variant='determinate' value={value} {...props} />
-      </Stack>
-      <Stack>
+      </Grid2>
+      <Grid2 xs={8} md={10}>
+        <LinearProgress
+          variant={running ? 'determinate' : 'indeterminate'}
+          value={value}
+          sx={{ height: 5, borderRadius: 5 }}
+          {...props}
+        />
+      </Grid2>
+      <Grid2 xs={2} md={1}>
         <Typography variant='body2' color='text.secondary'>{`${round(
           etrDisplay || 0,
           0
         )}s ${suffix}`}</Typography>
-      </Stack>
-    </Stack>
+      </Grid2>
+    </Grid2>
   );
 }
 
@@ -128,32 +131,54 @@ export default function Expose() {
   const { stages: stagesKw } = halKeywords;
   const { running_macros: runningMacrosKw } = halKeywords;
 
-  const getCommandString = () => {
-    const commandString: string[] = ['hal expose'];
-    const joinedStages = stages.join(',');
+  const getCommandString = React.useCallback(
+    (modify = false) => {
+      const commandString: string[] = ['hal expose'];
 
-    if (stages.length > 0) commandString.push(`-s ${joinedStages}`);
+      if (modify) {
+        commandString.push('--modify');
+      }
 
-    if (pairs) {
-      commandString.push('--pairs');
-    } else {
-      commandString.push('--no-pairs');
-    }
+      const joinedStages = stages.join(',');
 
-    if (stages.length === 0 || stages.includes('expose_boss')) {
-      commandString.push(
-        `-b ${bossTime || macros.expose.defaults.boss_exptime}`
-      );
-    } else {
-      commandString.push(
-        `--reads ${apogeeReads || macros.expose.defaults.apogee_reads}`
-      );
-    }
+      if (stages.length > 0) commandString.push(`-s ${joinedStages}`);
 
-    commandString.push(`--count ${count || macros.expose.defaults.count}`);
+      if (pairs) {
+        commandString.push('--pairs');
+      } else {
+        commandString.push('--no-pairs');
+      }
 
-    return commandString.join(' ');
-  };
+      if (stages.length === 0 || stages.includes('expose_boss')) {
+        commandString.push(
+          `-b ${bossTime || macros.expose.defaults.boss_exptime}`
+        );
+      } else {
+        commandString.push(
+          `--reads ${apogeeReads || macros.expose.defaults.apogee_reads}`
+        );
+      }
+
+      commandString.push(`--count ${count || macros.expose.defaults.count}`);
+
+      return commandString.join(' ');
+    },
+    [bossTime, apogeeReads, pairs, stages, count]
+  );
+
+  const handleCountKeyDown = React.useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (isRunning) {
+          // Modify command.
+          const commandString = getCommandString(true);
+          window.electron.tron.send(commandString);
+        }
+      }
+    },
+    [isRunning, getCommandString]
+  );
 
   React.useEffect(() => {
     // Calculate approximate exposure times.
@@ -164,7 +189,7 @@ export default function Expose() {
     const bossOverhead = observatory === 'APO' ? 80 : 40;
     const bossReadout = observatory === 'APO' ? 67 : 35;
 
-    const type = pairs ? 'pair(s)' : 'exposure(s)';
+    const type = pairs ? 'AB' : 'A';
 
     const nExp = parseInt(count || macros.expose.defaults.count.toString(), 10);
 
@@ -183,7 +208,7 @@ export default function Expose() {
         apogeeDetail = `APOGEE: ~${round(
           bossTotal - bossReadout,
           0
-        )} s (${nExp} ${type})`;
+        )} s (${nExp}x${type})`;
       }
     } else {
       let apogeeTotal =
@@ -222,73 +247,59 @@ export default function Expose() {
   React.useEffect(() => {
     // Create and update the BOSS progress bar. This only depend on actor keywords.
 
-    let progress: JSX.Element | null = null;
-
     if (actorStages.length === 0 || actorStages.includes('expose_boss')) {
       if (bossStateKw) {
         const bossState = bossStateKw.values;
-        const bossTotal = bossState[3];
-        const bossTimestamp = bossState[4];
-        const bossDeltaT = getTAITime().getTime() / 1000 - bossTimestamp;
-        const bossEtr = bossState[2] - bossDeltaT;
 
-        progress = (
+        const bossCurrent = bossState[0];
+        const bossNexp = bossState[1];
+        const bossEtr = bossState[2];
+        const bossTotal = bossState[3];
+
+        setBossProgress(
           <LinearProgressWithLabel
+            running={bossCurrent > 0 && isRunning}
             total={bossTotal}
             etr={bossEtr}
             header='BOSS'
-            suffix={`(${bossState[0]}/${bossState[1]})`}
+            suffix={`(${bossCurrent}/${bossNexp})`}
           />
         );
+        return;
       }
     }
 
-    setBossProgress(
-      progress ? (
-        <Grid item xs={actorStages.includes('expose_apogee') ? 6 : 12}>
-          {progress}
-        </Grid>
-      ) : (
-        <span />
-      )
-    );
-  }, [actorStages, bossStateKw]);
+    setBossProgress(<span />);
+  }, [actorStages, bossStateKw, isRunning]);
 
   React.useEffect(() => {
-    // Create and update the APOGEE progress bars. This only depend on actor keywords.
-
-    let progress: JSX.Element | null = null;
+    // Create and update the APOGEE progress bar.
 
     if (actorStages.length === 0 || actorStages.includes('expose_apogee')) {
       if (apogeeStateKw) {
         const apogeeState = apogeeStateKw.values;
-        const apogeeTotal = apogeeState[5];
-        const apogeeTimestamp = apogeeState[6];
-        const apogeeDeltaT = getTAITime().getTime() / 1000 - apogeeTimestamp;
-        const apogeeEtr = apogeeState[4] - apogeeDeltaT;
 
-        progress = (
+        const apogeeCurrent = apogeeState[0];
+        const apogeeNexp = apogeeState[1];
+        const apogeeEtr = apogeeState[4];
+        const apogeeTotal = apogeeState[5];
+
+        setApogeeProgress(
           <LinearProgressWithLabel
-            color='secondary'
+            running={apogeeCurrent > 0 && isRunning}
             total={apogeeTotal}
             etr={apogeeEtr}
             header='APOGEE'
-            suffix={`(${apogeeState[0]}/${apogeeState[1]}) ${apogeeState[3]}`}
+            color='secondary'
+            suffix={`(${apogeeCurrent}/${apogeeNexp})`}
           />
         );
+        return;
       }
     }
 
-    setApogeeProgress(
-      progress ? (
-        <Grid item xs={actorStages.includes('expose_boss') ? 6 : 12}>
-          {progress}
-        </Grid>
-      ) : (
-        <span />
-      )
-    );
-  }, [actorStages, apogeeStateKw]);
+    setApogeeProgress(<span />);
+  }, [actorStages, apogeeStateKw, isRunning]);
 
   return (
     <Paper variant='outlined'>
@@ -325,6 +336,7 @@ export default function Expose() {
                   e.preventDefault();
                   setBossTime(e.target.value);
                 }}
+                disabled={isRunning}
               />
             )}
             {!stages.includes('expose_boss') &&
@@ -346,6 +358,7 @@ export default function Expose() {
                     width: '80px',
                     '& .MuiInputBase-root': { marginTop: 1 },
                   }}
+                  disabled={isRunning}
                 />
               )}
             <TextField
@@ -355,6 +368,7 @@ export default function Expose() {
               variant='standard'
               value={count}
               onChange={(e) => setCount(e.target.value)}
+              onKeyDown={handleCountKeyDown}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -375,6 +389,7 @@ export default function Expose() {
               }
               label='Pairs'
               sx={{ display: isLarge ? 'inherit' : 'none' }}
+              disabled={isRunning}
             />
           </Stack>
           <Box flexGrow={1} />
@@ -390,9 +405,9 @@ export default function Expose() {
         </Stack>
         <Stack alignItems='center' textAlign='center' spacing={4}>
           {runningMacrosKw && runningMacrosKw.values.includes('expose') ? (
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 2 }}>
+            <Stack direction='column' spacing={2} width='100%'>
               {bossProgress} {apogeeProgress}
-            </Grid>
+            </Stack>
           ) : (
             detail
           )}

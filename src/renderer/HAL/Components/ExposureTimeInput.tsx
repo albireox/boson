@@ -11,18 +11,21 @@ export type ExposureTimeInputType = {
   label: string;
   value: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 };
 
 export function ExposureTimeInput({
   label,
   value,
   onChange,
+  disabled,
 }: ExposureTimeInputType) {
   return (
     <TextField
       label={label}
       size='small'
       type='number'
+      disabled={disabled}
       InputProps={{
         endAdornment: <InputAdornment position='end'>s</InputAdornment>,
       }}
