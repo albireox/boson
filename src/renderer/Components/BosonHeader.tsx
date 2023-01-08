@@ -14,6 +14,7 @@ interface BosonHeaderHeaderProps {
   pl?: number;
   pr?: number;
   spacing?: number;
+  visible?: boolean;
 }
 
 export default function BosonHeader(props: BosonHeaderHeaderProps) {
@@ -24,6 +25,7 @@ export default function BosonHeader(props: BosonHeaderHeaderProps) {
     pl = 10,
     pr = 2,
     spacing = 2,
+    visible = true,
   } = props;
   return (
     <Paper
@@ -38,6 +40,7 @@ export default function BosonHeader(props: BosonHeaderHeaderProps) {
         borderRadius: 0,
         zIndex: 1000,
         backgroundColor: color ?? theme.palette.background.paper,
+        visibility: visible ? 'inherit' : 'hidden',
       })}
       elevation={1}
     >

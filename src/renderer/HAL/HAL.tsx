@@ -11,7 +11,7 @@ import { KeywordContext, useKeywords } from 'renderer/hooks';
 import ApogeeDomeFlat from './ApogeeDomeFlat';
 import Expose from './Expose';
 import GotoField from './GotoField';
-import HALHeader from './Header';
+import HALHeader from './Header/Header';
 import hal9000logo from './images/hal9000.png';
 import Scripts from './Scripts';
 
