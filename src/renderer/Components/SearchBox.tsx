@@ -54,6 +54,7 @@ interface SearchBoxProps extends Omit<InputBaseProps, 'endAdornment'> {
   expand?: boolean;
   expandedWidth?: number;
   defaultWidth?: number;
+  showAdornment?: boolean;
   endAdornment?: JSX.Element | null;
   doClear?: () => void;
 }
@@ -66,6 +67,7 @@ export default function SearchBox(props: SearchBoxProps) {
     expandedWidth,
     defaultWidth,
     endAdornment: userEndAdornment,
+    showAdornment = true,
     ...rest
   } = props;
 
@@ -92,7 +94,7 @@ export default function SearchBox(props: SearchBoxProps) {
       placeholder='Search'
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
-      endAdornment={endAdornment}
+      endAdornment={showAdornment ? endAdornment : undefined}
       {...rest}
     />
   );
