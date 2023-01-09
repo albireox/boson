@@ -166,19 +166,28 @@ export default function Expose() {
     [bossTime, apogeeReads, pairs, stages, count]
   );
 
+  const modifyCount = React.useCallback(() => {
+    if (isRunning) {
+      // Modify command.
+      const commandString = getCommandString(true);
+      window.electron.tron.send(commandString);
+    }
+  }, [getCommandString, isRunning]);
+
   const handleCountKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        if (isRunning) {
-          // Modify command.
-          const commandString = getCommandString(true);
-          window.electron.tron.send(commandString);
-        }
+        modifyCount();
       }
     },
-    [isRunning, getCommandString]
+    [modifyCount]
   );
+
+  React.useEffect(() => {
+    const timeout = setTimeout(modifyCount, 2000);
+    return () => clearTimeout(timeout);
+  }, [count, modifyCount]);
 
   React.useEffect(() => {
     // Calculate approximate exposure times.

@@ -10,26 +10,35 @@ import React from 'react';
 import IOSSwitch from 'renderer/Components/IOSwitch';
 import useIsMacroRunning from './useIsMacroRunning';
 
-export default function AutoMacro() {
+export default function AutoMode() {
   const macroName = 'auto';
 
   const [count, setCount] = React.useState('1');
 
   const isRunning = useIsMacroRunning(macroName);
 
+  const modifyCount = React.useCallback(() => {
+    if (isRunning) {
+      // Modify command.
+      const commandString = `hal auto --modify --count ${count}`;
+      window.electron.tron.send(commandString);
+    }
+  }, [isRunning, count]);
+
   const handleCountKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        if (isRunning) {
-          // Modify command.
-          const commandString = `hal auto --modify --count ${count}`;
-          window.electron.tron.send(commandString);
-        }
+        modifyCount();
       }
     },
-    [isRunning, count]
+    [modifyCount]
   );
+
+  React.useEffect(() => {
+    const timeout = setTimeout(modifyCount, 2000);
+    return () => clearTimeout(timeout);
+  }, [count, modifyCount]);
 
   const handleSwitch = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

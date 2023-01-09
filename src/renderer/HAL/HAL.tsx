@@ -9,7 +9,7 @@ import { Box, CssBaseline, Stack } from '@mui/material';
 import React from 'react';
 import { KeywordContext, useKeywords } from 'renderer/hooks';
 import ApogeeDomeFlat from './ApogeeDomeFlat';
-import AutoMacro from './Auto';
+import AutoMode from './Auto';
 import Expose from './Expose';
 import GotoField from './GotoField';
 import HALHeader from './Header/Header';
@@ -62,7 +62,7 @@ export default function HAL() {
           zIndex={10}
           position='relative'
         >
-          <AutoMacro />
+          <AutoMode />
           <GotoField />
           <Expose />
           <ApogeeDomeFlat />
