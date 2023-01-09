@@ -36,6 +36,7 @@ class AppUpdater {
     autoUpdater.logger = log;
     autoUpdater.allowPrerelease = store.get('updateChannel') !== 'latest';
     autoUpdater.channel = store.get('updateChannel');
+    autoUpdater.allowDowngrade = false;
     autoUpdater.autoDownload = false;
   }
 }
