@@ -6,9 +6,10 @@
  */
 
 import SendIcon from '@mui/icons-material/Send';
-import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
+import MacroPaper from './Components/MacroPaper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import MacroStepper from './Components/MacroStepper';
 import macros from './macros.json';
@@ -20,7 +21,7 @@ export default function ApogeeDomeFlat() {
   const isRunning = useIsMacroRunning(macroName);
 
   return (
-    <Paper variant='outlined'>
+    <MacroPaper>
       <Stack
         direction='column'
         divider={<Divider variant='middle' sx={{ opacity: 0.8 }} />}
@@ -59,6 +60,6 @@ export default function ApogeeDomeFlat() {
           <MacroStepper macroName={macroName} />
         </Stack>
       </Stack>
-    </Paper>
+    </MacroPaper>
   );
 }

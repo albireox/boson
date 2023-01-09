@@ -11,7 +11,6 @@ import {
   Checkbox,
   Divider,
   FormControlLabel,
-  Paper,
   Stack,
   Typography,
   useMediaQuery,
@@ -21,6 +20,7 @@ import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
 import { useKeywordContext, useStore } from 'renderer/hooks';
 import { ExposureTimeInput } from './Components/ExposureTimeInput';
+import MacroPaper from './Components/MacroPaper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import MacroStepper from './Components/MacroStepper';
 import macros from './macros.json';
@@ -104,7 +104,7 @@ export default function GotoField() {
   }, [configurationLoadedKw]);
 
   return (
-    <Paper variant='outlined'>
+    <MacroPaper>
       <Stack
         direction='column'
         divider={<Divider variant='middle' sx={{ opacity: 0.8 }} />}
@@ -189,6 +189,6 @@ export default function GotoField() {
           <MacroStepper macroName={macroName} />
         </Stack>
       </Stack>
-    </Paper>
+    </MacroPaper>
   );
 }

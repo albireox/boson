@@ -6,13 +6,14 @@
  */
 
 import SendIcon from '@mui/icons-material/Send';
-import { Box, MenuItem, Paper, Select, Stack, Typography } from '@mui/material';
+import { Box, MenuItem, Select, Stack, Typography } from '@mui/material';
 import { CommandStatus, ReplyCode } from 'main/tron/types';
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
 import { useKeywordContext } from 'renderer/hooks';
 import BorderLinearProgress from './Components/BorderLinealProgress';
+import MacroPaper from './Components/MacroPaper';
 
 export default function Scripts() {
   const halKeywords = useKeywordContext();
@@ -91,7 +92,7 @@ export default function Scripts() {
   }, [scripStepKw, selectedScript]);
 
   return (
-    <Paper variant='outlined'>
+    <MacroPaper>
       <Stack p={1} alignItems='center' direction='row' spacing={2} px={2}>
         <Typography variant='h6'>Scripts</Typography>
         <Select
@@ -128,6 +129,6 @@ export default function Scripts() {
           </CommandButton>
         </CommandWrapper>
       </Stack>
-    </Paper>
+    </MacroPaper>
   );
 }

@@ -173,6 +173,7 @@ export default function MacroStepper({
         '::-webkit-scrollbar': {
           display: 'none',
         },
+        pointerEvents: 'auto',
       }}
     >
       <Stepper
