@@ -63,6 +63,8 @@ export class TronConnection {
 
   lastConnected: Date | undefined = undefined;
 
+  taiOffset: number = 0.0;
+
   constructor() {
     this.maxLogMessages = store.get('maxLogMessages') ?? 50000;
 
@@ -239,6 +241,14 @@ export class TronConnection {
       ConnectionStatus.Authorised |
       ConnectionStatus.Ready;
 
+    // Trigger an update of the TAI offset.
+    const observatory = store.get('connection.observatory') ?? 'APO';
+    if (observatory === 'APO') {
+      this.sendCommand('tcc show time');
+    } else {
+      this.sendCommand('lcotcc show time');
+    }
+
     return [true, null];
   }
 
@@ -269,6 +279,17 @@ export class TronConnection {
     this.client.write(`${command.commandId} ${command.rawCommand}\r\n`);
 
     return command;
+  }
+
+  updateTAIOffset(tai: number) {
+    // Updates the internal offset between system time and TCC UTC.
+
+    // The MJD on Jan 1st 1970. The TCC returns the TAI in seconds since
+    // the beginning of MJD time.
+    const TAI_MJD = 40587;
+
+    const now = new Date();
+    this.taiOffset = tai - TAI_MJD * 3600 * 24 - now.getTime() / 1000;
   }
 
   parseData(data: string) {
@@ -327,6 +348,9 @@ export class TronConnection {
         keywords
       );
 
+      // Update reply date to match TCC TAI.
+      reply.date += this.taiOffset * 1000;
+
       this.replies = this.replies.slice(-this.maxLogMessages);
       this.replies.push(reply);
 
@@ -342,6 +366,13 @@ export class TronConnection {
       this.commands.get(reply.commandId)?.addReply(reply);
 
       this.buffer.push(reply);
+
+      if (
+        (reply.sender === 'tcc' || reply.sender === 'lcotcc') &&
+        reply.getKeyword('TAI')
+      ) {
+        this.updateTAIOffset(reply.getKeyword('TAI')?.values[0]);
+      }
 
       this.processReply(reply);
     });
