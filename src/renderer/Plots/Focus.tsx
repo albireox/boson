@@ -10,7 +10,7 @@ import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { round } from 'lodash';
 import React from 'react';
-import { useKeywords, useWindowSize } from 'renderer/hooks';
+import { useKeywords, useStore, useWindowSize } from 'renderer/hooks';
 
 function makeArr(startValue: number, stopValue: number, cardinality: number) {
   const arr = [];
@@ -41,11 +41,15 @@ export default function FocusPlot() {
   const xBuffer = 50;
   const yBuffer = 0.5;
 
+  const [observatory] = useStore<string>('connection.observatory');
+  const secFocusKw = observatory === 'APO' ? 'tcc.SecFocus' : 'lcotcc.secFocus';
+
   const theme = useTheme();
-  const { focus_data: focusData, focus_fit: focusFit } = useKeywords([
-    'cherno.focus_data',
-    'cherno.focus_fit',
-  ]);
+  const {
+    focus_data: focusData,
+    focus_fit: focusFit,
+    [secFocusKw]: secFocus,
+  } = useKeywords(['cherno.focus_data', 'cherno.focus_fit', secFocusKw]);
 
   React.useEffect(() => {
     if (!focusData) return;
@@ -102,12 +106,13 @@ export default function FocusPlot() {
 
   const options: Highcharts.Options = {
     title: {
-      text: undefined,
+      text: `Secondary focus: ${secFocus?.values[0] ?? 'N/A'}`,
+      style: { color: theme.palette.text.primary, fontSize: '18px' },
     },
     chart: {
       renderTo: 'container',
       backgroundColor: 'transparent',
-      height: (height ?? 400) - 48,
+      height: (height ?? 400) - 24,
       zooming: {
         type: 'x',
       },
@@ -236,7 +241,7 @@ export default function FocusPlot() {
   return (
     <Box component='main' height='100%'>
       <CssBaseline />
-      <Box px={1} py={3} mt={2} height='100%'>
+      <Box px={1} py={2} mt={0} height='100%'>
         <HighchartsReact highcharts={Highcharts} options={options} />
       </Box>
     </Box>
