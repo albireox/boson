@@ -66,7 +66,7 @@ function getMessageColor(theme: Theme, reply: Reply) {
 }
 
 function formatDate(date: number) {
-  return new Date(date).toString().split(' ')[4];
+  return new Date(date).toUTCString().split(' ')[4];
 }
 
 const CmdQueuedRegex =
