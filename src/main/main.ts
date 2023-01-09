@@ -34,7 +34,7 @@ class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
-    autoUpdater.allowPrerelease = true;
+    autoUpdater.allowPrerelease = store.get('updateChannel') !== 'latest';
     autoUpdater.channel = store.get('updateChannel');
     autoUpdater.autoDownload = false;
   }
