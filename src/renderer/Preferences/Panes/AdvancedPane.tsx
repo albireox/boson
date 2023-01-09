@@ -84,22 +84,20 @@ function AutoUpdateMode() {
       <FormControl sx={{ paddingTop: 1 }}>
         <PreferencesRadioGroup value={updateChannel} onChange={handleChange}>
           <PreferencesFormControlLabel
-            value='latest'
+            value='stable'
             control={<Radio />}
             label='Stable'
           />
           <PreferencesFormControlLabel
-            value='beta'
+            value='prerelease'
             control={<Radio />}
             label='Beta'
           />
-          <PreferencesFormControlLabel
-            value='alpha'
-            control={<Radio />}
-            label='Alpha'
-          />
         </PreferencesRadioGroup>
       </FormControl>
+      <Typography variant='body2' color='text.secondary' pt={1}>
+        An app restart is required for changes to take effect.
+      </Typography>
     </Stack>
   );
 }

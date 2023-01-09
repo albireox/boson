@@ -34,10 +34,13 @@ class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
-    autoUpdater.allowPrerelease = store.get('updateChannel') !== 'latest';
-    autoUpdater.channel = store.get('updateChannel');
     autoUpdater.allowDowngrade = false;
     autoUpdater.autoDownload = false;
+
+    // GitHub does not allow channels. We use preRelease instead (this means
+    // we only have two channels, stable and pre-release).
+    autoUpdater.allowPrerelease = store.get('updateChannel') !== 'stable';
+    autoUpdater.channel = 'latest';
   }
 }
 

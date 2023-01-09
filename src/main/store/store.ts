@@ -23,6 +23,9 @@ const store = new Store({
     '>=0.2.0-beta.14': (st) => {
       st.set('log.saveState', true);
     },
+    '>=0.2.1': (st) => {
+      st.set('updateChannel', 'stable');
+    },
   },
 });
 

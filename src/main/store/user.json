@@ -38,6 +38,6 @@
     "notifications": true
   },
   "maxLogMessages": 50000,
-  "updateChannel": "beta",
+  "updateChannel": "stable",
   "profiles": {}
 }
