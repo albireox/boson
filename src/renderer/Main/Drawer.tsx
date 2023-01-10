@@ -75,12 +75,25 @@ type ItemProps = {
   name: string;
   icon: React.ReactElement;
   text?: string;
+  open?: boolean;
 };
 
 function Item(props: ItemProps) {
-  const { name, icon, text } = props;
+  const { name, icon, text, open = false } = props;
 
-  return <DrawerListItem name={name} icon={icon} text={text ?? ''} />;
+  const openNewWindow = React.useCallback((windowName: string) => {
+    window.electron.app.openNewWindow(windowName);
+  }, []);
+
+  return (
+    <DrawerListItem
+      name={name}
+      icon={icon}
+      text={text ?? ''}
+      onClick={openNewWindow}
+      open={open}
+    />
+  );
 }
 
 export default function Drawer() {
@@ -94,15 +107,31 @@ export default function Drawer() {
     <PersistentDrawer open={open}>
       <Stack direction='column' height='100%'>
         <Box sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
-          <Item name='log' icon={<NotesIcon />} text='New log window' />
+          <Item
+            name='log'
+            icon={<NotesIcon />}
+            text='New log window'
+            open={open}
+          />
           <Item
             name='snapshots'
             icon={<SettingsOverscanIcon />}
             text='Snapshots'
+            open={open}
           />
-          <Item name='guider' icon={<InsightsIcon />} text='Guider' />
-          <Item name='HAL' icon={<PrecisionManufacturingIcon />} text='HAL' />
-          <Item name='chat' icon={<ChatIcon />} text='Chat' />
+          <Item
+            name='guider'
+            icon={<InsightsIcon />}
+            text='Guider'
+            open={open}
+          />
+          <Item
+            name='HAL'
+            icon={<PrecisionManufacturingIcon />}
+            text='HAL'
+            open={open}
+          />
+          <Item name='chat' icon={<ChatIcon />} text='Chat' open={open} />
         </Box>
         <div style={{ flexGrow: 1 }} />
         <Footer open={open} setOpen={setOpen} openNewWindow={openNewWindow} />
