@@ -8,21 +8,60 @@
 import { Box, Paper, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import IOSSwitch from 'renderer/Components/IOSwitch';
+import { useKeywordContext } from 'renderer/hooks';
 import useIsMacroRunning from './useIsMacroRunning';
+
+function parseStageStatus(stageData: string[]) {
+  const stageState = { name: stageData[0], status: new Map<string, string>() };
+
+  for (let ii = 1; ii < stageData.length; ii += 2) {
+    stageState.status.set(stageData[ii], stageData[ii + 1]);
+  }
+
+  return stageState;
+}
 
 export default function AutoMode() {
   const macroName = 'auto';
 
   const [count, setCount] = React.useState('1');
 
+  const [error, setError] = React.useState(false);
+  const [cancelled, setCancelled] = React.useState(false);
+
+  const { 'hal.stage_status': stageStatusKw } = useKeywordContext();
+
   const isRunning = useIsMacroRunning(macroName);
 
+  let switchColor: 'success' | 'warning' | 'error';
+  let switchDisabledColor: 'default' | 'error' | 'success' | 'warning';
+  if (error) {
+    switchColor = 'error';
+    switchDisabledColor = 'error';
+  } else if (cancelled) {
+    switchColor = 'warning';
+    switchDisabledColor = 'warning';
+  } else {
+    switchColor = 'success';
+    switchDisabledColor = 'default';
+  }
+
+  React.useEffect(() => {
+    if (!stageStatusKw) return;
+
+    const { values } = stageStatusKw;
+    if (values[0] !== 'auto') return;
+
+    const { status } = parseStageStatus(values);
+    const states = Array.from(status.values());
+
+    setError(states.includes('failed') || states.includes('failing'));
+    setCancelled(states.includes('cancelling') || states.includes('cancelled'));
+  }, [stageStatusKw]);
+
   const modifyCount = React.useCallback(() => {
-    if (isRunning) {
-      // Modify command.
-      const commandString = `hal auto --modify --count ${count}`;
-      window.electron.tron.send(commandString);
-    }
+    if (!isRunning) return;
+    window.electron.tron.send(`hal auto --modify --count ${count}`);
   }, [isRunning, count]);
 
   const handleCountKeyDown = React.useCallback(
@@ -71,7 +110,12 @@ export default function AutoMode() {
           }}
         />
 
-        <IOSSwitch checked={isRunning} onChange={handleSwitch} />
+        <IOSSwitch
+          checked={isRunning}
+          onChange={handleSwitch}
+          color={switchColor}
+          disabledColor={switchDisabledColor}
+        />
       </Stack>
     </Paper>
   );
