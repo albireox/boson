@@ -67,7 +67,7 @@ export default function ExposeButtons() {
         </CommandIconButton>
       </CommandWrapper>
       <CommandWrapper
-        commandString={`cherno acquire -t ${expTime} -c`}
+        commandString={`cherno guide -t ${expTime}`}
         isRunning={isGuiding}
         abortCommand='cherno stop'
         runningTooltip='Stop guiding'
