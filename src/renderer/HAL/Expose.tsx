@@ -185,11 +185,6 @@ export default function Expose() {
   );
 
   React.useEffect(() => {
-    const timeout = setTimeout(modifyCount, 2000);
-    return () => clearTimeout(timeout);
-  }, [count, modifyCount]);
-
-  React.useEffect(() => {
     // Calculate approximate exposure times.
 
     let bossDetail = '';

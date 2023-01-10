@@ -35,11 +35,6 @@ export default function AutoMode() {
     [modifyCount]
   );
 
-  React.useEffect(() => {
-    const timeout = setTimeout(modifyCount, 2000);
-    return () => clearTimeout(timeout);
-  }, [count, modifyCount]);
-
   const handleSwitch = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       event.preventDefault();
