@@ -315,7 +315,9 @@ export default function Expose() {
         spacing={1}
       >
         <Stack alignItems='center' direction='row' spacing={2}>
-          <Typography variant='h6'>Expose</Typography>
+          <Typography variant='h6' whiteSpace='nowrap'>
+            Expose
+          </Typography>
           <MacroStageSelect
             stages={macros.expose.stages}
             maxWidth={200}

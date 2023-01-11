@@ -93,8 +93,17 @@ export default function Scripts() {
 
   return (
     <MacroPaper>
-      <Stack p={1} alignItems='center' direction='row' spacing={2} px={2}>
-        <Typography variant='h6'>Scripts</Typography>
+      <Stack
+        p={1}
+        alignItems='center'
+        direction='row'
+        spacing={2.5}
+        px={2}
+        width='100%'
+      >
+        <Typography variant='h6' whiteSpace='nowrap'>
+          Scripts
+        </Typography>
         <Select
           size='small'
           value={selectedScript}

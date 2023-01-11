@@ -90,9 +90,7 @@ export default function AutoMode() {
 
   return (
     <Paper variant='outlined'>
-      <Stack alignItems='center' direction='row' spacing={8} p={1.5} px={2}>
-        <Typography variant='h6'>Auto Mode</Typography>
-        <Box flexGrow={1} />
+      <Stack alignItems='center' direction='row' p={1.5} px={2} spacing={2.5}>
         <TextField
           label='Count'
           size='small'
@@ -105,11 +103,11 @@ export default function AutoMode() {
             shrink: true,
           }}
           sx={{
-            width: '40px',
+            minWidth: '35px',
+            maxWidth: '35px',
             '& .MuiInputBase-root': { marginTop: 1 },
           }}
         />
-
         <IOSSwitch
           checked={isRunning}
           onChange={handleSwitch}

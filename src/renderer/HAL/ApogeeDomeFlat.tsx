@@ -31,7 +31,9 @@ export default function ApogeeDomeFlat() {
         spacing={1}
       >
         <Stack alignItems='center' direction='row' spacing={2}>
-          <Typography variant='h6'>APOGEE Dome Flat</Typography>
+          <Typography variant='h6' whiteSpace='nowrap'>
+            APOGEE Dome Flat
+          </Typography>
           <MacroStageSelect
             stages={macros.apogee_dome_flat.stages}
             maxWidth={300}
