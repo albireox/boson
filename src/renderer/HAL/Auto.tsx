@@ -5,7 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Paper, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import IOSSwitch from 'renderer/Components/IOSwitch';
 import { useKeywordContext } from 'renderer/hooks';
@@ -29,7 +29,12 @@ export default function AutoMode() {
   const [error, setError] = React.useState(false);
   const [cancelled, setCancelled] = React.useState(false);
 
-  const { 'hal.stage_status': stageStatusKw } = useKeywordContext();
+  const [message, setMessage] = React.useState('');
+
+  const {
+    'hal.stage_status': stageStatusKw,
+    'hal.auto_mode_message': autoModeMessageKw,
+  } = useKeywordContext();
 
   const isRunning = useIsMacroRunning(macroName);
 
@@ -45,6 +50,10 @@ export default function AutoMode() {
     switchColor = 'success';
     switchDisabledColor = 'default';
   }
+
+  React.useEffect(() => {
+    setMessage(autoModeMessageKw?.values[0] ?? '');
+  }, [autoModeMessageKw]);
 
   React.useEffect(() => {
     if (!stageStatusKw) return;
@@ -91,6 +100,21 @@ export default function AutoMode() {
   return (
     <Paper variant='outlined'>
       <Stack alignItems='center' direction='row' p={1.5} px={2} spacing={2.5}>
+        <Typography variant='h6' whiteSpace='nowrap'>
+          Auto Mode
+        </Typography>
+        <Typography
+          flexGrow={1}
+          mx={3}
+          variant='caption'
+          textAlign='center'
+          fontSize={15}
+          whiteSpace='nowrap'
+          color={error ? 'error' : undefined}
+          sx={{ overflowX: 'scroll', overflowY: 'hidden' }}
+        >
+          {message}
+        </Typography>
         <TextField
           label='Count'
           size='small'

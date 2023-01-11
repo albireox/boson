@@ -24,6 +24,7 @@ export default function HAL() {
     'hal.available_scripts',
     'hal.exposure_state_apogee',
     'hal.exposure_state_boss',
+    'hal.auto_mode_message',
     'jaeger.configuration_loaded',
     'jaeger.design_preloaded',
     'jaeger.preloaded_is_cloned',
