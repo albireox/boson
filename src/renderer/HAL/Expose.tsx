@@ -9,6 +9,7 @@ import SendIcon from '@mui/icons-material/Send';
 import {
   Box,
   Checkbox,
+  Collapse,
   Divider,
   FormControlLabel,
   Grid,
@@ -29,6 +30,7 @@ import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import MacroPaper from './Components/MacroPaper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import MacroStepper from './Components/MacroStepper';
+import PauseResumeButton from './Components/PauseResumeButton';
 import macros from './macros.json';
 import useIsMacroRunning from './useIsMacroRunning';
 
@@ -48,6 +50,8 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
 
   React.useEffect(() => {
     let interval: NodeJS.Timer | undefined;
+    const { etr: propsETR } = props;
+    if (propsETR) setEtrDisplay(propsETR);
     if (running) {
       interval = setInterval(
         () => setEtrDisplay((etrD) => (etrD - 1 <= 0 ? 0 : etrD - 1)),
@@ -56,7 +60,7 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
     }
 
     return () => clearInterval(interval);
-  }, [running]);
+  }, [running, props]);
 
   React.useEffect(() => {
     setEtrDisplay(!etr || etr <= 0 ? 0 : etr);
@@ -97,7 +101,7 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
 export default function Expose() {
   const macroName = 'expose';
 
-  const isLarge = useMediaQuery('(min-width: 630px)');
+  const isLarge = useMediaQuery('(min-width: 680px)');
 
   const [apogeeReads, setApogeeReads] = React.useState<string>(
     macros.expose.defaults.apogee_reads.toString()
@@ -130,6 +134,9 @@ export default function Expose() {
   const { exposure_state_boss: bossStateKw } = halKeywords;
   const { stages: stagesKw } = halKeywords;
   const { running_macros: runningMacrosKw } = halKeywords;
+
+  const { 'hal.expose_is_paused': pausedKw } = halKeywords;
+  const isPaused = pausedKw?.values[0] ?? false;
 
   const getCommandString = React.useCallback(
     (modify = false) => {
@@ -262,7 +269,7 @@ export default function Expose() {
 
         setBossProgress(
           <LinearProgressWithLabel
-            running={bossCurrent > 0 && isRunning}
+            running={bossCurrent > 0 && isRunning && !isPaused}
             total={bossTotal}
             etr={bossEtr}
             header='BOSS'
@@ -274,7 +281,7 @@ export default function Expose() {
     }
 
     setBossProgress(<span />);
-  }, [actorStages, bossStateKw, isRunning]);
+  }, [actorStages, bossStateKw, isRunning, isPaused]);
 
   React.useEffect(() => {
     // Create and update the APOGEE progress bar.
@@ -290,7 +297,7 @@ export default function Expose() {
 
         setApogeeProgress(
           <LinearProgressWithLabel
-            running={apogeeCurrent > 0 && isRunning}
+            running={apogeeCurrent > 0 && isRunning && !isPaused}
             total={apogeeTotal}
             etr={apogeeEtr}
             header='APOGEE'
@@ -303,7 +310,7 @@ export default function Expose() {
     }
 
     setApogeeProgress(<span />);
-  }, [actorStages, apogeeStateKw, isRunning]);
+  }, [actorStages, apogeeStateKw, isRunning, isPaused]);
 
   return (
     <MacroPaper>
@@ -399,6 +406,9 @@ export default function Expose() {
             />
           </Stack>
           <Box flexGrow={1} />
+          <Collapse orientation='horizontal' in={isRunning}>
+            <PauseResumeButton macro='expose' />
+          </Collapse>
           <CommandWrapper
             commandString={getCommandString()}
             abortCommand='hal expose --stop'

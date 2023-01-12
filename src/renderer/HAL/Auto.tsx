@@ -5,10 +5,11 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Paper, Stack, TextField, Typography } from '@mui/material';
+import { Collapse, Paper, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import IOSSwitch from 'renderer/Components/IOSwitch';
 import { useKeywordContext } from 'renderer/hooks';
+import PauseResumeButton from './Components/PauseResumeButton';
 import useIsMacroRunning from './useIsMacroRunning';
 
 function parseStageStatus(stageData: string[]) {
@@ -132,6 +133,9 @@ export default function AutoMode() {
             '& .MuiInputBase-root': { marginTop: 1 },
           }}
         />
+        <Collapse orientation='horizontal' in={isRunning}>
+          <PauseResumeButton macro='auto' />
+        </Collapse>
         <IOSSwitch
           checked={isRunning}
           onChange={handleSwitch}
