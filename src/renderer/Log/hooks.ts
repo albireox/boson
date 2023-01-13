@@ -69,21 +69,19 @@ export function useReplyFilter() {
           }
         }
 
-        if (config.actors.size > 0) {
-          if (reply.sender !== 'cmds' && !config.actors.has(reply.sender)) {
-            return false;
-          }
+        if (config.actors.size > 0 && !config.actors.has(reply.sender)) {
           if (reply.sender === 'cmds') {
-            // TODO: this is not perfect and could cause some false positives.
-            let success = false;
-            Array.from(config.actors).some((actor) => {
-              if (reply.rawLine.includes(actor)) {
-                success = true;
-                return true;
-              }
+            if (
+              reply.rawLine.includes('CmdQueued') ||
+              reply.rawLine.includes('CmdDone')
+            ) {
+              const thisActor = reply.rawLine.split(',')[4]?.slice(1, -1);
+              if (!thisActor || !config.actors.has(thisActor)) return false;
+            } else {
               return false;
-            });
-            if (!success) return false;
+            }
+          } else {
+            return false;
           }
         }
 
