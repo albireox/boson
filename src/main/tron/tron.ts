@@ -265,8 +265,8 @@ export class TronConnection {
     this.status = this.connectionStatus | ConnectionStatus.Disconnected;
   }
 
-  sendCommand(commandString: string) {
-    const command = new Command(commandString);
+  sendCommand(commandString: string, internal = false) {
+    const command = new Command(commandString, internal);
     this.commands.set(command.commandId, command);
 
     // Remove command from TronConnection list when done.
@@ -306,6 +306,10 @@ export class TronConnection {
       const { groups } = lineMatched;
       let rawLine = line;
 
+      const commandId = parseInt(groups.commandId, 10);
+      const thisCommand = this.commands.get(commandId);
+      let isInternal = thisCommand?.internal ?? false;
+
       // In the log windows we want to colour the start and end of a command
       // and for that we rely on cmds, but CmdDone does not have all the
       // information, only the internal tron ID. When a command is queued
@@ -323,6 +327,7 @@ export class TronConnection {
               cmdsMatch[7], // command sent to the actor
             ]);
             groups.code = 's'; // started. This is not a standard tron code.
+            if (cmdId >= 60000) isInternal = true;
           }
         } else if (line.includes('CmdDone')) {
           const cmdsMatch = line.match(/CmdDone=([0-9]+),"([:f])"/);
@@ -334,6 +339,7 @@ export class TronConnection {
                 this.cmdsCommands.get(tronId) ?? [];
               groups.code = doneCode; // Change its code to the command result.
               rawLine += `,${cmdId},"${fromWhom}","${toActor}","${cmd}"`;
+              if (cmdId && cmdId >= 60000) isInternal = true;
             }
           }
         }
@@ -343,13 +349,15 @@ export class TronConnection {
         rawLine,
         groups.commander,
         groups.sender,
-        parseInt(groups.commandId, 10),
+        commandId,
         ReplyCodeReverseMap.get(groups.code.toLowerCase()) ?? ReplyCode.Unknown,
         keywords
       );
 
       // Update reply date to match TCC TAI.
       reply.date += this.taiOffset * 1000;
+
+      reply.internal = isInternal;
 
       this.replies = this.replies.slice(-this.maxLogMessages);
       this.replies.push(reply);
@@ -363,8 +371,7 @@ export class TronConnection {
         reply.keywords[0].values.forEach((actor) => this.actors.add(actor));
       }
 
-      this.commands.get(reply.commandId)?.addReply(reply);
-
+      thisCommand?.addReply(reply);
       this.buffer.push(reply);
 
       if (

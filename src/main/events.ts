@@ -76,18 +76,21 @@ export default function loadEvents() {
   ipcMain.handle('tron:get-all-keywords', async (_, keyword) => {
     return tron.trackedKeywordsAll.get(keyword) ?? [];
   });
-  ipcMain.handle('tron:send', async (event, command: string, raise = false) => {
-    const cmd = tron.sendCommand(command);
+  ipcMain.handle(
+    'tron:send',
+    async (event, command: string, raise = false, internal = false) => {
+      const cmd = tron.sendCommand(command, internal);
 
-    await cmd.awaitUntilDone();
-    delete cmd.lock; // Lock cannot be serialised and anyway it's not needed.
+      await cmd.awaitUntilDone();
+      delete cmd.lock; // Lock cannot be serialised and anyway it's not needed.
 
-    if (cmd.status === CommandStatus.Failed && raise) {
-      throw Error(`Command ${cmd.rawCommand} failed.`);
+      if (cmd.status === CommandStatus.Failed && raise) {
+        throw Error(`Command ${cmd.rawCommand} failed.`);
+      }
+
+      return cmd;
     }
-
-    return cmd;
-  });
+  );
 
   // store
   ipcMain.on('store:get', async (event, val: string, mode = 'normal') => {

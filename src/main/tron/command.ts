@@ -15,6 +15,8 @@ import { CommandStatus, ReplyCode } from './types';
 export default class Command {
   private static commandIdCounter = 0;
 
+  private static commandIdCounterInternal = 65000;
+
   commandId: number;
 
   lock: CommandLock<this> | undefined;
@@ -29,7 +31,7 @@ export default class Command {
 
   public readonly replies: Reply[] = [];
 
-  constructor(public rawCommand: string) {
+  constructor(public rawCommand: string, public internal = false) {
     this.lock = new CommandLock(this);
 
     const chunks: string[] =
@@ -44,8 +46,17 @@ export default class Command {
 
     [this.actor, this.command] = chunks;
 
-    Command.commandIdCounter += 1;
-    this.commandId = Command.commandIdCounter;
+    if (!internal) {
+      Command.commandIdCounter += 1;
+      if (Command.commandIdCounter >= 60000) Command.commandIdCounter = 0;
+      this.commandId = Command.commandIdCounter;
+    } else {
+      // Use a specific range for private commands.
+      Command.commandIdCounterInternal += 1;
+      if (Command.commandIdCounterInternal >= 65535)
+        Command.commandIdCounterInternal = 60000;
+      this.commandId = Command.commandIdCounterInternal;
+    }
 
     this.lock.enable();
   }

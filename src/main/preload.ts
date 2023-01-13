@@ -103,8 +103,8 @@ const ElectronAPI = {
     getAllKeywords(keyword: string): Promise<Keyword[]> {
       return ipcRenderer.invoke('tron:get-all-keywords', keyword);
     },
-    send(command: string, raise = false): Promise<Command> {
-      return ipcRenderer.invoke('tron:send', command, raise);
+    send(command: string, raise = false, internal = false): Promise<Command> {
+      return ipcRenderer.invoke('tron:send', command, raise, internal);
     },
   },
   store: {

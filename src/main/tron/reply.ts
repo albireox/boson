@@ -16,7 +16,8 @@ export default class Reply {
     public sender: string,
     public commandId: number,
     public code: ReplyCode,
-    public keywords: Keyword[]
+    public keywords: Keyword[],
+    public internal = false
   ) {
     this.date = Date.now();
   }
