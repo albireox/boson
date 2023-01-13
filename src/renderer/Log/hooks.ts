@@ -69,8 +69,15 @@ export function useReplyFilter() {
           }
         }
 
-        if (config.actors.size > 0 && !config.actors.has(reply.sender)) {
+        // Ignore replies to internal commands.
+        if (reply.internal) return false;
+
+        if (
+          config.actors.size === 0 ||
+          (config.actors.size > 0 && !config.actors.has(reply.sender))
+        ) {
           if (reply.sender === 'cmds') {
+            // if (reply.commander[0] === '.') return false;
             if (
               reply.rawLine.includes('CmdQueued') ||
               reply.rawLine.includes('CmdDone')
@@ -80,7 +87,7 @@ export function useReplyFilter() {
             } else {
               return false;
             }
-          } else {
+          } else if (config.actors.size > 0) {
             return false;
           }
         }
