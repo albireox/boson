@@ -66,7 +66,7 @@ export default function LogWindowPane() {
     <Pane title='Log Window'>
       <Grid container direction='row'>
         <Grid item xs={9}>
-          <Stack width='100%' direction='column' spacing={5}>
+          <Stack width='100%' direction='column' spacing={2}>
             <NumberLines />
             <BooleanOption
               title='Save state'
