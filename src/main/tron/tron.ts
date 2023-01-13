@@ -294,7 +294,7 @@ export class TronConnection {
 
   parseData(data: string) {
     const CmdQueuedRegex =
-      /CmdQueued=([0-9]+),([0-9.]+),"(.+?)",([0-9]+),"(.+?)",([0-9]+),"(.+?)"'/;
+      /CmdQueued=([0-9]+),([0-9.]+),"(.+?)",([0-9]+),"(.+?)",([0-9]+),"(.+?)"/;
 
     const newLines = data.trim().split(/\r|\n/);
 
