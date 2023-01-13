@@ -32,7 +32,8 @@ export default function HAL() {
   ]);
 
   React.useEffect(() => {
-    window.electron.tron.send('hal status --full');
+    // Ask for status as internal command.
+    window.electron.tron.send('hal status --full', false, true);
   }, []);
 
   return (

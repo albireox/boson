@@ -61,7 +61,7 @@ export default async function connectAndAuthorise({
     (tron.status & ConnectionStatus.Authorised ||
       (tron.status & ConnectionStatus.Connected && !authorise))
   ) {
-    tron.sendCommand('hub actors');
+    tron.sendCommand('hub actors', true);
   }
 
   return tron.status;

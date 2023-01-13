@@ -30,7 +30,7 @@ export default function Scripts() {
   const handleScriptChange = (newScript: string) => {
     setSelectedScript(newScript);
     window.electron.tron
-      .send(`hal script get-steps ${newScript}`)
+      .send(`hal script get-steps ${newScript}`, false, true)
       .then((command) => {
         if (command.status === CommandStatus.Done) {
           const stepsTmp: string[] = [];
@@ -52,7 +52,11 @@ export default function Scripts() {
   };
 
   const checkRunning = async () => {
-    const command = await window.electron.tron.send('hal script running');
+    const command = await window.electron.tron.send(
+      'hal script running',
+      false,
+      true
+    );
     const runningCommands = command.replies
       .reverse()[0]
       .getKeyword('running_scripts');

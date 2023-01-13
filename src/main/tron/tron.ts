@@ -231,7 +231,7 @@ export class TronConnection {
     });
 
     log.info('Getting list of users.');
-    this.sendCommand('hub commanders');
+    this.sendCommand('hub commanders', true);
 
     log.info('Logging in complete.');
     this.user = user;
@@ -244,9 +244,9 @@ export class TronConnection {
     // Trigger an update of the TAI offset.
     const observatory = store.get('connection.observatory') ?? 'APO';
     if (observatory === 'APO') {
-      this.sendCommand('tcc show time');
+      this.sendCommand('tcc show time', true);
     } else {
-      this.sendCommand('lcotcc show time');
+      this.sendCommand('lcotcc show time', true);
     }
 
     return [true, null];
@@ -466,7 +466,7 @@ export class TronConnection {
           .filter((kw) => kw.startsWith(actor))
           .map((kw) => kw.split('.')[1]);
 
-        this.sendCommand(`keys getFor=${actor} ${actorKeys.join(' ')}`)
+        this.sendCommand(`keys getFor=${actor} ${actorKeys.join(' ')}`, true)
           .awaitUntilDone()
           .then(({ replies }) => {
             if (replies.length > 0) {
