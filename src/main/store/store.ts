@@ -26,6 +26,9 @@ const store = new Store({
     '>=0.2.1': (st) => {
       st.set('updateChannel', 'stable');
     },
+    '>=0.2.4': (st) => {
+      st.set('log.showInternal', false);
+    },
   },
 });
 

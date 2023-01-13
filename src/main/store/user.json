@@ -32,7 +32,8 @@
   },
   "log": {
     "wrap": false,
-    "saveState": true
+    "saveState": true,
+    "showInternal": false
   },
   "chat": {
     "notifications": true

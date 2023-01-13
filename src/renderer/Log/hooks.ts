@@ -8,6 +8,7 @@
 import Reply from 'main/tron/reply';
 import { ReplyCodeMap } from 'main/tron/types';
 import React from 'react';
+import { useStore } from 'renderer/hooks';
 import LogConfigContext from './Context';
 
 export function useLogConfig() {
@@ -44,6 +45,8 @@ export function useActors(): string[] {
 export function useReplyFilter() {
   const { config } = useLogConfig();
 
+  const [showInternal] = useStore<boolean>('log.showInternal');
+
   const filterReplies = React.useCallback(
     (replies: Reply[]) =>
       replies.filter((reply) => {
@@ -70,7 +73,7 @@ export function useReplyFilter() {
         }
 
         // Ignore replies to internal commands.
-        if (reply.internal) return false;
+        if (!showInternal && reply.internal) return false;
 
         if (
           config.actors.size === 0 ||
@@ -94,7 +97,7 @@ export function useReplyFilter() {
 
         return true;
       }),
-    [config]
+    [config, showInternal]
   );
 
   return filterReplies;
