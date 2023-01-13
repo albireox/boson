@@ -136,6 +136,7 @@
       "hal.available_scripts",
       "hal.exposure_state_apogee",
       "hal.exposure_state_boss",
+      "hal.auto_mode_message",
       "hub.user"
     ],
     "trackAll": ["hub.user", "msg.msg"]
