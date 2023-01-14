@@ -5,59 +5,27 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { FormControl, Grid, SelectChangeEvent, Stack } from '@mui/material';
-import { BosonMenuItem, BosonSelect } from 'renderer/Components';
-import { useStore } from 'renderer/hooks';
+import { Grid, Stack } from '@mui/material';
 import BooleanOption from 'renderer/Preferences/Components/BooleanOption';
+import MenuOption from 'renderer/Preferences/Components/MenuOption';
 import Pane from 'renderer/Preferences/Components/Pane';
-import {
-  TypographyDescription,
-  TypographyTitle,
-} from 'renderer/Preferences/Components/TypographyTitle';
 
 function NumberLines() {
-  const [maxLogMessages] = useStore<number>('maxLogMessages');
-
+  const option = 'maxLogMessages';
   const values = [10000, 50000, 100000, 500000, 1000000];
 
-  const handleChange = (e: SelectChangeEvent<unknown>) => {
-    window.electron.store.set(
-      'maxLogMessages',
-      parseInt(e.target.value as string, 10)
-    );
-  };
+  const title = 'Number of lines';
+  const description =
+    'Keep this many lines in the log window. Requires an app restart.';
 
   return (
-    <Grid container pt={1} minHeight={50} alignContent='center'>
-      <Grid item xs={9}>
-        <TypographyTitle>Number of lines</TypographyTitle>
-        <TypographyDescription>
-          Keep this many lines in the log window. Requires an app restart.
-        </TypographyDescription>
-      </Grid>
-      <Grid
-        item
-        xs={3}
-        alignItems='flex-end'
-        textAlign='right'
-        alignSelf='center'
-      >
-        <FormControl>
-          <BosonSelect value={maxLogMessages} onChange={handleChange}>
-            {values.map((value) => (
-              <BosonMenuItem
-                value={value}
-                key={value.toString()}
-                fontVariant='body1'
-                textAlign='right'
-              >
-                {value}
-              </BosonMenuItem>
-            ))}
-          </BosonSelect>
-        </FormControl>
-      </Grid>
-    </Grid>
+    <MenuOption
+      title={title}
+      description={description}
+      values={values}
+      option={option}
+      isNumber
+    />
   );
 }
 

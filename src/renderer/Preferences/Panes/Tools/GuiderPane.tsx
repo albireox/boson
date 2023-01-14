@@ -5,19 +5,10 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import {
-  Box,
-  FormControl,
-  Grid,
-  SelectChangeEvent,
-  Stack,
-} from '@mui/material';
-import {
-  BosonInputBase,
-  BosonMenuItem,
-  BosonSelect,
-} from 'renderer/Components';
+import { Box, Grid, Stack } from '@mui/material';
+import { BosonInputBase } from 'renderer/Components';
 import { useStore } from 'renderer/hooks';
+import MenuOption from 'renderer/Preferences/Components/MenuOption';
 import Pane from 'renderer/Preferences/Components/Pane';
 import {
   TypographyDescription,
@@ -61,53 +52,21 @@ function RefreshWindow() {
     window.electron.store.set('guider.refreshInterval', 20);
   }
 
+  const option = 'guider.refreshInterval';
   const values = [10, 20, 30, 60];
 
-  const handleChange = (e: SelectChangeEvent<unknown>) => {
-    window.electron.store.set(
-      'guider.refreshInterval',
-      parseInt(e.target.value as string, 10)
-    );
-  };
+  const title = 'Refresh time';
+  const description =
+    'Refresh the guider window every N minutes to clear memory.';
 
   return (
-    <Grid container pt={1} minHeight={50} alignContent='center'>
-      <Grid item xs={9}>
-        <TypographyTitle>Refresh time</TypographyTitle>
-        <TypographyDescription>
-          Refresh the guider window every N minutes to clear memory.
-        </TypographyDescription>
-      </Grid>
-      <Grid
-        item
-        xs={3}
-        alignItems='flex-end'
-        textAlign='right'
-        alignSelf='center'
-      >
-        <FormControl>
-          <BosonSelect
-            value={refreshInterval}
-            onChange={handleChange}
-            // sx={{ width: 125 }}
-          >
-            <BosonMenuItem value={0} fontVariant='body1' textAlign='right'>
-              No refresh
-            </BosonMenuItem>
-            {values.map((value) => (
-              <BosonMenuItem
-                value={value}
-                key={value.toString()}
-                fontVariant='body1'
-                textAlign='right'
-              >
-                {value}
-              </BosonMenuItem>
-            ))}
-          </BosonSelect>
-        </FormControl>
-      </Grid>
-    </Grid>
+    <MenuOption
+      title={title}
+      description={description}
+      values={values}
+      option={option}
+      isNumber
+    />
   );
 }
 
