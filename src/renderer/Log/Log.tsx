@@ -45,6 +45,7 @@ export default function Log(props: LogProps) {
   const [storedConfig] = useStore<StoredConfigIface>(`log.config.${logId}`);
 
   const [wrap] = useStore<boolean>('log.wrap');
+  const [highlightCommands] = useStore<string>('log.highlightCommands');
 
   const initialConfig = {
     ...defaultLogConfig,
@@ -57,6 +58,12 @@ export default function Log(props: LogProps) {
   const logConfig = createLogConfig(config, setConfig);
 
   const viewportRef = React.useRef<ViewportRefType>(null);
+
+  React.useEffect(() => {
+    // We want the active windows to change their highlighting if
+    // highlightCommands changes.
+    setConfig((current) => ({ ...current, highlightCommands }));
+  }, [highlightCommands]);
 
   React.useEffect(() => {
     if (!saveState) return;

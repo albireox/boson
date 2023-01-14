@@ -40,7 +40,7 @@ export default function LogWindowPane() {
     <Pane title='HAL'>
       <Grid container direction='row'>
         <Grid item xs={9}>
-          <Stack width='100%' direction='column' spacing={2}>
+          <Stack width='100%' direction='column' spacing={2.5}>
             <AutoMode />
           </Stack>
         </Grid>

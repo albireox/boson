@@ -15,12 +15,20 @@ interface MenuOptionProps {
   title: string;
   option: string;
   values: string[] | number[];
+  labels?: string[];
   isNumber?: boolean;
   description?: string;
 }
 
 export default function MenuOption(props: MenuOptionProps) {
-  const { title, option, values, isNumber = false, description } = props;
+  const {
+    title,
+    option,
+    values,
+    isNumber = false,
+    labels,
+    description,
+  } = props;
 
   const [currentValue] = useStore(option);
 
@@ -37,17 +45,23 @@ export default function MenuOption(props: MenuOptionProps) {
         <TypographyTitle>{title}</TypographyTitle>
         <TypographyDescription>{description}</TypographyDescription>
       </Grid>
-      <Grid xs={3} alignItems='flex-end' textAlign='right' alignSelf='center'>
+      <Grid
+        xs={3}
+        alignItems='flex-end'
+        textAlign='right'
+        alignSelf='center'
+        pl={1}
+      >
         <FormControl>
           <BosonSelect value={currentValue} onChange={handleChange}>
-            {values.map((value) => (
+            {values.map((value, idx) => (
               <BosonMenuItem
                 value={value}
                 key={value.toString()}
                 fontVariant='body1'
                 textAlign='right'
               >
-                {value}
+                {labels ? labels[idx] : value.toString()}
               </BosonMenuItem>
             ))}
           </BosonSelect>

@@ -14,6 +14,7 @@ const defaultLogConfig = {
   searchShowMatched: false,
   searchUseRegEx: false,
   wrap: false,
+  highlightCommands: 'mine',
 };
 
 export interface ConfigIface {
@@ -23,6 +24,7 @@ export interface ConfigIface {
   searchShowMatched: boolean;
   searchUseRegEx: boolean;
   wrap: boolean;
+  highlightCommands: string;
 }
 
 export interface LogConfigIface {

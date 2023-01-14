@@ -33,7 +33,8 @@
   "log": {
     "wrap": false,
     "saveState": true,
-    "showInternal": false
+    "showInternal": false,
+    "highlightCommands": "mine"
   },
   "chat": {
     "notifications": true

@@ -75,7 +75,7 @@ export default function GuiderPane() {
     <Pane title='Log Window'>
       <Grid container direction='row'>
         <Grid item xs={11}>
-          <Stack width='100%' direction='column' spacing={2}>
+          <Stack width='100%' direction='column' spacing={2.5}>
             <XPA />
             <RefreshWindow />
           </Stack>

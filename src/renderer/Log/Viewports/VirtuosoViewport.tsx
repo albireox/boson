@@ -16,13 +16,14 @@ interface VirtuosoViewportProps {
   data: Reply[];
   onIsScrolling?: (scrolling: boolean) => void;
   onIsAtBottomState?: (atBottom: boolean) => void;
+  user?: string;
 }
 
 function VirtuosoViewportInner(
   props: VirtuosoViewportProps,
   ref: React.ForwardedRef<VirtuosoHandle>
 ) {
-  const { data, onIsScrolling, onIsAtBottomState } = props;
+  const { data, onIsScrolling, onIsAtBottomState, user } = props;
 
   const theme = useTheme();
   const { config } = useLogConfig();
@@ -46,6 +47,8 @@ function VirtuosoViewportInner(
           searchText={config.searchText}
           searchUseRegEx={config.searchUseRegEx}
           wrap={config.wrap}
+          user={user}
+          highlightCommands={config.highlightCommands}
         />
       )}
       followOutput='auto'

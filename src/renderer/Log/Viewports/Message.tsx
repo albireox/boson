@@ -28,9 +28,15 @@ export interface MessageProps {
   searchText: string | null;
   searchUseRegEx: boolean;
   wrap: boolean;
+  user?: string;
+  highlightCommands?: string;
 }
 
-function getMessageColor(theme: Theme, reply: Reply) {
+function getMessageColor(
+  theme: Theme,
+  reply: Reply,
+  highlightCommands: boolean = true
+) {
   const accent = 'main';
 
   const { code, sender } = reply;
@@ -40,7 +46,8 @@ function getMessageColor(theme: Theme, reply: Reply) {
 
   switch (code) {
     case ReplyCode.Started:
-      return theme.palette.info.main;
+      if (highlightCommands) return theme.palette.info.main;
+      return undefined;
     case ReplyCode.Error:
       return theme.palette.error[accent];
     case ReplyCode.Failed:
@@ -50,7 +57,8 @@ function getMessageColor(theme: Theme, reply: Reply) {
     case ReplyCode.Debug:
       return theme.palette.text.disabled;
     case ReplyCode.Done:
-      return theme.palette.success[accent];
+      if (highlightCommands) return theme.palette.success[accent];
+      return undefined;
     default:
       return undefined;
   }
@@ -76,8 +84,26 @@ export default function Message(props: MessageProps) {
   } = props;
 
   const getMessageColorMemo = React.useCallback(() => {
-    return getMessageColor(theme, reply);
-  }, [theme, reply]);
+    // Decide whether to colourise the CmdQueued/CmdDone lines.
+    // If we only want to highlight the commands for the user, check
+    // if the raw line contains the user, since CmdQueued/CmdDone are
+    // emitted by the hub and have commander .hub.
+    // This does not affect the colourisation of other messages.
+
+    const { user = '', highlightCommands = 'mine' } = props;
+
+    let highlight = false;
+    if (
+      highlightCommands === 'all' ||
+      (highlightCommands === 'mine' &&
+        user &&
+        reply.rawLine.toLowerCase().includes(user))
+    ) {
+      highlight = true;
+    }
+
+    return getMessageColor(theme, reply, highlight);
+  }, [theme, reply, props]);
 
   if (reply === undefined) return null;
 

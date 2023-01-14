@@ -32,6 +32,8 @@ function MessageViewportInner(
 
   const virtuoso = React.useRef<VirtuosoHandle>(null);
 
+  const [user, setUser] = React.useState('');
+
   const filterReplies = useReplyFilter();
 
   const maxLogMessages: number = window.electron.store.get('maxLogMessages');
@@ -146,6 +148,11 @@ function MessageViewportInner(
     // nFiltered to the dependency list.
   }, [nFiltered, mode]);
 
+  React.useEffect(() => {
+    const [, theUser, theProgram] = window.electron.tron.getCredentials();
+    setUser(`${theProgram}.${theUser}`.toLowerCase());
+  }, []);
+
   if (mode === 'column-reverse') {
     return <ColumnReverseViewport data={filtered} />;
   }
@@ -156,6 +163,7 @@ function MessageViewportInner(
       data={filtered}
       onIsScrolling={setIsScrolling}
       onIsAtBottomState={setIsAtBottom}
+      user={user}
     />
   );
 }
