@@ -33,19 +33,10 @@ export interface MessageProps {
 function getMessageColor(theme: Theme, reply: Reply) {
   const accent = 'main';
 
-  const { code, sender, rawLine } = reply;
+  const { code, sender } = reply;
 
   // We only want to colourize CmdDone if the reply code is Done.
   if (code === ReplyCode.Done && sender !== 'cmds') return undefined;
-
-  // Do not highlight CmdStarted and CmdDone when they are in response to
-  // useKeywords hooks. A bit hacky ...
-  if (
-    sender === 'cmds' &&
-    rawLine.includes('getFor=') &&
-    rawLine.includes('keys')
-  )
-    return undefined;
 
   switch (code) {
     case ReplyCode.Started:
@@ -84,10 +75,9 @@ export default function Message(props: MessageProps) {
     wrap = false,
   } = props;
 
-  const getMessageColorMemo = React.useCallback(
-    () => getMessageColor(theme, reply),
-    [theme, reply]
-  );
+  const getMessageColorMemo = React.useCallback(() => {
+    return getMessageColor(theme, reply);
+  }, [theme, reply]);
 
   if (reply === undefined) return null;
 

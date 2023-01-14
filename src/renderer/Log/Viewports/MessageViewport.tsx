@@ -5,14 +5,14 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box, useTheme } from '@mui/material';
 import Reply from 'main/tron/reply';
 import React from 'react';
-import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import { VirtuosoHandle } from 'react-virtuoso';
 import { useEventListener, usePrevious } from 'renderer/hooks';
-import { ViewportRefType } from '.';
-import { useLogConfig, useReplyFilter } from './hooks';
-import Message from './Message';
+import { ViewportRefType } from '..';
+import { useReplyFilter } from '../hooks';
+import ColumnReverseViewport from './ColumnReverseViewport';
+import VirtuosoViewport from './VirtuosoViewport';
 
 interface MessageViewportProps {
   mode: 'virtuoso' | 'column-reverse';
@@ -22,8 +22,6 @@ function MessageViewportInner(
   props: MessageViewportProps,
   ref: React.ForwardedRef<ViewportRefType>
 ) {
-  const theme = useTheme();
-
   const { mode } = props;
 
   const [filtered, setFiltered] = React.useState<Reply[]>([]);
@@ -33,8 +31,6 @@ function MessageViewportInner(
   const [triggerToBottom, setTriggerToBottom] = React.useState(true);
 
   const virtuoso = React.useRef<VirtuosoHandle>(null);
-
-  const { config } = useLogConfig();
 
   const filterReplies = useReplyFilter();
 
@@ -47,7 +43,10 @@ function MessageViewportInner(
       if (clear) {
         setFiltered(filterReplies(newReplies));
       } else {
-        setFiltered((old) => [...old, ...filterReplies(newReplies)]);
+        const newFiltered = filterReplies(newReplies);
+        if (newFiltered.length > 0) {
+          setFiltered((old) => [...old, ...newFiltered]);
+        }
       }
       setTriggerToBottom(true);
     },
@@ -73,9 +72,9 @@ function MessageViewportInner(
 
   React.useEffect(() => {
     // Get all replies when something changes. Since this effect depends on
-    // getAllReplies, which depends on addReplies, whic depens on filterReplies,
-    // which depends on the config, a change in the config will trigger a full
-    // reply reload.
+    // getAllReplies, which depends on addReplies, which depends on
+    // filterReplies, which depends on the config, a change in the
+    // config will trigger a full reply reload.
 
     getAllReplies();
   }, [getAllReplies]);
@@ -148,59 +147,15 @@ function MessageViewportInner(
   }, [nFiltered, mode]);
 
   if (mode === 'column-reverse') {
-    return (
-      <Box
-        component='div'
-        width='100%'
-        flexGrow={1}
-        flexDirection='column-reverse'
-        display='flex'
-        overflow='scroll'
-      >
-        {filtered
-          .slice(0)
-          .reverse()
-          .map((reply, index) => (
-            <Message
-              key={index}
-              reply={reply}
-              theme={theme}
-              searchText={config.searchText}
-              searchUseRegEx={config.searchUseRegEx}
-              wrap={config.wrap}
-            />
-          ))}
-      </Box>
-    );
+    return <ColumnReverseViewport data={filtered} />;
   }
 
   return (
-    <Virtuoso
+    <VirtuosoViewport
       ref={virtuoso}
-      style={{
-        height: '100%',
-        width: '100%',
-        overflowX: 'auto',
-        overflowY: 'auto',
-      }}
-      totalCount={filtered.length}
       data={filtered}
-      overscan={1000}
-      itemContent={(index) => (
-        <Message
-          reply={filtered[index]}
-          theme={theme}
-          searchText={config.searchText}
-          searchUseRegEx={config.searchUseRegEx}
-          wrap={config.wrap}
-        />
-      )}
-      followOutput='auto'
-      alignToBottom
-      atBottomThreshold={100}
-      increaseViewportBy={400}
-      isScrolling={(scrolling) => setIsScrolling(scrolling)}
-      atBottomStateChange={(atBottom) => setIsAtBottom(atBottom)}
+      onIsScrolling={setIsScrolling}
+      onIsAtBottomState={setIsAtBottom}
     />
   );
 }

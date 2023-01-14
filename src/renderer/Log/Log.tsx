@@ -18,7 +18,7 @@ import LogConfigContext, {
   defaultLogConfig,
 } from './Context';
 import LogHeader from './Header/LogHeader';
-import MessageViewport from './MessageViewport';
+import MessageViewport from './Viewports/MessageViewport';
 
 interface StoredConfigIface extends Omit<ConfigIface, 'actors' | 'codes'> {
   actors: string[];
@@ -41,9 +41,10 @@ export interface LogProps {
 export default function Log(props: LogProps) {
   const { logId } = props;
 
-  const [wrap] = useStore<boolean>('log.wrap');
   const [saveState] = useStore<boolean>('log.saveState');
   const [storedConfig] = useStore<StoredConfigIface>(`log.config.${logId}`);
+
+  const [wrap] = useStore<boolean>('log.wrap');
 
   const initialConfig = {
     ...defaultLogConfig,
@@ -52,6 +53,7 @@ export default function Log(props: LogProps) {
   };
 
   const [config, setConfig] = React.useState<ConfigIface>(initialConfig);
+
   const logConfig = createLogConfig(config, setConfig);
 
   const viewportRef = React.useRef<ViewportRefType>(null);
