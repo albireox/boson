@@ -28,22 +28,18 @@ export function MacroStageSelect({
   onStagesSelected,
 }: MacroStageSelectProps): JSX.Element {
   const [selectedStages, setSelectedStages] = React.useState<string[]>([]);
-  const [autoSelected, setAutoSelected] = React.useState(autoMode);
 
   const handleChange = React.useCallback(
     (e: SelectChangeEvent<string[]>) => {
       const selected = e.target.value as string[];
       if (selected.includes('auto')) {
         setSelectedStages([]);
-        setAutoSelected(true);
         if (onStagesSelected) onStagesSelected(['auto']);
       } else if (selected.includes('all')) {
         setSelectedStages([]);
-        setAutoSelected(false);
         if (onStagesSelected) onStagesSelected([]);
       } else {
         setSelectedStages(selected);
-        setAutoSelected(false);
         if (onStagesSelected) onStagesSelected(selected);
       }
     },
