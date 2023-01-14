@@ -20,6 +20,8 @@ node_modules
 
 release/app/dist
 release/build
+release/app/package-lock.json
+release/app/yarn.lock
 .erb/dll
 
 .idea
