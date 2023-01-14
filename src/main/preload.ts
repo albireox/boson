@@ -36,7 +36,7 @@ const ElectronAPI = {
     invoke(channel: string, args: any[]) {
       return ipcRenderer.invoke(channel, args);
     },
-    removeListener(channel: string, listener: () => void) {
+    removeListener(channel: string, listener: (...args: any) => void) {
       ipcRenderer.removeListener(channel, listener);
     },
     removeAllListeners(channel: string) {
