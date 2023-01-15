@@ -6,6 +6,7 @@
  */
 
 import { Grid, Stack } from '@mui/material';
+import BooleanOption from 'renderer/Preferences/Components/BooleanOption';
 import Pane from 'renderer/Preferences/Components/Pane';
 import Switch from 'renderer/Preferences/Components/Switch';
 import {
@@ -35,6 +36,17 @@ function AutoMode() {
   );
 }
 
+function SyncStages() {
+  return (
+    <BooleanOption
+      param='hal.syncStages'
+      title='Sync selected stages'
+      description='Update the stages menu with the last stages
+                   with which the macro run'
+    />
+  );
+}
+
 export default function LogWindowPane() {
   return (
     <Pane title='HAL'>
@@ -42,6 +54,7 @@ export default function LogWindowPane() {
         <Grid item xs={9}>
           <Stack width='100%' direction='column' spacing={2.5}>
             <AutoMode />
+            <SyncStages />
           </Stack>
         </Grid>
       </Grid>

@@ -11,6 +11,7 @@ import React from 'react';
 import BosonMenuItem, {
   BosonMenuItemCheckbox,
 } from 'renderer/Components/BosonMenuItem';
+import { useStore } from 'renderer/hooks';
 import macros from '../macros.json';
 import useIsMacroRunning from '../useIsMacroRunning';
 import useStageStatus from '../useStageStatus';
@@ -37,6 +38,8 @@ export function MacroStageSelect(props: MacroStageSelectProps) {
 
   const isRunning = useIsMacroRunning(macro);
   const stageStatus = useStageStatus(macro);
+
+  const [syncStages] = useStore<boolean>('hal.syncStages');
 
   const [selectedStages, setSelectedStages] = React.useState<string[]>([]);
 
@@ -76,13 +79,13 @@ export function MacroStageSelect(props: MacroStageSelectProps) {
   }, [onStagesSelected, autoMode]);
 
   React.useEffect(() => {
-    if (!isRunning) return;
+    if (!isRunning || !syncStages) return;
 
     const currentStages = Array.from(stageStatus.status.keys());
     const userStages = currentStages.filter((stage) => stages.includes(stage));
 
     setSelectedStages(userStages);
-  }, [stageStatus, isRunning, stages]);
+  }, [stageStatus, syncStages, isRunning, stages]);
 
   return (
     <div>

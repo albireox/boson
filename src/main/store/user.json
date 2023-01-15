@@ -28,7 +28,8 @@
     "refreshInterval": 10
   },
   "hal": {
-    "useAutoMode": false
+    "useAutoMode": false,
+    "syncStages": false
   },
   "log": {
     "wrap": false,
