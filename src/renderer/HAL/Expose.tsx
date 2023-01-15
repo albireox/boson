@@ -326,7 +326,7 @@ export default function Expose() {
             Expose
           </Typography>
           <MacroStageSelect
-            stages={macros.expose.stages}
+            macro={macroName}
             maxWidth={200}
             minWidth={100}
             onStagesSelected={React.useCallback(

@@ -11,22 +11,31 @@ import React from 'react';
 import BosonMenuItem, {
   BosonMenuItemCheckbox,
 } from 'renderer/Components/BosonMenuItem';
+import macros from '../macros.json';
+import useIsMacroRunning from '../useIsMacroRunning';
 
 type MacroStageSelectProps = {
-  stages: string[];
+  macro: keyof typeof macros;
   maxWidth?: number;
   minWidth?: number;
   onStagesSelected?: (selected: string[]) => void;
   autoMode?: boolean;
 };
 
-export function MacroStageSelect({
-  stages,
-  maxWidth = 300,
-  minWidth = 300,
-  autoMode = false,
-  onStagesSelected,
-}: MacroStageSelectProps): JSX.Element {
+export function MacroStageSelect(props: MacroStageSelectProps) {
+  const {
+    macro,
+    maxWidth = 300,
+    minWidth = 300,
+    autoMode = false,
+    onStagesSelected,
+  } = props;
+
+  // eslint-disable-next-line prefer-destructuring
+  const { stages } = macros[macro];
+
+  const isRunning = useIsMacroRunning(macro);
+
   const [selectedStages, setSelectedStages] = React.useState<string[]>([]);
 
   const handleChange = React.useCallback(
@@ -72,6 +81,7 @@ export function MacroStageSelect({
           displayEmpty
           value={selectedStages}
           onChange={handleChange}
+          disabled={isRunning}
           MenuProps={{
             PaperProps: {
               elevation: 0,

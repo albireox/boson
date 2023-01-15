@@ -12,7 +12,6 @@ import CommandWrapper from 'renderer/Components/CommandWrapper';
 import MacroPaper from './Components/MacroPaper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import MacroStepper from './Components/MacroStepper';
-import macros from './macros.json';
 import useIsMacroRunning from './useIsMacroRunning';
 
 export default function ApogeeDomeFlat() {
@@ -34,11 +33,7 @@ export default function ApogeeDomeFlat() {
           <Typography variant='h6' whiteSpace='nowrap'>
             APOGEE Dome Flat
           </Typography>
-          <MacroStageSelect
-            stages={macros.apogee_dome_flat.stages}
-            maxWidth={300}
-            minWidth={100}
-          />
+          <MacroStageSelect macro={macroName} maxWidth={300} minWidth={100} />
           <Box flexGrow={1} />
           <CommandWrapper
             commandString='hal calibrations apogee-dome-flat'

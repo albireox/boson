@@ -118,7 +118,7 @@ export default function GotoField() {
             Goto Field
           </Typography>
           <MacroStageSelect
-            stages={macros.goto_field.stages}
+            macro={macroName}
             autoMode={useAutoMode}
             maxWidth={200}
             minWidth={100}
