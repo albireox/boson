@@ -26,7 +26,7 @@ const store = new Store({
     '>=0.2.1': (st) => {
       st.set('updateChannel', 'stable');
     },
-    '>=0.2.4': (st) => {
+    '>=0.3.0': (st) => {
       st.set('log.showInternal', false);
       st.set('log.highlightCommands', 'mine');
       st.set('hal.syncStages', false);
