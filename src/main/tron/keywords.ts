@@ -8,6 +8,8 @@
 import { Keyword } from './types';
 
 function evaluateKeyword(value: string) {
+  if (value === '') return undefined;
+
   switch (value) {
     case 'F':
     case 'f':
@@ -76,9 +78,11 @@ export default function parseLine(
           name: key,
           sender: lineMatched.groups?.sender,
           commander: lineMatched.groups?.commander,
-          values: rawValues.map((value) => {
-            return evaluateKeyword(value);
-          }),
+          values: rawValues
+            .map((value) => {
+              return evaluateKeyword(value);
+            })
+            .filter((x) => x !== undefined),
         };
         return keyword;
       });
