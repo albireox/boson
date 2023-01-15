@@ -120,7 +120,7 @@ export default function GotoField() {
           <MacroStageSelect
             macro={macroName}
             autoMode={useAutoMode}
-            maxWidth={200}
+            maxWidth={300}
             minWidth={100}
             onStagesSelected={updateCommandString}
           />
@@ -128,6 +128,7 @@ export default function GotoField() {
             label='Guider Exp. Time'
             value={guiderTime}
             onChange={(e) => setGuiderTime(e.target.value)}
+            isNumber={false}
           />
           <FormControlLabel
             control={
@@ -162,7 +163,7 @@ export default function GotoField() {
                 size='small'
               />
             }
-            label='Keep Offsets'
+            label='Offsets'
             sx={{ '& .MuiFormControlLabel-label': { whiteSpace: 'nowrap' } }}
           />
           <Box flexGrow={1} />

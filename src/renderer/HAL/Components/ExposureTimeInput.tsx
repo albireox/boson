@@ -12,6 +12,8 @@ export type ExposureTimeInputType = {
   value: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  width?: string;
+  isNumber?: boolean;
 };
 
 export function ExposureTimeInput({
@@ -19,12 +21,14 @@ export function ExposureTimeInput({
   value,
   onChange,
   disabled,
+  width = '80px',
+  isNumber = true,
 }: ExposureTimeInputType) {
   return (
     <TextField
       label={label}
       size='small'
-      type='number'
+      type={isNumber ? 'number' : 'text'}
       disabled={disabled}
       InputProps={{
         endAdornment: <InputAdornment position='end'>s</InputAdornment>,
@@ -36,7 +40,7 @@ export function ExposureTimeInput({
         shrink: true,
       }}
       sx={{
-        width: '80px',
+        width,
         '& .MuiInputBase-root': { marginTop: 1 },
       }}
     />

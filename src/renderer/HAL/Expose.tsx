@@ -327,8 +327,8 @@ export default function Expose() {
           </Typography>
           <MacroStageSelect
             macro={macroName}
-            maxWidth={200}
             minWidth={100}
+            maxWidth={145}
             onStagesSelected={React.useCallback(
               (stgs: string[]) => setStages(stgs),
               []
@@ -343,13 +343,15 @@ export default function Expose() {
           >
             {(stages.length === 0 || stages.includes('expose_boss')) && (
               <ExposureTimeInput
-                label='BOSS Exp Time'
+                label='BOSS Exp'
                 value={bossTime}
                 onChange={(e) => {
                   e.preventDefault();
                   setBossTime(e.target.value);
                 }}
                 disabled={isRunning}
+                width='55px'
+                isNumber={false}
               />
             )}
             {!stages.includes('expose_boss') &&
@@ -368,7 +370,7 @@ export default function Expose() {
                     shrink: true,
                   }}
                   sx={{
-                    width: '80px',
+                    width: '40px',
                     '& .MuiInputBase-root': { marginTop: 1 },
                   }}
                   disabled={isRunning}
@@ -386,7 +388,7 @@ export default function Expose() {
                 shrink: true,
               }}
               sx={{
-                width: '60px',
+                width: '40px',
                 '& .MuiInputBase-root': { marginTop: 1 },
               }}
             />
