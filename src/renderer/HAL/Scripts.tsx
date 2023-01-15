@@ -18,82 +18,86 @@ import MacroPaper from './Components/MacroPaper';
 export default function Scripts() {
   const halKeywords = useKeywordContext();
 
-  const { available_scripts: availableScriptsKw, scrip_step: scripStepKw } =
-    halKeywords;
+  const {
+    'hal.available_scripts': availableScriptsKw,
+    'hal.script_step': scripStepKw,
+    'hal.running_scripts': runningScriptsKw,
+  } = halKeywords;
+
+  const [progress, setProgress] = React.useState(0);
 
   const [scripts, setScripts] = React.useState<string[]>([]);
-  const [progress, setProgress] = React.useState(0);
-  const [selectorDisabled, setSelectorDisabled] = React.useState(false);
   const [selectedScript, setSelectedScript] = React.useState<string>('');
+  const [runningScripts, setRunningScripts] = React.useState<string[]>([]);
   const [steps, setSteps] = React.useState<string[]>([]);
 
-  const handleScriptChange = (newScript: string) => {
-    setSelectedScript(newScript);
-    window.electron.tron
-      .send(`hal script get-steps ${newScript}`, false, true)
-      .then((command) => {
-        if (command.status === CommandStatus.Done) {
-          const stepsTmp: string[] = [];
-          command.replies.forEach((reply) => {
-            if (reply.code === ReplyCode.Info) {
-              reply.keywords.forEach((kw) => {
-                if (kw.name === 'text') {
-                  stepsTmp.push(kw.values[0]);
-                }
-              });
-            }
-          });
-          setSteps(stepsTmp);
-          setProgress(0);
-        }
-        return true;
-      })
-      .catch(() => {});
-  };
+  const isRunning = runningScripts.length > 0;
 
-  const checkRunning = async () => {
-    const command = await window.electron.tron.send(
-      'hal script running',
-      false,
-      true
-    );
-    const runningCommands = command.replies
-      .reverse()[0]
-      .getKeyword('running_scripts');
-    if (runningCommands && runningCommands.values.includes(selectedScript))
-      return false;
-    setProgress(0);
-    return true;
-  };
-
-  const handleScriptEvent = (event: string) => {
-    return event === 'running'
-      ? setSelectorDisabled(true)
-      : setSelectorDisabled(false);
-  };
+  const handleScriptChange = React.useCallback(
+    (newScript: string, resetProgress = true) => {
+      setSelectedScript(newScript);
+      window.electron.tron
+        .send(`hal script get-steps ${newScript}`, false, true)
+        .then((command) => {
+          if (command.status === CommandStatus.Done) {
+            const stepsTmp: string[] = [];
+            command.replies.forEach((reply) => {
+              if (reply.code === ReplyCode.Info) {
+                reply.keywords.forEach((kw) => {
+                  if (kw.name === 'text') {
+                    stepsTmp.push(kw.values[0]);
+                  }
+                });
+              }
+            });
+            setSteps(stepsTmp);
+            if (resetProgress) setProgress(0);
+          }
+          return true;
+        })
+        .catch(() => {});
+    },
+    []
+  );
 
   React.useEffect(() => {
-    if (!availableScriptsKw) return;
-
-    setScripts(availableScriptsKw.values);
+    setScripts(availableScriptsKw?.values ?? []);
   }, [availableScriptsKw]);
 
   React.useEffect(() => {
+    // Handle first render when selectedScript is not selected.
+
     if (availableScriptsKw && selectedScript === '') {
       const sortedScripts = availableScriptsKw.values.sort();
       setSelectedScript(sortedScripts[0]);
       handleScriptChange(sortedScripts[0]);
     }
-  }, [availableScriptsKw, selectedScript]);
+  }, [availableScriptsKw, selectedScript, handleScriptChange]);
 
   React.useEffect(() => {
+    // Handle new step in running script.
+
     if (!scripStepKw) return;
 
     const values = scripStepKw.values as [string, string, number, number];
+    console.log(selectedScript, values);
     if (values[0] !== selectedScript) return;
 
     setProgress(values[2]);
   }, [scripStepKw, selectedScript]);
+
+  React.useEffect(() => {
+    // If script is running, set the selected script to the currently running.
+    // Technically hal script allows to run multiple scripts at the same time
+    // but we assume just one is running.
+
+    if (!runningScriptsKw) return;
+
+    if (runningScriptsKw.values.length > 0) {
+      handleScriptChange(runningScriptsKw.values[0], false);
+    }
+    setRunningScripts(runningScriptsKw.values);
+  }, [runningScriptsKw, handleScriptChange]);
 
   return (
     <MacroPaper>
@@ -112,7 +116,7 @@ export default function Scripts() {
           size='small'
           value={selectedScript}
           onChange={(e) => handleScriptChange(e.target.value)}
-          disabled={selectorDisabled}
+          disabled={isRunning}
         >
           {scripts.map((script: string) => (
             <MenuItem key={script} value={script}>
@@ -134,8 +138,7 @@ export default function Scripts() {
         <CommandWrapper
           commandString={`hal script run ${selectedScript}`}
           abortCommand={`hal script cancel ${selectedScript}`}
-          beforeCallback={checkRunning}
-          onStatusChange={handleScriptEvent}
+          isRunning={isRunning}
         >
           <CommandButton variant='outlined' endIcon={<SendIcon />}>
             Run

@@ -19,9 +19,11 @@ import Scripts from './Scripts';
 export default function HAL() {
   const halKeywords = useKeywords([
     'hal.running_macros',
+    'hal.running_scripts',
     'hal.stage_status',
     'hal.stages',
     'hal.available_scripts',
+    'hal.script_step',
     'hal.exposure_state_apogee',
     'hal.exposure_state_boss',
     'hal.expose_is_paused',
