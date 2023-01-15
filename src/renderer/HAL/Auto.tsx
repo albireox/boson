@@ -11,16 +11,7 @@ import IOSSwitch from 'renderer/Components/IOSwitch';
 import { useKeywordContext } from 'renderer/hooks';
 import PauseResumeButton from './Components/PauseResumeButton';
 import useIsMacroRunning from './useIsMacroRunning';
-
-function parseStageStatus(stageData: string[]) {
-  const stageState = { name: stageData[0], status: new Map<string, string>() };
-
-  for (let ii = 1; ii < stageData.length; ii += 2) {
-    stageState.status.set(stageData[ii], stageData[ii + 1]);
-  }
-
-  return stageState;
-}
+import useStageStatus from './useStageStatus';
 
 export default function AutoMode() {
   const macroName = 'auto';
@@ -32,12 +23,10 @@ export default function AutoMode() {
 
   const [message, setMessage] = React.useState('');
 
-  const {
-    'hal.stage_status': stageStatusKw,
-    'hal.auto_mode_message': autoModeMessageKw,
-  } = useKeywordContext();
+  const { 'hal.auto_mode_message': autoModeMessageKw } = useKeywordContext();
 
   const isRunning = useIsMacroRunning(macroName);
+  const stageStatus = useStageStatus(macroName);
 
   let switchColor: 'success' | 'warning' | 'error';
   let switchDisabledColor: 'default' | 'error' | 'success' | 'warning';
@@ -57,17 +46,12 @@ export default function AutoMode() {
   }, [autoModeMessageKw]);
 
   React.useEffect(() => {
-    if (!stageStatusKw) return;
-
-    const { values } = stageStatusKw;
-    if (values[0] !== 'auto') return;
-
-    const { status } = parseStageStatus(values);
+    const { status } = stageStatus;
     const states = Array.from(status.values());
 
     setError(states.includes('failed') || states.includes('failing'));
     setCancelled(states.includes('cancelling') || states.includes('cancelled'));
-  }, [stageStatusKw]);
+  }, [stageStatus]);
 
   const modifyCount = React.useCallback(() => {
     if (!isRunning) return;
