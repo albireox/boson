@@ -1,7 +1,7 @@
 {
   "name": "boson",
   "productName": "boson",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "José Sánchez-Gallego <gallegoj@uw.edu>",
   "description": "SDSS observer graphical user interface",
   "license": "BSD-3-Clause",
