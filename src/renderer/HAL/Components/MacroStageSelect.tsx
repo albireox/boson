@@ -13,6 +13,7 @@ import BosonMenuItem, {
 } from 'renderer/Components/BosonMenuItem';
 import macros from '../macros.json';
 import useIsMacroRunning from '../useIsMacroRunning';
+import useStageStatus from '../useStageStatus';
 
 type MacroStageSelectProps = {
   macro: keyof typeof macros;
@@ -35,6 +36,7 @@ export function MacroStageSelect(props: MacroStageSelectProps) {
   const { stages } = macros[macro];
 
   const isRunning = useIsMacroRunning(macro);
+  const stageStatus = useStageStatus(macro);
 
   const [selectedStages, setSelectedStages] = React.useState<string[]>([]);
 
@@ -72,6 +74,15 @@ export function MacroStageSelect(props: MacroStageSelectProps) {
     // Emit the stages on load.
     if (onStagesSelected) onStagesSelected(autoMode ? ['auto'] : []);
   }, [onStagesSelected, autoMode]);
+
+  React.useEffect(() => {
+    if (!isRunning) return;
+
+    const currentStages = Array.from(stageStatus.status.keys());
+    const userStages = currentStages.filter((stage) => stages.includes(stage));
+
+    setSelectedStages(userStages);
+  }, [stageStatus, isRunning, stages]);
 
   return (
     <div>
