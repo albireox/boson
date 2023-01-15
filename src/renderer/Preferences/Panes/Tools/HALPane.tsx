@@ -8,31 +8,14 @@
 import { Grid, Stack } from '@mui/material';
 import BooleanOption from 'renderer/Preferences/Components/BooleanOption';
 import Pane from 'renderer/Preferences/Components/Pane';
-import Switch from 'renderer/Preferences/Components/Switch';
-import {
-  TypographyDescription,
-  TypographyTitle,
-} from 'renderer/Preferences/Components/TypographyTitle';
 
-function AutoMode() {
+function GotoAutoMode() {
   return (
-    <Grid container pt={1} minHeight={50} alignContent='center'>
-      <Grid item xs={9}>
-        <TypographyTitle>Allow goto-field auto mode</TypographyTitle>
-        <TypographyDescription>
-          Enable the auto mode for the goto-field macro
-        </TypographyDescription>
-      </Grid>
-      <Grid
-        item
-        xs={3}
-        alignItems='flex-end'
-        textAlign='right'
-        alignSelf='center'
-      >
-        <Switch param='hal.useAutoMode' />
-      </Grid>
-    </Grid>
+    <BooleanOption
+      param='hal.allowGotoFieldAutoMode'
+      title='Allow goto-field auto mode'
+      description='Enable the auto mode for the goto-field macro'
+    />
   );
 }
 
@@ -53,7 +36,7 @@ export default function LogWindowPane() {
       <Grid container direction='row'>
         <Grid item xs={9}>
           <Stack width='100%' direction='column' spacing={2.5}>
-            <AutoMode />
+            <GotoAutoMode />
             <SyncStages />
           </Stack>
         </Grid>

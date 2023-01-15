@@ -30,6 +30,8 @@ const store = new Store({
       st.set('log.showInternal', false);
       st.set('log.highlightCommands', 'mine');
       st.set('hal.syncStages', false);
+      st.set('hal.allowGotoFieldAutoMode', true);
+      st.delete('hal.useAutoMode' as keyof typeof userConfig);
     },
   },
 });

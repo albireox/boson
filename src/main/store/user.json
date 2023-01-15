@@ -28,7 +28,7 @@
     "refreshInterval": 10
   },
   "hal": {
-    "useAutoMode": false,
+    "allowGotoFieldAutoMode": true,
     "syncStages": false
   },
   "log": {

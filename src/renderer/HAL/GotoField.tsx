@@ -29,7 +29,7 @@ import useIsMacroRunning from './useIsMacroRunning';
 export default function GotoField() {
   const macroName = 'goto_field';
 
-  const [useAutoMode] = useStore<boolean>('hal.useAutoMode');
+  const [useAutoMode] = useStore<boolean>('hal.allowGotoFieldAutoMode');
 
   const [guiderTime, setGuiderTime] = React.useState(
     macros.goto_field.defaults.guider_time.toString()
