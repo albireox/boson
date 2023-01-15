@@ -80,7 +80,6 @@ export default function Scripts() {
     if (!scripStepKw) return;
 
     const values = scripStepKw.values as [string, string, number, number];
-    console.log(selectedScript, values);
     if (values[0] !== selectedScript) return;
 
     setProgress(values[2]);
