@@ -6,7 +6,8 @@
  */
 
 import SendIcon from '@mui/icons-material/Send';
-import { Box, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { Collapse, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 import { CommandStatus, ReplyCode } from 'main/tron/types';
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
@@ -14,6 +15,36 @@ import CommandWrapper from 'renderer/Components/CommandWrapper';
 import { useKeywordContext } from 'renderer/hooks';
 import BorderLinearProgress from './Components/BorderLinealProgress';
 import MacroPaper from './Components/MacroPaper';
+
+interface StepProgressProps {
+  progress: number;
+  steps: string[];
+  stepValue?: string;
+}
+
+function StepProgress(props: StepProgressProps) {
+  const { progress, steps, stepValue } = props;
+
+  return (
+    <Stack direction='column' spacing={0.5} pt={1} flexGrow={1}>
+      <Stack direction='row' spacing={1} flexGrow={1}>
+        <BorderLinearProgress
+          variant='determinate'
+          value={(progress / steps.length) * 100}
+          sx={{ flexGrow: 1, alignSelf: 'center' }}
+        />
+        <Typography>
+          {progress} / {steps.length}
+        </Typography>
+      </Stack>
+      <Collapse in={stepValue !== ''} timeout={500}>
+        <Typography variant='body1' textAlign='center'>
+          {stepValue}
+        </Typography>
+      </Collapse>
+    </Stack>
+  );
+}
 
 export default function Scripts() {
   const halKeywords = useKeywordContext();
@@ -30,6 +61,7 @@ export default function Scripts() {
   const [selectedScript, setSelectedScript] = React.useState<string>('');
   const [runningScripts, setRunningScripts] = React.useState<string[]>([]);
   const [steps, setSteps] = React.useState<string[]>([]);
+  const [currentStepValue, setCurrentStepValue] = React.useState('');
 
   const isRunning = runningScripts.length > 0;
 
@@ -83,6 +115,7 @@ export default function Scripts() {
     if (values[0] !== selectedScript) return;
 
     setProgress(values[2]);
+    setCurrentStepValue(values[1]);
   }, [scripStepKw, selectedScript]);
 
   React.useEffect(() => {
@@ -101,11 +134,11 @@ export default function Scripts() {
   return (
     <MacroPaper>
       <Stack
-        p={1}
-        alignItems='center'
+        alignItems='baseline'
         direction='row'
-        spacing={2.5}
+        spacing={2}
         px={2}
+        py={2}
         width='100%'
       >
         <Typography variant='h6' whiteSpace='nowrap'>
@@ -123,26 +156,22 @@ export default function Scripts() {
             </MenuItem>
           ))}
         </Select>
-        <Box flex={1} display='flex' alignItems='center' flexDirection='row'>
-          <BorderLinearProgress
-            variant='determinate'
-            value={(progress / steps.length) * 100}
-            sx={{ flexGrow: 1 }}
-          />
-          <Typography pl={1}>
-            {progress} / {steps.length}
-          </Typography>
+        <StepProgress
+          progress={progress}
+          steps={steps}
+          stepValue={isRunning ? currentStepValue : ''}
+        />
+        <Box>
+          <CommandWrapper
+            commandString={`hal script run ${selectedScript}`}
+            abortCommand={`hal script cancel ${selectedScript}`}
+            isRunning={isRunning}
+          >
+            <CommandButton variant='outlined' endIcon={<SendIcon />}>
+              Run
+            </CommandButton>
+          </CommandWrapper>
         </Box>
-
-        <CommandWrapper
-          commandString={`hal script run ${selectedScript}`}
-          abortCommand={`hal script cancel ${selectedScript}`}
-          isRunning={isRunning}
-        >
-          <CommandButton variant='outlined' endIcon={<SendIcon />}>
-            Run
-          </CommandButton>
-        </CommandWrapper>
       </Stack>
     </MacroPaper>
   );
