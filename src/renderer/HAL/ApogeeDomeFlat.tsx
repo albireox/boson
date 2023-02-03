@@ -9,10 +9,10 @@ import SendIcon from '@mui/icons-material/Send';
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
+import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
 import MacroPaper from './Components/MacroPaper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import MacroStepper from './Components/MacroStepper';
-import useIsMacroRunning from './useIsMacroRunning';
 
 export default function ApogeeDomeFlat() {
   const macroName = 'apogee_dome_flat';

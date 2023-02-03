@@ -12,9 +12,9 @@ import BosonMenuItem, {
   BosonMenuItemCheckbox,
 } from 'renderer/Components/BosonMenuItem';
 import { useStore } from 'renderer/hooks';
+import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
+import useStageStatus from 'renderer/hooks/useStageStatus';
 import macros from '../macros.json';
-import useIsMacroRunning from '../useIsMacroRunning';
-import useStageStatus from '../useStageStatus';
 
 type MacroStageSelectProps = {
   macro: keyof typeof macros;

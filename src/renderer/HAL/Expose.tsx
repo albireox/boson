@@ -26,13 +26,13 @@ import React from 'react';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
 import { useKeywordContext, useStore } from 'renderer/hooks';
+import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
 import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import MacroPaper from './Components/MacroPaper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import MacroStepper from './Components/MacroStepper';
 import PauseResumeButton from './Components/PauseResumeButton';
 import macros from './macros.json';
-import useIsMacroRunning from './useIsMacroRunning';
 
 interface LinearProgressWithLabelProps extends LinearProgressProps {
   running: boolean;

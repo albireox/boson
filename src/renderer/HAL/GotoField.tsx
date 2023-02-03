@@ -19,12 +19,12 @@ import React from 'react';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
 import { useKeywordContext, useStore } from 'renderer/hooks';
+import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
 import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import MacroPaper from './Components/MacroPaper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import MacroStepper from './Components/MacroStepper';
 import macros from './macros.json';
-import useIsMacroRunning from './useIsMacroRunning';
 
 export default function GotoField() {
   const macroName = 'goto_field';

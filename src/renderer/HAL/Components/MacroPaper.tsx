@@ -7,7 +7,7 @@
 
 import { Paper } from '@mui/material';
 import React from 'react';
-import useIsMacroRunning from '../useIsMacroRunning';
+import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
 
 export default function MacroPaper(props: React.PropsWithChildren) {
   const { children } = props;

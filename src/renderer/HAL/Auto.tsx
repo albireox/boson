@@ -9,9 +9,9 @@ import { Collapse, Paper, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import IOSSwitch from 'renderer/Components/IOSwitch';
 import { useKeywordContext } from 'renderer/hooks';
+import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
+import useStageStatus from 'renderer/hooks/useStageStatus';
 import PauseResumeButton from './Components/PauseResumeButton';
-import useIsMacroRunning from './useIsMacroRunning';
-import useStageStatus from './useStageStatus';
 
 export default function AutoMode() {
   const macroName = 'auto';
