@@ -8,6 +8,7 @@
 export { KeywordContext, useKeywordContext } from './keywordContext';
 export { default as useConnectionStatus } from './useConnectionStatus';
 export { default as useEventListener } from './useEventListener';
+export { default as useIsExposing } from './useIsExposing';
 export { default as useIsMacroRunning } from './useIsMacroRunning';
 export { default as useKeywords } from './useKeywords';
 export { default as useKeywordValue } from './useKeywordValue';
