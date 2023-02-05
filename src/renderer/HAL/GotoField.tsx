@@ -85,7 +85,7 @@ export default function GotoField() {
       return false;
     }
 
-    if (isRunning) {
+    if (isExposing) {
       const result = await window.electron.dialog.showMessageBox({
         message: 'Confirm go to field',
         type: 'question',
@@ -116,7 +116,7 @@ export default function GotoField() {
     }
 
     return true;
-  }, [configurationLoadedKw, isRunning]);
+  }, [configurationLoadedKw, isExposing]);
 
   return (
     <MacroPaper>
