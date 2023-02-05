@@ -20,6 +20,7 @@ interface SnackAlertProps {
   autoHideDuration?: null | number;
   actionText?: string;
   action?: () => void;
+  showClose?: boolean;
 }
 
 interface ActionButtonProps {
@@ -49,6 +50,7 @@ const SnackAlert = React.forwardRef<SnackAlertRefType, SnackAlertProps>(
       message,
       autoHideDuration = null,
       severity = 'warning',
+      showClose = true,
       actionText,
       action,
     } = props;
@@ -91,9 +93,15 @@ const SnackAlert = React.forwardRef<SnackAlertRefType, SnackAlertProps>(
                   }}
                 />
               )}
-              <IconButton onClick={handleClose} color='inherit' sx={{ p: 0.5 }}>
-                <CloseIcon sx={{ fontSize: '16px' }} />
-              </IconButton>
+              {showClose && (
+                <IconButton
+                  onClick={handleClose}
+                  color='inherit'
+                  sx={{ p: 0.5 }}
+                >
+                  <CloseIcon sx={{ fontSize: '16px' }} />
+                </IconButton>
+              )}
             </Stack>
           }
         >
