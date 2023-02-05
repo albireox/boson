@@ -32,7 +32,10 @@ import MacroPaper from './Components/MacroPaper';
 import { MacroStageSelect } from './Components/MacroStageSelect';
 import MacroStepper from './Components/MacroStepper';
 import PauseResumeButton from './Components/PauseResumeButton';
+import SnackAlert, { SnackAlertRefType } from './Components/SnackAlert';
 import macros from './macros.json';
+
+let modifyCountTimeout: NodeJS.Timeout | null = null;
 
 interface LinearProgressWithLabelProps extends LinearProgressProps {
   running: boolean;
@@ -130,6 +133,8 @@ export default function Expose() {
 
   const halKeywords = useKeywordContext();
 
+  const snackCountRef = React.useRef<SnackAlertRefType>(null);
+
   const { exposure_state_apogee: apogeeStateKw } = halKeywords;
   const { exposure_state_boss: bossStateKw } = halKeywords;
   const { stages: stagesKw } = halKeywords;
@@ -139,7 +144,7 @@ export default function Expose() {
   const isPaused = pausedKw?.values[0] ?? false;
 
   const getCommandString = React.useCallback(
-    (modify = false) => {
+    (modify = false, newCount: string | undefined = undefined) => {
       const commandString: string[] = ['hal expose'];
 
       if (modify) {
@@ -166,29 +171,45 @@ export default function Expose() {
         );
       }
 
-      commandString.push(`--count ${count || macros.expose.defaults.count}`);
+      const computedCount = newCount || count || macros.expose.defaults.count;
+      commandString.push(`--count ${computedCount}`);
 
       return commandString.join(' ');
     },
     [bossTime, apogeeReads, pairs, stages, count]
   );
 
-  const modifyCount = React.useCallback(() => {
-    if (isRunning) {
-      // Modify command.
-      const commandString = getCommandString(true);
-      window.electron.tron.send(commandString);
-    }
-  }, [getCommandString, isRunning]);
+  const modifyCount = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newCount = e.target.value;
 
-  const handleCountKeyDown = React.useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        modifyCount();
+      if (!isRunning) {
+        setCount(newCount);
+        return;
       }
+
+      // Allow for a delay so that quick modification of the count
+      // don't trigget multiple commands.
+      if (modifyCountTimeout) clearTimeout(modifyCountTimeout);
+
+      modifyCountTimeout = setTimeout(() => {
+        setCount(newCount);
+
+        const commandString = getCommandString(true, newCount);
+        window.electron.tron
+          .send(commandString)
+          .then(() => {
+            snackCountRef.current?.open();
+            return true;
+          })
+          .catch(() => {
+            snackCountRef.current?.open();
+          });
+
+        modifyCountTimeout = null;
+      }, 1000);
     },
-    [modifyCount]
+    [getCommandString, isRunning]
   );
 
   React.useEffect(() => {
@@ -313,135 +334,143 @@ export default function Expose() {
   }, [actorStages, apogeeStateKw, isRunning, isPaused]);
 
   return (
-    <MacroPaper>
-      <Stack
-        direction='column'
-        divider={<Divider variant='middle' sx={{ opacity: 0.8 }} />}
-        p={1}
-        px={2}
-        spacing={1}
-      >
-        <Stack alignItems='center' direction='row' spacing={2}>
-          <Typography variant='h6' whiteSpace='nowrap'>
-            Expose
-          </Typography>
-          <MacroStageSelect
-            macro={macroName}
-            minWidth={100}
-            maxWidth={145}
-            onStagesSelected={React.useCallback(
-              (stgs: string[]) => setStages(stgs),
-              []
+    <>
+      <MacroPaper>
+        <Stack
+          direction='column'
+          divider={<Divider variant='middle' sx={{ opacity: 0.8 }} />}
+          p={1}
+          px={2}
+          spacing={1}
+        >
+          <Stack alignItems='center' direction='row' spacing={2}>
+            <Typography variant='h6' whiteSpace='nowrap'>
+              Expose
+            </Typography>
+            <MacroStageSelect
+              macro={macroName}
+              minWidth={100}
+              maxWidth={145}
+              onStagesSelected={React.useCallback(
+                (stgs: string[]) => setStages(stgs),
+                []
+              )}
+            />
+            <Stack
+              alignItems='center'
+              direction='row'
+              spacing={2}
+              flexWrap='wrap'
+              justifyContent='center'
+            >
+              {(stages.length === 0 || stages.includes('expose_boss')) && (
+                <ExposureTimeInput
+                  label='BOSS Exp'
+                  value={bossTime}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setBossTime(e.target.value);
+                  }}
+                  disabled={isRunning}
+                  width='55px'
+                  isNumber={false}
+                />
+              )}
+              {!stages.includes('expose_boss') &&
+                stages.includes('expose_apogee') && (
+                  <TextField
+                    label='AP reads'
+                    type='number'
+                    size='small'
+                    variant='standard'
+                    value={apogeeReads}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setApogeeReads(e.target.value);
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    sx={{
+                      width: '40px',
+                      '& .MuiInputBase-root': { marginTop: 1 },
+                    }}
+                    disabled={isRunning}
+                  />
+                )}
+              <TextField
+                label='Count'
+                size='small'
+                type='number'
+                variant='standard'
+                value={count}
+                onChange={modifyCount}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                sx={{
+                  width: '40px',
+                  '& .MuiInputBase-root': { marginTop: 1 },
+                }}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    sx={{ pl: 0 }}
+                    checked={pairs}
+                    disableRipple
+                    onChange={(e) => setPairs(e.target.checked)}
+                    size='small'
+                  />
+                }
+                label='Pairs'
+                sx={{ display: isLarge ? 'inherit' : 'none' }}
+                disabled={isRunning}
+              />
+            </Stack>
+            <Box flexGrow={1} />
+            <Collapse orientation='horizontal' in={isRunning}>
+              <PauseResumeButton macro='expose' />
+            </Collapse>
+            <CommandWrapper
+              commandString={getCommandString()}
+              abortCommand='hal expose --stop'
+              isRunning={isRunning}
+            >
+              <CommandButton variant='outlined' endIcon={<SendIcon />}>
+                Run
+              </CommandButton>
+            </CommandWrapper>
+          </Stack>
+          <Stack alignItems='center' textAlign='center' spacing={4}>
+            {runningMacrosKw && runningMacrosKw.values.includes('expose') ? (
+              <Stack direction='column' spacing={2} width='100%'>
+                {bossProgress} {apogeeProgress}
+              </Stack>
+            ) : (
+              detail
             )}
-          />
+          </Stack>
           <Stack
             alignItems='center'
             direction='row'
             spacing={2}
-            flexWrap='wrap'
-            justifyContent='center'
+            sx={{
+              overflowX: 'auto',
+              overflowY: 'hidden',
+            }}
           >
-            {(stages.length === 0 || stages.includes('expose_boss')) && (
-              <ExposureTimeInput
-                label='BOSS Exp'
-                value={bossTime}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setBossTime(e.target.value);
-                }}
-                disabled={isRunning}
-                width='55px'
-                isNumber={false}
-              />
-            )}
-            {!stages.includes('expose_boss') &&
-              stages.includes('expose_apogee') && (
-                <TextField
-                  label='AP reads'
-                  type='number'
-                  size='small'
-                  variant='standard'
-                  value={apogeeReads}
-                  onChange={(e) => {
-                    e.preventDefault();
-                    setApogeeReads(e.target.value);
-                  }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  sx={{
-                    width: '40px',
-                    '& .MuiInputBase-root': { marginTop: 1 },
-                  }}
-                  disabled={isRunning}
-                />
-              )}
-            <TextField
-              label='Count'
-              size='small'
-              type='number'
-              variant='standard'
-              value={count}
-              onChange={(e) => setCount(e.target.value)}
-              onKeyDown={handleCountKeyDown}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              sx={{
-                width: '40px',
-                '& .MuiInputBase-root': { marginTop: 1 },
-              }}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  sx={{ pl: 0 }}
-                  checked={pairs}
-                  disableRipple
-                  onChange={(e) => setPairs(e.target.checked)}
-                  size='small'
-                />
-              }
-              label='Pairs'
-              sx={{ display: isLarge ? 'inherit' : 'none' }}
-              disabled={isRunning}
-            />
+            <MacroStepper macroName={macroName} />
           </Stack>
-          <Box flexGrow={1} />
-          <Collapse orientation='horizontal' in={isRunning}>
-            <PauseResumeButton macro='expose' />
-          </Collapse>
-          <CommandWrapper
-            commandString={getCommandString()}
-            abortCommand='hal expose --stop'
-            isRunning={isRunning}
-          >
-            <CommandButton variant='outlined' endIcon={<SendIcon />}>
-              Run
-            </CommandButton>
-          </CommandWrapper>
         </Stack>
-        <Stack alignItems='center' textAlign='center' spacing={4}>
-          {runningMacrosKw && runningMacrosKw.values.includes('expose') ? (
-            <Stack direction='column' spacing={2} width='100%'>
-              {bossProgress} {apogeeProgress}
-            </Stack>
-          ) : (
-            detail
-          )}
-        </Stack>
-        <Stack
-          alignItems='center'
-          direction='row'
-          spacing={2}
-          sx={{
-            overflowX: 'auto',
-            overflowY: 'hidden',
-          }}
-        >
-          <MacroStepper macroName={macroName} />
-        </Stack>
-      </Stack>
-    </MacroPaper>
+      </MacroPaper>
+      <SnackAlert
+        ref={snackCountRef}
+        message={`Expose count is now ${count}`}
+        severity='info'
+        showClose={false}
+        autoHideDuration={3000}
+      />
+    </>
   );
 }
