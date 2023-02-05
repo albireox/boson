@@ -6,7 +6,14 @@
  */
 
 import CloseIcon from '@mui/icons-material/Close';
-import { Alert, AlertProps, Button, IconButton, Snackbar } from '@mui/material';
+import {
+  Alert,
+  AlertProps,
+  Button,
+  Collapse,
+  IconButton,
+  Snackbar,
+} from '@mui/material';
 import { Stack } from '@mui/system';
 import React from 'react';
 
@@ -37,7 +44,6 @@ function ActionButton(props: ActionButtonProps) {
       size='small'
       onClick={action}
       sx={{ minWidth: '32px' }}
-      // sx={{ px: '2px', py: '1px' }}
     >
       {message}
     </Button>
@@ -68,6 +74,7 @@ const SnackAlert = React.forwardRef<SnackAlertRefType, SnackAlertProps>(
         open={open}
         autoHideDuration={autoHideDuration}
         onClose={handleClose}
+        TransitionComponent={Collapse}
       >
         <Alert
           elevation={6}
