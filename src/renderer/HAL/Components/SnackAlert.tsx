@@ -48,7 +48,7 @@ const SnackAlert = React.forwardRef<SnackAlertRefType, SnackAlertProps>(
   (props, ref) => {
     const {
       message,
-      autoHideDuration = null,
+      autoHideDuration = 5000,
       severity = 'warning',
       showClose = true,
       actionText,
