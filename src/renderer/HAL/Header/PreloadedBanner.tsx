@@ -30,11 +30,6 @@ export function PreloadedBanner() {
   const preloadAlertRef = React.useRef<SnackAlertRefType>(null);
 
   React.useEffect(() => {
-    const timeout = setTimeout(() => preloadAlertRef.current?.open(), 3000);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  React.useEffect(() => {
     if (!designPreloadedKw) return;
     setPreloadedDesignID(designPreloadedKw.values[0]);
   }, [designPreloadedKw]);
