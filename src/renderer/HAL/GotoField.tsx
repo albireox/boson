@@ -18,7 +18,7 @@ import {
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
 import CommandWrapper from 'renderer/Components/CommandWrapper';
-import { useKeywordContext, useStore } from 'renderer/hooks';
+import { useIsExposing, useKeywordContext, useStore } from 'renderer/hooks';
 import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
 import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import MacroPaper from './Components/MacroPaper';
@@ -42,6 +42,7 @@ export default function GotoField() {
   const isLarge = useMediaQuery('(min-width: 720px)');
 
   const isRunning = useIsMacroRunning(macroName);
+  const isExposing = useIsExposing();
 
   const halKeywords = useKeywordContext();
   const { configuration_loaded: configurationLoadedKw } = halKeywords;
@@ -84,6 +85,21 @@ export default function GotoField() {
       return false;
     }
 
+    if (isRunning) {
+      const result = await window.electron.dialog.showMessageBox({
+        message: 'Confirm go to field',
+        type: 'question',
+        detail:
+          'One or more exposures are currently running. ' +
+          'Are you sure you want to go to field?',
+        buttons: ['No', 'Yes'],
+      });
+
+      if (result.response !== 1) {
+        return null;
+      }
+    }
+
     if (configurationLoadedKw.values[9]) {
       const result = await window.electron.dialog.showMessageBox({
         message: 'Confirm go to field',
@@ -94,14 +110,13 @@ export default function GotoField() {
         buttons: ['No', 'Yes'],
       });
 
-      if (result.response === 1) {
-        return true;
+      if (result.response !== 1) {
+        return null;
       }
-      return null;
     }
 
     return true;
-  }, [configurationLoadedKw]);
+  }, [configurationLoadedKw, isRunning]);
 
   return (
     <MacroPaper>
