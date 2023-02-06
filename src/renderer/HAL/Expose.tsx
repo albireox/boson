@@ -35,8 +35,6 @@ import PauseResumeButton from './Components/PauseResumeButton';
 import SnackAlert, { SnackAlertRefType } from './Components/SnackAlert';
 import macros from './macros.json';
 
-let modifyCountTimeout: NodeJS.Timeout | null = null;
-
 interface LinearProgressWithLabelProps extends LinearProgressProps {
   running: boolean;
   total: number;
@@ -190,24 +188,18 @@ export default function Expose() {
 
       // Allow for a delay so that quick modification of the count
       // don't trigget multiple commands.
-      if (modifyCountTimeout) clearTimeout(modifyCountTimeout);
+      setCount(newCount);
 
-      modifyCountTimeout = setTimeout(() => {
-        setCount(newCount);
-
-        const commandString = getCommandString(true, newCount);
-        window.electron.tron
-          .send(commandString)
-          .then(() => {
-            snackCountRef.current?.open();
-            return true;
-          })
-          .catch(() => {
-            snackCountRef.current?.open();
-          });
-
-        modifyCountTimeout = null;
-      }, 1000);
+      const commandString = getCommandString(true, newCount);
+      window.electron.tron
+        .send(commandString)
+        .then(() => {
+          snackCountRef.current?.open();
+          return true;
+        })
+        .catch(() => {
+          snackCountRef.current?.open();
+        });
     },
     [getCommandString, isRunning]
   );

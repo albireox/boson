@@ -14,8 +14,6 @@ import useStageStatus from 'renderer/hooks/useStageStatus';
 import PauseResumeButton from './Components/PauseResumeButton';
 import SnackAlert, { SnackAlertRefType } from './Components/SnackAlert';
 
-let modifyCountTimeout: NodeJS.Timeout | null = null;
-
 export default function AutoMode() {
   const macroName = 'auto';
 
@@ -67,25 +65,17 @@ export default function AutoMode() {
         return;
       }
 
-      // Allow for a delay so that quick modification of the count
-      // don't trigget multiple commands.
-      if (modifyCountTimeout) clearTimeout(modifyCountTimeout);
+      setCount(newCount);
 
-      modifyCountTimeout = setTimeout(() => {
-        setCount(newCount);
-
-        window.electron.tron
-          .send(`hal auto --modify --count ${newCount}`)
-          .then(() => {
-            snackCountRef.current?.open();
-            return true;
-          })
-          .catch(() => {
-            snackCountRef.current?.open();
-          });
-
-        modifyCountTimeout = null;
-      }, 1000);
+      window.electron.tron
+        .send(`hal auto --modify --count ${newCount}`)
+        .then(() => {
+          snackCountRef.current?.open();
+          return true;
+        })
+        .catch(() => {
+          snackCountRef.current?.open();
+        });
     },
     [isRunning]
   );
