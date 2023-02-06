@@ -81,5 +81,5 @@ export default function useIsExposing(opts?: UseIsExposingOpts) {
     return apogeeExposing;
   }
 
-  return bossExposing && apogeeExposing;
+  return bossExposing || apogeeExposing;
 }
