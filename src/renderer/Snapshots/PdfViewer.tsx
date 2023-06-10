@@ -8,23 +8,26 @@
 import { Box } from '@mui/material';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { LoadingProcessData, TextLayerItemInternal } from 'react-pdf';
-import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5';
+import { Document, Page, pdfjs } from 'react-pdf';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url
+).toString();
 
 interface PdfViewerProps {
   files: string[];
   index: number;
   scale: number;
-  onLoadProgress?: (data: LoadingProcessData) => void;
   width?: number;
   searchText?: string;
 }
 
 export default function PdfViewer(props: PdfViewerProps) {
-  const { files, index, scale, width, onLoadProgress, searchText } = props;
+  const { files, index, scale, width, searchText } = props;
 
   const renderHighlight = React.useCallback(
-    ({ str }: TextLayerItemInternal) => {
+    ({ str }: { str: string }) => {
       if (!searchText) return ReactDOMServer.renderToString(<span />);
 
       if (
@@ -80,13 +83,7 @@ export default function PdfViewer(props: PdfViewerProps) {
       position='relative'
       overflow='auto'
     >
-      <Document
-        file={files[index]}
-        renderMode='canvas'
-        onLoadProgress={onLoadProgress}
-        error=''
-        loading=''
-      >
+      <Document file={files[index]} renderMode='canvas' error='' loading=''>
         <Page
           pageNumber={1}
           scale={scale}
