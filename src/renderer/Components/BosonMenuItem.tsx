@@ -102,6 +102,7 @@ const BosonMenuItem = React.forwardRef<Ref, BosonMenuItemProps>(
         sx={(theme) => {
           const bgColor = theme.palette.mode === 'dark' ? '#4653C4' : '#4756BD';
           return {
+            WebkitAppRegion: 'no-drag',
             px: '12px',
             textAlign: textAlign ?? (!endAdornment ? 'center' : 'inherit'),
             '&.Mui-focusVisible': {

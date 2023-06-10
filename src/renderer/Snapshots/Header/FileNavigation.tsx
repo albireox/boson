@@ -57,7 +57,7 @@ export default function FileNavigation(props: FileNavigationProps) {
           noWrap
           variant='h6'
           {...bindTrigger(popupState)}
-          sx={{ cursor: 'pointer' }}
+          sx={{ WebkitAppRegion: 'no-drag', cursor: 'pointer' }}
         >
           {files[index] ? files[index].split('/').reverse()[0] : 'Snapshots'}
         </Typography>

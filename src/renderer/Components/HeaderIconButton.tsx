@@ -24,6 +24,7 @@ const HeaderIconButton = styled((props: HeaderIconButtonProps) => {
     <IconButton disableRipple disableFocusRipple disableTouchRipple {...rest} />
   );
 })(({ theme }) => ({
+  WebkitAppRegion: 'no-drag',
   py: 0,
   px: 1,
   color: theme.palette.text.secondary,

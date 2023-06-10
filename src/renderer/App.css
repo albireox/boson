@@ -20,9 +20,11 @@
   font-size: 11pt;
   top: 0px;
   position: fixed;
+  z-index: 0
 }
 .titlebar else {
   -webkit-app-region: no-drag;
+  z-index: 0;
 }
 
 .snapshots::-webkit-scrollbar {

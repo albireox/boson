@@ -80,6 +80,7 @@ export default function SearchBox(props: SearchBoxProps) {
   return (
     <BosonInputBase
       sx={{
+        WebkitAppRegion: 'no-drag',
         fontWeight: 500,
         width:
           !expand || (!focused && !value)

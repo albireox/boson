@@ -18,6 +18,7 @@ export default function SnapSearchBox(props: SnapSearchBoxProps) {
   return (
     <SearchBox
       sx={{
+        WebkitAppRegion: 'no-drag',
         minWidth: 100,
         maxWidth: 150,
         fontWeight: 500,

@@ -38,7 +38,7 @@ export default function BosonHeader(props: BosonHeaderHeaderProps) {
         width: '100%',
         bgcolor: 'background.default',
         borderRadius: 0,
-        zIndex: 1000,
+        zIndex: 10,
         backgroundColor: color ?? theme.palette.background.paper,
         visibility: visible ? 'inherit' : 'hidden',
       })}

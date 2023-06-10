@@ -44,6 +44,7 @@ interface BosonTabProps {
 const BosonTab = styled((props: BosonTabProps) => (
   <Tab disableRipple {...props} />
 ))(({ theme }) => ({
+  WebkitAppRegion: 'no-drag',
   textTransform: 'none',
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.pxToRem(16),
@@ -57,4 +58,4 @@ const BosonTab = styled((props: BosonTabProps) => (
   },
 }));
 
-export { BosonTabs, BosonTab };
+export { BosonTab, BosonTabs };
