@@ -60,16 +60,6 @@ export default function Preferences() {
 
   const props = { selectedPane, setSelectedPane };
 
-  React.useEffect(() => {
-    // console.log(boopSfx);
-    // // errorSound();
-    // const test = new Audio(boopSfx);
-    // test.play();
-    // console.log(errorSound);
-    // errorSound();
-    window.electron.tools.playSound('error');
-  }, []);
-
   return (
     <Box
       component='div'
