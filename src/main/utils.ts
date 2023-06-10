@@ -1,6 +1,8 @@
 /* eslint import/prefer-default-export: off */
 import path from 'path';
+import sound from 'sound-play';
 import { URL } from 'url';
+import { store } from './store';
 
 export function resolveHtmlPath(htmlFileName: string) {
   if (process.env.NODE_ENV === 'development') {
@@ -13,4 +15,15 @@ export function resolveHtmlPath(htmlFileName: string) {
     __dirname,
     `../renderer/index.html?${htmlFileName}`
   )}`;
+}
+
+export function playSound(type: string) {
+  const file = store.get(`sounds.${type}`, null);
+  if (!file) return;
+
+  if (path.isAbsolute(file)) {
+    sound.play(file);
+  } else {
+    sound.play(path.join(__dirname, '../sounds', file));
+  }
 }

@@ -16,14 +16,13 @@ import {
   shell,
 } from 'electron';
 import * as keytar from 'keytar';
-import path from 'path';
-import sound from 'sound-play';
 import { promisify } from 'util';
 import { createWindow } from './main';
 import { config, store, subscriptions as storeSubscriptions } from './store';
 import connectAndAuthorise from './tron/tools';
 import { tron } from './tron/tron';
 import { CommandStatus } from './tron/types';
+import { playSound } from './utils';
 
 export default function loadEvents() {
   // app events
@@ -163,14 +162,7 @@ export default function loadEvents() {
     shell.openExternal(extPath)
   );
   ipcMain.handle('tools:play-sound', async (event, type: string) => {
-    const file = store.get(`sounds.${type}`, null);
-    if (!file) return;
-
-    if (path.isAbsolute(file)) {
-      sound.play(file);
-    } else {
-      sound.play(path.join(__dirname, '../sounds', file));
-    }
+    playSound(type);
   });
 
   // Dialogs
