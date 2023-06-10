@@ -8,7 +8,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf/dist/esm';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',

@@ -64,7 +64,7 @@ const configuration: webpack.Configuration = {
   module: {
     rules: [
       {
-        test: /\.s?css$/,
+        test: /\.s?(c|a)ss$/,
         use: [
           'style-loader',
           {
@@ -188,7 +188,6 @@ const configuration: webpack.Configuration = {
     },
     historyApiFallback: {
       verbose: true,
-      disableDotRule: true,
     },
     setupMiddlewares(middlewares) {
       console.log('Starting preload.js builder...');
