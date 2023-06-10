@@ -30,6 +30,10 @@ jobs:
           node-version: 18
           cache: npm
 
+      - name: Brew install dependencies
+        run: |
+          brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
+
       - name: Run install
         uses: borales/actions-yarn@v4
         with:
