@@ -33,6 +33,11 @@ const store = new Store({
       st.set('hal.allowGotoFieldAutoMode', true);
       st.delete('hal.useAutoMode' as keyof typeof userConfig);
     },
+    '>=0.3.3': (st) => {
+      st.set('sounds', {
+        error: 'error.wav',
+      });
+    },
   },
 });
 
@@ -49,4 +54,4 @@ if (!(store.get('windows.openWindows') as string[]).includes('main')) {
 
 const subscriptions = new Map<string, () => EventEmitter>();
 
-export { store, defaultConfig, subscriptions };
+export { defaultConfig, store, subscriptions };

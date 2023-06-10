@@ -16,6 +16,8 @@ import {
   shell,
 } from 'electron';
 import * as keytar from 'keytar';
+import path from 'path';
+import sound from 'sound-play';
 import { promisify } from 'util';
 import { createWindow } from './main';
 import { config, store, subscriptions as storeSubscriptions } from './store';
@@ -139,7 +141,7 @@ export default function loadEvents() {
     keytar.setPassword('boson', key, value);
   });
 
-  // tools
+  // Tools
   ipcMain.on('tools:get-uuid', async (event) => {
     event.returnValue = randomUUID();
   });
@@ -157,9 +159,19 @@ export default function loadEvents() {
       return stdout;
     }
   );
-  ipcMain.handle('tools:open-in-browser', async (event, path: string) =>
-    shell.openExternal(path)
+  ipcMain.handle('tools:open-in-browser', async (event, extPath: string) =>
+    shell.openExternal(extPath)
   );
+  ipcMain.handle('tools:play-sound', async (event, type: string) => {
+    const file = store.get(`sounds.${type}`, null);
+    if (!file) return;
+
+    if (path.isAbsolute(file)) {
+      sound.play(file);
+    } else {
+      sound.play(path.join(__dirname, '../sounds', file));
+    }
+  });
 
   // Dialogs
   ipcMain.handle(

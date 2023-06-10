@@ -19,7 +19,7 @@ function MenuItemPreferences(props: {
   name: string;
   title: string;
   selectedPane: string;
-  setSelectedPane: (string) => void;
+  setSelectedPane: (arg0: string) => void;
 }) {
   const { name, title, selectedPane, setSelectedPane } = props;
   const DEFAULT_PANE = 'connection';
@@ -59,6 +59,16 @@ export default function Preferences() {
   };
 
   const props = { selectedPane, setSelectedPane };
+
+  React.useEffect(() => {
+    // console.log(boopSfx);
+    // // errorSound();
+    // const test = new Audio(boopSfx);
+    // test.play();
+    // console.log(errorSound);
+    // errorSound();
+    window.electron.tools.playSound('error');
+  }, []);
 
   return (
     <Box
