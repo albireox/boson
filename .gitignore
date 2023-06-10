@@ -32,13 +32,21 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-**/.yarn/*
-!**/.yarn/patches
-!**/.yarn/releases
-!**/.yarn/plugins
-!**/.yarn/sdks
-!**/.yarn/versions
-**/.pnp.*
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+release/app/.pnp.*
+release/app/.yarn/*
+!release/app/.yarn/patches
+!release/app/.yarn/plugins
+!release/app/.yarn/releases
+!release/app/.yarn/sdks
+!release/app/.yarn/versions
 
 .env
 
