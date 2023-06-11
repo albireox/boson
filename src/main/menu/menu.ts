@@ -2,6 +2,7 @@
 
 import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
 import { createWindow } from '../main';
+import { store } from '../store';
 import {
   checkForUpdates,
   clearLogs,
@@ -36,6 +37,15 @@ export default class MenuBuilder {
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
+
+    store.onDidChange('audio', (newValue) => {
+      if (!newValue) return;
+
+      const mutedSoundsItem = menu.getMenuItemById('mute-sounds');
+      if (mutedSoundsItem) {
+        mutedSoundsItem.checked = newValue.muted;
+      }
+    });
 
     return menu;
   }
@@ -74,6 +84,17 @@ export default class MenuBuilder {
           click: () => createWindow('preferences'),
         },
         { type: 'separator' },
+        {
+          id: 'mute-sounds',
+          label: 'Mute sounds',
+          type: 'checkbox',
+          checked: store.get('audio.muted'),
+          click: () => {
+            const current = store.get('audio.muted') as boolean;
+            store.set('audio.muted', !current);
+          },
+          accelerator: 'Command+Shift+M',
+        },
         {
           label: 'Save window positions',
           click: saveWindows,
