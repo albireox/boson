@@ -17,9 +17,25 @@ export function resolveHtmlPath(htmlFileName: string) {
   )}`;
 }
 
-export function playSound(type: string) {
-  const file = store.get(`sounds.${type}`, null);
+export interface PlaySoundOpts {
+  overrideMode: boolean;
+}
+
+export function playSound(type: string, opts?: PlaySoundOpts) {
+  const { overrideMode = false } = opts || {};
+
+  const file = store.get(`audio.sounds.${type}`, null);
   if (!file) return;
+
+  const mode: string = store.get('audio.mode');
+  const minimals: string[] = store.get('audio.minimal');
+  const muted = store.get('audio.muted');
+
+  if (!overrideMode) {
+    if (muted) return;
+    if (mode === 'off') return;
+    if (mode === 'minimal' && !minimals.includes(type)) return;
+  }
 
   if (path.isAbsolute(file)) {
     sound.play(file);

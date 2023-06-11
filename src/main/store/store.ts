@@ -34,8 +34,13 @@ const store = new Store({
       st.delete('hal.useAutoMode' as keyof typeof userConfig);
     },
     '>=0.3.3': (st) => {
-      st.set('sounds', {
-        error: 'error.wav',
+      st.set('audio', {
+        mode: 'on',
+        muted: false,
+        minimal: ['error'],
+        sounds: {
+          error: 'error.wav',
+        },
       });
     },
   },
