@@ -184,7 +184,7 @@ __metadata:
   resolution: "boson@workspace:."
   dependencies:
     keytar: ^7.9.0
-    react-pdf: ^7.1.1
+    react-pdf: ^7.1.2
   languageName: unknown
   linkType: soft
 
@@ -1149,9 +1149,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-pdf@npm:^7.1.1":
-  version: 7.1.1
-  resolution: "react-pdf@npm:7.1.1"
+"react-pdf@npm:^7.1.2":
+  version: 7.1.2
+  resolution: "react-pdf@npm:7.1.2"
   dependencies:
     clsx: ^1.2.1
     make-cancellable-promise: ^1.0.0
@@ -1164,7 +1164,7 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 6e323a6a592ba6b3671599cbe75196bb709cd8bc660dcf4f0e0f59019acc41f1d18cee42ee2c24f3768b9a2d052f44983f0ee558dc30a0ae8a6f4f1b99ea4ec2
+  checksum: 0e0330a8f9b8daf438e4bee7c26d6bd40d3995a9b273e375f7836dab6b3be137e07a31b7c0dd4c64c493fddf50ce7fc320818d99029924ac998ead7914bce0e0
   languageName: node
   linkType: hard
 

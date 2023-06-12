@@ -13,6 +13,6 @@
   },
   "dependencies": {
     "keytar": "^7.9.0",
-    "react-pdf": "^7.1.1"
+    "react-pdf": "^7.1.2"
   }
 }
