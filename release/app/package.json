@@ -1,7 +1,7 @@
 {
   "name": "boson",
   "productName": "boson",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "author": "José Sánchez-Gallego <gallegoj@uw.edu>",
   "description": "SDSS observer graphical user interface",
   "license": "BSD-3-Clause",
@@ -12,7 +12,6 @@
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
   },
   "dependencies": {
-    "keytar": "^7.9.0",
-    "react-pdf": "^7.1.2"
+    "keytar": "^7.9.0"
   }
 }

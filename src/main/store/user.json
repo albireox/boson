@@ -42,5 +42,11 @@
   },
   "maxLogMessages": 50000,
   "updateChannel": "stable",
-  "profiles": {}
+  "profiles": {},
+  "__internal__": {
+		"migrations": {
+			"version": "0.3.3"
+		}
+	}
+
 }

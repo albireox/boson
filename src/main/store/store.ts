@@ -13,27 +13,13 @@ import userConfig from './user.json';
 // Define the store. Only load parameters that can be defined by the user.
 // We also export the default config which is the one that won't change
 // unless the version of boson changes.
+//
+
+
+
 const store = new Store({
   defaults: userConfig,
-  watch: true,
-  migrations: {
-    '>=0.2.0-beta.8': (st) => {
-      st.set('guider.refreshInterval', 20);
-    },
-    '>=0.2.0-beta.14': (st) => {
-      st.set('log.saveState', true);
-    },
-    '>=0.2.1': (st) => {
-      st.set('updateChannel', 'stable');
-    },
-    '>=0.3.0': (st) => {
-      st.set('log.showInternal', false);
-      st.set('log.highlightCommands', 'mine');
-      st.set('hal.syncStages', false);
-      st.set('hal.allowGotoFieldAutoMode', true);
-      st.delete('hal.useAutoMode' as keyof typeof userConfig);
-    },
-  },
+  watch: true
 });
 
 // Just a sanity check.

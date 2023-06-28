@@ -152,7 +152,6 @@ const configuration: webpack.Configuration = {
 
     new CopyPlugin({
       patterns: [
-        { from: 'js9/**', context: 'node_modules' },
         { from: '*.js', context: 'assets' },
         { from: '*.png', context: 'assets' },
       ],

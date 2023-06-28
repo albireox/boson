@@ -4,14 +4,12 @@ import React from 'react';
 import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { Chat } from './Chat';
-import { Guider } from './Guider';
 import { HAL } from './HAL';
 import { useStore } from './hooks';
 import Log from './Log';
 import Main from './Main';
 import FocusPlot from './Plots/Focus';
 import Preferences from './Preferences/Preferences';
-import { Snapshots } from './Snapshots';
 
 export type ColorModeValues = 'bright' | 'dark' | 'system';
 
@@ -139,12 +137,6 @@ export default function App() {
       break;
     case 'preferences':
       view = <Preferences />;
-      break;
-    case 'snapshots':
-      view = <Snapshots />;
-      break;
-    case 'guider':
-      view = <Guider />;
       break;
     case 'HAL':
       view = <HAL />;
