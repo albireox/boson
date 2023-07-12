@@ -145,6 +145,9 @@ const ElectronAPI = {
     openInApplication: (command: string) => {
       return ipcRenderer.invoke('tools:open-in-application', command);
     },
+    playSound: (type: string) => {
+      return ipcRenderer.invoke('tools:play-sound', type);
+    },
   },
   dialog: {
     showMessageBox: async (

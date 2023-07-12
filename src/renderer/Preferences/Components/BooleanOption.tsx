@@ -19,10 +19,20 @@ export default function BooleanOption(props: BooleanOptionProps) {
   const { title, param, description } = props;
 
   return (
-    <Grid container pt={1} minHeight={50} alignContent='center'>
-      <Grid item xs={9}>
-        <TypographyTitle>{title}</TypographyTitle>
-        <TypographyDescription>{description}</TypographyDescription>
+    <Grid
+      container
+      pt={1}
+      minHeight={50}
+      alignItems='center'
+      alignContent='center'
+    >
+      <Grid item xs={9} alignContent='center' alignItems='center'>
+        <TypographyTitle gutterBottom={description !== undefined}>
+          {title}
+        </TypographyTitle>
+        {description && (
+          <TypographyDescription>{description}</TypographyDescription>
+        )}
       </Grid>
       <Grid
         item

@@ -17,6 +17,7 @@ import {
   uniqueNamesGenerator,
 } from 'unique-names-generator';
 import { config, store } from '../store';
+import { playSound } from '../utils';
 import Command from './command';
 import parseLine from './keywords';
 import Reply from './reply';
@@ -353,6 +354,11 @@ export class TronConnection {
         ReplyCodeReverseMap.get(groups.code.toLowerCase()) ?? ReplyCode.Unknown,
         keywords
       );
+
+      // If message is error, play sound.
+      if (reply.code === ReplyCode.Error || reply.code === ReplyCode.Failed) {
+        playSound('error');
+      }
 
       // Update reply date to match TCC TAI.
       reply.date += this.taiOffset * 1000;

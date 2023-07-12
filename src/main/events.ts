@@ -22,6 +22,7 @@ import { config, store, subscriptions as storeSubscriptions } from './store';
 import connectAndAuthorise from './tron/tools';
 import { tron } from './tron/tron';
 import { CommandStatus } from './tron/types';
+import { playSound } from './utils';
 
 export default function loadEvents() {
   // app events
@@ -139,7 +140,7 @@ export default function loadEvents() {
     keytar.setPassword('boson', key, value);
   });
 
-  // tools
+  // Tools
   ipcMain.on('tools:get-uuid', async (event) => {
     event.returnValue = randomUUID();
   });
@@ -157,9 +158,12 @@ export default function loadEvents() {
       return stdout;
     }
   );
-  ipcMain.handle('tools:open-in-browser', async (event, path: string) =>
-    shell.openExternal(path)
+  ipcMain.handle('tools:open-in-browser', async (event, extPath: string) =>
+    shell.openExternal(extPath)
   );
+  ipcMain.handle('tools:play-sound', async (event, type: string) => {
+    playSound(type);
+  });
 
   // Dialogs
   ipcMain.handle(
