@@ -19,7 +19,7 @@ function MenuItemPreferences(props: {
   name: string;
   title: string;
   selectedPane: string;
-  setSelectedPane: (string) => void;
+  setSelectedPane: (arg0: string) => void;
 }) {
   const { name, title, selectedPane, setSelectedPane } = props;
   const DEFAULT_PANE = 'connection';

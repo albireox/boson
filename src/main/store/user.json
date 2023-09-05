@@ -40,6 +40,14 @@
   "chat": {
     "notifications": true
   },
+  "audio": {
+    "mode": "on",
+    "muted": false,
+    "minimal": ["error"],
+    "sounds": {
+      "error": "error.wav"
+    }
+  },
   "maxLogMessages": 50000,
   "updateChannel": "stable",
   "profiles": {},

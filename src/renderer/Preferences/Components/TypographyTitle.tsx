@@ -12,8 +12,12 @@ type PreferencesTypographyType = {
   children?: React.ReactNode;
 };
 
+type PreferencesTypographyTitleType = PreferencesTypographyType & {
+  gutterBottom?: boolean;
+};
+
 export function TypographyTitle(props: PreferencesTypographyType) {
-  const { children } = props;
+  const { children, gutterBottom = true } = props;
 
   return (
     <Typography
@@ -25,7 +29,7 @@ export function TypographyTitle(props: PreferencesTypographyType) {
         userSelect: 'none',
         alignSelf: 'center',
       })}
-      gutterBottom
+      gutterBottom={gutterBottom}
     >
       {children}
     </Typography>

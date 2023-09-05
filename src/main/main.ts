@@ -24,7 +24,7 @@ import loadEvents from './events';
 import MenuBuilder from './menu/menu';
 import { config, store } from './store';
 import { WindowNames, WindowParams } from './types';
-import { resolveHtmlPath } from './util';
+import { resolveHtmlPath } from './utils';
 
 // For now disable log rotation
 log.transports.file.maxSize = 0;
