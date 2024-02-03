@@ -21,6 +21,8 @@ exports.default = async function notarizeMacos(context) {
 
   const appName = context.packager.appInfo.productFilename;
 
+  console.info(`Notarizing ${appName} app`);
+
   await notarize({
     appBundleId: build.appId,
     appPath: `${appOutDir}/${appName}.app`,
