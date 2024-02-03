@@ -39,6 +39,8 @@ yarn force-rebuild
 
 This will force rebuilding the native dependencies. If that does not work either try removing the `node_modules` directories from the root directory and `release/app` and install again with `yarn`.
 
+Although `yarn package` will emit a `skipped macOS notarization  reason=notarize options were not provided` message, the script will still try to notarise the app. The warning originates because we do not use the internal `electron-builder` notarisation options. Notarisation is run as an `afterSign` [script](.erb/scripts/notarize.js) and you should see a `*** Notarizing boson app ***` message.
+
 Continuous Integration
 ----------------------
 
