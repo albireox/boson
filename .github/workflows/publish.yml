@@ -59,11 +59,11 @@ jobs:
 
       # It seems we need to delete the draft release or often it will fail
       # uploading assets.
-      - name: Delete drafts
-        uses: hugo19941994/delete-draft-releases@v1.0.0
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Delete drafts
+      #   uses: hugo19941994/delete-draft-releases@v1.0.0
+      #   if: startsWith(github.ref, 'refs/tags/')
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package application
         if: (github.event_name == 'pull_request') || (github.event_name == 'workflow_dispatch')
