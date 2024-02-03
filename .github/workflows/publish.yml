@@ -70,3 +70,11 @@ jobs:
         run: |
           npm exec electron-builder -- --publish never --mac
           ls -la release/build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: startsWith(github.ref, 'refs/tags/') != true
+        with:
+          name: packaged-apps
+          path: |
+            release/build/boson-*
