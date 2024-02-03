@@ -78,4 +78,4 @@ jobs:
           name: packaged-binaries
           compression-level: 0
           path: |
-            release/build/boson-*
+            release/build/boson-*.dmg
