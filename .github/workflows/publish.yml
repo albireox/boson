@@ -10,7 +10,9 @@ on:
       - "*"
 
 env:
-  YARN_ENABLE_IMMUTABLE_INSTALLS: false
+  # See https://yarnpkg.com/features/security
+  YARN_ENABLE_HARDENED_MODE: 0
+  # YARN_ENABLE_IMMUTABLE_INSTALLS: false
   # These values are used for auto updates signing
   APPLE_ID: ${{ secrets.APPLE_ID }}
   APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASSWORD }}
@@ -42,6 +44,18 @@ jobs:
         with:
           node-version: 20
           cache: npm
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Brew install dependencies
         run: |
