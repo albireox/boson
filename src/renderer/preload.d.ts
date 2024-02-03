@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import ElectronAPI from 'main/preload';
+import ElectronAPI from '../main/preload';
 
 declare global {
   interface Window {
