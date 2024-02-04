@@ -5,15 +5,16 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { Box } from '@mui/material';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { Document, Page, pdfjs } from 'react-pdf/dist/esm';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url
-).toString();
+// This seems to be necessary. Although VSCode/ESLint seem to be able to figure
+// out that this is a native import from release/app/node_modules, webpack
+// doesn't seem to be able to find the package and import undefined symbols.
+// This also seems to work when building the package.
+
+// eslint-disable-next-line import/no-relative-packages
+import { Document, Page, pdfjs } from '../../node_modules/react-pdf';
 
 interface PdfViewerProps {
   files: string[];
@@ -71,28 +72,28 @@ export default function PdfViewer(props: PdfViewerProps) {
 
       return '<span />';
     },
-    [searchText, scale]
+    [searchText, scale],
   );
+
+  React.useEffect(() => {
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+      'pdfjs-dist/build/pdf.worker.min.js',
+      import.meta.url,
+    ).toString();
+  }, []);
 
   if (!files[index]) return null;
 
   return (
-    <Box
-      height='100%'
-      sx={{ backgroundColor: '#fff' }}
-      position='relative'
-      overflow='auto'
-    >
-      <Document file={files[index]} renderMode='canvas' error='' loading=''>
-        <Page
-          pageNumber={1}
-          scale={scale}
-          width={width}
-          customTextRenderer={renderHighlight}
-          renderAnnotationLayer
-          renderTextLayer
-        />
-      </Document>
-    </Box>
+    <Document file={files[index]} renderMode='canvas' error='' loading=''>
+      <Page
+        pageNumber={1}
+        scale={scale}
+        width={width}
+        customTextRenderer={renderHighlight}
+        renderAnnotationLayer
+        renderTextLayer
+      />
+    </Document>
   );
 }

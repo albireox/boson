@@ -43,11 +43,8 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
   },
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 2022,
     sourceType: 'module',
-    project: './tsconfig.json',
-    tsconfigRootDir: __dirname,
-    createDefaultProgram: true,
   },
   overrides: [
     {
