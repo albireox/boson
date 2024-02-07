@@ -357,7 +357,13 @@ export class TronConnection {
 
       // If message is error, play sound.
       if (reply.code === ReplyCode.Error || reply.code === ReplyCode.Failed) {
+        console.log('error reply code');
         playSound('error');
+      }
+
+      if(reply.code === ReplyCode.Warning) {
+        console.log("testing warnings")
+        playSound('warning');
       }
       
       // Update reply date to match TCC TAI.

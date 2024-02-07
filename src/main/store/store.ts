@@ -40,6 +40,7 @@ const store = new Store({
         minimal: ['error'],
         sounds: {
           error: 'error.wav',
+          warning: 'click.mp3'
         },
       });
     },

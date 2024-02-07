@@ -27,6 +27,8 @@ export function playSound(type: string, opts?: PlaySoundOpts) {
   const file = store.get(`audio.sounds.${type}`, null);
   if (!file) return;
 
+
+
   const mode: string = store.get('audio.mode');
   const minimals: string[] = store.get('audio.minimal');
   const muted = store.get('audio.muted');

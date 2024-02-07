@@ -45,7 +45,8 @@
     "muted": false,
     "minimal": ["error"],
     "sounds": {
-      "error": "error.wav"
+      "error": "error.wav",
+      "warning":"click.mp3"
     }
   },
   "maxLogMessages": 50000,

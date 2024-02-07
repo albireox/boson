@@ -72,48 +72,6 @@ function ThemeMode() {
   );
 }
 
-function AudioMode() {
-  const key = 'audio.mode';
-  const [audioMode, setAudioMode] = React.useState<string>(
-    window.electron.store.get(key) || 'on'
-  );
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAudioMode(event.target.value);
-    window.electron.store.set(key, event.target.value);
-  };
-
-  return (
-    <Stack>
-      <Typography variant='button' color='text.secondary' fontSize='13px'>
-        Sounds
-      </Typography>
-      <FormControl sx={{ paddingTop: 1 }}>
-        <PreferencesRadioGroup value={audioMode} onChange={handleChange}>
-          <PreferencesFormControlLabel
-            value='on'
-            control={<Radio />}
-            label='On'
-          />
-          <PreferencesFormControlLabel
-            value='minimal'
-            control={<Radio />}
-            label='Minimal'
-          />
-          <PreferencesFormControlLabel
-            value='off'
-            control={<Radio />}
-            label='Off'
-          />
-        </PreferencesRadioGroup>
-      </FormControl>
-      <Box px={1} pr={2}>
-        <BooleanOption param='audio.muted' title='Mute all sounds' />
-      </Box>
-    </Stack>
-  );
-}
-
 function WindowManagement() {
   const [saveOnlyOnRequest] = useStore<boolean>('interface.saveOnlyOnRequest');
 
@@ -201,8 +159,6 @@ export default function InterfacePane() {
           <Grid xs={9}>
             <Stack width='100%' direction='column'>
               <ThemeMode />
-              <Divider sx={{ my: 4 }} />
-              <AudioMode />
               <Divider sx={{ my: 4 }} />
               <WindowManagement />
             </Stack>

@@ -9,7 +9,7 @@ import { Box, CssBaseline, Divider } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { Stack } from '@mui/system';
 import * as React from 'react';
-import { AdvancedPane, ConnectionPane, InterfacePane } from './Panes';
+import { AdvancedPane, ConnectionPane, InterfacePane, SoundsPane } from './Panes';
 import GuiderPane from './Panes/Tools/GuiderPane';
 import HALPane from './Panes/Tools/HALPane';
 import LogWindowPane from './Panes/Tools/LogWindowPane';
@@ -45,6 +45,8 @@ export default function Preferences() {
         return <ConnectionPane />;
       case 'interface':
         return <InterfacePane />;
+      case 'sounds':
+        return <SoundsPane />;
       case 'advanced':
         return <AdvancedPane />;
       case 'log_window':
@@ -91,6 +93,11 @@ export default function Preferences() {
             <MenuItemPreferences
               title='Interface'
               name='interface'
+              {...props}
+            />
+            <MenuItemPreferences
+              title='Sounds'
+              name='sounds'
               {...props}
             />
             <MenuItemPreferences title='Advanced' name='advanced' {...props} />

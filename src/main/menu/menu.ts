@@ -40,11 +40,6 @@ export default class MenuBuilder {
 
     store.onDidChange('audio', (newValue) => {
       if (!newValue) return;
-
-      const mutedSoundsItem = menu.getMenuItemById('mute-sounds');
-      if (mutedSoundsItem) {
-        mutedSoundsItem.checked = newValue.muted;
-      }
     });
 
     return menu;
