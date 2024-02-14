@@ -1,12 +1,27 @@
 name: Publish
 
 on:
-  push:
+  workflow_dispatch:
+  pull_request:
     branches:
       - main
+  push:
+    tags:
+      - "*"
 
 env:
-  YARN_ENABLE_IMMUTABLE_INSTALLS: false
+  # See https://yarnpkg.com/features/security
+  YARN_ENABLE_HARDENED_MODE: 0
+  # YARN_ENABLE_IMMUTABLE_INSTALLS: false
+  # These values are used for auto updates signing
+  APPLE_ID: ${{ secrets.APPLE_ID }}
+  APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASSWORD }}
+  CSC_LINK: ${{ secrets.CSC_LINK }}
+  CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+  CSC_FOR_PULL_REQUEST: true
+  APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+  # This is used for uploading release assets to github
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 concurrency:
   group: boson-publish
@@ -22,43 +37,65 @@ jobs:
 
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Node and NPM
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Brew install dependencies
         run: |
           brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
 
       - name: Run install
-        uses: borales/actions-yarn@v4
+        uses: borales/actions-yarn@v5
         with:
           cmd: install
 
       - name: Build
-        uses: borales/actions-yarn@v4
+        uses: borales/actions-yarn@v5
         with:
           cmd: build
 
       # It seems we need to delete the draft release or often it will fail
       # uploading assets.
-      - name: Delete drafts
-        uses: hugo19941994/delete-draft-releases@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Delete drafts
+      #   uses: hugo19941994/delete-draft-releases@v1.0.0
+      #   if: startsWith(github.ref, 'refs/tags/')
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish releases
-        env:
-          # These values are used for auto updates signing
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASSWORD }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          # This is used for uploading release assets to github
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Package application
+        if: (github.event_name == 'pull_request') || (github.event_name == 'workflow_dispatch')
+        run: |
+          npm exec electron-builder -- --publish never --mac
+          ls -la release/build
+
+      - name: Publish application
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           npm exec electron-builder -- --publish always --mac
+          ls -la release/build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        if: startsWith(github.ref, 'refs/tags/') != true
+        with:
+          name: packaged-binaries
+          compression-level: 0
+          path: |
+            release/build/boson-*.dmg

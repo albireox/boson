@@ -40,7 +40,10 @@ const store = new Store({
         minimal: ['error'],
         sounds: {
           error: 'error.wav',
-          warning: 'click.mp3'
+          warning: 'click.wav',
+          axis_halt: 'synth_strings_short.wav',
+          axis_slew: 'woodblock.wav',
+          axis_track: 'marimba.wav',
         },
       });
     },

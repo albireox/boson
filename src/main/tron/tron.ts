@@ -357,14 +357,25 @@ export class TronConnection {
 
       // If message is error, play sound.
       if (reply.code === ReplyCode.Error || reply.code === ReplyCode.Failed) {
-        console.log('error reply code');
         playSound('error');
       }
 
       if(reply.code === ReplyCode.Warning) {
-        console.log("testing warnings")
+        store.set('audio', {
+        sounds: {
+          error: 'error.wav',
+          warning: 'click.wav',
+          axis_halt: 'synth_strings_short.wav',
+          axis_slew: 'woodblock.wav',
+          axis_track: 'marimba.wav',
+        }
+        });
         playSound('warning');
       }
+
+    //if(reply.sender === '' && /\.tcc 0 tcc W .*/.test(reply.rawLine)) {
+        //playSound(axis_halt)
+    //} 
       
       // Update reply date to match TCC TAI.
       reply.date += this.taiOffset * 1000;
