@@ -356,26 +356,19 @@ export class TronConnection {
       );
 
       // If message is error, play sound.
-      if (reply.code === ReplyCode.Error || reply.code === ReplyCode.Failed) {
+      if(/\S+\s\d+\s\S+\s[f!]/.test(reply.rawLine)) {
         playSound('error');
+      } else if(/alert=\S+/.test(reply.rawLine)) {
+        playSound('error_serious');
+      } else if((reply.sender === 'tcc' && /\S+\s\d+\s\S+\s\S\strack/.test(reply.rawLine)) || (reply.sender === 'lcotcc' && /\S+\s\d+\s\S+\s\S\starget/.test(reply.rawLine))) {
+        playSound('axis_slew');
+      } else if((reply.sender === 'apogee' && /\S+\s\d+\s\S+\s\S\sexposureState=exposing/.test(reply.rawLine)) || (reply.sender === 'boss' && /\S+\s\d+\s\S+\s\S\sexposureState=FLUSHING/.test(reply.rawLine))||(reply.sender === 'yao' && /\S+\s\d+\s\S+\s\S\ssp2_status_names=EXPOSING/.test(reply.rawLine))) {
+        playSound('exposure_start');
+      } else if(reply.sender === 'tcc' && /\S+\s\d+\s\S+\s\S\sSlewEnd/.test(reply.rawLine)) {
+        playSound('axis_halt');
+      } else if((reply.sender === 'apogee' && /\S+\s\d+\s\S+\s\S\sexposureState=done/.test(reply.rawLine)) || (reply.sender === 'boss' && /\S+\s\d+\s\S+\s\S\stext="writing BOSS FITS files/.test(reply.rawLine))||(reply.sender === 'yao' && /\S+\s\d+\s\S+\s\S\sfilenames=/.test(reply.rawLine))) {
+        playSound('exposure_end');
       }
-
-      if(reply.code === ReplyCode.Warning) {
-        store.set('audio', {
-        sounds: {
-          error: 'error.wav',
-          warning: 'click.wav',
-          axis_halt: 'synth_strings_short.wav',
-          axis_slew: 'woodblock.wav',
-          axis_track: 'marimba.wav',
-        }
-        });
-        playSound('warning');
-      }
-
-    //if(reply.sender === '' && /\.tcc 0 tcc W .*/.test(reply.rawLine)) {
-        //playSound(axis_halt)
-    //} 
       
       // Update reply date to match TCC TAI.
       reply.date += this.taiOffset * 1000;
