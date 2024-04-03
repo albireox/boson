@@ -17,6 +17,7 @@ import {
   uniqueNamesGenerator,
 } from 'unique-names-generator';
 import { config, store } from '../store';
+import { playSound } from '../utils';
 import Command from './command';
 import parseLine from './keywords';
 import Reply from './reply';
@@ -353,6 +354,48 @@ export class TronConnection {
         ReplyCodeReverseMap.get(groups.code.toLowerCase()) ?? ReplyCode.Unknown,
         keywords
       );
+
+      // Parse messages and play sounds.
+      if (/\S+\s\d+\s\S+\s[f!]/.test(reply.rawLine)) {
+        playSound('error');
+      } else if (/alert=\S+/.test(reply.rawLine)) {
+        playSound('error_serious');
+      } else if (
+        reply.sender === 'tcc' &&
+        /\S+\s\d+\s\S+\s\S\strack/.test(reply.rawLine)
+      ) {
+        playSound('axis_slew');
+      } else if (
+        reply.sender === 'lcotcc' &&
+        /\S+\s\d+\s\S+\s\S\starget/.test(reply.rawLine)
+      ) {
+        playSound('axis_slew');
+      } else if (
+        (reply.sender === 'apogee' &&
+          /\S+\s\d+\s\S+\s\S\sexposureState=exposing/.test(reply.rawLine)) ||
+        (reply.sender === 'boss' &&
+          /\S+\s\d+\s\S+\s\S\sexposureState=FLUSHING/.test(reply.rawLine)) ||
+        (reply.sender === 'yao' &&
+          /\S+\s\d+\s\S+\s\S\ssp2_status_names=EXPOSING/.test(reply.rawLine))
+      ) {
+        playSound('exposure_start');
+      } else if (
+        reply.sender === 'tcc' &&
+        /\S+\s\d+\s\S+\s\S\sSlewEnd/.test(reply.rawLine)
+      ) {
+        playSound('axis_halt');
+      } else if (
+        (reply.sender === 'apogee' &&
+          /\S+\s\d+\s\S+\s\S\sexposureState=done/.test(reply.rawLine)) ||
+        (reply.sender === 'boss' &&
+          /\S+\s\d+\s\S+\s\S\stext="writing BOSS FITS files/.test(
+            reply.rawLine
+          )) ||
+        (reply.sender === 'yao' &&
+          /\S+\s\d+\s\S+\s\S\sfilenames=/.test(reply.rawLine))
+      ) {
+        playSound('exposure_end');
+      }
 
       // Update reply date to match TCC TAI.
       reply.date += this.taiOffset * 1000;

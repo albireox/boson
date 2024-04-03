@@ -8,3 +8,4 @@
 export { default as AdvancedPane } from './AdvancedPane';
 export { default as ConnectionPane } from './ConnectionPane';
 export { default as InterfacePane } from './InterfacePane';
+export { default as SoundsPane } from './SoundsPane';

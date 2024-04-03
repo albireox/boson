@@ -2,6 +2,7 @@
 
 import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
 import { createWindow } from '../main';
+import { store } from '../store';
 import { clearLogs, reloadWindow, saveWindows } from './actions';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -69,6 +70,17 @@ export default class MenuBuilder {
           click: () => createWindow('preferences'),
         },
         { type: 'separator' },
+        {
+          id: 'mute-sounds',
+          label: 'Mute sounds',
+          type: 'checkbox',
+          checked: store.get('audio.muted'),
+          click: () => {
+            const current = store.get('audio.muted') as boolean;
+            store.set('audio.muted', !current);
+          },
+          accelerator: 'Command+Shift+M',
+        },
         {
           label: 'Save window positions',
           click: saveWindows,

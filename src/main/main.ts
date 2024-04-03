@@ -7,12 +7,12 @@
 import { BrowserWindow, app, nativeTheme, shell } from 'electron';
 import log from 'electron-log';
 import path from 'path';
+import { updateElectronApp } from 'update-electron-app';
 import loadEvents from './events';
 import MenuBuilder from './menu/menu';
 import { config, store } from './store';
 import { WindowNames, WindowParams } from './types';
-import { resolveHtmlPath } from './util';
-const { updateElectronApp } = require('update-electron-app');
+import { resolveHtmlPath } from './utils';
 
 updateElectronApp(); // additional configuration options available
 // For now disable log rotation

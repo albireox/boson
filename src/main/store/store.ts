@@ -33,6 +33,22 @@ const store = new Store({
       st.set('hal.allowGotoFieldAutoMode', true);
       st.delete('hal.useAutoMode' as keyof typeof userConfig);
     },
+    '>=0.3.3': (st) => {
+      st.set('audio', {
+        mode: 'on',
+        muted: false,
+        minimal: ['error'],
+        sounds: {
+          error: 'error.wav',
+          error_serious: 'synth_error_long.wav',
+          warning: 'click.wav',
+          axis_halt: 'synth_strings_short.wav',
+          axis_slew: 'marimba.wav',
+          exposure_start: 'woodblock.wav',
+          exposure_end: 'bell_soft_long.wav',
+        },
+      });
+    },
   },
 });
 
@@ -49,4 +65,4 @@ if (!(store.get('windows.openWindows') as string[]).includes('main')) {
 
 const subscriptions = new Map<string, () => EventEmitter>();
 
-export { store, defaultConfig, subscriptions };
+export { defaultConfig, store, subscriptions };
