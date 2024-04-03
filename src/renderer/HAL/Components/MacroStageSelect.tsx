@@ -41,28 +41,38 @@ export function MacroStageSelect(props: MacroStageSelectProps) {
 
   const [syncStages] = useStore<boolean>('hal.syncStages');
 
-  const [selectedStages, setSelectedStages] = React.useState<string[]>([]);
+  const [selectedStages, setSelectedStages] = React.useState<string[]>(
+    autoMode ? ['auto'] : []
+  );
 
   const handleChange = React.useCallback(
     (e: SelectChangeEvent<string[]>) => {
       const selected = e.target.value as string[];
-      if (selected.includes('auto')) {
-        setSelectedStages([]);
-        if (onStagesSelected) onStagesSelected(['auto']);
-      } else if (selected.includes('all')) {
-        setSelectedStages([]);
-        if (onStagesSelected) onStagesSelected([]);
+      const lastSelected = selected[selected.length - 1];
+
+      let newState: string[] = [];
+
+      if (selected.length === 0) {
+        newState = autoMode ? ['auto'] : [];
+      } else if ((autoMode && !selected) || lastSelected === 'auto') {
+        newState = ['auto'];
+      } else if ((!autoMode && !selected) || lastSelected === 'all') {
+        newState = [];
       } else {
-        setSelectedStages(selected);
-        if (onStagesSelected) onStagesSelected(selected);
+        newState = selected.filter(
+          (value) => value !== 'auto' && value !== 'all'
+        );
       }
+
+      setSelectedStages(newState);
+      if (onStagesSelected) onStagesSelected(newState);
     },
     [onStagesSelected]
   );
 
   const renderValue = React.useCallback((selected: string[]) => {
     if (selected.includes('auto')) return 'Auto';
-    if (selected.length === 0) return 'All stages';
+    if (selected.length === 0 || selected.includes('all')) return 'All stages';
 
     return (
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -109,7 +119,11 @@ export function MacroStageSelect(props: MacroStageSelectProps) {
           }}
           renderValue={renderValue}
         >
-          {autoMode && <BosonMenuItem value='auto'>Auto</BosonMenuItem>}
+          {autoMode && (
+            <BosonMenuItem key='auto' text='auto' value='auto'>
+              Auto
+            </BosonMenuItem>
+          )}
           <BosonMenuItem value='all'>All stages</BosonMenuItem>
           <Divider sx={{ my: '2px !important' }} />
           {stages.map((name) => (
