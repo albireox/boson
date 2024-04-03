@@ -1,9 +1,10 @@
 name: Publish
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main
+    tags:
+      - "*"
 
 env:
   YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -22,10 +23,10 @@ jobs:
 
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Node and NPM
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: npm
@@ -34,31 +35,37 @@ jobs:
         run: |
           brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
 
+      - name: Add MacOS certs
+        if: matrix.os == 'macos-latest'
+        run: chmod +x tools/add-macos-cert.sh && ./tools/add-macos-cert.sh
+        env:
+          MACOS_CERT_P12: ${{ secrets.CSC_LINK }}
+          MACOS_CERT_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+
       - name: Run install
-        uses: borales/actions-yarn@v4
+        uses: borales/actions-yarn@v5
         with:
           cmd: install
 
-      - name: Build
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: build
-
-      # It seems we need to delete the draft release or often it will fail
-      # uploading assets.
-      - name: Delete drafts
-        uses: hugo19941994/delete-draft-releases@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish releases
+      - name: Publish
+        uses: borales/actions-yarn@v5
         env:
           # These values are used for auto updates signing
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASSWORD }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          # This is used for uploading release assets to github
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm exec electron-builder -- --publish always --mac
+        with:
+          cmd: publish
+
+      # It seems we need to delete the draft release or often it will fail
+      # uploading assets.
+      # - name: Delete drafts
+      #   uses: hugo19941994/delete-draft-releases@v1.0.0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Publish releases
+      #   run: |
+      #     npm exec electron-builder -- --publish always --mac

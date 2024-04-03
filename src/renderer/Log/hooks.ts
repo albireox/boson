@@ -8,7 +8,7 @@
 import Reply from 'main/tron/reply';
 import { ReplyCodeMap } from 'main/tron/types';
 import React from 'react';
-import { useStore } from 'renderer/hooks';
+import { useStore } from '..//hooks';
 import LogConfigContext from './Context';
 
 export function useLogConfig() {

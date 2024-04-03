@@ -16,7 +16,6 @@ import ExposeRow from './Expose/ExposeRow';
 import GuideTable from './GuideTable/GuideTable';
 import { GuiderHeader } from './Header';
 import { JS9Grid } from './JS9';
-import { useLoadJS9 } from './tools';
 
 export type GuiderRefType = {
   name: string;
@@ -30,7 +29,7 @@ export type GuiderRefMap = {
 };
 
 export default function Guider() {
-  useLoadJS9();
+  // useLoadJS9();
 
   const [config, setConfig] = React.useState(defaultGuiderConfig);
   const boundContext = prepareGuiderContext(config, setConfig);
@@ -71,23 +70,23 @@ export default function Guider() {
   }, [refreshInterval]);
 
   return (
-    <Box component='main' display='flex' width='100%'>
+    <Box component="main" display="flex" width="100%">
       <CssBaseline />
       <GuiderContext.Provider value={boundContext}>
         <KeywordContext.Provider value={keywords}>
           <GuiderHeader guiderRef={ref} />
 
           <Stack
-            direction='column'
-            height='100%'
-            width='100%'
+            direction="column"
+            height="100%"
+            width="100%"
             pt={1}
             pb={2}
             px={3}
             spacing={2.5}
             sx={{ overflowY: 'auto' }}
           >
-            <Box width='100%'>
+            <Box width="100%">
               <JS9Grid
                 guiderRef={(element: GuiderRefType | null) => {
                   if (element) {

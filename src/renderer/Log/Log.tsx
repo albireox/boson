@@ -77,19 +77,19 @@ export default function Log(props: LogProps) {
   }, [saveState, config, logId]);
 
   return (
-    <Box component='main' display='flex' width='100%'>
+    <Box component="main" display="flex" width="100%">
       <CssBaseline />
       <LogConfigContext.Provider value={logConfig}>
         <LogHeader logId={logId} viewportRef={viewportRef} />
         <Stack
-          height='100%'
-          direction='column'
+          height="100%"
+          direction="column"
           px={2}
           pb={2}
           spacing={3}
-          overflow='hidden'
+          overflow="hidden"
         >
-          <MessageViewport mode='virtuoso' ref={viewportRef} />
+          <MessageViewport mode="virtuoso" ref={viewportRef} />
           <CommandInput viewportRef={viewportRef} />
         </Stack>
       </LogConfigContext.Provider>
