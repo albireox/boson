@@ -36,7 +36,6 @@ jobs:
           brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
 
       - name: Add MacOS certs
-        if: matrix.os == 'macos-latest'
         run: chmod +x tools/add-macos-cert.sh && ./tools/add-macos-cert.sh
         env:
           MACOS_CERT_P12: ${{ secrets.CSC_LINK }}
@@ -65,7 +64,3 @@ jobs:
       #   uses: hugo19941994/delete-draft-releases@v1.0.0
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Publish releases
-      #   run: |
-      #     npm exec electron-builder -- --publish always --mac
