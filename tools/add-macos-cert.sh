@@ -9,6 +9,7 @@ MACOS_CERT_P12_FILE=certificate.p12
 if [ -n "$MACOS_CERT_P12" ]; then
   # If the variable is set, print its length
   variable_length=${#MACOS_CERT_P12}
+  echo $MACOS_CERT_P12
   echo "MACOS_CERT_P12 is set. Length: $variable_length"
 else
   # If the variable is not set, print a message

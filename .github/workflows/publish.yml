@@ -34,17 +34,17 @@ jobs:
         run: |
           brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
 
-      - name: Run install
-        uses: borales/actions-yarn@v5
-        with:
-          cmd: install
-
       - name: Add MacOS certs
         if: matrix.os == 'macos-latest'
         run: chmod +x tools/add-macos-cert.sh && ./tools/add-macos-cert.sh
         env:
           MACOS_CERT_P12: ${{ secrets.CSC_LINK }}
           MACOS_CERT_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+
+      - name: Run install
+        uses: borales/actions-yarn@v5
+        with:
+          cmd: install
 
       - name: Publish
         uses: borales/actions-yarn@v5
