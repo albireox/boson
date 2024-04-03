@@ -1,9 +1,10 @@
 name: Publish
 
 on:
+  workflow_dispatch:
   push:
-    # branches:
-    #   - main
+    tags:
+      - "*"
 
 env:
   YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -52,9 +53,8 @@ jobs:
           # These values are used for auto updates signing
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASSWORD }}
-          # CSC_LINK: ${{ secrets.CSC_LINK }}
-          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          # This is used for uploading release assets to github
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           cmd: publish

@@ -23,8 +23,7 @@ const config: ForgeConfig = {
           hardenedRuntime: true,
         };
       },
-      identity:
-        'Developer ID Application: ASTROPHYSICAL RESEARCH CONSORTIUM, INC (MN8R2RU8JC)',
+      identity: process.env.APPLE_IDENTITY,
     },
     osxNotarize: {
       appleId: process.env.APPLE_ID,
