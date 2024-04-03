@@ -41,6 +41,7 @@ const config: ForgeConfig = {
           name: 'boson',
         },
         prerelease: true,
+        tagPrefix: '',
       },
     },
   ],
