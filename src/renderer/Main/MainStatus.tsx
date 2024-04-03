@@ -12,16 +12,16 @@ import { ConnectionStatus } from 'main/tron/types';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useConnectionStatus, useStore } from 'renderer/hooks';
-import icon from '../../../assets/icon.png';
+import icon from '/icon.png';
 
 type StatusTextProps = { color?: string | undefined } & React.PropsWithChildren;
 
 function StatusText({ color = undefined, children }: StatusTextProps) {
   return (
     <Typography
-      variant='h6'
-      fontFamily='monospace'
-      component='span'
+      variant="h6"
+      fontFamily="monospace"
+      component="span"
       fontSize={16}
       color={color}
       sx={{ WebkitUserSelect: 'unset' }}
@@ -191,18 +191,18 @@ function MainStatus() {
 
   return (
     <Stack
-      direction='column'
+      direction="column"
       spacing={1}
-      width='100%'
-      alignItems='center'
-      height='100%'
+      width="100%"
+      alignItems="center"
+      height="100%"
     >
-      <img width='30%' alt='icon' src={icon} />
-      <Typography variant='h3'>
+      <img width="30%" alt="icon" src={icon} />
+      <Typography variant="h3">
         boson {isPackaged !== undefined && isPackaged ? version : 'dev'}
       </Typography>
-      <Box width='100%' paddingTop={2}>
-        <Card variant='outlined'>
+      <Box width="100%" paddingTop={2}>
+        <Card variant="outlined">
           <CardContent>
             <StatusText>Status: </StatusText>
             {connectionText}

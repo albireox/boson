@@ -203,7 +203,7 @@ function JS9FrameInner(
   return (
     <>
       <Box
-        className='JS9'
+        className="JS9"
         id={display}
         style={{
           width: size,
@@ -226,7 +226,7 @@ function JS9FrameInner(
           boxSizing: 'border-box',
           'div.JS9Container > canvas.JS9Image': {
             backgroundColor: theme.palette.background.default,
-            backgroundImage: path ? null : `url(SDSS-V.png)`,
+            backgroundImage: path ? null : `url(/SDSS-V.png)`,
             backgroundSize: 'cover',
             backgroundBlendMode: 'luminosity',
             backgroundPosition: 'center',

@@ -1,17 +1,17 @@
 import { createTheme, useMediaQuery } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
-import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import { Chat } from './Chat';
 import { Guider } from './Guider';
 import { HAL } from './HAL';
-import { useStore } from './hooks';
 import Log from './Log';
 import Main from './Main';
 import FocusPlot from './Plots/Focus';
 import Preferences from './Preferences/Preferences';
 import { Snapshots } from './Snapshots';
+import { useStore } from './hooks';
 
 export type ColorModeValues = 'bright' | 'dark' | 'system';
 
@@ -163,7 +163,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-          <Route path='/' element={view} />
+          <Route path="/" element={view} />
         </Routes>
       </Router>
     </ThemeProvider>

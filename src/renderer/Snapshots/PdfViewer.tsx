@@ -6,9 +6,9 @@
  */
 
 import { Box } from '@mui/material';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import { Document, Page, pdfjs } from 'react-pdf/dist/esm';
+import { useCallback } from 'react';
+import { renderToString } from 'react-dom/server';
+import { Document, Page, pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -26,9 +26,9 @@ interface PdfViewerProps {
 export default function PdfViewer(props: PdfViewerProps) {
   const { files, index, scale, width, searchText } = props;
 
-  const renderHighlight = React.useCallback(
+  const renderHighlight = useCallback(
     ({ str }: { str: string }) => {
-      if (!searchText) return ReactDOMServer.renderToString(<span />);
+      if (!searchText) return renderToString(<span />);
 
       if (
         (searchText.length >= 4 && str.includes(searchText)) ||
@@ -66,7 +66,7 @@ export default function PdfViewer(props: PdfViewerProps) {
             />
           </div>
         );
-        return ReactDOMServer.renderToString(JSXElement);
+        return renderToString(JSXElement);
       }
 
       return '<span />';
@@ -78,12 +78,12 @@ export default function PdfViewer(props: PdfViewerProps) {
 
   return (
     <Box
-      height='100%'
+      height="100%"
       sx={{ backgroundColor: '#fff' }}
-      position='relative'
-      overflow='auto'
+      position="relative"
+      overflow="auto"
     >
-      <Document file={files[index]} renderMode='canvas' error='' loading=''>
+      <Document file={files[index]} renderMode="canvas" error="" loading="">
         <Page
           pageNumber={1}
           scale={scale}

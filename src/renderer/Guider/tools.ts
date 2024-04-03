@@ -5,8 +5,6 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-/* eslint-disable promise/no-nesting */
-
 import React from 'react';
 
 export const loadExternalScript = (url: string) => {
@@ -46,11 +44,11 @@ export function useLoadJS9() {
 
   const [state, setState] = React.useState(false);
 
-  loadExternalScript('js9prefs.js')
+  loadExternalScript('/js9prefs.js')
     .then(() =>
-      loadExternalScript('js9/js9support.min.js')
+      loadExternalScript('/js9_source/js9support.min.js')
         .then(() =>
-          loadExternalScript('js9/js9.min.js')
+          loadExternalScript('/js9_source/js9.min.js')
             .then(() => setState(true))
             .catch(() => {})
         )

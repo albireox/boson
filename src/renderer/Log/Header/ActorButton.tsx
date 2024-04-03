@@ -36,11 +36,11 @@ export default function ActorButton() {
 
   return (
     <BosonIconMenu
-      name='actorButton'
+      name="actorButton"
       Icon={PlaylistAddIcon}
       IconButtonProps={IconButtonProps}
     >
-      <BosonMenuItem text='All actors' onSelect={handleClick} />
+      <BosonMenuItem text="All actors" onSelect={handleClick} />
       <Divider sx={{ my: '2px !important' }} />
       {actors.sort().map((actor) => (
         <BosonMenuItem

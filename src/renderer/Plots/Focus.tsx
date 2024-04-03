@@ -239,9 +239,9 @@ export default function FocusPlot() {
   };
 
   return (
-    <Box component='main' height='100%'>
+    <Box component="main" height="100%">
       <CssBaseline />
-      <Box px={1} py={2} mt={0} height='100%'>
+      <Box px={1} py={2} mt={0} height="100%">
         <HighchartsReact highcharts={Highcharts} options={options} />
       </Box>
     </Box>
