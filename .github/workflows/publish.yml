@@ -46,6 +46,13 @@ jobs:
         with:
           cmd: install
 
+      # It seems we need to delete the draft release or often it will fail
+      # uploading assets.
+      - name: Delete drafts
+        uses: hugo19941994/delete-draft-releases@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish
         uses: borales/actions-yarn@v5
         env:
@@ -57,10 +64,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           cmd: publish
-
-      # It seems we need to delete the draft release or often it will fail
-      # uploading assets.
-      # - name: Delete drafts
-      #   uses: hugo19941994/delete-draft-releases@v1.0.0
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
