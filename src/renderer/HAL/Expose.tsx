@@ -149,9 +149,9 @@ export default function Expose() {
         commandString.push('--modify');
       }
 
-      const joinedStages = stages.join(',');
+      const joinedStages = stages.filter((v) => v != 'auto').join(',');
 
-      if (stages.length > 0) commandString.push(`-s ${joinedStages}`);
+      if (joinedStages.length > 0) commandString.push(`-s ${joinedStages}`);
 
       if (pairs) {
         commandString.push('--pairs');
@@ -163,7 +163,7 @@ export default function Expose() {
         commandString.push(
           `-b ${bossTime || macros.expose.defaults.boss_exptime}`
         );
-      } else {
+      } else if (stages.includes('expose_apogee')) {
         commandString.push(
           `--reads ${apogeeReads || macros.expose.defaults.apogee_reads}`
         );
@@ -217,34 +217,39 @@ export default function Expose() {
 
     const nExp = parseInt(count || macros.expose.defaults.count.toString(), 10);
 
-    if (stages.length === 0 || stages.includes('expose_boss')) {
-      const bossExpTime = parseFloat(
-        bossTime || macros.expose.defaults.boss_exptime.toString()
-      );
-      const bossTotal = nExp * (bossExpTime + bossOverhead);
-
-      bossDetail = `BOSS: ~${round(bossTotal, 0)} s (${nExp}x${round(
-        bossExpTime,
-        0
-      )})`;
-
-      if (stages.length === 0 || stages.includes('expose_apogee')) {
-        apogeeDetail = `APOGEE: ~${round(
-          bossTotal - bossReadout,
-          0
-        )} s (${nExp}x${type})`;
-      }
+    if (stages.includes('auto')) {
+      bossDetail = 'BOSS: ??? s (auto)';
+      apogeeDetail = 'APOGEE: ??? s (auto)';
     } else {
-      let apogeeTotal =
-        nExp *
-        10.6 *
-        parseInt(
-          apogeeReads || macros.expose.defaults.apogee_reads.toString(),
-          10
+      if (stages.length === 0 || stages.includes('expose_boss')) {
+        const bossExpTime = parseFloat(
+          bossTime || macros.expose.defaults.boss_exptime.toString()
         );
-      if (pairs) apogeeTotal *= 2;
+        const bossTotal = nExp * (bossExpTime + bossOverhead);
 
-      apogeeDetail = `APOGEE: ~${round(apogeeTotal, 0)} s (${nExp} ${type})`;
+        bossDetail = `BOSS: ~${round(bossTotal, 0)} s (${nExp}x${round(
+          bossExpTime,
+          0
+        )})`;
+
+        if (stages.length === 0 || stages.includes('expose_apogee')) {
+          apogeeDetail = `APOGEE: ~${round(
+            bossTotal - bossReadout,
+            0
+          )} s (${nExp}x${type})`;
+        }
+      } else {
+        let apogeeTotal =
+          nExp *
+          10.6 *
+          parseInt(
+            apogeeReads || macros.expose.defaults.apogee_reads.toString(),
+            10
+          );
+        if (pairs) apogeeTotal *= 2;
+
+        apogeeDetail = `APOGEE: ~${round(apogeeTotal, 0)} s (${nExp} ${type})`;
+      }
     }
 
     setDetail(
@@ -324,6 +329,7 @@ export default function Expose() {
 
     setApogeeProgress(<span />);
   }, [actorStages, apogeeStateKw, isRunning, isPaused]);
+  console.log(getCommandString());
 
   return (
     <>
@@ -341,6 +347,7 @@ export default function Expose() {
             </Typography>
             <MacroStageSelect
               macro={macroName}
+              autoMode={true}
               minWidth={100}
               maxWidth={145}
               onStagesSelected={React.useCallback(
@@ -355,7 +362,9 @@ export default function Expose() {
               flexWrap='wrap'
               justifyContent='center'
             >
-              {(stages.length === 0 || stages.includes('expose_boss')) && (
+              {(stages.length === 0 ||
+                stages.includes('all') ||
+                stages.includes('expose_boss')) && (
                 <ExposureTimeInput
                   label='BOSS Exp'
                   value={bossTime}
