@@ -394,7 +394,13 @@ export default function Expose() {
                     }}
                     sx={{
                       width: '40px',
-                      '& .MuiInputBase-root': { marginTop: 1 },
+                      '& .MuiInputBase-root': {
+                        marginTop: 1,
+                        '& .MuiInput-input': {
+                          paddingTop: 0.5,
+                          paddingBottom: 0.2,
+                        },
+                      },
                     }}
                     disabled={isRunning}
                   />
@@ -411,7 +417,13 @@ export default function Expose() {
                 }}
                 sx={{
                   width: '40px',
-                  '& .MuiInputBase-root': { marginTop: 1 },
+                  '& .MuiInputBase-root': {
+                    marginTop: 1,
+                    '& .MuiInput-input': {
+                      paddingTop: 0.5,
+                      paddingBottom: 0.2,
+                    },
+                  },
                 }}
               />
               <FormControlLabel

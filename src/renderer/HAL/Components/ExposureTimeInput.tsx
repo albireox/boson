@@ -41,7 +41,10 @@ export function ExposureTimeInput({
       }}
       sx={{
         width,
-        '& .MuiInputBase-root': { marginTop: 1 },
+        '& .MuiInputBase-root': {
+          marginTop: 1,
+          '& .MuiInput-input': { paddingTop: 0.5, paddingBottom: 0.2 },
+        },
       }}
     />
   );

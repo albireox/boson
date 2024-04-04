@@ -126,7 +126,10 @@ export default function AutoMode() {
             sx={{
               minWidth: '35px',
               maxWidth: '35px',
-              '& .MuiInputBase-root': { marginTop: 1 },
+              '& .MuiInputBase-root': {
+                marginTop: 1,
+                '& .MuiInput-input': { paddingTop: 0.5, paddingBottom: 0.1 },
+              },
             }}
           />
           <Collapse orientation='horizontal' in={isRunning}>
