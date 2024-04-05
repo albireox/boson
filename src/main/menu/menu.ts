@@ -3,7 +3,12 @@
 import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
 import { createWindow } from '../main';
 import { store } from '../store';
-import { clearLogs, reloadWindow, saveWindows } from './actions';
+import {
+  checkForUpdates,
+  clearLogs,
+  reloadWindow,
+  saveWindows,
+} from './actions';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -59,10 +64,10 @@ export default class MenuBuilder {
           label: 'About Boson',
           selector: 'orderFrontStandardAboutPanel:',
         },
-        // {
-        //   label: 'Check for updates ... ',
-        //   click: checkForUpdates,
-        // },
+        {
+          label: 'Check for updates ... ',
+          click: checkForUpdates,
+        },
         { type: 'separator' },
         {
           label: 'Preferences ...',
