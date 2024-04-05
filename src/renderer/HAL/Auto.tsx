@@ -11,6 +11,7 @@ import IOSSwitch from 'renderer/Components/IOSwitch';
 import { useKeywordContext } from 'renderer/hooks';
 import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
 import useStageStatus from 'renderer/hooks/useStageStatus';
+import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import PauseResumeButton from './Components/PauseResumeButton';
 import SnackAlert, { SnackAlertRefType } from './Components/SnackAlert';
 
@@ -18,11 +19,12 @@ export default function AutoMode() {
   const macroName = 'auto';
 
   const [count, setCount] = React.useState('1');
+  const [preload, setPreload] = React.useState('300');
 
   const [error, setError] = React.useState(false);
   const [cancelled, setCancelled] = React.useState(false);
 
-  const [message, setMessage] = React.useState('');
+  const [message, setMessage] = React.useState();
 
   const { 'hal.auto_mode_message': autoModeMessageKw } = useKeywordContext();
 
@@ -87,7 +89,7 @@ export default function AutoMode() {
       if (isRunning) {
         commandString = 'hal auto --stop';
       } else {
-        commandString = `hal auto --count ${count}`;
+        commandString = `hal auto --preload-ahead ${preload} --count ${count}`;
       }
       window.electron.tron.send(commandString);
     },
@@ -113,6 +115,14 @@ export default function AutoMode() {
           >
             {message}
           </Typography>
+          <ExposureTimeInput
+            label='Preload'
+            value={preload}
+            onChange={(e) => setPreload(e.target.value)}
+            width='50px'
+            isNumber={false}
+            disabled={isRunning}
+          />
           <TextField
             label='Count'
             size='small'
