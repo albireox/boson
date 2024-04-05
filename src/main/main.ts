@@ -165,6 +165,7 @@ export async function createWindow(windowName: WindowNames) {
     menuBuilder.buildMenu();
 
     loadEvents();
+    new AppUpdater();
   }
 
   // Open urls in the user's browser
