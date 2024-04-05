@@ -148,7 +148,15 @@ export default function CommandWrapper(props: CommandWrapperProps) {
     setState((current) => {
       if (isRunning === undefined) return current;
 
-      return isRunning ? 'running' : 'idle';
+      if (isRunning) {
+        return 'running';
+      } else {
+        if (current === 'error') {
+          return 'error';
+        } else {
+          return 'idle';
+        }
+      }
     });
   }, [isRunning]);
 

@@ -21,6 +21,7 @@ export default function CommandButton(props: LoadingButtonProps) {
       <Tooltip title={state === 'running' ? runningTooltip : tooltip}>
         <span>
           <LoadingButton
+            color={state === 'error' ? 'error' : 'primary'}
             loading={state === 'running'}
             sx={{
               '&.Mui-disabled': { pointerEvents: 'auto', cursor: 'pointer' },
