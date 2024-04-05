@@ -78,6 +78,7 @@ export function PreloadedBanner() {
                 '&.MuiButton-root': {
                   color: 'text.secondary',
                   border: `1px solid ${theme.palette.text.secondary}`,
+                  '-webkit-app-region': 'no-drag',
                 },
               })}
               onClick={checkAndLoad}
@@ -85,7 +86,7 @@ export function PreloadedBanner() {
               Load
             </Button>
             <IconButton
-              sx={{ ml: 1 }}
+              sx={{ ml: 1, '-webkit-app-region': 'no-drag' }}
               size='small'
               disableRipple
               onClick={clearDesign}
