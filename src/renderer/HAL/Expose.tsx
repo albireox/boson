@@ -329,7 +329,6 @@ export default function Expose() {
 
     setApogeeProgress(<span />);
   }, [actorStages, apogeeStateKw, isRunning, isPaused]);
-  console.log(getCommandString());
 
   return (
     <>
