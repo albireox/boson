@@ -13,7 +13,11 @@ import {
   Radio,
   Typography,
   useTheme,
+  Select,
+  InputLabel,
+  MenuItem
 } from '@mui/material';
+import { dialog} from 'electron';
 import { blue } from '@mui/material/colors';
 import { Stack } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid';
@@ -55,6 +59,11 @@ function AudioMode() {
             label='On'
           />
           <PreferencesFormControlLabel
+            value='custom'
+            control={<Radio />}
+            label='Custom'
+          />
+          <PreferencesFormControlLabel
             value='minimal'
             control={<Radio />}
             label='Minimal'
@@ -73,8 +82,55 @@ function AudioMode() {
   );
 }
 
+function CustomSounds() {
+  
+  const key = 'audio.sounds'
+
+  const [audioSounds, setAudioSounds] = React.useState<object>(
+    window.electron.store.get(key)
+  );
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
+    console.log(event.target.name);
+    audioSounds[event.target.name] = event.target.value;
+    console.log("audioSounds: ", audioSounds)
+    setAudioSounds(audioSounds);
+    window.electron.store.set(key, audioSounds);
+  };
+
+  const soundList = Object.keys(audioSounds).map((sound) => audioSounds[sound]);
+  const soundOptions = soundList.map((option) => {
+      return <MenuItem key= {option + "_option"} value={option}>{option}</MenuItem>;
+    })
+  console.log(Object.keys(audioSounds))
+
+  const soundSelect = Object.keys(audioSounds).map((sound) => 
+    <FormControl fullWidth key={sound +"_form"}>
+    <InputLabel key={sound +"_label"}>{sound}</InputLabel>
+    <Select
+      value={audioSounds[sound]}
+      label={sound +"_select"}
+      name = {sound}
+      key={sound +"_select"}
+      onChange={handleChange}
+    >
+    {soundOptions}
+    </Select>
+    <Box sx={{ my: 1 }} />
+  </FormControl>  
+  );
+  console.log(soundSelect)
+  return (
+    <Stack>
+    {soundSelect}
+    </Stack>
+    );
+}
+
 
 export default function SoundsPane() {
+  const [audioMode, setAudioMode] = useStore<string>('audio.mode');
   return (
     <Pane title='Sounds'>
       <Stack direction='column'>
@@ -83,6 +139,7 @@ export default function SoundsPane() {
             <Stack width='100%' direction='column'>
               <AudioMode />
               <Divider sx={{ my: 4 }} />
+              {audioMode==="custom" ? <CustomSounds /> : <Box />}
             </Stack>
           </Grid>
         </Grid>
@@ -90,5 +147,4 @@ export default function SoundsPane() {
     </Pane>
   );
 }
-
 
