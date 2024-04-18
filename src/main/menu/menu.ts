@@ -1,14 +1,15 @@
 /* eslint-disable import/no-cycle */
 
-import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
+import {
+  app,
+  autoUpdater,
+  BrowserWindow,
+  Menu,
+  MenuItemConstructorOptions,
+} from 'electron';
 import { createWindow } from '../main';
 import { store } from '../store';
-import {
-  checkForUpdates,
-  clearLogs,
-  reloadWindow,
-  saveWindows,
-} from './actions';
+import { clearLogs, reloadWindow, saveWindows } from './actions';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -66,7 +67,7 @@ export default class MenuBuilder {
         },
         {
           label: 'Check for updates ... ',
-          click: checkForUpdates,
+          click: autoUpdater.checkForUpdates,
         },
         { type: 'separator' },
         {

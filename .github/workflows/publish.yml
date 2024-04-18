@@ -19,7 +19,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [macos-14, macos-14-arm64]
 
     steps:
       - name: Checkout git repo
@@ -48,10 +48,10 @@ jobs:
 
       # It seems we need to delete the draft release or often it will fail
       # uploading assets.
-      - name: Delete drafts
-        uses: hugo19941994/delete-draft-releases@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Delete drafts
+      #   uses: hugo19941994/delete-draft-releases@v1.0.0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish
         uses: borales/actions-yarn@v5

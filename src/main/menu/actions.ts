@@ -6,7 +6,6 @@
  */
 
 import { BrowserWindow } from 'electron';
-import { autoUpdater } from 'electron-updater';
 import { store } from '../store';
 import { tron } from '../tron/tron';
 import { WindowParams } from '../types';
@@ -39,9 +38,9 @@ export function saveWindows() {
   store.set('windows.openWindows', openWindowsNames);
 }
 
-export function checkForUpdates() {
-  autoUpdater.checkForUpdates();
-}
+// export function checkForUpdates() {
+//   autoUpdater.checkForUpdates();
+// }
 
 export function clearLogs() {
   // Sends an event to all windows asking them to clear their list of replies.
