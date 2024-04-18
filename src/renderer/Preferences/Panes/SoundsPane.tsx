@@ -84,11 +84,23 @@ function AudioMode() {
 
 function CustomSounds() {
   
-  const key = 'audio.sounds'
+  const assignKey = 'audio.sounds';
+  const listKey = 'audio.user_sounds';
 
   const [audioSounds, setAudioSounds] = React.useState<object>(
-    window.electron.store.get(key)
+    window.electron.store.get(assignKey)
   );
+
+  const[userSoundList, setUserSoundList] = React.useState<object>(
+    window.electron.store.get(listKey) || ['error.wav']
+  );
+  console.log('user_sounds: ', userSoundList)
+  console.log('audio.sounds: ', window.electron.store.get(assignKey))
+  console.log("audioSounds: ", audioSounds)
+
+  const getFiles = React.useCallback(async () => {
+      await window.electron.dialog.listFiles()
+  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
@@ -96,15 +108,27 @@ function CustomSounds() {
     audioSounds[event.target.name] = event.target.value;
     console.log("audioSounds: ", audioSounds)
     setAudioSounds(audioSounds);
-    window.electron.store.set(key, audioSounds);
+    window.electron.store.set(assignKey, audioSounds);
+    getFiles();
   };
 
-  const soundList = Object.keys(audioSounds).map((sound) => audioSounds[sound]);
-  const soundOptions = soundList.map((option) => {
-      return <MenuItem key= {option + "_option"} value={option}>{option}</MenuItem>;
-    })
-  console.log(Object.keys(audioSounds))
+  const [testSound, setTestSound] = React.useState<string>(
+    userSoundList[0] || 'error.wav'
+  );
 
+  console.log("test sound: ", testSound)
+
+  const assignTestSound = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.value);
+    setTestSound(event.target.value);
+
+  };
+
+  const soundOptions = userSoundList.map((option) => {
+      return <MenuItem key= {option + "_option"} value={option}>{option}</MenuItem>;
+    });
+
+  console.log('sound options: ', soundOptions)
   const soundSelect = Object.keys(audioSounds).map((sound) => 
     <FormControl fullWidth key={sound +"_form"}>
     <InputLabel key={sound +"_label"}>{sound}</InputLabel>
@@ -120,9 +144,27 @@ function CustomSounds() {
     <Box sx={{ my: 1 }} />
   </FormControl>  
   );
-  console.log(soundSelect)
+
+  const soundTest =
+    <Stack> 
+    <Select
+      value={userSoundList[0]}
+      label={'Test Sound'}
+      name = {'sound_test'}
+      key={'sound_test'}
+      onChange={assignTestSound}
+    >
+    {soundOptions}
+    </Select>
+    <Button variant="contained" onClick={() => window.electron.tools.playSound(testSound)}>
+    Test Sound
+    </Button>
+    </Stack>
+
   return (
     <Stack>
+    {soundTest}
+    <Divider sx={{ my: 4 }} />
     {soundSelect}
     </Stack>
     );

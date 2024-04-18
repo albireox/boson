@@ -187,4 +187,11 @@ export default function loadEvents() {
       await dialog.showErrorBox(title, content);
     }
   );
+
+  ipcMain.handle(
+    'dialog:list-files',
+    async (event) => {
+      await dialog.showOpenDialog({ properties: ['openFile', 'multiSelections'] })
+    }
+  );
 }

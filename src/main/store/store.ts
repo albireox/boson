@@ -47,8 +47,17 @@ const store = new Store({
           exposure_start: 'woodblock.wav',
           exposure_end: 'bell_soft_long.wav',
         },
-      });
+      })
     },
+    '>=0.4.3': (st) => {
+      st.set('audio.user_sounds', ['bar_long.wav', 'bell_soft_long.wav', 'bell_soft_short.wav', 
+                      'buzz_error_long.wav', 'buzz_error_short.wav', 'chime_long.wav', 
+                      'click.wav', 'cowbell_high.wav', 'cowbell_low.wav', 'error.wav', 
+                      'high_buzz_error.wav', 'hit_long.wav', 'jingle_ bell.wav', 'low_error.wav',
+                      'marimba.wav', 'marimba_sharp.wav', 'synth_error_long.wav',  
+                      'synth_soft_short.wav','synth_string_echo.wav', 'synth_strings_long.wav',
+                      'synth_strings_short.wav','woodblock.wav']
+      )}
   },
 });
 

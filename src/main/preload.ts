@@ -156,6 +156,8 @@ const ElectronAPI = {
       ipcRenderer.invoke('dialog:show-message-box', options),
     showErrorBox: async (title: string, content: string): Promise<void> =>
       ipcRenderer.invoke('dialog:show-error-box', title, content),
+    listFiles: async (): Promise<void> =>
+      ipcRenderer.invoke('dialog:list-files')
   },
 };
 
