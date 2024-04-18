@@ -28,6 +28,7 @@ jobs:
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DEBUG: electron-packager
 
     steps:
       - name: Checkout git repo
@@ -63,10 +64,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish x64
-        run: yarn publish --arch x64
+        run: yarn run electron-forge --verbose publish --arch x64
 
       - name: Publish arm64
-        run: yarn publish --arch arm64
+        run: yarn run electron-forge --verbose publish --arch arm64
 
       - name: Publish universal
-        run: yarn publish --arch universal
+        run: yarn run electron-forge --verbose publish --arch universal
