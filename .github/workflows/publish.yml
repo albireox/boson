@@ -53,7 +53,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Make
+      - name: Publish
         uses: borales/actions-yarn@v5
         env:
           # These values are used for auto updates signing
@@ -63,11 +63,4 @@ jobs:
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          cmd: make --arch arm64,x64,universal
-
-      - name: Publish
-        uses: borales/actions-yarn@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          cmd: publish
+          cmd: publish --arch arm64,x64,universal
