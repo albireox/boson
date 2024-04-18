@@ -9,6 +9,7 @@ import {
   Notification,
   app,
   autoUpdater,
+  dialog,
   nativeTheme,
   shell,
 } from 'electron';
@@ -191,58 +192,39 @@ app
   })
   .catch(console.log);
 
-autoUpdater.on('checking-for-update', () => {
-  console.log('checking now');
+// Auto-updater
+autoUpdater.on('error', (message) => {
+  log.error('There was a problem updating the application');
+  log.error(message);
 });
 
-// // Auto-updater
-// autoUpdater.on('update-available', (info) => {
-//   // For now this can only get triggered if the menu bar
-//   // Check For Updated is used.
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const notification = new Notification({
+    title: 'Update available',
+    body: `Boson ${releaseName} is now available.`,
+    silent: false,
+    actions: [
+      { type: 'button', text: 'Install and Restart' },
+      { type: 'button', text: 'Cancel' },
+    ],
+  });
 
-//   const notification = new Notification({
-//     title: 'Update available',
-//     body: `Boson ${info.version} is now available.`,
-//     silent: false,
-//     actions: [
-//       { type: 'button', text: 'Install and Restart' },
-//       { type: 'button', text: 'Cancel' },
-//     ],
-//   });
+  notification.on('action', (e, i) => {
+    if (i === 0) autoUpdater.quitAndInstall();
+  });
 
-//   notification.on('action', (e, i) => {
-//     if (i === 0) autoUpdater.downloadUpdate();
-//   });
+  notification.show();
 
-//   notification.on('click', () => {
-//     dialog
-//       .showMessageBox({
-//         message: 'Update available',
-//         type: 'question',
-//         detail: 'Do you want to install this update now?',
-//         buttons: ['Yes', 'Not now'],
-//       })
-//       .then((response) => {
-//         if (response.response === 0) {
-//           autoUpdater.downloadUpdate();
-//         }
-//       })
-//       .catch(() => {});
-//   });
+  globalThis.manualUpdateCheckTriggered = false;
+});
 
-//   notifications.push(notification); // To prevent GC from removing it.
-//   notification.show();
-// });
-
-// autoUpdater.on('update-downloaded', () => {
-//   // We only allow a download if we're ready to intall it, so go for it.
-//   autoUpdater.quitAndInstall();
-// });
-
-// autoUpdater.on('update-not-available', () => {
-//   dialog.showMessageBox({
-//     message: 'You are up to date!',
-//     type: 'info',
-//     detail: `Boson ${app.getVersion()} is currently the newest version available.`,
-//   });
-// });
+autoUpdater.on('update-not-available', () => {
+  if (globalThis.manualUpdateCheckTriggered) {
+    dialog.showMessageBox({
+      message: 'You are up to date!',
+      type: 'info',
+      detail: `Boson ${app.getVersion()} is currently the newest version available.`,
+    });
+  }
+  globalThis.manualUpdateCheckTriggered = false;
+});

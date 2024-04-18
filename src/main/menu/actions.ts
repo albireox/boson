@@ -5,7 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, autoUpdater } from 'electron';
 import { store } from '../store';
 import { tron } from '../tron/tron';
 import { WindowParams } from '../types';
@@ -38,9 +38,10 @@ export function saveWindows() {
   store.set('windows.openWindows', openWindowsNames);
 }
 
-// export function checkForUpdates() {
-//   autoUpdater.checkForUpdates();
-// }
+export function checkForUpdates() {
+  globalThis.manualUpdateCheckTriggered = true;
+  autoUpdater.checkForUpdates();
+}
 
 export function clearLogs() {
   // Sends an event to all windows asking them to clear their list of replies.
