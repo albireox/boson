@@ -39,6 +39,9 @@ jobs:
           node-version: 21
           cache: npm
 
+      - name: Install Yarn
+        run: npm install -g yarn
+
       - name: Brew install dependencies
         run: |
           brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
@@ -50,9 +53,7 @@ jobs:
           MACOS_CERT_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
 
       - name: Run install
-        uses: borales/actions-yarn@v5
-        with:
-          cmd: install
+        run: yarn install
 
       # It seems we need to delete the draft release or often it will fail
       # uploading assets.
@@ -62,16 +63,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish x64
-        uses: borales/actions-yarn@v5
-        with:
-          cmd: publish --arch x64
+        run: yarn publish --arch x64
 
       - name: Publish arm64
-        uses: borales/actions-yarn@v5
-        with:
-          cmd: publish --arch arm64
+        run: yarn publish --arch arm64
 
       - name: Publish universal
-        uses: borales/actions-yarn@v5
-        with:
-          cmd: publish --arch universal
+        run: yarn publish --arch universal
