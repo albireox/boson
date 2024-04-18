@@ -19,8 +19,8 @@ const config: ForgeConfig = {
       optionsForFile: () => {
         return {
           // https://github.com/electron-userland/electron-builder/issues/3940#issuecomment-501702531
-          entitlements: 'public/entitlements.mac.plist',
-          entitlementsInherit: 'public/entitlements.mac.plist',
+          entitlements: 'resources/entitlements.mac.plist',
+          entitlementsInherit: 'resources/entitlements.mac.plist',
           hardenedRuntime: true,
         };
       },
