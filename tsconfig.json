@@ -12,6 +12,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "jsx": "react-jsx",
+    "types": ["vite/client"],
     "paths": {
       "main/*": ["./src/main/*"],
       "renderer/*": ["./src/renderer/*"],

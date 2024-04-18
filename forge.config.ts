@@ -14,6 +14,7 @@ const config: ForgeConfig = {
   packagerConfig: {
     icon: 'public/icon',
     asar: true,
+    extraResource: ['resources/sounds'],
     osxSign: {
       optionsForFile: () => {
         return {
