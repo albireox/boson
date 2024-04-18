@@ -2,9 +2,9 @@ name: Package and publish
 
 on:
   workflow_dispatch:
-  # push:
-  #   tags:
-  #     - "*"
+  push:
+    tags:
+      - "*"
 
 env:
   YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -47,12 +47,6 @@ jobs:
         run: |
           brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
 
-      # - name: Add MacOS certs
-      #   run: chmod +x tools/add-macos-cert.sh && ./tools/add-macos-cert.sh
-      #   env:
-      #     MACOS_CERT_P12: ${{ secrets.CSC_LINK }}
-      #     MACOS_CERT_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-
       - name: Import codesign certs
         uses: apple-actions/import-codesign-certs@v2
         with:
@@ -64,10 +58,10 @@ jobs:
 
       # It seems we need to delete the draft release or often it will fail
       # uploading assets.
-      - name: Delete drafts
-        uses: hugo19941994/delete-draft-releases@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Delete drafts
+      #   uses: hugo19941994/delete-draft-releases@v1.0.0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish x64
         run: yarn run electron-forge --verbose publish --arch x64
