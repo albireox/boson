@@ -2,9 +2,9 @@ name: Package and publish
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "*"
+  # push:
+  #   tags:
+  #     - "*"
 
 env:
   YARN_ENABLE_IMMUTABLE_INSTALLS: false
