@@ -52,7 +52,13 @@ const config: ForgeConfig = {
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),
     new MakerDeb({}),
-    new MakerDMG({}, ['darwin']),
+    new MakerDMG(
+      {
+        icon: 'public/icon.icns',
+        background: 'resources/DMGBackground.png',
+      },
+      ['darwin']
+    ),
   ],
   hooks: {
     packageAfterPrune: async (_config, buildPath) => {
