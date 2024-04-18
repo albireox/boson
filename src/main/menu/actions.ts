@@ -5,8 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
-import { BrowserWindow } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { BrowserWindow, autoUpdater } from 'electron';
 import { store } from '../store';
 import { tron } from '../tron/tron';
 import { WindowParams } from '../types';
@@ -40,6 +39,7 @@ export function saveWindows() {
 }
 
 export function checkForUpdates() {
+  globalThis.manualUpdateCheckTriggered = true;
   autoUpdater.checkForUpdates();
 }
 

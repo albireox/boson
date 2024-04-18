@@ -59,7 +59,10 @@ export default function GotoField() {
   }, []);
 
   const getCommandString = React.useCallback(() => {
-    let cmdString = `${commandString} --guider-time ${guiderTime || 15}`;
+    let cmdString = commandString;
+    if (guiderTime.trim() !== '') {
+      cmdString += ` --guider-time ${guiderTime.trim()}`;
+    }
     if (fixedAltAz) {
       cmdString += ' --fixed-altaz';
     }

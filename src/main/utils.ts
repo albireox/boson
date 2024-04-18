@@ -38,7 +38,13 @@ export function playSound(type: string, opts?: PlaySoundOpts) {
 
   if (path.isAbsolute(file)) {
     sound.play(file);
+  } else if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    // development
+    sound.play(path.join(__dirname, '../../', 'resources', 'sounds', file));
   } else {
-    sound.play(path.join(__dirname, 'sounds', file));
+    // production
+    // This requires extraResource: ['resources/sounds'] in the electron-forge
+    // packages config.
+    sound.play(path.join(process.resourcesPath, 'sounds', file));
   }
 }

@@ -14,12 +14,13 @@ const config: ForgeConfig = {
   packagerConfig: {
     icon: 'public/icon',
     asar: true,
+    extraResource: ['resources/sounds'],
     osxSign: {
       optionsForFile: () => {
         return {
           // https://github.com/electron-userland/electron-builder/issues/3940#issuecomment-501702531
-          entitlements: 'public/entitlements.mac.plist',
-          entitlementsInherit: 'public/entitlements.mac.plist',
+          entitlements: 'resources/entitlements.mac.plist',
+          entitlementsInherit: 'resources/entitlements.mac.plist',
           hardenedRuntime: true,
         };
       },
@@ -39,7 +40,8 @@ const config: ForgeConfig = {
           owner: 'albireox',
           name: 'boson',
         },
-        prerelease: true,
+        draft: true,
+        prerelease: false,
         tagPrefix: 'v',
       },
     },
@@ -50,7 +52,13 @@ const config: ForgeConfig = {
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),
     new MakerDeb({}),
-    new MakerDMG({}, ['darwin']),
+    new MakerDMG(
+      {
+        icon: 'public/icon.icns',
+        background: 'resources/DMGBackground.png',
+      },
+      ['darwin']
+    ),
   ],
   hooks: {
     packageAfterPrune: async (_config, buildPath) => {

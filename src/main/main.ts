@@ -8,13 +8,14 @@ import {
   BrowserWindow,
   Notification,
   app,
+  autoUpdater,
   dialog,
   nativeTheme,
   shell,
 } from 'electron';
 import log from 'electron-log';
-import { autoUpdater } from 'electron-updater';
 import path from 'path';
+import { updateElectronApp } from 'update-electron-app';
 import loadEvents from './events';
 import MenuBuilder from './menu/menu';
 import { config, store } from './store';
@@ -25,19 +26,7 @@ import { resolveHtmlPath } from './utils';
 log.transports.file.maxSize = 0;
 
 // Set up auto-updater
-class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-    autoUpdater.allowDowngrade = false;
-    autoUpdater.autoDownload = false;
-
-    // GitHub does not allow channels. We use preRelease instead (this means
-    // we only have two channels, stable and pre-release).
-    autoUpdater.allowPrerelease = store.get('updateChannel') !== 'stable';
-    autoUpdater.channel = 'latest';
-  }
-}
+updateElectronApp({ updateInterval: '10 minutes', logger: log });
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -165,7 +154,6 @@ export async function createWindow(windowName: WindowNames) {
     menuBuilder.buildMenu();
 
     loadEvents();
-    new AppUpdater();
   }
 
   // Open urls in the user's browser
@@ -205,13 +193,15 @@ app
   .catch(console.log);
 
 // Auto-updater
-autoUpdater.on('update-available', (info) => {
-  // For now this can only get triggered if the menu bar
-  // Check For Updated is used.
+autoUpdater.on('error', (message) => {
+  log.error('There was a problem updating the application');
+  log.error(message);
+});
 
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
   const notification = new Notification({
     title: 'Update available',
-    body: `Boson ${info.version} is now available.`,
+    body: `Boson ${releaseName} is now available.`,
     silent: false,
     actions: [
       { type: 'button', text: 'Install and Restart' },
@@ -220,38 +210,21 @@ autoUpdater.on('update-available', (info) => {
   });
 
   notification.on('action', (e, i) => {
-    if (i === 0) autoUpdater.downloadUpdate();
+    if (i === 0) autoUpdater.quitAndInstall();
   });
 
-  notification.on('click', () => {
-    dialog
-      .showMessageBox({
-        message: 'Update available',
-        type: 'question',
-        detail: 'Do you want to install this update now?',
-        buttons: ['Yes', 'Not now'],
-      })
-      .then((response) => {
-        if (response.response === 0) {
-          autoUpdater.downloadUpdate();
-        }
-      })
-      .catch(() => {});
-  });
-
-  notifications.push(notification); // To prevent GC from removing it.
   notification.show();
-});
 
-autoUpdater.on('update-downloaded', () => {
-  // We only allow a download if we're ready to intall it, so go for it.
-  autoUpdater.quitAndInstall();
+  globalThis.manualUpdateCheckTriggered = false;
 });
 
 autoUpdater.on('update-not-available', () => {
-  dialog.showMessageBox({
-    message: 'You are up to date!',
-    type: 'info',
-    detail: `Boson ${app.getVersion()} is currently the newest version available.`,
-  });
+  if (globalThis.manualUpdateCheckTriggered) {
+    dialog.showMessageBox({
+      message: 'You are up to date!',
+      type: 'info',
+      detail: `Boson ${app.getVersion()} is currently the newest version available.`,
+    });
+  }
+  globalThis.manualUpdateCheckTriggered = false;
 });
