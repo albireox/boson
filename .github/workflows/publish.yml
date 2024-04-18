@@ -19,7 +19,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-14, macos-14-arm64]
+        os: [macos-latest]
 
     steps:
       - name: Checkout git repo
@@ -48,12 +48,12 @@ jobs:
 
       # It seems we need to delete the draft release or often it will fail
       # uploading assets.
-      # - name: Delete drafts
-      #   uses: hugo19941994/delete-draft-releases@v1.0.0
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete drafts
+        uses: hugo19941994/delete-draft-releases@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish
+      - name: Make
         uses: borales/actions-yarn@v5
         env:
           # These values are used for auto updates signing
@@ -61,6 +61,13 @@ jobs:
           APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          cmd: make --arch arm64,x64,universal
+
+      - name: Publish
+        uses: borales/actions-yarn@v5
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           cmd: publish
