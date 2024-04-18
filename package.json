@@ -4,7 +4,7 @@
     "name": "José Sánchez-Gallego",
     "email": "gallegoj@uw.edu"
   },
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "SDSS observer graphical user interface",
   "repository": "github:albireox/boson",
   "homepage": "https://github.com/albireox/boson",
