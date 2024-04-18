@@ -21,6 +21,14 @@ jobs:
       matrix:
         os: [macos-latest]
 
+    env:
+      # These values are used for auto updates signing
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASSWORD }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout git repo
         uses: actions/checkout@v4
@@ -53,14 +61,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish
+      - name: Publish x64
         uses: borales/actions-yarn@v5
-        env:
-          # These values are used for auto updates signing
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          cmd: publish --arch arm64,x64,universal
+          cmd: publish --arch x64
+
+      - name: Publish arm64
+        uses: borales/actions-yarn@v5
+        with:
+          cmd: publish --arch arm64
+
+      - name: Publish universal
+        uses: borales/actions-yarn@v5
+        with:
+          cmd: publish --arch universal
