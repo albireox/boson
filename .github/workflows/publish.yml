@@ -48,7 +48,7 @@ jobs:
           brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
 
       - name: Import codesign certs
-        uses: slidoapp/import-codesign-certs@node20k
+        uses: slidoapp/import-codesign-certs@node20
         with:
           p12-file-base64: ${{ secrets.CSC_LINK }}
           p12-password: ${{ secrets.CSC_KEY_PASSWORD }}
