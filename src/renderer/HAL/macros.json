@@ -26,7 +26,7 @@
       "boss_flat": "Flat"
     },
     "defaults": {
-      "guider_time": 15.0
+      "guider_time": ""
     }
   },
   "apogee_dome_flat": {
