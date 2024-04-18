@@ -28,7 +28,7 @@ jobs:
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      DEBUG: electron-packager
+      DEBUG: electron-packager,electron-osx-sign*
 
     steps:
       - name: Checkout git repo
