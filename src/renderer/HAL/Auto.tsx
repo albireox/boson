@@ -5,6 +5,7 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { Collapse, Paper, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import IOSSwitch from 'renderer/Components/IOSwitch';
@@ -100,9 +101,12 @@ export default function AutoMode() {
     <>
       <Paper variant='outlined'>
         <Stack alignItems='center' direction='row' p={1.5} px={2} spacing={2.5}>
-          <Typography variant='h6' whiteSpace='nowrap'>
-            Auto Mode
-          </Typography>
+          <Stack alignItems='center' direction='row' spacing={1}>
+            <AirplanemodeActiveIcon />
+            <Typography variant='h6' whiteSpace='nowrap'>
+              Auto Pilot
+            </Typography>
+          </Stack>
           <Typography
             flexGrow={1}
             mx={3}
