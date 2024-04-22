@@ -23,7 +23,9 @@ export interface PlaySoundOpts {
 export function playSound(type: string, opts?: PlaySoundOpts) {
   const { overrideMode = false } = opts || {};
 
-  const file = store.get(`audio.sounds.${type}`, null);
+  const soundList = store.get('audio.user_sounds', null);
+
+  const file = soundList.includes(type) ? type: store.get(`audio.sounds.${type}`, null);
   if (!file) return;
 
   const mode: string = store.get('audio.mode');

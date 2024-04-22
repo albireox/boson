@@ -15,10 +15,12 @@ import {
   useTheme,
   Select,
   InputLabel,
-  MenuItem
+  MenuItem,
+  IconButton,
+  Tooltip,
+  alpha,
 } from '@mui/material';
 import { dialog} from 'electron';
-import { blue } from '@mui/material/colors';
 import { Stack } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid';
 import React from 'react';
@@ -33,6 +35,8 @@ import {
   TypographyDescription,
   TypographyTitle,
 } from '../Components/TypographyTitle';
+import PlayIcon from '@mui/icons-material/PlayCircleFilledTwoTone';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 
 function AudioMode() {
@@ -49,7 +53,7 @@ function AudioMode() {
   return (
     <Stack>
       <Typography variant='button' color='text.secondary' fontSize='13px'>
-        Sounds
+        Sound Mode
       </Typography>
       <FormControl sx={{ paddingTop: 1 }}>
         <PreferencesRadioGroup value={audioMode} onChange={handleChange}>
@@ -99,7 +103,12 @@ function CustomSounds() {
   console.log("audioSounds: ", audioSounds)
 
   const getFiles = React.useCallback(async () => {
-      await window.electron.dialog.listFiles()
+    await window.electron.dialog.listFiles().then(result => {
+      for (const file of result.filePaths) {
+        console.log(file);
+        console.log()
+      }
+    })
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +118,6 @@ function CustomSounds() {
     console.log("audioSounds: ", audioSounds)
     setAudioSounds(audioSounds);
     window.electron.store.set(assignKey, audioSounds);
-    getFiles();
   };
 
   const [testSound, setTestSound] = React.useState<string>(
@@ -123,6 +131,11 @@ function CustomSounds() {
     setTestSound(event.target.value);
 
   };
+
+  // const uploadSounds = () => {
+  //   const files = await getFiles;
+  //   console.log(files);
+  // }
 
   const soundOptions = userSoundList.map((option) => {
       return <MenuItem key= {option + "_option"} value={option}>{option}</MenuItem>;
@@ -146,25 +159,69 @@ function CustomSounds() {
   );
 
   const soundTest =
-    <Stack> 
+    <Grid>
+    <Tooltip title='Import'>
+      <IconButton
+        sx={(theme) => ({
+          color: theme.palette.text.primary,
+          border: `1px solid ${theme.palette.text.primary}`,
+          mx: '8px',
+          '&:hover': {
+            color: theme.palette.action.active,
+            border: `1px solid ${theme.palette.action.active}`,
+            backgroundColor: alpha(theme.palette.action.active, 0.1),
+          },
+        })}
+        color='primary'
+        component='label'
+        onClick={() => getFiles()}
+      >
+        <UploadFileIcon  fontSize='large' />
+      </IconButton>
+    </Tooltip> 
     <Select
-      value={userSoundList[0]}
+      value={testSound}
       label={'Test Sound'}
       name = {'sound_test'}
       key={'sound_test'}
       onChange={assignTestSound}
+      sx= {{ ml: 8}}
     >
     {soundOptions}
     </Select>
-    <Button variant="contained" onClick={() => window.electron.tools.playSound(testSound)}>
-    Test Sound
-    </Button>
-    </Stack>
+    <Tooltip title='Play'>
+      <IconButton
+        sx={(theme) => ({
+          color: theme.palette.text.success,
+          border: `1px solid ${theme.palette.text.success}`,
+          mx: '8px',
+          '&:hover': {
+            color: theme.palette.action.active,
+            border: `1px solid ${theme.palette.action.active}`,
+            backgroundColor: alpha(theme.palette.action.active, 0.1),
+          },
+        })}
+        color='success'
+        component='label'
+        onClick={() =>
+          window.electron.tools.playSound(testSound)
+        }
+      >
+        <PlayIcon fontSize='large' />
+      </IconButton>
+    </Tooltip>
+    </Grid>
 
   return (
     <Stack>
+    <Typography variant='button' color='text.secondary' fontSize='13px' sx={{ mb: 4 }}>
+        Import Sounds
+    </Typography>
     {soundTest}
     <Divider sx={{ my: 4 }} />
+    <Typography variant='button' color='text.secondary' fontSize='13px' sx={{ mb: 4 }}>
+        Assign Custom Sounds
+    </Typography>
     {soundSelect}
     </Stack>
     );
