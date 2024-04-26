@@ -25,6 +25,9 @@ import connectAndAuthorise from './tron/tools';
 import { tron } from './tron/tron';
 import { CommandStatus } from './tron/types';
 import { playSound } from './utils';
+const fs = require("fs");
+const os = require('os');
+
 
 export default function loadEvents() {
   // app events
@@ -160,12 +163,25 @@ export default function loadEvents() {
       return stdout;
     }
   );
+
   ipcMain.handle('tools:open-in-browser', async (event, path: string) =>
     shell.openExternal(path)
   );
+
   ipcMain.handle('tools:play-sound', async (event, type: string) => {
     console.log('playing: ', type)
     playSound(type);
+  });
+
+  ipcMain.handle('tools:create-local-copy', async (event, path: string, name: string) => {
+    try { 
+      const localPath = os.tmpdir() + '/' + name;
+      fs.copyFileSync(path, localPath, fs.constants.COPYFILE_EXCL);
+      return localPath;
+    } catch (error) { 
+      console.log('error creating copy of sound file: ' + error); 
+      return false;
+    }
   });
 
   // Dialogs
@@ -186,7 +202,10 @@ export default function loadEvents() {
   ipcMain.handle(
     'dialog:list-files',
     async (event) => {
-      const selection = await dialog.showOpenDialog({ properties: ['openFile', 'multiSelections'] })
+      const selection = await dialog.showOpenDialog({ 
+        properties: ['openFile', 'multiSelections'],
+        filters: [{ name: 'Sounds', extensions: ['wav', 'mp3']}]
+})
       return selection;
     }
   );

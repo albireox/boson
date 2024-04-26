@@ -148,6 +148,9 @@ const ElectronAPI = {
     playSound: (type: string) => {
       return ipcRenderer.invoke('tools:play-sound', type);
     },
+    createLocalCopy: (path: string, name: string) => {
+      return ipcRenderer.invoke('tools:create-local-copy', path, name);
+    }
   },
   dialog: {
     showMessageBox: async (

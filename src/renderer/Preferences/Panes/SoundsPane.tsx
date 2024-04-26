@@ -95,28 +95,46 @@ function CustomSounds() {
     window.electron.store.get(assignKey)
   );
 
-  const[userSoundList, setUserSoundList] = React.useState<object>(
+  const[userSoundList, setUserSoundList] = React.useState<array<string>>(
     window.electron.store.get(listKey) || ['error.wav']
   );
-  console.log('user_sounds: ', userSoundList)
-  console.log('audio.sounds: ', window.electron.store.get(assignKey))
-  console.log("audioSounds: ", audioSounds)
+
+  const soundNames = userSoundList.map((sound) => {
+    const soundMatch = sound.match(/[\w\-. ]+\.([0-9a-z]+)(?:[\?#]|$)/);
+    if (soundMatch) {
+      return soundMatch[0];
+    } else {
+      return sound;
+    }
+    })
 
   const getFiles = React.useCallback(async () => {
-    await window.electron.dialog.listFiles().then(result => {
+    await window.electron.dialog.listFiles().then(async (result) => {
+      let addFiles = [];
       for (const file of result.filePaths) {
-        console.log(file);
-        console.log()
+        const fileName = file.match(/[\w\-. ]+\.([0-9a-z]+)(?:[\?#]|$)/)
+        if (soundNames.includes(fileName[0])) {
+          await window.electron.dialog.showErrorBox('File Already Exists', fileName[0] + ' is already in the sound list')
+        } else {
+          await window.electron.tools.createLocalCopy(file,fileName[0]).then(result => {
+            setUserSoundList(userSoundList => ([...userSoundList,
+              result]))
+            userSoundList.push(result);
+            window.electron.store.set(listKey, userSoundList)
+        })
+          
+                 
+        }
       }
     })
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
-    console.log(event.target.name);
-    audioSounds[event.target.name] = event.target.value;
-    console.log("audioSounds: ", audioSounds)
-    setAudioSounds(audioSounds);
+    const updatedValue = {[event.target.name]:event.target.value};
+    setAudioSounds(audioSounds => ({
+      ...audioSounds,
+      ...updatedValue
+    }));
     window.electron.store.set(assignKey, audioSounds);
   };
 
@@ -124,24 +142,16 @@ function CustomSounds() {
     userSoundList[0] || 'error.wav'
   );
 
-  console.log("test sound: ", testSound)
-
   const assignTestSound = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setTestSound(event.target.value);
-
   };
 
-  // const uploadSounds = () => {
-  //   const files = await getFiles;
-  //   console.log(files);
-  // }
-
   const soundOptions = userSoundList.map((option) => {
-      return <MenuItem key= {option + "_option"} value={option}>{option}</MenuItem>;
+      return <MenuItem key= {option + "_option"} value={option}>
+      {option.startsWith('/') ? option.match(/[\w\-. ]+\.([0-9a-z]+)(?:[\?#]|$)/)[0]: option}
+      </MenuItem>;
     });
 
-  console.log('sound options: ', soundOptions)
   const soundSelect = Object.keys(audioSounds).map((sound) => 
     <FormControl fullWidth key={sound +"_form"}>
     <InputLabel key={sound +"_label"}>{sound}</InputLabel>
