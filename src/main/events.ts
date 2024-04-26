@@ -189,9 +189,7 @@ export default function loadEvents() {
       if (sound.startsWith('/')){
         try {
           fs.statSync(sound);
-          console.log("File exists.");
         } catch (e) {
-          console.log("File does not exist.");
           toRemove.push(sound);
         }
       }
