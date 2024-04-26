@@ -150,6 +150,9 @@ const ElectronAPI = {
     },
     createLocalCopy: (path: string, name: string) => {
       return ipcRenderer.invoke('tools:create-local-copy', path, name);
+    },
+    verifySoundList:() => {
+      return ipcRenderer.invoke('tools:verify-sound-list');
     }
   },
   dialog: {

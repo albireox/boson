@@ -37,6 +37,7 @@ import {
 } from '../Components/TypographyTitle';
 import PlayIcon from '@mui/icons-material/PlayCircleFilledTwoTone';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import UpdateIcon from '@mui/icons-material/Update';
 
 
 function AudioMode() {
@@ -99,6 +100,7 @@ function CustomSounds() {
     window.electron.store.get(listKey) || ['error.wav']
   );
 
+  // create a list of user sounds without paths
   const soundNames = userSoundList.map((sound) => {
     const soundMatch = sound.match(/[\w\-. ]+\.([0-9a-z]+)(?:[\?#]|$)/);
     if (soundMatch) {
@@ -108,6 +110,7 @@ function CustomSounds() {
     }
     })
 
+  // open dialog and allow user upload of files, add non-existing files to audio.usersoundlist
   const getFiles = React.useCallback(async () => {
     await window.electron.dialog.listFiles().then(async (result) => {
       let addFiles = [];
@@ -129,6 +132,16 @@ function CustomSounds() {
     })
   });
 
+  // iterate userSoundList and verify that temp audio file exists
+  // if the path does not exist, remove from sound list
+  const updateSoundList = (async () => {
+    await window.electron.tools.verifySoundList().then((result) => {
+      setUserSoundList(result);
+      window.electron.store.set(listKey, result);
+    })
+  });
+
+  // update program sounds with new dropdown selection
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updatedValue = {[event.target.name]:event.target.value};
     setAudioSounds(audioSounds => ({
@@ -142,6 +155,7 @@ function CustomSounds() {
     userSoundList[0] || 'error.wav'
   );
 
+  // select sound to be played by "play" button
   const assignTestSound = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTestSound(event.target.value);
   };
@@ -169,13 +183,13 @@ function CustomSounds() {
   );
 
   const soundTest =
-    <Grid>
-    <Tooltip title='Import'>
+    <Stack direction = "row" justifyContent = "space-between">
+    <Tooltip title='Import new sounds'>
       <IconButton
         sx={(theme) => ({
           color: theme.palette.text.primary,
           border: `1px solid ${theme.palette.text.primary}`,
-          mx: '8px',
+          mx: '4px',
           '&:hover': {
             color: theme.palette.action.active,
             border: `1px solid ${theme.palette.action.active}`,
@@ -188,23 +202,26 @@ function CustomSounds() {
       >
         <UploadFileIcon  fontSize='large' />
       </IconButton>
-    </Tooltip> 
+    </Tooltip>
+    <Stack direction = "row" justifyContent="center">
+    <Tooltip title='Test sounds'>
     <Select
       value={testSound}
       label={'Test Sound'}
       name = {'sound_test'}
       key={'sound_test'}
       onChange={assignTestSound}
-      sx= {{ ml: 8}}
+      sx= {{ ml: 4}}
     >
     {soundOptions}
     </Select>
+    </Tooltip>
     <Tooltip title='Play'>
       <IconButton
         sx={(theme) => ({
           color: theme.palette.text.success,
           border: `1px solid ${theme.palette.text.success}`,
-          mx: '8px',
+          mx: '4px',
           '&:hover': {
             color: theme.palette.action.active,
             border: `1px solid ${theme.palette.action.active}`,
@@ -220,7 +237,30 @@ function CustomSounds() {
         <PlayIcon fontSize='large' />
       </IconButton>
     </Tooltip>
-    </Grid>
+    </Stack>
+    <Stack direction = "row" justifyContent="flex-end">
+    <Tooltip title='Remove missing sounds'>
+      <IconButton
+        sx={(theme) => ({
+          color: theme.palette.text.primary,
+          border: `1px solid ${theme.palette.text.primary}`,
+          mx: '8px',
+          float: 'right',
+          '&:hover': {
+            color: theme.palette.action.active,
+            border: `1px solid ${theme.palette.action.active}`,
+            backgroundColor: alpha(theme.palette.action.active, 0.1),
+          },
+        })}
+        color='primary'
+        component='label'
+        onClick={() => updateSoundList()}
+      >
+        <UpdateIcon  fontSize='large' />
+      </IconButton>
+    </Tooltip>
+    </Stack>
+    </Stack>
 
   return (
     <Stack>

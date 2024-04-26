@@ -169,7 +169,6 @@ export default function loadEvents() {
   );
 
   ipcMain.handle('tools:play-sound', async (event, type: string) => {
-    console.log('playing: ', type)
     playSound(type);
   });
 
@@ -179,10 +178,28 @@ export default function loadEvents() {
       fs.copyFileSync(path, localPath, fs.constants.COPYFILE_EXCL);
       return localPath;
     } catch (error) { 
-      console.log('error creating copy of sound file: ' + error); 
       return false;
     }
   });
+
+  ipcMain.handle('tools:verify-sound-list', async (event) => {
+    const soundList = store.get('audio.user_sounds');
+    let toRemove = [];
+    for ( const sound of soundList) {
+      if (sound.startsWith('/')){
+        try {
+          fs.statSync(sound);
+          console.log("File exists.");
+        } catch (e) {
+          console.log("File does not exist.");
+          toRemove.push(sound);
+        }
+      }
+    }
+    const newSoundList = soundList.filter( ( missing ) => !toRemove.includes( missing ) );
+    return newSoundList;
+
+  })
 
   // Dialogs
   ipcMain.handle(

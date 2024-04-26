@@ -57,6 +57,21 @@ const store = new Store({
                       'marimba.wav', 'marimba_sharp.wav', 'synth_error_long.wav',  
                       'synth_soft_short.wav','synth_string_echo.wav', 'synth_strings_long.wav',
                       'synth_strings_short.wav','woodblock.wav']
+      )},
+      '>=0.4.6': (st) => {
+      st.set('audio.user_sounds', ['bar_long.wav', 'bell_soft_long.wav', 'bell_soft_short.wav', 
+                      'buzz_error_long.wav', 'buzz_error_short.wav', 'chime_long.wav', 
+                      'click.wav', 'cowbell_high.wav', 'cowbell_low.wav', 'error.wav', 
+                      'high_buzz_error.wav', 'hit_long.wav', 'jingle_ bell.wav', 'low_error.wav',
+                      'marimba.wav', 'marimba_sharp.wav', 'synth_error_long.wav',  
+                      'synth_soft_short.wav','synth_string_echo.wav', 'synth_strings_long.wav',
+                      'synth_strings_short.wav','woodblock.wav', 'STUI_AxisHalt.wav',
+                      'STUI_AxisSlew.wav','STUI_AxisTrack.wav','STUI_CommandDone.wav',
+                      'STUI_CommandFailed.wav','STUI_CriticalAlert.wav','STUI_ExposureBegins.wav',
+                      'STUI_ExposureEnds.wav','STUI_FiducialCrossing.wav','STUI_Glass.wav',
+                      'STUI_GuidingBegins.wav','STUI_GuidingEnds.wav','STUI_GuidingFailed.wav',
+                      'STUI_LogHighlightedText.wav','STUI_MessageReceived.wav','STUI_NoGuideStar.wav',
+                      'STUI_SeriousAlert.wav','STUI_Silence.wav']
       )}
   },
 });
