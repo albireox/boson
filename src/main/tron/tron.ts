@@ -388,7 +388,7 @@ export class TronConnection {
         (reply.sender === 'apogee' &&
           /\S+\s\d+\s\S+\s\S\sexposureState=done/.test(reply.rawLine)) ||
         (reply.sender === 'boss' &&
-          /\S+\s\d+\s\S+\s\S\stext="writing BOSS FITS files/.test(
+          /\S+\s\d+\s\S+\s\S\stext="Readout complete/.test(
             reply.rawLine
           )) ||
         (reply.sender === 'yao' &&
