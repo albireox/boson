@@ -125,8 +125,8 @@ function CustomSounds() {
             }
             setUserSoundList(userSoundList => ([...userSoundList,
               result]))
-            userSoundList.push(result);
-            window.electron.store.set(listKey, userSoundList)
+            window.electron.store.set(listKey, [...userSoundList,
+              result])
         })
           
                  
@@ -147,11 +147,12 @@ function CustomSounds() {
   // update program sounds with new dropdown selection
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updatedValue = {[event.target.name]:event.target.value};
+    console.log(event.target.name, event.target.value)
     setAudioSounds(audioSounds => ({
       ...audioSounds,
       ...updatedValue
     }));
-    window.electron.store.set(assignKey, audioSounds);
+    window.electron.store.set(assignKey, {...audioSounds,...updatedValue});
   };
 
   const [testSound, setTestSound] = React.useState<string>(
