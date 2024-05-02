@@ -120,6 +120,9 @@ function CustomSounds() {
           await window.electron.dialog.showErrorBox('File Already Exists', fileName[0] + ' is already in the sound list')
         } else {
           await window.electron.tools.createLocalCopy(file,fileName[0]).then(result => {
+            if(!result) {
+              return
+            }
             setUserSoundList(userSoundList => ([...userSoundList,
               result]))
             userSoundList.push(result);

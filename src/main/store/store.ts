@@ -58,7 +58,7 @@ const store = new Store({
                       'synth_soft_short.wav','synth_string_echo.wav', 'synth_strings_long.wav',
                       'synth_strings_short.wav','woodblock.wav']
       )},
-      '>=0.4.6': (st) => {
+      '>=0.4.5': (st) => {
       st.set('audio.user_sounds', ['bar_long.wav', 'bell_soft_long.wav', 'bell_soft_short.wav', 
                       'buzz_error_long.wav', 'buzz_error_short.wav', 'chime_long.wav', 
                       'click.wav', 'cowbell_high.wav', 'cowbell_low.wav', 'error.wav', 

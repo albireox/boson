@@ -173,11 +173,14 @@ export default function loadEvents() {
   });
 
   ipcMain.handle('tools:create-local-copy', async (event, path: string, name: string) => {
-    try { 
-      const localPath = os.tmpdir() + '/' + name;
-      fs.copyFileSync(path, localPath, fs.constants.COPYFILE_EXCL);
-      return localPath;
-    } catch (error) { 
+    try{
+      const localPath = os.homedir() + '/.config/sdss/boson/sounds/';
+      fs.mkdir(localPath, { recursive: true }, (err) => {
+      if (err) throw err;
+      });
+      fs.copyFileSync(path, localPath + name, fs.constants.COPYFILE_EXCL);
+      return localPath + name;
+    } catch {
       return false;
     }
   });
