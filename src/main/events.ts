@@ -24,6 +24,10 @@ import { config, store, subscriptions as storeSubscriptions } from './store';
 import connectAndAuthorise from './tron/tools';
 import { tron } from './tron/tron';
 import { CommandStatus } from './tron/types';
+import { playSound } from './utils';
+const fs = require("fs");
+const os = require('os');
+
 
 export default function loadEvents() {
   // app events
@@ -159,19 +163,44 @@ export default function loadEvents() {
       return stdout;
     }
   );
+
   ipcMain.handle('tools:open-in-browser', async (event, path: string) =>
     shell.openExternal(path)
   );
-  ipcMain.handle('tools:play-sound', async (event, type: string) => {
-    const file = store.get(`sounds.${type}`, null);
-    if (!file) return;
 
-    if (path.isAbsolute(file)) {
-      sound.play(file);
-    } else {
-      sound.play('/sounds', file);
+  ipcMain.handle('tools:play-sound', async (event, type: string) => {
+    playSound(type);
+  });
+
+  ipcMain.handle('tools:create-local-copy', async (event, path: string, name: string) => {
+    try{
+      const localPath = os.homedir() + '/.config/sdss/boson/sounds/';
+      fs.mkdir(localPath, { recursive: true }, (err) => {
+      if (err) throw err;
+      });
+      fs.copyFileSync(path, localPath + name, fs.constants.COPYFILE_EXCL);
+      return localPath + name;
+    } catch {
+      return false;
     }
   });
+
+  ipcMain.handle('tools:verify-sound-list', async (event) => {
+    const soundList = store.get('audio.user_sounds');
+    let toRemove = [];
+    for ( const sound of soundList) {
+      if (sound.startsWith('/')){
+        try {
+          fs.statSync(sound);
+        } catch (e) {
+          toRemove.push(sound);
+        }
+      }
+    }
+    const newSoundList = soundList.filter( ( missing ) => !toRemove.includes( missing ) );
+    return newSoundList;
+
+  })
 
   // Dialogs
   ipcMain.handle(
@@ -185,6 +214,17 @@ export default function loadEvents() {
     'dialog:show-error-box',
     async (event, title: string, content: string) => {
       await dialog.showErrorBox(title, content);
+    }
+  );
+
+  ipcMain.handle(
+    'dialog:list-files',
+    async (event) => {
+      const selection = await dialog.showOpenDialog({ 
+        properties: ['openFile', 'multiSelections'],
+        filters: [{ name: 'Sounds', extensions: ['wav', 'mp3']}]
+})
+      return selection;
     }
   );
 }

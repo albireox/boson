@@ -23,7 +23,9 @@ export interface PlaySoundOpts {
 export function playSound(type: string, opts?: PlaySoundOpts) {
   const { overrideMode = false } = opts || {};
 
-  const file = store.get(`audio.sounds.${type}`, null);
+  const soundList = store.get('audio.user_sounds', null);
+  // return the file name if it is in the user_sounds list, otherwise get the associated filename for the sound type
+  const file = soundList.includes(type) ? type: store.get(`audio.sounds.${type}`, null);
   if (!file) return;
 
   const mode: string = store.get('audio.mode');
@@ -35,7 +37,7 @@ export function playSound(type: string, opts?: PlaySoundOpts) {
     if (mode === 'off') return;
     if (mode === 'minimal' && !minimals.includes(type)) return;
   }
-
+  
   if (path.isAbsolute(file)) {
     sound.play(file);
   } else if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {

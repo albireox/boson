@@ -148,6 +148,12 @@ const ElectronAPI = {
     playSound: (type: string) => {
       return ipcRenderer.invoke('tools:play-sound', type);
     },
+    createLocalCopy: (path: string, name: string) => {
+      return ipcRenderer.invoke('tools:create-local-copy', path, name);
+    },
+    verifySoundList:() => {
+      return ipcRenderer.invoke('tools:verify-sound-list');
+    }
   },
   dialog: {
     showMessageBox: async (
@@ -156,6 +162,8 @@ const ElectronAPI = {
       ipcRenderer.invoke('dialog:show-message-box', options),
     showErrorBox: async (title: string, content: string): Promise<void> =>
       ipcRenderer.invoke('dialog:show-error-box', title, content),
+    listFiles: async (): Promise<void> =>
+      ipcRenderer.invoke('dialog:list-files')
   },
 };
 
