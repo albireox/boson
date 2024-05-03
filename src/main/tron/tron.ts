@@ -357,6 +357,7 @@ export class TronConnection {
 
       // Parse messages and play sounds.
       if (/\S+\s\d+\s\S+\s[f!]/.test(reply.rawLine)) {
+        console.log(reply.rawLine);
         playSound('error');
       } else if (/alert=\S+/.test(reply.rawLine)) {
         playSound('error_serious');
@@ -388,9 +389,7 @@ export class TronConnection {
         (reply.sender === 'apogee' &&
           /\S+\s\d+\s\S+\s\S\sexposureState=done/.test(reply.rawLine)) ||
         (reply.sender === 'boss' &&
-          /\S+\s\d+\s\S+\s\S\stext="Readout complete/.test(
-            reply.rawLine
-          )) ||
+          /\S+\s\d+\s\S+\s\S\stext="Readout complete/.test(reply.rawLine)) ||
         (reply.sender === 'yao' &&
           /\S+\s\d+\s\S+\s\S\sfilenames=/.test(reply.rawLine))
       ) {
@@ -490,6 +489,7 @@ export class TronConnection {
     this.keywordListeners.set(sender, current);
 
     const untracked: string[] = [];
+    const observatory: string = store.get('connection.observatory') ?? 'APO';
 
     keywords.forEach((key, idx) => {
       const trackedKeyword = this.trackedKeywords.get(key);
@@ -508,6 +508,14 @@ export class TronConnection {
         const actorKeys = untracked
           .filter((kw) => kw.startsWith(actor))
           .map((kw) => kw.split('.')[1]);
+
+        // HACK: quick fix to avoid error sound when connecting to an
+        // observatory without the specific actor.
+        if (actor === 'yao' && observatory === 'APO') {
+          return true;
+        } else if (actor === 'boss' && observatory === 'LCO') {
+          return true;
+        }
 
         this.sendCommand(`keys getFor=${actor} ${actorKeys.join(' ')}`, true)
           .awaitUntilDone()
