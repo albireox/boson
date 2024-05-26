@@ -5,40 +5,30 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+import PlayIcon from '@mui/icons-material/PlayCircleFilledTwoTone';
+import UpdateIcon from '@mui/icons-material/Update';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import {
   Box,
-  Button,
   Divider,
   FormControl,
-  Radio,
-  Typography,
-  useTheme,
-  Select,
+  IconButton,
   InputLabel,
   MenuItem,
-  IconButton,
+  Radio,
+  Select,
   Tooltip,
+  Typography,
   alpha,
 } from '@mui/material';
-import { dialog} from 'electron';
 import { Stack } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid';
 import React from 'react';
-import { ColorModeValues } from 'renderer/App';
 import { useStore } from 'renderer/hooks';
 import BooleanOption from '../Components/BooleanOption';
 import Pane from '../Components/Pane';
 import PreferencesFormControlLabel from '../Components/PreferencesFormControlLabel';
 import PreferencesRadioGroup from '../Components/PreferencesRadioGroup';
-import Switch from '../Components/Switch';
-import {
-  TypographyDescription,
-  TypographyTitle,
-} from '../Components/TypographyTitle';
-import PlayIcon from '@mui/icons-material/PlayCircleFilledTwoTone';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import UpdateIcon from '@mui/icons-material/Update';
-
 
 function AudioMode() {
   const key = 'audio.mode';
@@ -88,7 +78,6 @@ function AudioMode() {
 }
 
 function CustomSounds() {
-  
   const assignKey = 'audio.sounds';
   const listKey = 'audio.user_sounds';
 
@@ -96,7 +85,7 @@ function CustomSounds() {
     window.electron.store.get(assignKey)
   );
 
-  const[userSoundList, setUserSoundList] = React.useState<array<string>>(
+  const [userSoundList, setUserSoundList] = React.useState<array<string>>(
     window.electron.store.get(listKey) || ['error.wav']
   );
 
@@ -108,51 +97,51 @@ function CustomSounds() {
     } else {
       return sound;
     }
-    })
+  });
 
   // open dialog and allow user upload of files, add non-existing files to audio.usersoundlist
   const getFiles = React.useCallback(async () => {
     await window.electron.dialog.listFiles().then(async (result) => {
       let addFiles = [];
       for (const file of result.filePaths) {
-        const fileName = file.match(/[\w\-. ]+\.([0-9a-z]+)(?:[\?#]|$)/)
+        const fileName = file.match(/[\w\-. ]+\.([0-9a-z]+)(?:[\?#]|$)/);
         if (soundNames.includes(fileName[0])) {
-          await window.electron.dialog.showErrorBox('File Already Exists', fileName[0] + ' is already in the sound list')
+          await window.electron.dialog.showErrorBox(
+            'File Already Exists',
+            fileName[0] + ' is already in the sound list'
+          );
         } else {
-          await window.electron.tools.createLocalCopy(file,fileName[0]).then(result => {
-            if(!result) {
-              return
-            }
-            setUserSoundList(userSoundList => ([...userSoundList,
-              result]))
-            window.electron.store.set(listKey, [...userSoundList,
-              result])
-        })
-          
-                 
+          await window.electron.tools
+            .createLocalCopy(file, fileName[0])
+            .then((result) => {
+              if (!result) {
+                return;
+              }
+              setUserSoundList((userSoundList) => [...userSoundList, result]);
+              window.electron.store.set(listKey, [...userSoundList, result]);
+            });
         }
       }
-    })
+    });
   });
 
   // iterate userSoundList and verify that temp audio file exists
   // if the path does not exist, remove from sound list
-  const updateSoundList = (async () => {
+  const updateSoundList = async () => {
     await window.electron.tools.verifySoundList().then((result) => {
       setUserSoundList(result);
       window.electron.store.set(listKey, result);
-    })
-  });
+    });
+  };
 
   // update program sounds with new dropdown selection
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedValue = {[event.target.name]:event.target.value};
-    console.log(event.target.name, event.target.value)
-    setAudioSounds(audioSounds => ({
+    const updatedValue = { [event.target.name]: event.target.value };
+    setAudioSounds((audioSounds) => ({
       ...audioSounds,
-      ...updatedValue
+      ...updatedValue,
     }));
-    window.electron.store.set(assignKey, {...audioSounds,...updatedValue});
+    window.electron.store.set(assignKey, { ...audioSounds, ...updatedValue });
   };
 
   const [testSound, setTestSound] = React.useState<string>(
@@ -165,122 +154,134 @@ function CustomSounds() {
   };
 
   const soundOptions = userSoundList.map((option) => {
-      return <MenuItem key= {option + "_option"} value={option}>
-      {option.startsWith('/') ? option.match(/[\w\-. ]+\.([0-9a-z]+)(?:[\?#]|$)/)[0]: option}
-      </MenuItem>;
-    });
+    return (
+      <MenuItem key={option + '_option'} value={option}>
+        {option.startsWith('/')
+          ? option.match(/[\w\-. ]+\.([0-9a-z]+)(?:[\?#]|$)/)[0]
+          : option}
+      </MenuItem>
+    );
+  });
 
-  const soundSelect = Object.keys(audioSounds).map((sound) => 
-    <FormControl fullWidth key={sound +"_form"}>
-    <InputLabel key={sound +"_label"}>{sound}</InputLabel>
-    <Select
-      value={audioSounds[sound]}
-      label={sound +"_select"}
-      name = {sound}
-      key={sound +"_select"}
-      onChange={handleChange}
-    >
-    {soundOptions}
-    </Select>
-    <Box sx={{ my: 1 }} />
-  </FormControl>  
+  const soundSelect = Object.keys(audioSounds).map((sound) => (
+    <FormControl fullWidth key={sound + '_form'}>
+      <InputLabel key={sound + '_label'}>{sound}</InputLabel>
+      <Select
+        value={audioSounds[sound]}
+        label={sound + '_select'}
+        name={sound}
+        key={sound + '_select'}
+        onChange={handleChange}
+      >
+        {soundOptions}
+      </Select>
+      <Box sx={{ my: 1 }} />
+    </FormControl>
+  ));
+
+  const soundTest = (
+    <Stack direction='row' justifyContent='space-between'>
+      <Tooltip title='Import new sounds'>
+        <IconButton
+          sx={(theme) => ({
+            color: theme.palette.text.primary,
+            border: `1px solid ${theme.palette.text.primary}`,
+            mx: '4px',
+            '&:hover': {
+              color: theme.palette.action.active,
+              border: `1px solid ${theme.palette.action.active}`,
+              backgroundColor: alpha(theme.palette.action.active, 0.1),
+            },
+          })}
+          color='primary'
+          component='label'
+          onClick={() => getFiles()}
+        >
+          <UploadFileIcon fontSize='large' />
+        </IconButton>
+      </Tooltip>
+      <Stack direction='row' justifyContent='center'>
+        <Tooltip title='Test sounds'>
+          <Select
+            value={testSound}
+            label={'Test Sound'}
+            name={'sound_test'}
+            key={'sound_test'}
+            onChange={assignTestSound}
+            sx={{ ml: 4 }}
+          >
+            {soundOptions}
+          </Select>
+        </Tooltip>
+        <Tooltip title='Play'>
+          <IconButton
+            sx={(theme) => ({
+              color: theme.palette.text.success,
+              border: `1px solid ${theme.palette.text.success}`,
+              mx: '4px',
+              '&:hover': {
+                color: theme.palette.action.active,
+                border: `1px solid ${theme.palette.action.active}`,
+                backgroundColor: alpha(theme.palette.action.active, 0.1),
+              },
+            })}
+            color='success'
+            component='label'
+            onClick={() => window.electron.tools.playSound(testSound)}
+          >
+            <PlayIcon fontSize='large' />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+      <Stack direction='row' justifyContent='flex-end'>
+        <Tooltip title='Remove missing sounds'>
+          <IconButton
+            sx={(theme) => ({
+              color: theme.palette.text.primary,
+              border: `1px solid ${theme.palette.text.primary}`,
+              mx: '8px',
+              float: 'right',
+              '&:hover': {
+                color: theme.palette.action.active,
+                border: `1px solid ${theme.palette.action.active}`,
+                backgroundColor: alpha(theme.palette.action.active, 0.1),
+              },
+            })}
+            color='primary'
+            component='label'
+            onClick={() => updateSoundList()}
+          >
+            <UpdateIcon fontSize='large' />
+          </IconButton>
+        </Tooltip>
+      </Stack>
+    </Stack>
   );
-
-  const soundTest =
-    <Stack direction = "row" justifyContent = "space-between">
-    <Tooltip title='Import new sounds'>
-      <IconButton
-        sx={(theme) => ({
-          color: theme.palette.text.primary,
-          border: `1px solid ${theme.palette.text.primary}`,
-          mx: '4px',
-          '&:hover': {
-            color: theme.palette.action.active,
-            border: `1px solid ${theme.palette.action.active}`,
-            backgroundColor: alpha(theme.palette.action.active, 0.1),
-          },
-        })}
-        color='primary'
-        component='label'
-        onClick={() => getFiles()}
-      >
-        <UploadFileIcon  fontSize='large' />
-      </IconButton>
-    </Tooltip>
-    <Stack direction = "row" justifyContent="center">
-    <Tooltip title='Test sounds'>
-    <Select
-      value={testSound}
-      label={'Test Sound'}
-      name = {'sound_test'}
-      key={'sound_test'}
-      onChange={assignTestSound}
-      sx= {{ ml: 4}}
-    >
-    {soundOptions}
-    </Select>
-    </Tooltip>
-    <Tooltip title='Play'>
-      <IconButton
-        sx={(theme) => ({
-          color: theme.palette.text.success,
-          border: `1px solid ${theme.palette.text.success}`,
-          mx: '4px',
-          '&:hover': {
-            color: theme.palette.action.active,
-            border: `1px solid ${theme.palette.action.active}`,
-            backgroundColor: alpha(theme.palette.action.active, 0.1),
-          },
-        })}
-        color='success'
-        component='label'
-        onClick={() =>
-          window.electron.tools.playSound(testSound)
-        }
-      >
-        <PlayIcon fontSize='large' />
-      </IconButton>
-    </Tooltip>
-    </Stack>
-    <Stack direction = "row" justifyContent="flex-end">
-    <Tooltip title='Remove missing sounds'>
-      <IconButton
-        sx={(theme) => ({
-          color: theme.palette.text.primary,
-          border: `1px solid ${theme.palette.text.primary}`,
-          mx: '8px',
-          float: 'right',
-          '&:hover': {
-            color: theme.palette.action.active,
-            border: `1px solid ${theme.palette.action.active}`,
-            backgroundColor: alpha(theme.palette.action.active, 0.1),
-          },
-        })}
-        color='primary'
-        component='label'
-        onClick={() => updateSoundList()}
-      >
-        <UpdateIcon  fontSize='large' />
-      </IconButton>
-    </Tooltip>
-    </Stack>
-    </Stack>
 
   return (
     <Stack>
-    <Typography variant='button' color='text.secondary' fontSize='13px' sx={{ mb: 4 }}>
+      <Typography
+        variant='button'
+        color='text.secondary'
+        fontSize='13px'
+        sx={{ mb: 4 }}
+      >
         Import Sounds
-    </Typography>
-    {soundTest}
-    <Divider sx={{ my: 4 }} />
-    <Typography variant='button' color='text.secondary' fontSize='13px' sx={{ mb: 4 }}>
+      </Typography>
+      {soundTest}
+      <Divider sx={{ my: 4 }} />
+      <Typography
+        variant='button'
+        color='text.secondary'
+        fontSize='13px'
+        sx={{ mb: 4 }}
+      >
         Assign Custom Sounds
-    </Typography>
-    {soundSelect}
+      </Typography>
+      {soundSelect}
     </Stack>
-    );
+  );
 }
-
 
 export default function SoundsPane() {
   const [audioMode, setAudioMode] = useStore<string>('audio.mode');
@@ -292,7 +293,7 @@ export default function SoundsPane() {
             <Stack width='100%' direction='column'>
               <AudioMode />
               <Divider sx={{ my: 4 }} />
-              {audioMode==="custom" ? <CustomSounds /> : <Box />}
+              {audioMode === 'custom' ? <CustomSounds /> : <Box />}
             </Stack>
           </Grid>
         </Grid>
@@ -300,4 +301,3 @@ export default function SoundsPane() {
     </Pane>
   );
 }
-
