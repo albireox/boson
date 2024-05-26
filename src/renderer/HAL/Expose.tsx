@@ -50,7 +50,7 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
   const [value, setValue] = React.useState(0);
 
   React.useEffect(() => {
-    let interval: NodeJS.Timer | undefined;
+    let interval: NodeJS.Timeout | string | number | undefined;
     const { etr: propsETR } = props;
     if (propsETR) setEtrDisplay(propsETR);
     if (running) {

@@ -7,12 +7,14 @@
 
 import { Paper } from '@mui/material';
 import React from 'react';
+import { useAutoPilotMacroName } from 'renderer/HAL/AutoPilot';
 import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
 
 export default function MacroPaper(props: React.PropsWithChildren) {
   const { children } = props;
 
-  const autoIsRunning = useIsMacroRunning('auto');
+  const autoPilotMacroName = useAutoPilotMacroName();
+  const autoIsRunning = useIsMacroRunning(autoPilotMacroName);
 
   return (
     <Paper

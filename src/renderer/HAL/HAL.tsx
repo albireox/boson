@@ -9,12 +9,12 @@ import { Box, CssBaseline, Stack } from '@mui/material';
 import React from 'react';
 import { KeywordContext, useKeywords } from 'renderer/hooks';
 import ApogeeDomeFlat from './ApogeeDomeFlat';
-import AutoMode from './Auto';
+import AutoPilotMode from './AutoPilot';
 import Expose from './Expose';
 import GotoField from './GotoField';
 import HALHeader from './Header/Header';
-import hal9000logo from './images/hal9000.png';
 import Scripts from './Scripts';
+import hal9000logo from './images/hal9000.png';
 
 export default function HAL() {
   const halKeywords = useKeywords([
@@ -22,12 +22,15 @@ export default function HAL() {
     'hal.running_scripts',
     'hal.stage_status',
     'hal.stages',
+    'hal.error',
+    'hal.version',
     'hal.available_scripts',
     'hal.script_step',
     'hal.exposure_state_apogee',
     'hal.exposure_state_boss',
     'hal.expose_is_paused',
     'hal.auto_mode_message',
+    'hal.auto_pilot_message',
     'jaeger.configuration_loaded',
     'jaeger.design_preloaded',
     'jaeger.preloaded_is_cloned',
@@ -67,7 +70,7 @@ export default function HAL() {
           zIndex={10}
           position='relative'
         >
-          <AutoMode />
+          <AutoPilotMode />
           <GotoField />
           <Expose />
           <ApogeeDomeFlat />

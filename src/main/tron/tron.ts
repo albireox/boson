@@ -357,7 +357,6 @@ export class TronConnection {
 
       // Parse messages and play sounds.
       if (/\S+\s\d+\s\S+\s[f!]/.test(reply.rawLine)) {
-        console.log(reply.rawLine);
         playSound('error');
       } else if (/alert=\S+/.test(reply.rawLine)) {
         playSound('error_serious');

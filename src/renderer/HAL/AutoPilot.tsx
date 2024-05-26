@@ -1,7 +1,7 @@
 /*
  *  @Author: José Sánchez-Gallego (gallegoj@uw.edu)
  *  @Date: 2023-01-08
- *  @Filename: Auto.tsx
+ *  @Filename: AutoPilot.tsx
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
@@ -16,18 +16,47 @@ import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import PauseResumeButton from './Components/PauseResumeButton';
 import SnackAlert, { SnackAlertRefType } from './Components/SnackAlert';
 
-export default function AutoMode() {
-  const macroName = 'auto';
+export function useAutoPilotMacroName(): string {
+  // In HAL 1.2.x we changed the name of the macro from "auto" to "auto_pilot" and
+  // the keyword "hal.auto_mode_message" to "hal.auto_pilot_message".
+  // Why, you ask? To spread chaos.
 
+  const [macroName, setMacroName] = React.useState<string>('auto-pilot');
+  const { 'hal.version': halVersionKw } = useKeywordContext();
+
+  React.useEffect(() => {
+    if (!halVersionKw) return;
+
+    const versionChunks = halVersionKw.values[0].split('.');
+    const major = Number(versionChunks[0]);
+    const minor = Number(versionChunks[1]);
+
+    if (major > 1 || (major === 1 && minor >= 2)) {
+      setMacroName('auto_pilot');
+    } else {
+      setMacroName('auto');
+    }
+  }, [halVersionKw]);
+
+  return macroName;
+}
+
+export default function AutoPilotMode() {
   const [count, setCount] = React.useState('1');
   const [preload, setPreload] = React.useState('300');
 
   const [error, setError] = React.useState(false);
   const [cancelled, setCancelled] = React.useState(false);
 
-  const [message, setMessage] = React.useState();
+  const [message, setMessage] = React.useState<string>('');
 
-  const { 'hal.auto_mode_message': autoModeMessageKw } = useKeywordContext();
+  const {
+    'hal.auto_mode_message': autoModeMessageKw,
+    'hal.auto_pilot_message': autoPilotMessageKw,
+    'hal.error': errorKw,
+  } = useKeywordContext();
+
+  const macroName = useAutoPilotMacroName();
 
   const isRunning = useIsMacroRunning(macroName);
   const stageStatus = useStageStatus(macroName);
@@ -48,8 +77,15 @@ export default function AutoMode() {
   }
 
   React.useEffect(() => {
-    setMessage(autoModeMessageKw?.values[0] ?? '');
-  }, [autoModeMessageKw]);
+    const isModern = macroName == 'auto-pilot';
+
+    // If the version is "modern" (>=1.2.0) then we use the auto_pilot_message keyword.
+    // Otherwise we use auto_mode_message.
+    if (isModern === undefined) return;
+    isModern
+      ? setMessage(autoPilotMessageKw?.values[0] ?? '')
+      : setMessage(autoModeMessageKw?.values[0] ?? '');
+  }, [autoModeMessageKw, autoPilotMessageKw]);
 
   React.useEffect(() => {
     const { status } = stageStatus;
@@ -58,6 +94,16 @@ export default function AutoMode() {
     setError(states.includes('failed') || states.includes('failing'));
     setCancelled(states.includes('cancelling') || states.includes('cancelled'));
   }, [stageStatus]);
+
+  React.useEffect(() => {
+    if (error && errorKw) {
+      setMessage(errorKw.values[0]);
+    }
+  }, [error]);
+
+  React.useEffect(() => {
+    if (isRunning) setMessage('');
+  }, [isRunning]);
 
   const modifyCount = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,15 +132,16 @@ export default function AutoMode() {
   const handleSwitch = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       event.preventDefault();
+      const command = macroName === 'auto' ? 'auto' : 'auto-pilot';
       let commandString: string;
       if (isRunning) {
-        commandString = 'hal auto --stop';
+        commandString = `hal ${command} --stop`;
       } else {
-        commandString = `hal auto --preload-ahead ${preload} --count ${count}`;
+        commandString = `hal ${command} --preload-ahead ${preload} --count ${count}`;
       }
       window.electron.tron.send(commandString);
     },
-    [isRunning, count]
+    [isRunning, count, macroName, preload]
   );
 
   return (
