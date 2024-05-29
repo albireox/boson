@@ -8,7 +8,6 @@
 import SendIcon from '@mui/icons-material/Send';
 import {
   Box,
-  Button,
   Checkbox,
   Collapse,
   Divider,
@@ -445,16 +444,15 @@ export default function Expose() {
             <Collapse orientation='horizontal' in={isRunning}>
               <PauseResumeButton macro='expose' />
             </Collapse>
-            <Button
-              onClick={() => {
-                window.electron.tron.send('hal abort-exposures');
-              }}
-              variant='outlined'
-              color='error'
-              sx={{ pointerEvents: 'all' }}
-            >
-              Stop exposures
-            </Button>
+            <CommandWrapper commandString='hal abort-exposures'>
+              <CommandButton
+                variant='outlined'
+                color='error'
+                sx={{ pointerEvents: 'all' }}
+              >
+                Stop exposures
+              </CommandButton>
+            </CommandWrapper>
             <CommandWrapper
               commandString={getCommandString()}
               abortCommand='hal expose --stop'
