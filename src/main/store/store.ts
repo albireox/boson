@@ -119,6 +119,9 @@ const store = new Store({
         'STUI_Silence.wav',
       ]);
     },
+    '>=0.4.7': (st) => {
+      st.set('hal.useColours', false);
+    },
   },
 });
 

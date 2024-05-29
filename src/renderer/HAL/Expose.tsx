@@ -332,7 +332,7 @@ export default function Expose() {
 
   return (
     <>
-      <MacroPaper>
+      <MacroPaper backcolor='#448AFF30'>
         <Stack
           direction='column'
           divider={<Divider variant='middle' sx={{ opacity: 0.8 }} />}

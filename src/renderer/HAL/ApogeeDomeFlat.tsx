@@ -20,7 +20,7 @@ export default function ApogeeDomeFlat() {
   const isRunning = useIsMacroRunning(macroName);
 
   return (
-    <MacroPaper>
+    <MacroPaper backcolor='#FF980030'>
       <Stack
         direction='column'
         divider={<Divider variant='middle' sx={{ opacity: 0.8 }} />}

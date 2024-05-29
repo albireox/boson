@@ -132,7 +132,7 @@ export default function Scripts() {
   }, [runningScriptsKw, handleScriptChange]);
 
   return (
-    <MacroPaper>
+    <MacroPaper backcolor='#9C27B030'>
       <Stack
         alignItems='baseline'
         direction='row'

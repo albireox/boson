@@ -8,20 +8,30 @@
 import { Paper } from '@mui/material';
 import React from 'react';
 import { useAutoPilotMacroName } from 'renderer/HAL/AutoPilot';
+import { useStore } from 'renderer/hooks';
 import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
 
-export default function MacroPaper(props: React.PropsWithChildren) {
-  const { children } = props;
+interface MacroPaperProps {
+  backcolor?: string;
+  children: React.ReactNode;
+}
+
+export default function MacroPaper(props: MacroPaperProps) {
+  const { backcolor, children } = props;
 
   const autoPilotMacroName = useAutoPilotMacroName();
   const autoIsRunning = useIsMacroRunning(autoPilotMacroName);
 
+  const [useBackcolor] = useStore<boolean>('hal.useColours');
+
+  console.log(useBackcolor);
   return (
     <Paper
       variant='outlined'
       sx={{
         pointerEvents: autoIsRunning ? 'none' : 'inherit',
         opacity: autoIsRunning ? 0.6 : 'inherit',
+        backgroundColor: useBackcolor && backcolor ? backcolor : 'inherit',
       }}
     >
       {children}

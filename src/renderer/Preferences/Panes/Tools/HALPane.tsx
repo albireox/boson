@@ -30,6 +30,16 @@ function SyncStages() {
   );
 }
 
+function UseColours() {
+  return (
+    <BooleanOption
+      param='hal.useColours'
+      title='Use colours'
+      description='Use different colours for the background of the HAL macros'
+    />
+  );
+}
+
 export default function LogWindowPane() {
   return (
     <Pane title='HAL'>
@@ -38,6 +48,7 @@ export default function LogWindowPane() {
           <Stack width='100%' direction='column' spacing={2.5}>
             <GotoAutoMode />
             <SyncStages />
+            <UseColours />
           </Stack>
         </Grid>
       </Grid>

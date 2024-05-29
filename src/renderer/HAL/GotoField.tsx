@@ -122,7 +122,7 @@ export default function GotoField() {
   }, [configurationLoadedKw, isExposing]);
 
   return (
-    <MacroPaper>
+    <MacroPaper backcolor='#F4433630'>
       <Stack
         direction='column'
         divider={<Divider variant='middle' sx={{ opacity: 0.8 }} />}
