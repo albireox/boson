@@ -8,8 +8,7 @@
 import { Paper } from '@mui/material';
 import React from 'react';
 import { useAutoPilotMacroName } from 'renderer/HAL/AutoPilot';
-import { useStore } from 'renderer/hooks';
-import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
+import { useIsMacroRunning, useStore } from 'renderer/hooks';
 
 interface MacroPaperProps {
   backcolor?: string;
@@ -30,7 +29,8 @@ export default function MacroPaper(props: MacroPaperProps) {
       sx={{
         pointerEvents: autoIsRunning ? 'none' : 'inherit',
         opacity: autoIsRunning ? 0.6 : 'inherit',
-        backgroundColor: useBackcolor && backcolor ? backcolor : 'inherit',
+        backgroundColor:
+          useBackcolor && backcolor ? backcolor : 'background.paper',
       }}
     >
       {children}
