@@ -18,7 +18,6 @@ import { blue } from '@mui/material/colors';
 import { Stack } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid';
 import React from 'react';
-import { ColorModeValues } from 'renderer/App';
 import { useStore } from 'renderer/hooks';
 import Pane from '../Components/Pane';
 import PreferencesFormControlLabel from '../Components/PreferencesFormControlLabel';
@@ -31,10 +30,10 @@ import {
 
 function ThemeMode() {
   const theme = useTheme();
-  const [themeMode, setThemeMode] = React.useState<ColorModeValues>('system');
+
+  const [mode] = useStore<string>('interface.mode');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setThemeMode(event.target.value as ColorModeValues);
     window.electron.store.set('interface.mode', event.target.value);
   };
 
@@ -44,7 +43,7 @@ function ThemeMode() {
         Theme mode
       </Typography>
       <FormControl sx={{ paddingTop: 1 }}>
-        <PreferencesRadioGroup value={themeMode} onChange={handleChange}>
+        <PreferencesRadioGroup value={mode} onChange={handleChange}>
           <PreferencesFormControlLabel
             value='light'
             control={<Radio />}
