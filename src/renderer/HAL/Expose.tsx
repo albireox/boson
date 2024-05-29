@@ -449,6 +449,7 @@ export default function Expose() {
                 variant='outlined'
                 color='error'
                 sx={{ pointerEvents: 'all' }}
+                requireConfirmation
               >
                 Stop exposures
               </CommandButton>
