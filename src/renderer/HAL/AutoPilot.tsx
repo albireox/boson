@@ -6,11 +6,22 @@
  */
 
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
-import { Collapse, Paper, Stack, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Collapse,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import React from 'react';
 import IOSSwitch from 'renderer/Components/IOSwitch';
-import { useKeywordContext } from 'renderer/hooks';
-import useIsMacroRunning from 'renderer/hooks/useIsMacroRunning';
+import { useIsMacroRunning, useKeywordContext } from 'renderer/hooks';
 import useStageStatus from 'renderer/hooks/useStageStatus';
 import { ExposureTimeInput } from './Components/ExposureTimeInput';
 import PauseResumeButton from './Components/PauseResumeButton';
@@ -49,6 +60,8 @@ export default function AutoPilotMode() {
   const [cancelled, setCancelled] = React.useState(false);
 
   const [message, setMessage] = React.useState<string>('');
+
+  const [openStopDialog, setOpenStopDialog] = React.useState(false);
 
   const {
     'hal.auto_mode_message': autoModeMessageKw,
@@ -135,7 +148,8 @@ export default function AutoPilotMode() {
       const command = macroName === 'auto' ? 'auto' : 'auto-pilot';
       let commandString: string;
       if (isRunning) {
-        commandString = `hal ${command} --stop`;
+        setOpenStopDialog(true);
+        return;
       } else {
         commandString = `hal ${command} --preload-ahead ${preload} --count ${count}`;
       }
@@ -143,6 +157,13 @@ export default function AutoPilotMode() {
     },
     [isRunning, count, macroName, preload]
   );
+
+  const handleStop = (immediately: boolean = false) => {
+    setOpenStopDialog(false);
+    const command = macroName === 'auto' ? 'auto' : 'auto-pilot';
+    const commandString = `hal ${command} --stop ${immediately ? '--now' : ''}`;
+    window.electron.tron.send(commandString);
+  };
 
   return (
     <>
@@ -211,6 +232,21 @@ export default function AutoPilotMode() {
         showClose={false}
         autoHideDuration={3000}
       />
+      <Dialog open={openStopDialog}>
+        <DialogTitle>Stop auto-pilot?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Select how you want to stop the auto-pilot.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleStop()} autoFocus>
+            Finish current stage
+          </Button>
+          <Button onClick={() => handleStop(true)}>Stop immediately</Button>
+          <Button onClick={() => setOpenStopDialog(false)}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
