@@ -24,7 +24,6 @@ export default function MacroPaper(props: MacroPaperProps) {
 
   const [useBackcolor] = useStore<boolean>('hal.useColours');
 
-  console.log(useBackcolor);
   return (
     <Paper
       variant='outlined'
