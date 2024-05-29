@@ -30,7 +30,8 @@
   "hal": {
     "allowGotoFieldAutoMode": true,
     "syncStages": false,
-    "useColours": false
+    "useColours": false,
+    "disableOnAutoPilot": true
   },
   "log": {
     "wrap": false,

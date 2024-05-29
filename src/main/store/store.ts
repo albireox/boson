@@ -122,6 +122,9 @@ const store = new Store({
     '>=0.4.7': (st) => {
       st.set('hal.useColours', false);
     },
+    '>=0.4.8': (st) => {
+      st.set('hal.disableOnAutoPilot', true);
+    },
   },
 });
 

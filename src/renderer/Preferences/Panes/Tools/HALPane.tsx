@@ -40,6 +40,16 @@ function UseColours() {
   );
 }
 
+function DisableOnAutoPilot() {
+  return (
+    <BooleanOption
+      param='hal.disableOnAutoPilot'
+      title='Disable macros on auto-pilot'
+      description='Disable the other macro panes when the auto-pilot is active'
+    />
+  );
+}
+
 export default function LogWindowPane() {
   return (
     <Pane title='HAL'>
@@ -49,6 +59,7 @@ export default function LogWindowPane() {
             <GotoAutoMode />
             <SyncStages />
             <UseColours />
+            <DisableOnAutoPilot />
           </Stack>
         </Grid>
       </Grid>
