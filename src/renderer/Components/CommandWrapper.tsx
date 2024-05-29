@@ -47,6 +47,7 @@ export interface CommandContext {
   handleClick: () => void;
   tooltip?: string;
   runningTooltip?: string;
+  commandString?: string;
 }
 
 export type CommandWrapperProps = {
@@ -161,8 +162,8 @@ export default function CommandWrapper(props: CommandWrapperProps) {
   }, [isRunning]);
 
   const wrapperValue = React.useMemo(
-    () => ({ state, handleClick, tooltip, runningTooltip }),
-    [state, handleClick, tooltip, runningTooltip]
+    () => ({ state, handleClick, tooltip, runningTooltip, commandString }),
+    [state, handleClick, tooltip, runningTooltip, commandString]
   );
 
   return (
