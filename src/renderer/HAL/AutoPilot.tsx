@@ -164,7 +164,7 @@ export default function AutoPilotMode() {
         window.electron.tron.send(commandString);
       }
     },
-    [isRunning, count, macroName, preload]
+    [isRunning, count, macroName, preload, hartmann]
   );
 
   const handleStop = (immediately: boolean = false) => {
