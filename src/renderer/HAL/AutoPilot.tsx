@@ -8,12 +8,14 @@
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import {
   Button,
+  Checkbox,
   Collapse,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControlLabel,
   Paper,
   Stack,
   TextField,
@@ -60,6 +62,7 @@ export default function AutoPilotMode() {
   const [cancelled, setCancelled] = React.useState(false);
 
   const [message, setMessage] = React.useState<string>('');
+  const [hartmann, setHartmann] = React.useState(false);
 
   const [openStopDialog, setOpenStopDialog] = React.useState(false);
 
@@ -67,6 +70,7 @@ export default function AutoPilotMode() {
     'hal.auto_mode_message': autoModeMessageKw,
     'hal.auto_pilot_message': autoPilotMessageKw,
     'hal.error': errorKw,
+    'hal.auto_pilot_hartmann': autoPilotHartmannKw,
   } = useKeywordContext();
 
   const macroName = useAutoPilotMacroName();
@@ -118,6 +122,10 @@ export default function AutoPilotMode() {
     if (isRunning) setMessage('');
   }, [isRunning]);
 
+  React.useEffect(() => {
+    if (autoPilotHartmannKw) setHartmann(autoPilotHartmannKw.values[0]);
+  }, [autoPilotHartmannKw]);
+
   const modifyCount = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newCount = e.target.value;
@@ -146,14 +154,15 @@ export default function AutoPilotMode() {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       event.preventDefault();
       const command = macroName === 'auto' ? 'auto' : 'auto-pilot';
-      let commandString: string;
+      const hartmannFlag = hartmann ? '--add-hartmann' : '';
+
       if (isRunning) {
         setOpenStopDialog(true);
         return;
       } else {
-        commandString = `hal ${command} --preload-ahead ${preload} --count ${count}`;
+        const commandString = `hal ${command} --preload-ahead ${preload} --count ${count} ${hartmannFlag}`;
+        window.electron.tron.send(commandString);
       }
-      window.electron.tron.send(commandString);
     },
     [isRunning, count, macroName, preload]
   );
@@ -165,10 +174,33 @@ export default function AutoPilotMode() {
     window.electron.tron.send(commandString);
   };
 
+  const handleHartmann = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      event.preventDefault();
+
+      const value = event.target.checked;
+      setHartmann(value);
+
+      if (isRunning) {
+        const command = macroName === 'auto' ? 'auto' : 'auto-pilot';
+        const flag = value ? '--add-hartmann' : '--remove-hartmann';
+        window.electron.tron.send(`hal ${command} ${flag}`);
+      }
+    },
+    [isRunning]
+  );
+
   return (
     <>
       <Paper variant='outlined'>
-        <Stack alignItems='center' direction='row' p={1.5} px={2} spacing={2.5}>
+        <Stack
+          alignItems='center'
+          direction='row'
+          p={1.5}
+          px={2}
+          paddingBottom={0.25}
+          spacing={2.5}
+        >
           <Stack alignItems='center' direction='row' spacing={1}>
             <AirplanemodeActiveIcon />
             <Typography variant='h6' whiteSpace='nowrap'>
@@ -183,37 +215,57 @@ export default function AutoPilotMode() {
             fontSize={15}
             whiteSpace='nowrap'
             color={error ? 'error' : undefined}
-            sx={{ overflowX: 'scroll', overflowY: 'hidden' }}
+            maxHeight={100}
+            sx={{ overflowX: 'scroll', overflowY: 'hidden', textWrap: 'wrap' }}
           >
             {message}
           </Typography>
-          <ExposureTimeInput
-            label='Preload'
-            value={preload}
-            onChange={(e) => setPreload(e.target.value)}
-            width='50px'
-            isNumber={false}
-            disabled={isRunning}
-          />
-          <TextField
-            label='Count'
-            size='small'
-            type='number'
-            variant='standard'
-            value={count}
-            onChange={modifyCount}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            sx={{
-              minWidth: '35px',
-              maxWidth: '35px',
-              '& .MuiInputBase-root': {
-                marginTop: 1,
-                '& .MuiInput-input': { paddingTop: 0.5, paddingBottom: 0.1 },
-              },
-            }}
-          />
+          <Stack direction='column' spacing={0.5}>
+            <Stack direction='row' spacing={2.5}>
+              <ExposureTimeInput
+                label='Preload'
+                value={preload}
+                onChange={(e) => setPreload(e.target.value)}
+                width='50px'
+                isNumber={false}
+                disabled={isRunning}
+              />
+              <TextField
+                label='Count'
+                size='small'
+                type='number'
+                variant='standard'
+                value={count}
+                onChange={modifyCount}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                sx={{
+                  minWidth: '35px',
+                  maxWidth: '35px',
+                  '& .MuiInputBase-root': {
+                    marginTop: 1,
+                    '& .MuiInput-input': {
+                      paddingTop: 0.5,
+                      paddingBottom: 0.1,
+                    },
+                  },
+                }}
+              />
+            </Stack>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  sx={{ pl: 0 }}
+                  checked={hartmann}
+                  disableRipple
+                  onChange={handleHartmann}
+                  size='small'
+                />
+              }
+              label='Hartmann'
+            />
+          </Stack>
           <Collapse orientation='horizontal' in={isRunning}>
             <PauseResumeButton macro='auto' />
           </Collapse>

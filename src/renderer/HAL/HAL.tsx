@@ -31,6 +31,7 @@ export default function HAL() {
     'hal.expose_is_paused',
     'hal.auto_mode_message',
     'hal.auto_pilot_message',
+    'hal.auto_pilot_hartmann',
     'jaeger.configuration_loaded',
     'jaeger.design_preloaded',
     'jaeger.preloaded_is_cloned',
