@@ -11,7 +11,7 @@ import { renderToString } from 'react-dom/server';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
+  'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url
 ).toString();
 
@@ -78,12 +78,12 @@ export default function PdfViewer(props: PdfViewerProps) {
 
   return (
     <Box
-      height="100%"
+      height='100%'
       sx={{ backgroundColor: '#fff' }}
-      position="relative"
-      overflow="auto"
+      position='relative'
+      overflow='auto'
     >
-      <Document file={files[index]} renderMode="canvas" error="" loading="">
+      <Document file={files[index]} renderMode='canvas' error='' loading=''>
         <Page
           pageNumber={1}
           scale={scale}

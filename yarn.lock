@@ -1139,16 +1139,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/core-downloads-tracker@npm:^5.15.18":
-  version: 5.15.18
-  resolution: "@mui/core-downloads-tracker@npm:5.15.18"
-  checksum: 10c0/7899df3ce5192f2b876b8e5e645b03701512b9edaf386be07aa81d0d940404fa966776ef3e5e7654f312949f669db60438b864e14f7cece3eec7b5979a7349aa
+"@mui/core-downloads-tracker@npm:^5.15.19":
+  version: 5.15.19
+  resolution: "@mui/core-downloads-tracker@npm:5.15.19"
+  checksum: 10c0/90cd3eb95399326f60140618b43c91de133a7192fd122c379278e30e09b921a6109786189b1a78e45b3b6ef6104d0f0e2f29209e48f64c978ec28ef91c5bce2b
   languageName: node
   linkType: hard
 
-"@mui/icons-material@npm:^5.15.18":
-  version: 5.15.18
-  resolution: "@mui/icons-material@npm:5.15.18"
+"@mui/icons-material@npm:^5.15.19":
+  version: 5.15.19
+  resolution: "@mui/icons-material@npm:5.15.19"
   dependencies:
     "@babel/runtime": "npm:^7.23.9"
   peerDependencies:
@@ -1158,7 +1158,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/8990f48060cb9f52a898c3b53d602913129bd37c811528dbc3988a62b1ef84b12dd9e263be76200a429455e5552706d1395c8f2b1fe56c04b37543784864d43c
+  checksum: 10c0/f2a4381b6a0f955d74aa5ac88bb8d38fee384fdff9a8e82c7fb9e596fbc61ccff97883a6c1a3cfbab3253f4d53c3fef21a3b438dfe45de365e842577bc892c08
   languageName: node
   linkType: hard
 
@@ -1191,13 +1191,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/material@npm:^5.15.18":
-  version: 5.15.18
-  resolution: "@mui/material@npm:5.15.18"
+"@mui/material@npm:^5.15.19":
+  version: 5.15.19
+  resolution: "@mui/material@npm:5.15.19"
   dependencies:
     "@babel/runtime": "npm:^7.23.9"
     "@mui/base": "npm:5.0.0-beta.40"
-    "@mui/core-downloads-tracker": "npm:^5.15.18"
+    "@mui/core-downloads-tracker": "npm:^5.15.19"
     "@mui/system": "npm:^5.15.15"
     "@mui/types": "npm:^7.2.14"
     "@mui/utils": "npm:^5.15.14"
@@ -1220,7 +1220,7 @@ __metadata:
       optional: true
     "@types/react":
       optional: true
-  checksum: 10c0/0ae6ec5cb806b8095f16c542be5e0ae059e5e4adccf1cc463865acd0429b7c9b8fc12ce56c12a15ac787f29c173d118ff06af56e1e4c46a040212cd7d203c15d
+  checksum: 10c0/388eb14bedea7453dde7e5cbdcf9e51bec20567978d9405aa4affb9df69d25c9696427820ebff927215a8e8cd79a873ce9ac4207989a1c6b859d26394031382e
   languageName: node
   linkType: hard
 
@@ -1872,12 +1872,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.12.12":
-  version: 20.12.12
-  resolution: "@types/node@npm:20.12.12"
+"@types/node@npm:20.12.13":
+  version: 20.12.13
+  resolution: "@types/node@npm:20.12.13"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10c0/f374b763c744e8f16e4f38cf6e2c0eef31781ec9228c9e43a6f267880fea420fab0a238b59f10a7cb3444e49547c5e3785787e371fc242307310995b21988812
+  checksum: 10c0/2ac92bb631dbddfb560eb3ba4eedbb1c688044a0130bc1ef032f5c0f20148ac7c9aa3c5aaa5a9787b6c4c6299847d754b96ee8c9def951481ba6628c46b683f5
   languageName: node
   linkType: hard
 
@@ -1913,12 +1913,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-highlight-words@npm:^0.16.7":
-  version: 0.16.7
-  resolution: "@types/react-highlight-words@npm:0.16.7"
+"@types/react-highlight-words@npm:^0.20.0":
+  version: 0.20.0
+  resolution: "@types/react-highlight-words@npm:0.20.0"
   dependencies:
     "@types/react": "npm:*"
-  checksum: 10c0/9b5f4bee59abae67f641026b9575ae10988f759a61329176751052be6e2f7036fd708e047d6d03099626d0a5c0a41aaa2550ff31de619b1fa27683fa56513ec9
+  checksum: 10c0/95d268fc24f4ad43e1b4c5be41f66b6401b90977fd4e2c9de37bf696b0c97fd216c1f6c4a833236886183dbda766d3d0485333997ac193360c35a2a36f46534b
   languageName: node
   linkType: hard
 
@@ -2680,20 +2680,20 @@ __metadata:
     "@emotion/react": "npm:^11.11.4"
     "@emotion/styled": "npm:^11.11.5"
     "@fontsource/roboto": "npm:^5.0.13"
-    "@mui/icons-material": "npm:^5.15.18"
+    "@mui/icons-material": "npm:^5.15.19"
     "@mui/lab": "npm:^5.0.0-alpha.170"
-    "@mui/material": "npm:^5.15.18"
+    "@mui/material": "npm:^5.15.19"
     "@mui/system": "npm:^5.15.15"
     "@mui/x-data-grid-pro": "npm:5.17.18"
     "@types/lodash": "npm:^4.17.4"
-    "@types/node": "npm:20.12.12"
+    "@types/node": "npm:20.12.13"
     "@types/react": "npm:^18.3.3"
     "@types/react-dom": "npm:^18.3.0"
-    "@types/react-highlight-words": "npm:^0.16.7"
+    "@types/react-highlight-words": "npm:^0.20.0"
     "@types/sound-play": "npm:^1.1.3"
     "@typescript-eslint/eslint-plugin": "npm:^7.11.0"
     "@typescript-eslint/parser": "npm:^7.11.0"
-    electron: "npm:30.0.8"
+    electron: "npm:30.0.9"
     electron-debug: "npm:^4.0.0"
     electron-log: "npm:^5.1.5"
     electron-squirrel-startup: "npm:^1.0.1"
@@ -2718,7 +2718,7 @@ __metadata:
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     react-highlight-words: "npm:^0.20.0"
-    react-pdf: "npm:^8.0.2"
+    react-pdf: "npm:^9.0.0"
     react-router-dom: "npm:^6.23.1"
     react-virtuoso: "npm:^4.7.11"
     rxjs: "npm:^7.8.1"
@@ -3751,16 +3751,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:30.0.8":
-  version: 30.0.8
-  resolution: "electron@npm:30.0.8"
+"electron@npm:30.0.9":
+  version: 30.0.9
+  resolution: "electron@npm:30.0.9"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^20.9.0"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10c0/eedeb7e2a922c8cd59df1b8413317a510d58eb1d12bd6cdaeef20461d3553f5880d441efee91e702798f17271066f1bc120785624fc561bee998ab46c3740470
+  checksum: 10c0/98f28e9f905a4734af708e156bab85b924ab196439e383ea5b7c83b884106a1e5684dfb175fb4fd518c91b9276f955aef6e0e06ba9b1f5fe6c8a555bcff46749
   languageName: node
   linkType: hard
 
@@ -7482,34 +7482,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path2d-polyfill@npm:^2.0.1":
-  version: 2.1.1
-  resolution: "path2d-polyfill@npm:2.1.1"
-  dependencies:
-    path2d: "npm:0.1.1"
-  checksum: 10c0/1467c6a5da51db7d6e5fce5a2af3dd70765e57dcebf187784c23e3a69547a3e6746451176606049fde8b31ba76fac7a6955d81fecc73e67eb92091e0bef355dd
+"path2d@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "path2d@npm:0.2.0"
+  checksum: 10c0/fcf95e10a28ef9277a8e60c1df2b5279facb5894efa6a6c5225ec86b502aead1ea8fa90a3b21a7b5864e7a0ffb1405b360dc757c88794c5965bd43aa51b3c4f1
   languageName: node
   linkType: hard
 
-"path2d@npm:0.1.1":
-  version: 0.1.1
-  resolution: "path2d@npm:0.1.1"
-  checksum: 10c0/3eb3df35afa952042f202f71b1b5f1d0009afa3d98d5e544312af281a4261d8f3d3da3b2a033678b92aecf61a51588547b1e0705947f480a338156250d5a166a
-  languageName: node
-  linkType: hard
-
-"pdfjs-dist@npm:3.11.174":
-  version: 3.11.174
-  resolution: "pdfjs-dist@npm:3.11.174"
+"pdfjs-dist@npm:4.3.136":
+  version: 4.3.136
+  resolution: "pdfjs-dist@npm:4.3.136"
   dependencies:
     canvas: "npm:^2.11.2"
-    path2d-polyfill: "npm:^2.0.1"
+    path2d: "npm:^0.2.0"
   dependenciesMeta:
     canvas:
       optional: true
-    path2d-polyfill:
+    path2d:
       optional: true
-  checksum: 10c0/0cb26561fd9bea90f2c1c8029d4cf972d338838de0f7f7aa3f369b2e555b99a2d8bbf1b81cc682fb26331241201a432726ae356a7ad3a930d86a308ca941d29c
+  checksum: 10c0/4cb88d737f56100d45d2c9c0c6e8dc2f3dfd856362a55e47801ae32c52b2f12b3e74819c3cafb995a1e84c43eb580598a69c6710a78b1a11cdb52ef24bf8a633
   languageName: node
   linkType: hard
 
@@ -7825,16 +7816,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-pdf@npm:^8.0.2":
-  version: 8.0.2
-  resolution: "react-pdf@npm:8.0.2"
+"react-pdf@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "react-pdf@npm:9.0.0"
   dependencies:
     clsx: "npm:^2.0.0"
     dequal: "npm:^2.0.3"
     make-cancellable-promise: "npm:^1.3.1"
     make-event-props: "npm:^1.6.0"
     merge-refs: "npm:^1.3.0"
-    pdfjs-dist: "npm:3.11.174"
+    pdfjs-dist: "npm:4.3.136"
     tiny-invariant: "npm:^1.0.0"
     warning: "npm:^4.0.0"
   peerDependencies:
@@ -7844,7 +7835,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/83064e77030207bf4a7c80e24968c8957c9dedccadbf6f8e28b1a28166d9b7aa6cc473dc31bddcc57660d636756db763a39c0fdf1bc0d4cea49ffc3bb0f5d1d1
+  checksum: 10c0/c9e5606ee5a36acab0746914f2efa84459bf969e0f4d5e3a945da6d14f9882c57c45ea66f181ed16112b933321b963241e5c7f6b1cb0890322a24b4c8925a48b
   languageName: node
   linkType: hard
 
