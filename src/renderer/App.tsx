@@ -6,6 +6,7 @@ import './App.css';
 import { Chat } from './Chat';
 import { Guider } from './Guider';
 import { HAL } from './HAL';
+import { Collimate } from './Collimate';
 import Log from './Log';
 import Main from './Main';
 import FocusPlot from './Plots/Focus';
@@ -149,12 +150,16 @@ export default function App() {
     case 'HAL':
       view = <HAL />;
       break;
+    case 'collimate':
+      view = <Collimate />
+      break;
     case 'focus_plot':
       view = <FocusPlot />;
       break;
     case 'chat':
       view = <Chat />;
       break;
+    // add new window here
     default:
       view = null;
   }

@@ -200,6 +200,11 @@ export default class MenuBuilder {
           click: () => createWindow('guider'),
         },
         {
+          label: 'Collimate',
+          accelerator: 'Command+Shift+G',
+          click: () => createWindow('collimate'),
+        },
+        {
           label: 'HAL',
           accelerator: 'Command+Shift+H',
           click: () => createWindow('HAL'),

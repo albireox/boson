@@ -14,6 +14,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
+import { Stack } from '@mui/system';
 import { Keyword } from 'main/tron/types';
 import React from 'react';
 import { useStore, useWindowSize } from 'renderer/hooks';
@@ -47,13 +48,15 @@ function DS9Dialog(props: DS9DialogProps) {
 export interface JS9FrameProps {
   display: string;
   filenameBundle: Keyword;
+  windowFraction: number;
+  showImgNum: boolean;
 }
 
 function JS9FrameInner(
   props: JS9FrameProps,
   ref: React.ForwardedRef<GuiderRefType>
 ) {
-  const { display, filenameBundle } = props;
+  const { display, filenameBundle, windowFraction, showImgNum } = props;
 
   const windowSize = useWindowSize();
   const [xpaset] = useStore<string>('guider.xpaset');
@@ -61,7 +64,7 @@ function JS9FrameInner(
   const guiderConfig = React.useContext(GuiderContext);
 
   const [path, setPath] = React.useState<string | null>(null);
-  const [size, setSize] = React.useState(800 / 3.2);
+  const [size, setSize] = React.useState(800 / windowFraction);
   const [expanded, setExpanded] = React.useState(false);
 
   const [zoomed, setZoomed] = React.useState(false);
@@ -165,6 +168,8 @@ function JS9FrameInner(
         return;
       }
 
+
+
       setPath(fullURL);
     },
     [host, port, display, path, updateParams]
@@ -178,7 +183,7 @@ function JS9FrameInner(
     if (!windowSize) return;
 
     const factor = expanded ? 2 : 1;
-    setSize(Math.round(((windowSize.width || 800) / 3.2) * factor));
+    setSize(Math.round(((windowSize.width || 800) / windowFraction) * factor));
   }, [windowSize, expanded]);
 
   React.useEffect(() => {
@@ -200,8 +205,27 @@ function JS9FrameInner(
     });
   }, [filenameBundle, host, port, display, updateImage]);
 
+  // console.log(`url ${path}`);
+  // console.log(path&&showImgNum)
+  // console.log(path&&showImgNum)
+  let thisImgNum: string = "";
+  let thisGfaNum: string = "";
+  if (showImgNum && path){
+    // console.log(path);
+    // console.log(window);
+    // console.log(path.split("-").at(-1).split(".").at(0));
+    thisImgNum = path.split("-").at(-1).split(".").at(0);
+    thisGfaNum = path.split("-").at(1);
+    // const thisImgNum = path.split("-").at(-1).strip(".fits");
+    // console.log(thisImgNum);
+    // console.log(thisGfaNum);
+    // window.JS9.DisplayMessage('info', thisImgNum);
+
+  }
+
   return (
     <>
+      {thisImgNum && <Box> {thisGfaNum}: {thisImgNum} </Box>}
       <Box
         className="JS9"
         id={display}

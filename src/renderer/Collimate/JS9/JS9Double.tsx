@@ -9,29 +9,30 @@ import { Box } from '@mui/material';
 import { Stack } from '@mui/system';
 import React from 'react';
 import { useKeywordContext, useWindowSize } from 'renderer/hooks';
-import { GuiderRefType } from '../Guider';
-import JS9Frame from './JS9Frame';
+import { GuiderRefType } from '../../Guider';
+import JS9Frame from '../../Guider/JS9/JS9Frame';
 
 export interface JS9GridProps {
   guiderRef: (element: GuiderRefType | null) => void;
 }
 
-export default function JS9Grid(props: JS9GridProps) {
+export default function JS9Double(props: JS9GridProps) {
   const { filename_bundle: filenameBundle } = useKeywordContext();
 
   const { guiderRef } = props;
 
   const windowSize = useWindowSize();
-  const [size, setSize] = React.useState(533);
+  // const [size, setSize] = React.useState(533);
+  const [size, setSize] = React.useState(300);
 
   const frameProps = { filenameBundle, ref: guiderRef };
-  const windowFraction = 3.2;
-  const showImgNum = false;
+  const windowFraction = 2.5;
+  const showImgNum = true;
 
   React.useEffect(() => {
     if (!windowSize) return;
 
-    setSize(Math.round(((windowSize.width || 800) / 3.2) * 2));
+    setSize(Math.round(((windowSize.width || 800) / 5) * 2));
   }, [windowSize]);
 
   return (
@@ -43,19 +44,8 @@ export default function JS9Grid(props: JS9GridProps) {
           spacing={-0.5}
           width='100%'
         >
-          <JS9Frame display='gfa1' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
           <JS9Frame display='gfa2' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
-          <JS9Frame display='gfa3' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
-        </Stack>
-        <Stack
-          direction='row'
-          justifyContent='center'
-          spacing={-0.5}
-          width='100%'
-        >
-          <JS9Frame display='gfa4' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
           <JS9Frame display='gfa5' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
-          <JS9Frame display='gfa6' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
         </Stack>
       </Stack>
     </Box>

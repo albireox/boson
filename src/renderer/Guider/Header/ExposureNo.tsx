@@ -11,7 +11,6 @@ import { useKeywordContext } from 'renderer/hooks';
 
 export default function ExposureNo() {
   const { filename_bundle: filenameBundle } = useKeywordContext();
-
   const [exposureNo, setExposureNo] = React.useState(-1);
 
   React.useEffect(() => {
