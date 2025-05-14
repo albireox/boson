@@ -225,7 +225,7 @@ function JS9FrameInner(
 
   return (
     <>
-      {thisImgNum && <Box> {thisGfaNum}: {thisImgNum} </Box>}
+      {thisImgNum && <div> {thisGfaNum}: {thisImgNum} </div>}
       <Box
         className="JS9"
         id={display}

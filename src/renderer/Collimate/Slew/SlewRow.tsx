@@ -20,10 +20,14 @@ export default function SlewRow() {
   const [az, setAz] = React.useState<string>('180');
   const [minMag, setMinMag] = React.useState<string>('7');
   const [maxMag, setMaxMag] = React.useState<string>('11');
+  const [gfaAng, setGfaAng] = React.useState<string>('0');
+  const [expTime, setExpTime] = React.useState<string>('10');
 
   const [isSlewing, setIsSlewing] = React.useState(false);
+  const [isExposing, setIsExposing] = React.useState(false);
 
   const { AxisCmdState: axisCmdState } = useKeywordContext();
+  const { TCCPos: tccPos } = useKeywordContext();
 
   React.useEffect(() => {
       if (!axisCmdState) return;
@@ -46,6 +50,21 @@ export default function SlewRow() {
       }
 
     }, [axisCmdState]);
+
+
+  async function asyncClick() {
+    setIsExposing(true);
+    console.log(`tcc pos ${tccPos.values[2]}`);
+    console.log("button clickededed!!");
+    await window.electron.tron.send(`tcc offset rotator ${gfaAng} /computed`);
+    await window.electron.tron.send(`tcc offset inst 0, 1.47 /pabsolute/computed`);
+    await window.electron.tron.send(`fliswarm talk -n gfa2 expose ${expTime}`);
+    await window.electron.tron.send(`tcc offset inst 0, -1.47 /pabsolute/computed`);
+    await window.electron.tron.send(`fliswarm talk -n gfa5 expose ${expTime}`);
+    await window.electron.tron.send(`tcc offset inst 0, 0 /pabsolute/computed`);
+    console.log("button done!!");
+    setIsExposing(false);
+  }
 
   return (
     <Stack direction="column" spacing={1}>
@@ -79,7 +98,7 @@ export default function SlewRow() {
         onChange={(event) => setMaxMag(event.target.value)}
       />
       <CommandWrapper
-        commandString={`track ${az}, ${alt} obs/pterr/rottype=object/rotang=0/magRange=(${minMag}, ${maxMag}) `} //${expTime}`}
+        commandString={`tcc track ${az}, ${alt} obs/pterr/rottype=object/rotang=0/magRange=(${minMag}, ${maxMag}) `} //${expTime}`}
         isRunning={isSlewing}
         // abortCommand='cherno stop'
         // runningTooltip='Stop guiding'
@@ -88,6 +107,23 @@ export default function SlewRow() {
           Slew
         </CommandButton>
       </CommandWrapper>
+      <SearchBox
+        endAdornment={<span>GFA rot (deg)</span>}
+        defaultWidth={100}
+        placeholder='gfaAng'
+        value={gfaAng}
+        onChange={(event) => setGfaAng(event.target.value)}
+      />
+      <SearchBox
+        endAdornment={<span>Exptime (s)</span>}
+        defaultWidth={100}
+        placeholder='expTime'
+        value={expTime}
+        onChange={(event) => setExpTime(event.target.value)}
+      />
+      <CommandButton variant='contained' onClick={asyncClick} disabled={isExposing} endIcon={<InsightsIcon />}>
+        Expose Two
+      </CommandButton>
     </Stack>
     </Stack>
 

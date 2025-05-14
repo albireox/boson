@@ -11,6 +11,7 @@ import SlewRow from './Slew/SlewRow'
 import GuideTable from '../Guider/GuideTable/GuideTable';
 import { GuiderHeader } from '../Guider/Header';
 import { JS9Double } from './JS9';
+import { MirrorPlot } from './Plot';
 
 export type GuiderRefType = {
   name: string;
@@ -85,6 +86,7 @@ export default function Collimate() {
             </Box>
             <StatusRow />
             <SlewRow />
+            <MirrorPlot />
             <ExposeRow />
             <GuideTable />
           </Stack>
