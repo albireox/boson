@@ -225,7 +225,7 @@ function JS9FrameInner(
 
   return (
     <>
-      {thisImgNum && <div> {thisGfaNum}: {thisImgNum} </div>}
+      {thisImgNum && <div style={{width: '100px', height: '30px', float: 'left', top: '10px', left: '10px', color: 'white', backgroundColor: 'black'}}> {thisGfaNum}: {thisImgNum} </div>}
       <Box
         className="JS9"
         id={display}
@@ -275,7 +275,8 @@ function JS9FrameInner(
         }}
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
-      />
+      >
+      </Box>
       <DS9Dialog
         open={openDS9Dialog}
         close={() => setOpenDS9Dialog(false)}

@@ -5,13 +5,12 @@ import GuiderContext, {
   defaultGuiderConfig,
   prepareGuiderContext,
 } from '../Guider/Context';
-import ExposeRow from '../Guider/Expose/ExposeRow';
 import StatusRow from './Status/StatusRow'
 import SlewRow from './Slew/SlewRow'
-import GuideTable from '../Guider/GuideTable/GuideTable';
 import { GuiderHeader } from '../Guider/Header';
 import { JS9Double } from './JS9';
 import { MirrorPlot } from './Plot';
+import { MirrorTable } from './MirrorTable';
 
 export type GuiderRefType = {
   name: string;
@@ -38,8 +37,12 @@ export default function Collimate() {
     'fliswarm.filename_bundle',
     'tcc.TCCPos',
     'tcc.AxisCmdState',
+    'tcc.AxePos',
     'tcc.SecState',
-    'tcc.PrimState'
+    'tcc.PrimState',
+    'tcc.TAI',
+    'tcc.PrimOrient',
+    'tcc.SecOrient'
   ]);
 
   const ref = React.useRef<GuiderRefMap>({});
@@ -84,11 +87,13 @@ export default function Collimate() {
                 }}
               />
             </Box>
+
             <StatusRow />
-            <SlewRow />
+            <Stack direction="row" spacing={2.5}>
+              <MirrorTable />
+              <SlewRow />
+            </Stack>
             <MirrorPlot />
-            <ExposeRow />
-            <GuideTable />
           </Stack>
         </KeywordContext.Provider>
       </GuiderContext.Provider>
