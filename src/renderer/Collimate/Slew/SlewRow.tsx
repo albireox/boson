@@ -79,14 +79,15 @@ export default function SlewRow() {
     setIsExposing(true);
     let deltaRot = computeDeltaRot();
 
-    console.log(`deltarot ${deltaRot}`);
-    console.log("button clickededed!!");
-    // await window.electron.tron.send(`tcc offset rotator ${gfaAng} /computed`);
-    // await window.electron.tron.send(`tcc offset inst 0, 1.47 /pabsolute/computed`);
-    // await window.electron.tron.send(`fliswarm talk -n gfa2 expose ${expTime}`);
-    // await window.electron.tron.send(`tcc offset inst 0, -1.47 /pabsolute/computed`);
-    // await window.electron.tron.send(`fliswarm talk -n gfa5 expose ${expTime}`);
-    // await window.electron.tron.send(`tcc offset inst 0, 0 /pabsolute/computed`);
+    // for some reason, you must expose gfa5 before gfa2 to make
+    // the images remain displayed in the JS9 window.  If you reverse the order
+    // then gfa2's image will disappear after gfa5's image is rendered
+    await window.electron.tron.send(`tcc offset rotator ${deltaRot} /computed`);
+    await window.electron.tron.send(`tcc offset inst 0, -1.47 /pabsolute/computed`);
+    await window.electron.tron.send(`fliswarm talk -n gfa5 expose ${expTime}`);
+    await window.electron.tron.send(`tcc offset inst 0, 1.47 /pabsolute/computed`);
+    await window.electron.tron.send(`fliswarm talk -n gfa2 expose ${expTime}`);
+    await window.electron.tron.send(`tcc offset inst 0, 0 /pabsolute/computed`);
     console.log("button done!!");
     setIsExposing(false);
   }
@@ -115,21 +116,20 @@ export default function SlewRow() {
     // console.log(`xytrans ${xtrans} ${ytrans} ${xtilt} ${ytilt}`);
     if (mirTrans < 0){
       // command x then y translation
-      console.log("mirror trans < 0");
       if (Math.abs(xtrans) > 0){
-        console.log(xTransCmd);
+        await window.electron.tron.send(xTransCmd);
       }
       if (Math.abs(ytrans) > 0){
-        console.log(yTransCmd);
+        await window.electron.tron.send(yTransCmd);
       }
     }
     else {
       // command y then x translation
       if (Math.abs(ytrans) > 0){
-        console.log(yTransCmd);
+        await window.electron.tron.send(yTransCmd);
       }
       if (Math.abs(xtrans) > 0){
-        console.log(xTransCmd);
+        await window.electron.tron.send(xTransCmd);
       }
     }
 
