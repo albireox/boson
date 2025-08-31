@@ -64,10 +64,10 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish x64
-        run: yarn run electron-forge --verbose publish --arch x64
+        run: yarn run electron-forge publish --arch x64
 
       - name: Publish arm64
-        run: yarn run electron-forge --verbose publish --arch arm64
+        run: yarn run electron-forge publish --arch arm64
 
       - name: Publish universal
-        run: yarn run electron-forge --verbose publish --arch universal
+        run: yarn run electron-forge publish --arch universal
