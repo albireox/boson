@@ -81,7 +81,7 @@ export default function EditProfileDialog(props: EditProfileDialogProps) {
       return;
     }
 
-    window.electron.keytar
+    window.electron.safe
       .get(program)
       .then((value) => setPassword(value ?? ''))
       .catch(() => setPassword(''));
@@ -109,7 +109,7 @@ export default function EditProfileDialog(props: EditProfileDialogProps) {
     });
 
     if (needsAuthentication && password !== '') {
-      window.electron.keytar.set(program, password);
+      window.electron.safe.set(program, password);
     }
 
     if (closer) closer();

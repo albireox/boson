@@ -127,12 +127,12 @@ const ElectronAPI = {
       ipcRenderer.invoke('store:unsubscribe', channel);
     },
   },
-  keytar: {
+  safe: {
     get(key: string) {
-      return ipcRenderer.invoke('keytar:get', key);
+      return ipcRenderer.invoke('safe:get', key);
     },
     set(key: string, val: string) {
-      return ipcRenderer.invoke('keytar:set', key, val);
+      return ipcRenderer.invoke('safe:set', key, val);
     },
   },
   tools: {
@@ -151,9 +151,9 @@ const ElectronAPI = {
     createLocalCopy: (path: string, name: string) => {
       return ipcRenderer.invoke('tools:create-local-copy', path, name);
     },
-    verifySoundList:() => {
+    verifySoundList: () => {
       return ipcRenderer.invoke('tools:verify-sound-list');
-    }
+    },
   },
   dialog: {
     showMessageBox: async (
@@ -163,7 +163,7 @@ const ElectronAPI = {
     showErrorBox: async (title: string, content: string): Promise<void> =>
       ipcRenderer.invoke('dialog:show-error-box', title, content),
     listFiles: async (): Promise<void> =>
-      ipcRenderer.invoke('dialog:list-files')
+      ipcRenderer.invoke('dialog:list-files'),
   },
 };
 

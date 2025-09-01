@@ -169,7 +169,7 @@ export default function Main() {
 
   const handlePassword = () => {
     if (password !== null) {
-      window.electron.keytar.set(program, password);
+      window.electron.safe.set(program, password);
       setShowPasswordModal(false);
       connect(needsAuthentication);
     }

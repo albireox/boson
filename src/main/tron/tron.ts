@@ -6,9 +6,8 @@
  */
 
 import { createHash } from 'crypto';
-import { app, webContents, WebContents } from 'electron';
+import { app, safeStorage, webContents, WebContents } from 'electron';
 import log from 'electron-log';
-import * as keytar from 'keytar';
 import { Socket } from 'net';
 import { arch, platform, release } from 'os';
 import {
@@ -143,7 +142,14 @@ export class TronConnection {
     const program = program_ ?? store.get('connection.program');
     if (!program) return [false, 'Program not found.'];
 
-    const password = await keytar.getPassword('boson', program);
+    const value: string | undefined = store.get(`keys.${program}`);
+    let password: string | null;
+    if (value) {
+      const buffer = Buffer.from(value, 'latin1');
+      password = safeStorage.decryptString(buffer);
+    } else {
+      password = null;
+    }
 
     if (!password) {
       this.connectionStatus |=

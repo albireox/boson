@@ -25,12 +25,12 @@ export default function PasswordInput(props: PasswordInputProps) {
   ) => {
     setValue(event.target.value);
     if (event.target.value !== '') {
-      window.electron.keytar.set(account, event.target.value ?? '');
+      window.electron.safe.set(account, event.target.value ?? '');
     }
   };
 
   const updatePassword = React.useCallback(() => {
-    window.electron.keytar
+    window.electron.safe
       .get(account)
       .then((pw: string | undefined) => {
         setValue(pw);

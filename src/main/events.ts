@@ -13,9 +13,9 @@ import {
   dialog,
   ipcMain,
   MessageBoxOptions,
+  safeStorage,
   shell,
 } from 'electron';
-import * as keytar from 'keytar';
 import { promisify } from 'util';
 import { createWindow } from './main';
 import { config, store, subscriptions as storeSubscriptions } from './store';
@@ -134,12 +134,17 @@ export default function loadEvents() {
     if (unsubscribe) unsubscribe();
   });
 
-  // keytar passwords
-  ipcMain.handle('keytar:get', async (event, key) => {
-    return keytar.getPassword('boson', key);
+  // safe storage passwords
+  ipcMain.handle('safe:get', async (event, key) => {
+    const value: string | undefined = store.get(`keys.${key}`);
+    if (value) {
+      const buffer = Buffer.from(value, 'latin1');
+      return safeStorage.decryptString(buffer);
+    }
   });
-  ipcMain.handle('keytar:set', async (event, key, value) => {
-    keytar.setPassword('boson', key, value);
+  ipcMain.handle('safe:set', async (event, key, value) => {
+    const buffer = safeStorage.encryptString(value);
+    store.set(`keys.${key}`, buffer.toString('latin1'));
   });
 
   // tools
