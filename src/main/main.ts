@@ -14,6 +14,7 @@ import {
   shell,
 } from 'electron';
 import log from 'electron-log';
+import started from 'electron-squirrel-startup';
 import path from 'path';
 import { updateElectronApp } from 'update-electron-app';
 import loadEvents from './events';
@@ -29,7 +30,7 @@ log.transports.file.maxSize = 0;
 updateElectronApp({ updateInterval: '10 minutes', logger: log });
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
+if (started) {
   app.quit();
 }
 
