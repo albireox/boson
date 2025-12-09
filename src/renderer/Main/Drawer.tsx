@@ -13,6 +13,7 @@ import NotesIcon from '@mui/icons-material/Notes';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
+import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
 import {
   List,
   ListItem,
@@ -129,6 +130,12 @@ export default function Drawer() {
             name='HAL'
             icon={<PrecisionManufacturingIcon />}
             text='HAL'
+            open={open}
+          />
+          <Item 
+            name='status'
+            icon={<SignalWifiStatusbar4BarIcon />}
+            text="Status"
             open={open}
           />
           <Item name='chat' icon={<ChatIcon />} text='Chat' open={open} />
