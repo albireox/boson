@@ -2,8 +2,8 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import { CssBaseline, Box, Stack } from '@mui/material';
 import { KeywordContext, useKeywords } from 'renderer/hooks';
-import StatusHeader from './Header/StatusHeader';
-import StatusPanels from './Header/StatusPanels';
+import TopPart from './StatusParts/TopPart';
+
 
 
 function MyButton({ title }: { title: string }) {
@@ -11,21 +11,6 @@ function MyButton({ title }: { title: string }) {
     }
 
 export default function Status() {
-
-    const statusKeywords = useKeywords([
-        'status.coordsys_ICRS',
-        'status.coordsys_FK5',
-        'status.coordsys_FK4',
-        'status.coordsys_galactic',
-        'status.coordsys_geocentric',
-        'status.coordsys_topocentric',
-        'status.coordsys_observed',
-        'status.coordsys_physical',
-        'status.coordsys_mount',
-        'jaeger.configuration_loaded',
-        'jaeger.design_preloaded',
-        'jaeger.preloaded_is_cloned',
-    ])
 
     return (
         <Box
@@ -36,8 +21,8 @@ export default function Status() {
         top={0}>
 
         <CssBaseline />
-
-        <MyButton title="Click Me" />
+        <TopPart />
+        
         </Box>
     );
 }
