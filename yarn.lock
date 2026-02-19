@@ -2992,6 +2992,7 @@ __metadata:
     highcharts: "npm:^11.4.3"
     highcharts-react-official: "npm:^3.2.1"
     js9: "npm:^3.8.0"
+    local-sidereal-time: "npm:^1.0.4"
     lodash: "npm:^4.17.21"
     material-ui-popup-state: "npm:^5.1.2"
     prettier: "npm:^3.2.5"
@@ -5305,6 +5306,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gregorian-calendar@npm:^4.1.6":
+  version: 4.1.6
+  resolution: "gregorian-calendar@npm:4.1.6"
+  checksum: 10c0/698df1ae58088405d117de1a2086b4c166bebdd06d1522ad680fde1d374564e474400db6985fabe90ae610460f746ff62d90a29157e9a5540512d4c86ebf40ac
+  languageName: node
+  linkType: hard
+
 "has-bigints@npm:^1.0.2":
   version: 1.1.0
   resolution: "has-bigints@npm:1.1.0"
@@ -6247,6 +6255,15 @@ __metadata:
     pify: "npm:^2.0.0"
     strip-bom: "npm:^3.0.0"
   checksum: 10c0/15cf1259361325fadfc54cd4ecc5d6729103c8873492001ba5473fb1ef753000f680c887db6c86fec69a4ede009efeb8c0c0c77b2a31bc54d2793767e25577c9
+  languageName: node
+  linkType: hard
+
+"local-sidereal-time@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "local-sidereal-time@npm:1.0.4"
+  dependencies:
+    gregorian-calendar: "npm:^4.1.6"
+  checksum: 10c0/f0228fcbc2b947b703cd53da6318caf8b833ad3bf70919ee4e79b4229d23c5c2f66f57c1e01c3081b07b45dc64112a6fb3a35d359a27a11f59fecb91e110e06e
   languageName: node
   linkType: hard
 

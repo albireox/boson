@@ -2,13 +2,14 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import { CssBaseline, Box, Stack } from '@mui/material';
 import { KeywordContext, useKeywords } from 'renderer/hooks';
-import TopPart from './StatusParts/TopPart';
+import NetPosition from './StatusParts/NetPostition';
+import MiscStatus from './StatusParts/MiscStatus';
+import OffsetStatus from './StatusParts/OffsetStatus';
+import AxisOffsetStatus from './StatusParts/AxisOffsetStatus';
+import AxisStatus from './StatusParts/AxisStatus';
 
 
 
-function MyButton({ title }: { title: string }) {
-    return <Button variant="contained">{title}</Button>;
-    }
 
 export default function Status() {
 
@@ -21,8 +22,11 @@ export default function Status() {
         top={0}>
 
         <CssBaseline />
-        <TopPart />
-        
+        <NetPosition />
+        <MiscStatus />
+        <OffsetStatus />
+        <AxisOffsetStatus />
+        <AxisStatus />
         </Box>
     );
 }
