@@ -28,7 +28,7 @@ export function TAIconvert(mjdseconds: number): string {
 }
 
 export function getTAIdays(mjdseconds: number): number {
-    return Math.floor((mjdseconds / 86400)+0.3); // Convert seconds to days and add 0.3
+    return Math.trunc((mjdseconds / 86400)+0.3); // Convert seconds to days and add 0.3
 }
 
 export function convertUTCtoTAI(mjdseconds: number): string {
@@ -52,6 +52,14 @@ export function unixSecondsToJulianDay(unixSeconds: number): number {
     return unixSeconds / 86400 + 2440587.5; // Convert seconds to days and add Julian Date of Unix epoch
 }
 
+export function unixSecondsToTAINum(unixSeconds: number): number {
+    const jdUTC = unixSecondsToJulianDay(unixSeconds);
+    const mjdUTC = jdUTC - 2400000.5; // Convert Julian Date to Modified Julian Date
+    const mjdUTCSeconds = mjdUTC * 86400; // Convert MJD to seconds
+    const TAI = mjdUTCSeconds + TAI_MINUS_UTC_SECONDS;
+    return TAI;
+}
+
 export function unixSecondsToTAI(unixSeconds: number): string {
     const jdUTC = unixSecondsToJulianDay(unixSeconds);
     const mjdUTC = jdUTC - 2400000.5; // Convert Julian Date to Modified Julian Date
@@ -73,7 +81,7 @@ export function unixSecondstoSJD(unixSeconds: number): number {
 
 export function getLMST(unixSeconds: number, longitude: number): number {
     const julianday = unixSecondsToJulianDay(unixSeconds);
-    const JD0 = Math.floor(julianday - 0.5) + 0.5; // Julian day at previous midnight
+    const JD0 = Math.trunc(julianday - 0.5) + 0.5; // Julian day at previous midnight
     const H = (julianday - JD0) * 24; // Hours since previous midnight
     const D = julianday - 2451545.0; // Days since J2000.0
     const D0 = JD0 - 2451545.0; // Days since J2000.0 at previous midnight

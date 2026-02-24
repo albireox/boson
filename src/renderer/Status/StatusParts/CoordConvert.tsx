@@ -7,6 +7,7 @@ export function CCFromSC(pos1 : number, pos2 : number, magP : number): number[] 
     //pos 2: spherical position of the object (Dec or Alt, etc)
     //magP: desired magnitude of the cartesian position vector
 
+
     const coords: number[] = [0, 0, 0];
     coords[0] = magP * cosd(pos2) * cosd(pos1);
     coords[1] = magP * cosd(pos2) * sind(pos1);
@@ -20,29 +21,24 @@ export function DCFromSC(pos1 : number, pos2 : number): number[] {
     //pos 1: spherical position of the object (RA or Az, etc)
     //pos 2: spherical position of the object (Dec or Alt, etc)
 
-    const coords: number[] = [0, 0, 0];
-    coords[0] = cosd(pos2) * cosd(pos1);
-    coords[1] = cosd(pos2) * sind(pos1);
-    coords[2] = sind(pos2);
-
-    return coords;
+    return CCFromSC(pos1, pos2, 1.0);
 
 }
 
-export function SCFromCC(nums: number[]): number[] {
+export function SCFromCC(p: number[]): {pos:[number, number], magP: number, atPole: boolean} {
     //returns spherical coordinates of the form [pos1, pos2, magP, atPole] where pos1 and pos2 are the spherical positions of the object (RA or Az, etc) and magP is the magnitude of the cartesian position vector. atPole is a boolean value indicating whether the position vector is too close to the pole (i.e. if x and y are both close to 0).
     //nums is a cartesian position vector of the form [x, y, z]
-    const x = nums[0];
-    const y = nums[1];
-    const z = nums[2];
+    const x = p[0];
+    const y = p[1];
+    const z = p[2];
 
-    const magPxySq = x**2 + y**2;
-    const magPsq = magPxySq + z**2;
+    const magPxySq = (x*x) + (y*y);
+    const magPsq = magPxySq + (z*z);
     const magP = Math.sqrt(magPsq);
 
-    var atPole;
-    var pos1;
-    var pos2;
+    let atPole: boolean;
+    let pos1 : number;
+    let pos2: number;
 
     const FAccuracy = 1.0e-14; //accuracy threshold for determining if the position vector is too small
 
@@ -63,17 +59,16 @@ export function SCFromCC(nums: number[]): number[] {
         atPole = false;
         pos1 = atan2d(y, x);
         pos2 = atan2d(z, Math.sqrt(magPxySq));
-
         if (pos1 < 0.0) {
             pos1 += 360.0;
         }
     }
-
-    return [pos1, pos2, magP, atPole ? 1 : 0];
+    //console.log(`pos1: ${pos1}, pos2: ${pos2}, magP: ${magP}, atPole: ${atPole}`);
+    return {pos: [pos1, pos2], magP, atPole};
 }
 
-export function SCFromDC(nums: number[]): number[] {
+export function SCFromDC(nums: number[]): {pos:[number, number], atPole: boolean} {
     //returns pos1, pos2, and atPole
     const sphCoords = SCFromCC(nums);
-    return [sphCoords[0], sphCoords[1], sphCoords[3]];
+    return {pos: sphCoords.pos, atPole: sphCoords.atPole};
 }

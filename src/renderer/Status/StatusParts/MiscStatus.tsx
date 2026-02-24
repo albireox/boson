@@ -6,7 +6,7 @@ import { useKeywords } from 'renderer/hooks';
 import { unixSecondstoSJD, getLMST, UnixS, unixSecondsToTAI } from './timeFuncs';
 import { HAfromAzAlt } from './HAfromAzAlt';
 import { Latitude } from './TelConst';
-import { HMSConvert } from './HMSConvert';
+import { HMSConvert, HMSConvertNoDecimal } from './HMSConvert';
 import { Airmass } from './Airmass';
 import Cartridge  from './Cartridge';
 
@@ -39,14 +39,14 @@ export default function MiscStatus() {
     } = keywords;
 
     React.useEffect(() => {
-        console.log(`instrument:`,instNumW); 
+        //console.log(`instrument:`,instNumW); 
                
         setAirmass(Airmass(axePosw ? axePosw.values[1] : 0).toFixed(3)); //alt is 2nd value in AxePos
         
         setScale(scaleW ? ((scaleW.values[0] - 1) * 1.0e6).toFixed(1) : 'N/A');
         setFocus(focusW ? focusW.values[0] : 'N/A');
         
-        setHA(axePosw ? HMSConvert(HAfromAzAlt(axePosw.values[0], axePosw.values[1],Latitude)) : 'N/A'); 
+        setHA(axePosw ? HMSConvert(HAfromAzAlt(axePosw.values[0], axePosw.values[1],Latitude)) : 'N/A'); //need to get lat of LCO
         setCartridge(Cartridge(instNumW ? instNumW.values[0] : null));
     }, [keywords]);
 
@@ -63,7 +63,7 @@ export default function MiscStatus() {
         const tick = () => {
             setTAI(unixSecondsToTAI(UnixS()));
             setSJD(unixSecondstoSJD(UnixS())); //adding .3
-            setLMST(HMSConvert(getLMST(UnixS(), long))); //longitude of APO
+            setLMST(HMSConvertNoDecimal(getLMST(UnixS(), long))); //longitude of APO
         };
         tick();
         const interval = setInterval(tick, 1000); // Update every second

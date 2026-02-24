@@ -28,7 +28,7 @@ export default function AxisOffset() {
     } = keywords;
 
     React.useEffect(() => {
-        //console.log(parseBitErrors(azStatw ? azStatw.values[3] : 0));
+        //console.log(`Guide offset:`,guideOffw);
         setCalibAz(calibOffw ? DMSConvert(calibOffw.values[0]) : 'N/A');
         setCalibAlt(calibOffw ? DMSConvert(calibOffw.values[3]) : 'N/A');
         setCalibRot(calibOffw ? DMSConvert(calibOffw.values[6]) : 'N/A');

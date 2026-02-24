@@ -1,0 +1,15 @@
+export const sysconstlist : Record<string, string[]> = {
+    "ICRS" : ["RA", "Dec", "J","ICRS"],
+    "FK5" : ["RA", "Dec", "J","FK5"],
+    "FK4" : ["RA", "Dec", "B","FK4"],
+    "Gal" : ["Long","Lat","J","Galactic"],
+    "Topo" : ["Az","Alt","","Topocentric"],
+    "Obs" : ["Az","Alt","","Observed"],
+    "Phys" : ["Az","Alt","","Physical"],
+    "Mount" : ["Az","Alt","","Mount"],
+    "Unknown" : ["RA","Dec","","Unknown"],
+    "NoCSys" : ["","","","NoCSys"],
+    "Inst" : ["Az","Alt","","Instrument"],
+    "GImage" : ["Az","Alt","","GImage"],
+    "None" : ["","","","NoCSys"],
+}

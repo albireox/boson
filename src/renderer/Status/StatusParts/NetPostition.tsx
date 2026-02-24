@@ -2,45 +2,69 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
 import { HMSConvert, DMSConvert } from './HMSConvert';
+import { sysconstlist } from './SysConstList';
 
-//make sure to rename files
+//need to add/ask: Csys
 export default function NetPosition() {
     const keywords = useKeywords([
-            'tcc.AxePos', // az, alt, rot
+            'tcc.ObjNetPos',
+            'tcc.ObjSys', 
+            'tcc.RotPos',
+            'tcc.RotType',
+            'tcc.ObjName',
             'jaeger.configuration_loaded'
+
         ])
 
-    const [az, setAz] = React.useState<string>(''); //in a HH:MM:SS format? ask
-    const [alt, setAlt] = React.useState<string>('');
+    const [netPos1, setnetPos1] = React.useState<string>(''); //net position, changes depending on the objsys
+    const [netPos2, setnetPos2] = React.useState<string>('');
     const [rot, setRot] = React.useState<string>('');
+    const [objName, setObjName] = React.useState<string>('');
+    const [objSys, setObjSys] = React.useState<string>(''); //for the pos type, should change depending on the objsys
+    const [netPos1Type, setNetPos1Type] = React.useState<string>(''); //RA, Dec, Az, Alt, etc
+    const [netPos2Type, setNetPos2Type] = React.useState<string>(''); //RA, Dec, Az, Alt, etc
+    const [rotType, setRotType] = React.useState<string>(''); //for the rot type, should change depending on the rottype
 
-    const { AxePos: axePosw } = keywords;
+
+    const { 
+            ObjNetPos: objNetPosw,
+            ObjSys: objSysw,
+            RotPos: rotPosw,
+            ObjName: objNamew,
+            RotType: rotTypew
+     } = keywords;
+
 
     React.useEffect(() => {
-        if (!axePosw) {
-            setAz('N/A');
-            setAlt('N/A');
-            setRot('N/A');
-            return;
-        }
-        setAz(DMSConvert(axePosw.values[0]));
-        setAlt(DMSConvert(axePosw.values[1]));
-        setRot(DMSConvert(axePosw.values[2]));
         
-    }, [axePosw]);
+        setRot(rotPosw ? rotPosw.values[0] : 'N/A');
+        setObjName(objNamew ? objNamew.values[0] : 'N/A');
+        setObjSys(objSysw ? objSysw.values[0] : 'N/A');
+        setNetPos1Type(sysconstlist[objSysw ? objSysw.values[0] : 'Unknown'][0]);
+        setNetPos2Type(sysconstlist[objSysw ? objSysw.values[0] : 'Unknown'][1]);
+        if (netPos1Type === "RA") {
+            setnetPos1(HMSConvert(objNetPosw ? objNetPosw.values[0] : 'N/A'));
+        } else {
+            setnetPos1(DMSConvert(objNetPosw ? objNetPosw.values[0] : 'N/A'));
+        }
+        setnetPos2(DMSConvert(objNetPosw ? objNetPosw.values[3] : 'N/A'));
+
+        setRotType(rotTypew ? rotTypew.values[0] : 'N/A');
+        
+    }, [keywords]);
 
     return (
         <Box display='flex' flexDirection='column' p={2} pt={5}>
-            <Box>Name</Box>
+            <Box>Name {objName}</Box>
             <Box pl={4}>
-                <strong>Az:{"   "}</strong> {az}{"   "}°'"
+                <strong>{netPos1Type}:{"   "}</strong> {netPos1}{"   "}{netPos1Type === "RA" ? "hms" : `°'" `}
             </Box>
             <Box pl={4}>
-                <strong>Alt:{"   "}</strong> {alt}{"   "}°'"            
+                <strong>{netPos2Type}:{"   "}</strong> {netPos2}{"   "}°'"            
             </Box>
-            <Box>CSys Mount</Box>
+            <Box>CSys {objSys}</Box>
             <Box pl={4}>
-                <strong>Rot:{"   "}</strong> {rot}{"   "}° Mount
+                <strong>Rot:{"   "}</strong> {rot}{"   "}° {rotType}
             </Box>
         </Box>
     )
