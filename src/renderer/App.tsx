@@ -14,6 +14,7 @@ import FocusPlot from './Plots/Focus';
 import Preferences from './Preferences/Preferences';
 import { Snapshots } from './Snapshots';
 import { useStore } from './hooks';
+import { MirrorStatus } from './MirrorStatus';
 
 export type ColorModeValues = 'bright' | 'dark' | 'system';
 
@@ -164,6 +165,9 @@ export default function App() {
     // add new window here
     case 'status':
       view = <Status />;
+      break;
+    case 'mirrorstatus':
+      view = <MirrorStatus />
       break;
     default:
       view = null;

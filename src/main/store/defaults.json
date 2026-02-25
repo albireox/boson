@@ -57,6 +57,9 @@
       "width": 500,
       "height": 300,
       "resizable": true
+    },
+    "status": {
+      
     }
   },
   "profiles": {

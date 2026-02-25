@@ -213,6 +213,10 @@ export default class MenuBuilder {
           label: 'Chat',
           click: () => createWindow('chat'),
         },
+        {
+          label: "Status",
+          click: () => createWindow('status'),
+        },
 
         { type: 'separator' },
         {

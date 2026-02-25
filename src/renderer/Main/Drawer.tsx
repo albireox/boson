@@ -14,6 +14,7 @@ import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturi
 import SettingsIcon from '@mui/icons-material/Settings';
 import SettingsOverscanIcon from '@mui/icons-material/SettingsOverscan';
 import SignalWifiStatusbar4BarIcon from '@mui/icons-material/SignalWifiStatusbar4Bar';
+import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth';
 import {
   List,
   ListItem,
@@ -138,6 +139,12 @@ export default function Drawer() {
             text="Status"
             open={open}
           />
+          <Item
+            name='mirrorstatus'
+            icon={<CalendarViewMonthIcon />}
+            text='Mirror Status'
+            open={open}
+            />
           <Item name='chat' icon={<ChatIcon />} text='Chat' open={open} />
         </Box>
         <div style={{ flexGrow: 1 }} />

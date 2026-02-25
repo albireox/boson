@@ -42,6 +42,9 @@
   "chat": {
     "notifications": true
   },
+  "status" : {
+
+  },
   "audio": {
     "mode": "on",
     "muted": false,
