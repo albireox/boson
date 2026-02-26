@@ -45,7 +45,7 @@ export default function BottomLevel() {
     });
   };
 
-  console.log(secEncMountw);
+  //console.log(secEncMountw);
   React.useEffect(() => setPrimEnc(sanitize(primEncMountw?.values,6)), [primEncMountw]);
   React.useEffect(() => setPrimDesEnc(sanitize(primDesEncMountw?.values,6)), [primDesEncMountw]);
   React.useEffect(() => setPrimCmd(sanitize(primCmdMountw?.values,6)), [primCmdMountw]);
