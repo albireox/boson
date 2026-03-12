@@ -34,7 +34,6 @@ export default function Status() {
         position='absolute'
         width='100%'
         top={0}>
-
         <CssBaseline />
         <Grid container columnSpacing={10} rowSpacing={1} columns={3}>
             <Grid xs={1}>
