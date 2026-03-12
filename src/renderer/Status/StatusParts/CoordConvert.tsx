@@ -1,3 +1,11 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: CoordConvert.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 //bunch of function for conversion, take from RO python library, but converted to typescript and adapted for our use case.
 
 import { sind, cosd, atan2d } from "./MathUtil";

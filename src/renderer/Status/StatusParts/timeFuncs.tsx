@@ -1,11 +1,18 @@
-import React from 'react';
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: timeFuncs.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import { wrapPos, hoursPerDeg } from './MathUtil';
-import { get } from 'lodash';
 
 
 const TAI_MINUS_UTC_SECONDS = 37;
 
 export function TAIconvert(mjdseconds: number): string {
+    // Convert MJD seconds to Unix time (milliseconds since 1970-01-01T00:00:00Z)
     const SECONDS_PER_DAY = 86400;
     const MJD_TO_UNIX_DAYS = 40587; // MJD starts 1858-11-17
 
@@ -28,10 +35,12 @@ export function TAIconvert(mjdseconds: number): string {
 }
 
 export function getTAIdays(mjdseconds: number): number {
+    // Convert MJD seconds to TAI days, adding 0.3 days to account for the difference between MJD and TAI
     return Math.trunc((mjdseconds / 86400)+0.3); // Convert seconds to days and add 0.3
 }
 
 export function convertUTCtoTAI(mjdseconds: number): string {
+    // Convert MJD seconds to TAI seconds by adding the TAI-UTC offset, then convert to human-readable format
     const taiSeconds = mjdseconds + 37; // Add 37 seconds to convert UTC to TAI
     return TAIconvert(taiSeconds);
 }

@@ -1,9 +1,16 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: AxisOffsetStatus.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import Grid from '@mui/material/Unstable_Grid2';
 import { Box } from '@mui/system';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
 import { DMSConvert } from './HMSConvert';
-import { parseBitErrors } from './bitErr';
 
 export default function AxisOffset() {
     const keywords = useKeywords([

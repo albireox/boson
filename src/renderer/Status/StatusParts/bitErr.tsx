@@ -1,3 +1,11 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: bitErr.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 export const BitInfoMap = new Map<number, [string, number]>([
     // ErrorBits (severity = 2)
     [6,  ["Reverse limit switch", 2]],
@@ -31,6 +39,8 @@ export function toBinary(n: number): string {
 }
 
 export function parseBitErrors(bitValue: number): string {
+    //this function takes in a bit value and returns a string describing the active error and warning bits, 
+    // prioritizing errors over warnings
     const binaryString = toBinary(bitValue);
     const activeBits: string[] = [];
 
@@ -45,4 +55,22 @@ export function parseBitErrors(bitValue: number): string {
 
     return activeBits.join(", ");
 }
+
+export function parseBitColor(bitValue: number): number {
+    //returns one color based on the highest severity bit
+    const binaryString = toBinary(bitValue);
+    const activeBits: number[] = [];
+
+    for (let i = 0; i < binaryString.length; i++) {
+        if (binaryString[binaryString.length - 1 - i] === '1') {
+            const bitInfo = BitInfoMap.get(i);
+            if (bitInfo) {
+                activeBits.push(bitInfo[1]);
+            }
+        }
+    }
+
+    return Math.max(...activeBits, 0);
+}
+
 

@@ -60,6 +60,11 @@
     },
     "status": {
       
+    },
+    "mirrorstatus": {
+      "width": 800,
+      "height": 500,
+      "resizable": true
     }
   },
   "profiles": {

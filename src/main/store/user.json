@@ -45,6 +45,9 @@
   "status" : {
 
   },
+  "windowstatus" : {
+
+  },
   "audio": {
     "mode": "on",
     "muted": false,

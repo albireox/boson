@@ -1,3 +1,11 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: TopLevel.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import React from "react";
 import { Box } from "@mui/system";
 import {
@@ -32,6 +40,7 @@ export default function TopLevel() {
   const [secDesOrient, setSecDesOrient] = React.useState<number[]>([0, 0, 0, 0, 0]);
 
   const sanitize5 = (vals: unknown): number[] => {
+    //this function takes in the values of an orientation keyword and sanitizes it into an array of 5 numbers,
     if (!Array.isArray(vals) || vals.length < 5) return [0, 0, 0, 0, 0];
     return vals.slice(0, 5).map((v) => {
       const n = Number(v);

@@ -1,10 +1,18 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: NetPosition.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import { Box } from '@mui/system';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
 import { HMSConvert, DMSConvert } from './HMSConvert';
 import { sysconstlist } from './SysConstList';
 
-//need to add/ask: Csys
+
 export default function NetPosition() {
     const keywords = useKeywords([
             'tcc.ObjNetPos',
@@ -37,6 +45,7 @@ export default function NetPosition() {
 
     React.useEffect(() => {
         
+        console.log(`Net position:`,rotPosw);
         setRot(rotPosw ? rotPosw.values[0] : 'N/A');
         setObjName(objNamew ? objNamew.values[0] : 'N/A');
         setObjSys(objSysw ? objSysw.values[0] : 'N/A');

@@ -1,3 +1,11 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: MiscStatus.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { Box } from '@mui/system';
 import React from 'react';
@@ -70,7 +78,7 @@ export default function MiscStatus() {
         return () => clearInterval(interval); // Cleanup on unmount
     }, []);
 
-    //not sure how to calc LMST, no long in tcc
+
 
     return (
         

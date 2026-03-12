@@ -1,3 +1,11 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: SlewStatus.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import { Box } from '@mui/system';
 import { LinearProgress } from '@mui/material';
 import React from 'react';
@@ -51,7 +59,6 @@ export default function SlewStatus() {
     }, []);
 
     const localStartRef = React.useRef<number | null>(null);
-    const prevIsSlewingRef = React.useRef<boolean>(false);
 
     React.useEffect(() => {
         if (!isSlewing) {

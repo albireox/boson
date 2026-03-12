@@ -1,9 +1,33 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: AxisStatus.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import Grid from '@mui/material/Unstable_Grid2';
 import { Box } from '@mui/system';
-import { DMSConvert } from './HMSConvert';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
-import { parseBitErrors } from './bitErr';
+import { parseBitErrors, parseBitColor } from './bitErr';
+
+
+const statusColors: Record<number, string> = {
+    0: 'black',
+    1: 'blue',
+    2: 'red',
+};
+
+const cmdStates : Record<string,number> = {
+    //1 is warning, 2 is error, 0 is normal
+    "Drifting" : 1,
+    "Halted" : 2,
+    "Halting" : 2,
+    "Slewing" : 1,
+    "Tracking" : 0,
+    "NotAvailable" : 0,
+}
 
 export default function AxisStatus() {
     const keywords = useKeywords([
@@ -91,26 +115,26 @@ export default function AxisStatus() {
             <Grid xs={2}>
                 {azTarget}{"   "}° 
             </Grid>
-            <Grid xs={2}>
+            <Grid xs={2} sx={{color: statusColors[cmdStates[azCmdState] || 0]}}>
                 {azCmdState}
             </Grid>
             <Grid xs={3}>
                 {azErrCode}
             </Grid>
-            <Grid xs={10}>{azStat}</Grid>
+            <Grid xs={10} sx={{color: statusColors[azStatw ? parseBitColor(azStatw.values[3]) : 0]}}>{azStat}</Grid>
             <Grid xs={3}>
                 Alt : {alt} {"   "}°           
             </Grid>
             <Grid xs={2}>
                 {altTarget}{"   "}° 
             </Grid>
-            <Grid xs={2}>
+            <Grid xs={2} sx={{color: statusColors[cmdStates[altCmdState] || 0]}}>
                 {altCmdState}
             </Grid>
             <Grid xs={3}>
                 {altErrCode}
             </Grid>
-            <Grid xs={10}>{altStat}</Grid>
+            <Grid xs={10} sx={{color: statusColors[altStatw ? parseBitColor(altStatw.values[3]) : 0]}}>{altStat}</Grid>
 
             <Grid xs={3}>
                 Rot : {rot} {"   "}°            
@@ -118,15 +142,13 @@ export default function AxisStatus() {
             <Grid xs={2}>
                 {rotTarget}{"   "}° 
             </Grid>
-            <Grid xs={2}>
+            <Grid xs={2} sx={{color: statusColors[cmdStates[rotCmdState] || 0]}}>
                 {rotCmdState}
             </Grid>
             <Grid xs={3}>
                 {rotErrCode}
             </Grid>
-            <Grid xs={10}>{rotStat}</Grid>
-
-
+            <Grid xs={10} sx={{color: statusColors[rotStatw ? parseBitColor(rotStatw.values[3]) : 0]}}>{rotStat}</Grid>
         </Grid>
         </Box>
     )

@@ -217,6 +217,10 @@ export default class MenuBuilder {
           label: "Status",
           click: () => createWindow('status'),
         },
+        {
+          label: "Mirror Status",
+          click: () => createWindow('mirrorstatus'),
+        },
 
         { type: 'separator' },
         {

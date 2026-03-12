@@ -1,7 +1,15 @@
-import React from 'react';
-import { DMSConvert } from './HMSConvert';
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: HAfromAzAlt.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import { DCFromSC, SCFromDC } from './CoordConvert';
 import { sind, cosd, wrapCtr } from './MathUtil';
+
+
 
 //logic taken from RO python library
 

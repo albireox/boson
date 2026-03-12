@@ -1,4 +1,10 @@
-import Grid from '@mui/material/Unstable_Grid2';
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: MirrorStatus.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
 import { CssBaseline, Box, Stack } from '@mui/material';
 import { KeywordContext, useKeywords } from 'renderer/hooks';
 import TopLevel from './Components/TopLevel';

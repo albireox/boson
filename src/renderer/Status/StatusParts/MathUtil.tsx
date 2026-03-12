@@ -1,3 +1,11 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: MathUtil.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 export const RadPerDeg = Math.PI / 180;
 export const DegPerRad = 1.0 / RadPerDeg;
 export const hoursPerDeg = 24.0 / 360.0;
@@ -28,6 +36,7 @@ export function wrapCtr(degrees: number): number {
 }
 
 export function modulo(degrees: number, modulus: number): number {
+    //returns the angle (in degrees) wrapped into the range [0, modulus)
     return ((degrees % modulus) + modulus) % modulus;
 }
 
@@ -43,6 +52,7 @@ export function rot2D(xyVec: number[], angDeg: number): { xRot: number, yRot: nu
 }
 
 export function wrapPos(degrees: number): number {
+    //returns the angle (in degrees) wrapped into the range [0, 360)
     const res = ((degrees % 360.0) + 360.0) % 360.0;
     if (res < 0) {
         return res + 360.0;

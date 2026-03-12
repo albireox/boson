@@ -1,3 +1,11 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: SysConstList.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 export const sysconstlist : Record<string, string[]> = {
     "ICRS" : ["RA", "Dec", "J","ICRS"],
     "FK5" : ["RA", "Dec", "J","FK5"],

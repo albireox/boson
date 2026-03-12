@@ -1,4 +1,11 @@
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-03-11
+ *  @Filename: MidLevel.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import { Box } from '@mui/system';
 import React from 'react';
 import { LinearProgress, Typography } from '@mui/material';
@@ -65,7 +72,7 @@ function MountProgress({ title, values }: { title: string; values: unknown }) {
     const [disableAnim, setDisableAnim] = React.useState(false);
 
     React.useEffect(() => {
-    // If progress moved backwards (reset), disable animation for this frame
+    // On next animation, disable animation for this frame
     if (progress < prevProgressRef.current) {
         setDisableAnim(true);
         // Re-enable animation on next tick/frame
@@ -77,7 +84,6 @@ function MountProgress({ title, values }: { title: string; values: unknown }) {
   
     return (
       <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-        {/* Always show title + state */}
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
           <Typography variant="body2" sx={{ fontWeight: 600 }}>
             {title} state: {parsed.state}
