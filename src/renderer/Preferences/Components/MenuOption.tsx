@@ -6,7 +6,7 @@
  */
 
 import { FormControl, SelectChangeEvent } from '@mui/material';
-import Grid from '@mui/system/Unstable_Grid';
+import Grid from '@mui/material/Grid';
 import { BosonMenuItem, BosonSelect } from 'renderer/Components';
 import { useStore } from 'renderer/hooks';
 import { TypographyDescription, TypographyTitle } from './TypographyTitle';
@@ -41,12 +41,12 @@ export default function MenuOption(props: MenuOptionProps) {
 
   return (
     <Grid container pt={1} minHeight={50} alignContent='center'>
-      <Grid xs={9}>
+      <Grid size={9}>
         <TypographyTitle>{title}</TypographyTitle>
         <TypographyDescription>{description}</TypographyDescription>
       </Grid>
       <Grid
-        xs={3}
+        size={3}
         alignItems='flex-end'
         textAlign='right'
         alignSelf='center'

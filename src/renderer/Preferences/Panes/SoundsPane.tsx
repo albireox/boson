@@ -21,8 +21,8 @@ import {
   Typography,
   alpha,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { Stack } from '@mui/system';
-import Grid from '@mui/system/Unstable_Grid';
 import React from 'react';
 import { useStore } from 'renderer/hooks';
 import BooleanOption from '../Components/BooleanOption';
@@ -289,7 +289,7 @@ export default function SoundsPane() {
     <Pane title='Sounds'>
       <Stack direction='column'>
         <Grid container direction='row'>
-          <Grid xs={9}>
+          <Grid size={9}>
             <Stack width='100%' direction='column'>
               <AudioMode />
               <Divider sx={{ my: 4 }} />
