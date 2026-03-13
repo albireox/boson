@@ -7,7 +7,8 @@
 
 import {
   Box,
-  Button, ButtonProps,
+  Button,
+  ButtonProps,
   Dialog,
   DialogActions,
   DialogContent,

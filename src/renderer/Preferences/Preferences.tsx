@@ -69,48 +69,48 @@ export default function Preferences() {
 
   return (
     <Box
-      component="div"
-      width="100%"
-      height="100%"
-      position="absolute"
+      component='div'
+      width='100%'
+      height='100%'
+      position='absolute'
       top={0}
-      display="grid"
-      gridTemplateColumns="minmax(150px, 250px) 1fr"
-      gridAutoFlow="column"
+      display='grid'
+      gridTemplateColumns='minmax(150px, 250px) 1fr'
+      gridAutoFlow='column'
     >
       <CssBaseline />
       <Paper elevation={0} style={{ height: '100%' }}>
         <Stack
           spacing={1}
-          width="100%"
-          direction="row"
+          width='100%'
+          direction='row'
           paddingTop={5}
           paddingRight={1.5}
         >
           <div style={{ flexGrow: 1 }} />
-          <Stack direction="column">
+          <Stack direction='column'>
             <Title>USER SETTINGS</Title>
             <MenuItemPreferences
-              title="Connection"
-              name="connection"
+              title='Connection'
+              name='connection'
               {...props}
             />
             <MenuItemPreferences
-              title="Interface"
-              name="interface"
+              title='Interface'
+              name='interface'
               {...props}
             />
-            <MenuItemPreferences title="Sounds" name="sounds" {...props} />
-            <MenuItemPreferences title="Advanced" name="advanced" {...props} />
+            <MenuItemPreferences title='Sounds' name='sounds' {...props} />
+            <MenuItemPreferences title='Advanced' name='advanced' {...props} />
             <Divider sx={{ mt: 2, mb: 3 }} />
             <Title>TOOLS</Title>
             <MenuItemPreferences
-              title="Log window"
-              name="log_window"
+              title='Log window'
+              name='log_window'
               {...props}
             />
-            <MenuItemPreferences title="Guider" name="guider" {...props} />
-            <MenuItemPreferences title="HAL" name="HAL" {...props} />
+            <MenuItemPreferences title='Guider' name='guider' {...props} />
+            <MenuItemPreferences title='HAL' name='HAL' {...props} />
           </Stack>
         </Stack>
       </Paper>

@@ -3,8 +3,10 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
-
- html, body, main, div#root {
+html,
+body,
+main,
+div#root {
   height: 100%;
   flex-direction: column;
   overflow: hidden;
@@ -20,7 +22,7 @@
   font-size: 11pt;
   top: 0px;
   position: fixed;
-  z-index: 0
+  z-index: 0;
 }
 .titlebar else {
   -webkit-app-region: no-drag;
@@ -28,7 +30,7 @@
 }
 
 .snapshots::-webkit-scrollbar {
-  display:block;
+  display: block;
   -webkit-appearance: none;
   width: 11px;
 }
@@ -36,7 +38,7 @@
 .snapshots::-webkit-scrollbar-thumb {
   border-radius: 8px;
   border: 2px solid white;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* source-code-pro-regular - latin */
@@ -45,12 +47,19 @@
   font-style: normal;
   font-weight: 400;
   src: url('/fonts/source-code-pro-v18-latin-regular.eot'); /* IE9 Compat Modes */
-  src: local(''),
-       url('/fonts/source-code-pro-v18-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('/fonts/source-code-pro-v18-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('/fonts/source-code-pro-v18-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('/fonts/source-code-pro-v18-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('/fonts/source-code-pro-v18-latin-regular.svg#SourceCodePro') format('svg'); /* Legacy iOS */
+  src:
+    local(''),
+    url('/fonts/source-code-pro-v18-latin-regular.eot?#iefix')
+      format('embedded-opentype'),
+    /* IE6-IE8 */ url('/fonts/source-code-pro-v18-latin-regular.woff2')
+      format('woff2'),
+    /* Super Modern Browsers */
+      url('/fonts/source-code-pro-v18-latin-regular.woff') format('woff'),
+    /* Modern Browsers */ url('/fonts/source-code-pro-v18-latin-regular.ttf')
+      format('truetype'),
+    /* Safari, Android, iOS */
+      url('/fonts/source-code-pro-v18-latin-regular.svg#SourceCodePro')
+      format('svg'); /* Legacy iOS */
 }
 
 :root {

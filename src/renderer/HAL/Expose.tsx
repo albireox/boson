@@ -75,12 +75,12 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
 
   return (
     <Grid direction='row' alignItems='center' columns={12} container>
-      <Grid size={{xs: 2, md: 1}}>
+      <Grid size={{ xs: 2, md: 1 }}>
         <Typography variant='body2' color='text.secondary'>
           {header}
         </Typography>
       </Grid>
-      <Grid size={{xs: 8, md: 10}}>
+      <Grid size={{ xs: 8, md: 10 }}>
         <LinearProgress
           variant={running ? 'determinate' : 'indeterminate'}
           value={value}
@@ -88,7 +88,7 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
           {...props}
         />
       </Grid>
-      <Grid size={{xs: 2, md: 1}}>
+      <Grid size={{ xs: 2, md: 1 }}>
         <Typography variant='body2' color='text.secondary'>{`${round(
           etrDisplay || 0,
           0
@@ -254,14 +254,10 @@ export default function Expose() {
     setDetail(
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1 }} width='100%'>
         {bossDetail && (
-          <Grid size={apogeeDetail && bossDetail ? 6 : 12}>
-            {bossDetail}
-          </Grid>
+          <Grid size={apogeeDetail && bossDetail ? 6 : 12}>{bossDetail}</Grid>
         )}
         {apogeeDetail && (
-          <Grid size={apogeeDetail && bossDetail ? 6 : 12}>
-            {apogeeDetail}
-          </Grid>
+          <Grid size={apogeeDetail && bossDetail ? 6 : 12}>{apogeeDetail}</Grid>
         )}
       </Grid>
     );

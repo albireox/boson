@@ -39,7 +39,7 @@ function ConnectionDetails() {
   return (
     <Pane title='Connection'>
       <Grid container>
-        <Grid size={{xs: 12,sm: 9, md: 9}}>
+        <Grid size={{ xs: 12, sm: 9, md: 9 }}>
           <Stack direction='column' spacing={1}>
             <Stack direction='row' spacing={1}>
               <TextInput fullWidth label='User' param='connection.user' />
@@ -94,7 +94,7 @@ function ConnectionDetails() {
           <Divider sx={{ my: 4 }} />
         </Grid>
         <Grid
-          size={{xs: 3, sm: 3}}
+          size={{ xs: 3, sm: 3 }}
           pl={4}
           sx={(theme) => ({
             [theme.breakpoints.down('sm')]: {
@@ -138,7 +138,7 @@ function ConnectionProfiles() {
   return (
     <Pane title='Profiles'>
       <Grid container direction='row'>
-        <Grid container size={{xs: 12, sm: 9, md: 9}} spacing={2}>
+        <Grid container size={{ xs: 12, sm: 9, md: 9 }} spacing={2}>
           {Object.entries(profiles).map((profile) => (
             <Grid key={profile[0]}>
               <ConnectionProfileCard
@@ -149,7 +149,7 @@ function ConnectionProfiles() {
           ))}
         </Grid>
         <Grid
-          size={{xs: 3, sm: 3}}
+          size={{ xs: 3, sm: 3 }}
           pl={4}
           sx={(theme) => ({
             [theme.breakpoints.down('sm')]: {
@@ -198,7 +198,7 @@ function Observatory() {
   return (
     <Pane title='Observatory'>
       <Grid container direction='row'>
-        <Grid size={{xs: 12, sm: 9, md: 9}}>
+        <Grid size={{ xs: 12, sm: 9, md: 9 }}>
           <Stack direction='column'>
             <FormControl fullWidth>
               <PreferencesRadioGroup

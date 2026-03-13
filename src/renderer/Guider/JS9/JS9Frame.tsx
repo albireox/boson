@@ -168,8 +168,6 @@ function JS9FrameInner(
         return;
       }
 
-
-
       setPath(fullURL);
     },
     [host, port, display, path, updateParams]
@@ -208,26 +206,40 @@ function JS9FrameInner(
   // console.log(`url ${path}`);
   // console.log(path&&showImgNum)
   // console.log(path&&showImgNum)
-  let thisImgNum: string = "";
-  let thisGfaNum: string = "";
-  if (showImgNum && path){
+  let thisImgNum: string = '';
+  let thisGfaNum: string = '';
+  if (showImgNum && path) {
     // console.log(path);
     // console.log(window);
     // console.log(path.split("-").at(-1).split(".").at(0));
-    thisImgNum = path.split("-").at(-1).split(".").at(0);
-    thisGfaNum = path.split("-").at(1);
+    thisImgNum = path.split('-').at(-1).split('.').at(0);
+    thisGfaNum = path.split('-').at(1);
     // const thisImgNum = path.split("-").at(-1).strip(".fits");
     // console.log(thisImgNum);
     // console.log(thisGfaNum);
     // window.JS9.DisplayMessage('info', thisImgNum);
-
   }
 
   return (
     <>
-      {thisImgNum && <div style={{width: '100px', height: '30px', float: 'left', top: '10px', left: '10px', color: 'white', backgroundColor: 'black'}}> {thisGfaNum}: {thisImgNum} </div>}
+      {thisImgNum && (
+        <div
+          style={{
+            width: '100px',
+            height: '30px',
+            float: 'left',
+            top: '10px',
+            left: '10px',
+            color: 'white',
+            backgroundColor: 'black',
+          }}
+        >
+          {' '}
+          {thisGfaNum}: {thisImgNum}{' '}
+        </div>
+      )}
       <Box
-        className="JS9"
+        className='JS9'
         id={display}
         style={{
           width: size,
@@ -275,8 +287,7 @@ function JS9FrameInner(
         }}
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
-      >
-      </Box>
+      ></Box>
       <DS9Dialog
         open={openDS9Dialog}
         close={() => setOpenDS9Dialog(false)}
