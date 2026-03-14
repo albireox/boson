@@ -45,7 +45,7 @@ export default function NetPosition() {
 
     React.useEffect(() => {
         
-        console.log(`Net position:`,rotPosw);
+        //console.log(`Net position:`,rotPosw);
         setRot(rotPosw ? rotPosw.values[0] : 'N/A');
         setObjName(objNamew ? objNamew.values[0] : 'N/A');
         setObjSys(objSysw ? objSysw.values[0] : 'N/A');
@@ -63,7 +63,7 @@ export default function NetPosition() {
     }, [keywords]);
 
     return (
-        <Box display='flex' flexDirection='column' p={2} pt={5}>
+        <Box display='flex' flexDirection='column' p={2} pt={1}>
             <Box>Name {objName}</Box>
             <Box pl={4}>
                 <strong>{netPos1Type}:{"   "}</strong> {netPos1}{"   "}{netPos1Type === "RA" ? "hms" : `°'" `}

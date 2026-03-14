@@ -10,6 +10,7 @@ import { KeywordContext, useKeywords } from 'renderer/hooks';
 import TopLevel from './Components/TopLevel';
 import MidLevel from './Components/MidLevel';
 import BottomLevel from './Components/BottomLevel';
+import { BosonHeader } from 'renderer/Components';
 
 
 export default function MirrorStatus() {
@@ -23,6 +24,7 @@ export default function MirrorStatus() {
         top={0}>
 
         <CssBaseline />
+        <BosonHeader/>
         <TopLevel />
         <MidLevel />
         <BottomLevel />

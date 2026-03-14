@@ -6,7 +6,7 @@
  */
 
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Box } from '@mui/system';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
@@ -38,7 +38,7 @@ export default function OffsetStatus() {
     } = keywords;
 
     React.useEffect(() => {
-        //console.log(objArcOffw);
+        console.log(objInstAngw);
         if (!objArcOffw) {
             setoffpos1('N/A');
             setoffpos2('N/A');
@@ -47,14 +47,17 @@ export default function OffsetStatus() {
         let offpos1 = DMSConvert(objArcOffw.values[0]);
         let offpos2 = DMSConvert(objArcOffw.values[3]);
         let xyVec = [objArcOffw.values[0], objArcOffw.values[3]];
-        let objxoff = DMSConvert(rot2D(xyVec, objInstAngw ? objInstAngw.values[0] : 0).xRot);
-        let objyoff = DMSConvert(rot2D(xyVec, objInstAngw ? objInstAngw.values[0] : 0).yRot);
+        if (typeof objInstAngw.values[0] === "string" || Number.isNaN(Number(objInstAngw.values[0]))) {
+            setObjxoff("??:??:??");     
+            setObjyoff("??:??:??");  
+        } else {
+            setObjxoff(DMSConvert(rot2D(xyVec, objInstAngw ? objInstAngw.values[0] : 0).xRot));
+            setObjyoff(DMSConvert(rot2D(xyVec, objInstAngw ? objInstAngw.values[0] : 0).yRot));
+        }
         setoffpos1(offpos1);
         setoffpos2(offpos2);
         setBorex(boresightw ? DMSConvert(boresightw.values[0]) : 'N/A');
         setBorey(boresightw ? DMSConvert(boresightw.values[1]) : 'N/A');
-        setObjxoff(objxoff);
-        setObjyoff(objyoff);
         
         
     }, [keywords]);
@@ -62,46 +65,46 @@ export default function OffsetStatus() {
     return (
         <Box display='flex' flexDirection='column' borderTop={1} p={2} pt={1}>
         <Grid container columnSpacing={2} rowSpacing={1} columns={20}>
-            <Grid xs={2}>
+            <Grid size={2}>
                 Object
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 {sysconstlist[objSysw ? objSysw.values[0] : 'Unknown'][0]}
             </Grid>
-            <Grid xs={4}>
+            <Grid size={4}>
                 {offpos1}°'"
             </Grid>
-            <Grid xs={7} sx={{ whiteSpace: 'pre' }}>
+            <Grid size={7} sx={{ whiteSpace: 'pre' }}>
                 (X          {objxoff}°'")
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 Bore         
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 X  
             </Grid>
-            <Grid xs={4}>
+            <Grid size={4}>
                 {borex}°'"
             </Grid>
 
 
-            <Grid xs={2}>
+            <Grid size={2}>
                 Arc Off
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 {sysconstlist[objSysw ? objSysw.values[0] : 'Unknown'][1]}
             </Grid>
-            <Grid xs={4}>
+            <Grid size={4}>
                 {offpos2}°'"
             </Grid>
-            <Grid xs={7} sx={{ whiteSpace: 'pre' }}>
+            <Grid size={7} sx={{ whiteSpace: 'pre' }}>
                 (Y          {objyoff}°'")
             </Grid>
-            <Grid xs={1} />
-            <Grid xs={1}>
+            <Grid size={1} />
+            <Grid size={1}>
                 Y         
             </Grid>
-            <Grid xs={4}>
+            <Grid size={4}>
                 {borey}°'"
             </Grid>
         </Grid>

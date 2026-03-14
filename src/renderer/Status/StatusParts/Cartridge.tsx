@@ -5,6 +5,8 @@
  *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
  */
 
+//may be deprecated
+
 
 const InstNameDict = new Map<any,any>();
 InstNameDict.set(0, "None");

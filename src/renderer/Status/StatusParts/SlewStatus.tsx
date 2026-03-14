@@ -111,7 +111,7 @@ export default function SlewStatus() {
     }, [isSlewing, slewSuperseded, slewDuration, slewBeg]);
     
     return (
-        <Box display='flex' flexDirection='column' borderTop={1} p={2} pt={5}>
+        <Box display='flex' flexDirection='column' p={2} pt={5}>
             { isSlewing && !slewSuperseded ? (
             <>
             <p>Slew Progress - {remainingSec}s remaining</p>

@@ -6,7 +6,7 @@
  */
 
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Box } from '@mui/system';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
@@ -109,46 +109,46 @@ export default function AxisStatus() {
     return (
         <Box display='flex' flexDirection='column' borderTop={1} p={2} pt={1}>
         <Grid container columnSpacing={4} rowSpacing={1} columns={20}>
-            <Grid xs={3}>
+            <Grid size={3}>
                 Az : {az} {"   "}°
             </Grid>
-            <Grid xs={2}>
+            <Grid size={2}>
                 {azTarget}{"   "}° 
             </Grid>
-            <Grid xs={2} sx={{color: statusColors[cmdStates[azCmdState] || 0]}}>
+            <Grid size={2} sx={{color: statusColors[cmdStates[azCmdState] || 0]}}>
                 {azCmdState}
             </Grid>
-            <Grid xs={3}>
+            <Grid size={3}>
                 {azErrCode}
             </Grid>
-            <Grid xs={10} sx={{color: statusColors[azStatw ? parseBitColor(azStatw.values[3]) : 0]}}>{azStat}</Grid>
-            <Grid xs={3}>
+            <Grid size={10} sx={{color: statusColors[azStatw ? parseBitColor(azStatw.values[3]) : 0]}}>{azStat}</Grid>
+            <Grid size={3}>
                 Alt : {alt} {"   "}°           
             </Grid>
-            <Grid xs={2}>
+            <Grid size={2}>
                 {altTarget}{"   "}° 
             </Grid>
-            <Grid xs={2} sx={{color: statusColors[cmdStates[altCmdState] || 0]}}>
+            <Grid size={2} sx={{color: statusColors[cmdStates[altCmdState] || 0]}}>
                 {altCmdState}
             </Grid>
-            <Grid xs={3}>
+            <Grid size={3}>
                 {altErrCode}
             </Grid>
-            <Grid xs={10} sx={{color: statusColors[altStatw ? parseBitColor(altStatw.values[3]) : 0]}}>{altStat}</Grid>
+            <Grid size={10} sx={{color: statusColors[altStatw ? parseBitColor(altStatw.values[3]) : 0]}}>{altStat}</Grid>
 
-            <Grid xs={3}>
+            <Grid size={3}>
                 Rot : {rot} {"   "}°            
             </Grid>
-            <Grid xs={2}>
+            <Grid size={2}>
                 {rotTarget}{"   "}° 
             </Grid>
-            <Grid xs={2} sx={{color: statusColors[cmdStates[rotCmdState] || 0]}}>
+            <Grid size={2} sx={{color: statusColors[cmdStates[rotCmdState] || 0]}}>
                 {rotCmdState}
             </Grid>
-            <Grid xs={3}>
+            <Grid size={3}>
                 {rotErrCode}
             </Grid>
-            <Grid xs={10} sx={{color: statusColors[rotStatw ? parseBitColor(rotStatw.values[3]) : 0]}}>{rotStat}</Grid>
+            <Grid size={10} sx={{color: statusColors[rotStatw ? parseBitColor(rotStatw.values[3]) : 0]}}>{rotStat}</Grid>
         </Grid>
         </Box>
     )
