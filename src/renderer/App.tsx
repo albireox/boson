@@ -154,7 +154,7 @@ export default function App() {
       break;
     
     case 'collimate':
-      view = <Collimate />
+      view = <Collimate />;
       break;
     case 'focus_plot':
       view = <FocusPlot />;
@@ -177,7 +177,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-          <Route path="/" element={view} />
+          <Route path='/' element={view} />
         </Routes>
       </Router>
     </ThemeProvider>

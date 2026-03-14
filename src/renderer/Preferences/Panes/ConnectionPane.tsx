@@ -17,7 +17,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 import { useStore } from 'renderer/hooks';
 import ConnectionProfileCard from '../Components/ConnectionProfileCard';
@@ -39,7 +39,7 @@ function ConnectionDetails() {
   return (
     <Pane title='Connection'>
       <Grid container>
-        <Grid xs={12} sm={9} md={9}>
+        <Grid size={{ xs: 12, sm: 9, md: 9 }}>
           <Stack direction='column' spacing={1}>
             <Stack direction='row' spacing={1}>
               <TextInput fullWidth label='User' param='connection.user' />
@@ -47,22 +47,22 @@ function ConnectionDetails() {
               <PasswordInput fullWidth label='Password' account={program} />
             </Stack>
             <Grid container pt={1}>
-              <Grid xs={9}>
+              <Grid size={9}>
                 <TextInput fullWidth label='Host' param='connection.host' />
               </Grid>
-              <Grid xs={3} pl={1}>
+              <Grid size={3} pl={1}>
                 <TextInput fullWidth label='Port' param='connection.port' />
               </Grid>
             </Grid>
             <Grid container pt={1}>
-              <Grid xs={9}>
+              <Grid size={9}>
                 <TextInput
                   fullWidth
                   label='HTTP Host'
                   param='connection.httpHost'
                 />
               </Grid>
-              <Grid xs={3} pl={1}>
+              <Grid size={3} pl={1}>
                 <TextInput
                   fullWidth
                   label='HTTP Port'
@@ -71,7 +71,7 @@ function ConnectionDetails() {
               </Grid>
             </Grid>
             <Grid container pt={1} minHeight={50} alignContent='center'>
-              <Grid xs={6}>
+              <Grid size={6}>
                 <Typography
                   variant='body2'
                   fontSize={14}
@@ -86,7 +86,7 @@ function ConnectionDetails() {
                   Requires authentication
                 </Typography>
               </Grid>
-              <Grid xs={6} alignItems='flex-end' textAlign='right'>
+              <Grid size={6} alignItems='flex-end' textAlign='right'>
                 <Switch param='connection.needsAuthentication' />
               </Grid>
             </Grid>
@@ -94,7 +94,7 @@ function ConnectionDetails() {
           <Divider sx={{ my: 4 }} />
         </Grid>
         <Grid
-          sm={3}
+          size={{ xs: 3, sm: 3 }}
           pl={4}
           sx={(theme) => ({
             [theme.breakpoints.down('sm')]: {
@@ -138,7 +138,7 @@ function ConnectionProfiles() {
   return (
     <Pane title='Profiles'>
       <Grid container direction='row'>
-        <Grid container xs={12} sm={9} md={9} spacing={2}>
+        <Grid container size={{ xs: 12, sm: 9, md: 9 }} spacing={2}>
           {Object.entries(profiles).map((profile) => (
             <Grid key={profile[0]}>
               <ConnectionProfileCard
@@ -149,7 +149,7 @@ function ConnectionProfiles() {
           ))}
         </Grid>
         <Grid
-          sm={3}
+          size={{ xs: 3, sm: 3 }}
           pl={4}
           sx={(theme) => ({
             [theme.breakpoints.down('sm')]: {
@@ -198,7 +198,7 @@ function Observatory() {
   return (
     <Pane title='Observatory'>
       <Grid container direction='row'>
-        <Grid xs={12} sm={9} md={9}>
+        <Grid size={{ xs: 12, sm: 9, md: 9 }}>
           <Stack direction='column'>
             <FormControl fullWidth>
               <PreferencesRadioGroup

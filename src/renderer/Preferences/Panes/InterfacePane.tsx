@@ -15,8 +15,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { blue } from '@mui/material/colors';
+import Grid from '@mui/material/Grid';
 import { Stack } from '@mui/system';
-import Grid from '@mui/system/Unstable_Grid';
 import React from 'react';
 import { useStore } from 'renderer/hooks';
 import Pane from '../Components/Pane';
@@ -82,13 +82,13 @@ function WindowManagement() {
 
         {/* Save window positions */}
         <Grid container pt={1} minHeight={50} alignContent='center'>
-          <Grid xs={9}>
+          <Grid size={9}>
             <TypographyTitle>Save window positions</TypographyTitle>
             <TypographyDescription>
               Remembers open windows, dimensions, and positions.
             </TypographyDescription>
           </Grid>
-          <Grid xs={3} alignItems='flex-end' textAlign='right'>
+          <Grid size={3} alignItems='flex-end' textAlign='right'>
             <Switch
               disabled={saveOnlyOnRequest}
               param='interface.saveWindows'
@@ -100,14 +100,14 @@ function WindowManagement() {
       {/* Save only when requested */}
       <Box>
         <Grid container pt={1} minHeight={50} alignContent='center'>
-          <Grid xs={9}>
+          <Grid size={9}>
             <TypographyTitle>Save only when requested</TypographyTitle>
             <TypographyDescription>
               Windows will be saved only when manually requested
             </TypographyDescription>
           </Grid>
           <Grid
-            xs={3}
+            size={3}
             alignItems='flex-end'
             textAlign='right'
             alignSelf='center'
@@ -120,14 +120,14 @@ function WindowManagement() {
       {/* Delete window positions */}
       <Box>
         <Grid container pt={1} minHeight={50} alignContent='center'>
-          <Grid xs={9}>
+          <Grid size={9}>
             <TypographyTitle>Delete window positions</TypographyTitle>
             <TypographyDescription>
               Removes all saved window position.
             </TypographyDescription>
           </Grid>
           <Grid
-            xs={3}
+            size={3}
             alignItems='flex-end'
             textAlign='right'
             alignSelf='center'
@@ -152,7 +152,7 @@ export default function InterfacePane() {
     <Pane title='Interface'>
       <Stack direction='column'>
         <Grid container direction='row'>
-          <Grid xs={9}>
+          <Grid size={9}>
             <Stack width='100%' direction='column'>
               <ThemeMode />
               <Divider sx={{ my: 4 }} />

@@ -5,8 +5,8 @@ import GuiderContext, {
   defaultGuiderConfig,
   prepareGuiderContext,
 } from '../Guider/Context';
-import StatusRow from './Status/StatusRow'
-import SlewRow from './Slew/SlewRow'
+import StatusRow from './Status/StatusRow';
+import SlewRow from './Slew/SlewRow';
 import { GuiderHeader } from '../Guider/Header';
 import { JS9Double } from './JS9';
 import { MirrorPlot } from './Plot';
@@ -26,7 +26,6 @@ export type GuiderRefMap = {
 export default function Collimate() {
   // useLoadJS9();
 
-
   const [config, setConfig] = React.useState(defaultGuiderConfig);
   const boundContext = prepareGuiderContext(config, setConfig);
 
@@ -42,7 +41,7 @@ export default function Collimate() {
     'tcc.PrimState',
     'tcc.TAI',
     'tcc.PrimOrient',
-    'tcc.SecOrient'
+    'tcc.SecOrient',
   ]);
 
   const ref = React.useRef<GuiderRefMap>({});
@@ -53,32 +52,35 @@ export default function Collimate() {
 
     if (refreshInterval === 0) return () => {};
 
-    const interval = setInterval(() => {
-      window.electron.app.reloadWindow();
-    }, refreshInterval * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        window.electron.app.reloadWindow();
+      },
+      refreshInterval * 60 * 1000
+    );
     return () => {
       clearInterval(interval);
     };
   }, [refreshInterval]);
 
   return (
-    <Box component="main" display="flex" width="100%">
+    <Box component='main' display='flex' width='100%'>
       <CssBaseline />
       <GuiderContext.Provider value={boundContext}>
         <KeywordContext.Provider value={keywords}>
           <GuiderHeader guiderRef={ref} />
 
           <Stack
-            direction="column"
-            height="100%"
-            width="100%"
+            direction='column'
+            height='100%'
+            width='100%'
             pt={1}
             pb={2}
             px={3}
             spacing={2.5}
             sx={{ overflowY: 'auto' }}
           >
-            <Box width="100%">
+            <Box width='100%'>
               <JS9Double
                 guiderRef={(element: GuiderRefType | null) => {
                   if (element) {
@@ -89,7 +91,7 @@ export default function Collimate() {
             </Box>
 
             <StatusRow />
-            <Stack direction="row" spacing={2.5}>
+            <Stack direction='row' spacing={2.5}>
               <MirrorTable />
               <SlewRow />
             </Stack>

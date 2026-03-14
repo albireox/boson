@@ -61,32 +61,35 @@ export default function Guider() {
 
     if (refreshInterval === 0) return () => {};
 
-    const interval = setInterval(() => {
-      window.electron.app.reloadWindow();
-    }, refreshInterval * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        window.electron.app.reloadWindow();
+      },
+      refreshInterval * 60 * 1000
+    );
     return () => {
       clearInterval(interval);
     };
   }, [refreshInterval]);
 
   return (
-    <Box component="main" display="flex" width="100%">
+    <Box component='main' display='flex' width='100%'>
       <CssBaseline />
       <GuiderContext.Provider value={boundContext}>
         <KeywordContext.Provider value={keywords}>
           <GuiderHeader guiderRef={ref} />
 
           <Stack
-            direction="column"
-            height="100%"
-            width="100%"
+            direction='column'
+            height='100%'
+            width='100%'
             pt={1}
             pb={2}
             px={3}
             spacing={2.5}
             sx={{ overflowY: 'auto' }}
           >
-            <Box width="100%">
+            <Box width='100%'>
               <JS9Grid
                 guiderRef={(element: GuiderRefType | null) => {
                   if (element) {

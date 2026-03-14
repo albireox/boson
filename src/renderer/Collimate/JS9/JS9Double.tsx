@@ -44,8 +44,18 @@ export default function JS9Double(props: JS9GridProps) {
           spacing={-0.5}
           width='100%'
         >
-          <JS9Frame display='gfa2' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
-          <JS9Frame display='gfa5' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
+          <JS9Frame
+            display='gfa2'
+            windowFraction={windowFraction}
+            showImgNum={showImgNum}
+            {...frameProps}
+          />
+          <JS9Frame
+            display='gfa5'
+            windowFraction={windowFraction}
+            showImgNum={showImgNum}
+            {...frameProps}
+          />
         </Stack>
       </Stack>
     </Box>
