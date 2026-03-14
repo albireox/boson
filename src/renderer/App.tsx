@@ -4,6 +4,7 @@ import React from 'react';
 import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import { Chat } from './Chat';
+import { Status } from './Status';
 import { Guider } from './Guider';
 import { HAL } from './HAL';
 import { Collimate } from './Collimate';
@@ -13,6 +14,7 @@ import FocusPlot from './Plots/Focus';
 import Preferences from './Preferences/Preferences';
 import { Snapshots } from './Snapshots';
 import { useStore } from './hooks';
+import { MirrorStatus } from './MirrorStatus';
 
 export type ColorModeValues = 'bright' | 'dark' | 'system';
 
@@ -150,6 +152,7 @@ export default function App() {
     case 'HAL':
       view = <HAL />;
       break;
+    
     case 'collimate':
       view = <Collimate />;
       break;
@@ -160,6 +163,12 @@ export default function App() {
       view = <Chat />;
       break;
     // add new window here
+    case 'status':
+      view = <Status />;
+      break;
+    case 'mirrorstatus':
+      view = <MirrorStatus />
+      break;
     default:
       view = null;
   }

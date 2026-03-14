@@ -213,11 +213,23 @@ export default class MenuBuilder {
           label: 'Chat',
           click: () => createWindow('chat'),
         },
-
         { type: 'separator' },
         {
           label: 'Focus plot',
           click: () => createWindow('focus_plot'),
+        },
+      ],
+    };
+    const subMenuTCC: MenuItemConstructorOptions = {
+      label: 'TCC',
+      submenu: [
+        {
+          label: "Status",
+          click: () => createWindow('status'),
+        },
+        {
+          label: "Mirror Status",
+          click: () => createWindow('mirrorstatus'),
         },
       ],
     };
@@ -247,6 +259,7 @@ export default class MenuBuilder {
       subMenuEdit,
       subMenuView,
       subMenuTools,
+      subMenuTCC,
       subMenuWindow,
     ];
   }
