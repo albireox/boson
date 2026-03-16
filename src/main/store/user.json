@@ -42,6 +42,12 @@
   "chat": {
     "notifications": true
   },
+  "status" : {
+
+  },
+  "windowstatus" : {
+
+  },
   "audio": {
     "mode": "on",
     "muted": false,
