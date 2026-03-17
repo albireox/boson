@@ -72,7 +72,7 @@ export default function TopLevel() {
   ];
 
   return (
-    <Box display="flex" flexDirection="column" borderTop={1} p={2} pt={5}>
+    <Box display="flex" flexDirection="column" p={2} pt={1}>
       <TableContainer component={Paper} elevation={0}>
         <Table size="small">
           <TableHead>

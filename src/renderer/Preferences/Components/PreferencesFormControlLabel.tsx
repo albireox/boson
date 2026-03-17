@@ -14,8 +14,7 @@ import {
   useRadioGroup,
 } from '@mui/material';
 
-export interface PreferencesFormControlLabelProps
-  extends FormControlLabelProps {
+export interface PreferencesFormControlLabelProps extends FormControlLabelProps {
   gutterColor?: string;
 }
 

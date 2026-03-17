@@ -27,8 +27,8 @@ export default function MirrorTable() {
 
   const [po, setPO] = React.useState([0.0, 0.0, 0.0, 0.0, 0.0]);
   const [so, setSO] = React.useState([0.0, 0.0, 0.0, 0.0, 0.0]);
-  const [ps, setPS] = React.useState("?");
-  const [ss, setSS] = React.useState("?");
+  const [ps, setPS] = React.useState('?');
+  const [ss, setSS] = React.useState('?');
 
   React.useEffect(() => {
     if (!primOrient) return;
@@ -39,7 +39,6 @@ export default function MirrorTable() {
       primOrient.values[3],
       primOrient.values[4],
     ]);
-
   }, [primOrient]);
 
   React.useEffect(() => {
@@ -51,26 +50,23 @@ export default function MirrorTable() {
       secOrient.values[3],
       secOrient.values[4],
     ]);
-
   }, [secOrient]);
 
   React.useEffect(() => {
-      if (!primState) return;
+    if (!primState) return;
 
-      const ss: string = primState.values[0];
+    const ss: string = primState.values[0];
 
-      setPS(ss);
-
-    }, [primState]);
+    setPS(ss);
+  }, [primState]);
 
   React.useEffect(() => {
-      if (!secState) return;
+    if (!secState) return;
 
-      const ss: string = secState.values[0];
+    const ss: string = secState.values[0];
 
-      setSS(ss);
-
-    }, [secState]);
+    setSS(ss);
+  }, [secState]);
 
   // const [pidRA, setPidRA] = React.useState([0.0, 0.0, 0.0]);
   // const [pidDec, setPidDec] = React.useState([0.0, 0.0, 0.0]);
@@ -164,7 +160,7 @@ export default function MirrorTable() {
       // flex: 0.1,
       width: 100,
     },
-  ]
+  ];
 
   const rows = [
     {
@@ -175,7 +171,7 @@ export default function MirrorTable() {
       xtilt: po[1],
       ytilt: po[2],
       xtrans: po[3],
-      ytrans: po[4]
+      ytrans: po[4],
     },
     {
       id: 2,
@@ -185,7 +181,7 @@ export default function MirrorTable() {
       xtilt: so[1],
       ytilt: so[2],
       xtrans: so[3],
-      ytrans: so[4]
+      ytrans: so[4],
     },
   ];
 

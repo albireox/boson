@@ -59,11 +59,14 @@
       "resizable": true
     },
     "status": {
+      "width": 950,
+      "height": 650,
+      "resizable": true
       
     },
     "mirrorstatus": {
       "width": 800,
-      "height": 500,
+      "height": 600,
       "resizable": true
     }
   },

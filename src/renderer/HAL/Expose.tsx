@@ -12,7 +12,6 @@ import {
   Collapse,
   Divider,
   FormControlLabel,
-  Grid,
   LinearProgress,
   LinearProgressProps,
   Stack,
@@ -20,7 +19,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import Grid2 from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { round } from 'lodash';
 import React from 'react';
 import { CommandButton } from 'renderer/Components';
@@ -75,27 +74,27 @@ function LinearProgressWithLabel(props: LinearProgressWithLabelProps) {
   }, [etrDisplay, total]);
 
   return (
-    <Grid2 direction='row' alignItems='center' columns={12} container>
-      <Grid2 xs={2} md={1}>
+    <Grid direction='row' alignItems='center' columns={12} container>
+      <Grid size={{ xs: 2, md: 1 }}>
         <Typography variant='body2' color='text.secondary'>
           {header}
         </Typography>
-      </Grid2>
-      <Grid2 xs={8} md={10}>
+      </Grid>
+      <Grid size={{ xs: 8, md: 10 }}>
         <LinearProgress
           variant={running ? 'determinate' : 'indeterminate'}
           value={value}
           sx={{ height: 5, borderRadius: 5 }}
           {...props}
         />
-      </Grid2>
-      <Grid2 xs={2} md={1}>
+      </Grid>
+      <Grid size={{ xs: 2, md: 1 }}>
         <Typography variant='body2' color='text.secondary'>{`${round(
           etrDisplay || 0,
           0
         )}s ${suffix}`}</Typography>
-      </Grid2>
-    </Grid2>
+      </Grid>
+    </Grid>
   );
 }
 
@@ -253,16 +252,12 @@ export default function Expose() {
     }
 
     setDetail(
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1 }}>
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1 }} width='100%'>
         {bossDetail && (
-          <Grid item xs={apogeeDetail && bossDetail ? 6 : 12}>
-            {bossDetail}
-          </Grid>
+          <Grid size={apogeeDetail && bossDetail ? 6 : 12}>{bossDetail}</Grid>
         )}
         {apogeeDetail && (
-          <Grid item xs={apogeeDetail && bossDetail ? 6 : 12}>
-            {apogeeDetail}
-          </Grid>
+          <Grid size={apogeeDetail && bossDetail ? 6 : 12}>{apogeeDetail}</Grid>
         )}
       </Grid>
     );

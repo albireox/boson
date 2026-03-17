@@ -6,7 +6,7 @@
  */
 
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { CssBaseline, Box, Stack } from '@mui/material';
 import NetPosition from './StatusParts/NetPostition';
 import MiscStatus from './StatusParts/MiscStatus';
@@ -22,10 +22,6 @@ import { BosonHeader } from 'renderer/Components';
 
 export default function Status() {
 
-    useEffect(() => {  
-        document.title = 'Status';
-    }, []);
-
     return (
         
         <Box
@@ -35,11 +31,12 @@ export default function Status() {
         width='100%'
         top={0}>
         <CssBaseline />
+        <BosonHeader/>
         <Grid container columnSpacing={10} rowSpacing={1} columns={3}>
-            <Grid xs={1}>
+            <Grid size={1}>
                 <NetPosition />
             </Grid>
-            <Grid xs={2}>
+            <Grid size={2}>
                 <SlewStatus />
             </Grid>
         </Grid>

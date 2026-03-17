@@ -6,7 +6,7 @@
  */
 
 
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid';
 import { Box } from '@mui/system';
 import React from 'react';
 import { useKeywords } from 'renderer/hooks';
@@ -48,52 +48,52 @@ export default function AxisOffset() {
     return (
         <Box display='flex' flexDirection='column' borderTop={1} p={2} pt={1} whiteSpace={'pre'}>
         <Grid container columnSpacing={10} rowSpacing={1} columns={12}>
-            <Grid xs={2}>
+            <Grid size={2}>
                  Calib Off
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 Az
             </Grid>
-            <Grid xs={3}>
+            <Grid size={3}>
                 {calibAz}°'"
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                  Guide Off
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 Az
             </Grid>
-            <Grid xs={3}>
+            <Grid size={3}>
                 {guideAz}°'"
             </Grid>
 
-            <Grid xs={2}/>
-            <Grid xs={1}>
+            <Grid size={2}/>
+            <Grid size={1}>
                 Alt
             </Grid>
-            <Grid xs={3}>
+            <Grid size={3}>
                 {calibAlt}°'"
             </Grid>
-            <Grid xs={1}/>
-            <Grid xs={1}>
+            <Grid size={1}/>
+            <Grid size={1}>
                 Alt
             </Grid>
-            <Grid xs={3}>
+            <Grid size={3}>
                 {guideAlt}°'"
             </Grid>
 
-            <Grid xs={2}/>
-            <Grid xs={1}>
+            <Grid size={2}/>
+            <Grid size={1}>
                 Rot
             </Grid>
-            <Grid xs={3}>
+            <Grid size={3}>
                 {calibRot}°'"
             </Grid>
-            <Grid xs={1}/>
-            <Grid xs={1}>
+            <Grid size={1}/>
+            <Grid size={1}>
                 Rot
             </Grid>
-            <Grid xs={3}>
+            <Grid size={3}>
                 {guideRot}°'"
             </Grid>
             

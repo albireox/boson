@@ -43,9 +43,24 @@ export default function JS9Grid(props: JS9GridProps) {
           spacing={-0.5}
           width='100%'
         >
-          <JS9Frame display='gfa1' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
-          <JS9Frame display='gfa2' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
-          <JS9Frame display='gfa3' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
+          <JS9Frame
+            display='gfa1'
+            windowFraction={windowFraction}
+            showImgNum={showImgNum}
+            {...frameProps}
+          />
+          <JS9Frame
+            display='gfa2'
+            windowFraction={windowFraction}
+            showImgNum={showImgNum}
+            {...frameProps}
+          />
+          <JS9Frame
+            display='gfa3'
+            windowFraction={windowFraction}
+            showImgNum={showImgNum}
+            {...frameProps}
+          />
         </Stack>
         <Stack
           direction='row'
@@ -53,9 +68,24 @@ export default function JS9Grid(props: JS9GridProps) {
           spacing={-0.5}
           width='100%'
         >
-          <JS9Frame display='gfa4' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
-          <JS9Frame display='gfa5' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
-          <JS9Frame display='gfa6' windowFraction={windowFraction} showImgNum={showImgNum} {...frameProps} />
+          <JS9Frame
+            display='gfa4'
+            windowFraction={windowFraction}
+            showImgNum={showImgNum}
+            {...frameProps}
+          />
+          <JS9Frame
+            display='gfa5'
+            windowFraction={windowFraction}
+            showImgNum={showImgNum}
+            {...frameProps}
+          />
+          <JS9Frame
+            display='gfa6'
+            windowFraction={windowFraction}
+            showImgNum={showImgNum}
+            {...frameProps}
+          />
         </Stack>
       </Stack>
     </Box>

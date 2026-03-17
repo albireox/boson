@@ -21,8 +21,8 @@ import {
   Typography,
   alpha,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { Stack } from '@mui/system';
-import Grid from '@mui/system/Unstable_Grid';
 import React from 'react';
 import { useStore } from 'renderer/hooks';
 import BooleanOption from '../Components/BooleanOption';
@@ -81,11 +81,11 @@ function CustomSounds() {
   const assignKey = 'audio.sounds';
   const listKey = 'audio.user_sounds';
 
-  const [audioSounds, setAudioSounds] = React.useState<object>(
-    window.electron.store.get(assignKey)
-  );
+  const [audioSounds, setAudioSounds] = React.useState<{
+    [key: string]: string;
+  }>(window.electron.store.get(assignKey));
 
-  const [userSoundList, setUserSoundList] = React.useState<array<string>>(
+  const [userSoundList, setUserSoundList] = React.useState<string[]>(
     window.electron.store.get(listKey) || ['error.wav']
   );
 
@@ -123,7 +123,7 @@ function CustomSounds() {
         }
       }
     });
-  });
+  }, []);
 
   // iterate userSoundList and verify that temp audio file exists
   // if the path does not exist, remove from sound list
@@ -216,8 +216,8 @@ function CustomSounds() {
         <Tooltip title='Play'>
           <IconButton
             sx={(theme) => ({
-              color: theme.palette.text.success,
-              border: `1px solid ${theme.palette.text.success}`,
+              color: theme.palette.success.main,
+              border: `1px solid ${theme.palette.success.main}`,
               mx: '4px',
               '&:hover': {
                 color: theme.palette.action.active,
@@ -289,7 +289,7 @@ export default function SoundsPane() {
     <Pane title='Sounds'>
       <Stack direction='column'>
         <Grid container direction='row'>
-          <Grid xs={9}>
+          <Grid size={9}>
             <Stack width='100%' direction='column'>
               <AudioMode />
               <Divider sx={{ my: 4 }} />

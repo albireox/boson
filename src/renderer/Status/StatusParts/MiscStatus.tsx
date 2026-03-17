@@ -6,7 +6,7 @@
  */
 
 
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Grid from '@mui/material/Grid'; // Grid version 2
 import { Box } from '@mui/system';
 import React from 'react';
 import { useStore } from 'renderer/hooks';
@@ -16,7 +16,6 @@ import { HAfromAzAlt } from './HAfromAzAlt';
 import { Latitude } from './TelConst';
 import { HMSConvert, HMSConvertNoDecimal } from './HMSConvert';
 import { Airmass } from './Airmass';
-import Cartridge  from './Cartridge';
 
 
 export default function MiscStatus() {
@@ -36,14 +35,11 @@ export default function MiscStatus() {
     const [focus, setFocus] = React.useState<string>(''); //not sure, ask
     const [sjd, setSJD] = React.useState<number>(); 
     const [lmst, setLMST] = React.useState<string>(''); 
-    const [cartridge, setCartridge] = React.useState<string>('');
 
     const{
         AxePos: axePosw, 
         ScaleFac: scaleW,
         SecFocus: focusW,
-        TimeStamp: timeStampW,
-        instrumentNum: instNumW,
     } = keywords;
 
     React.useEffect(() => {
@@ -55,7 +51,6 @@ export default function MiscStatus() {
         setFocus(focusW ? focusW.values[0] : 'N/A');
         
         setHA(axePosw ? HMSConvert(HAfromAzAlt(axePosw.values[0], axePosw.values[1],Latitude)) : 'N/A'); //need to get lat of LCO
-        setCartridge(Cartridge(instNumW ? instNumW.values[0] : null));
     }, [keywords]);
 
     //grab the obs, default to APO
@@ -84,33 +79,31 @@ export default function MiscStatus() {
         
         <Box display='flex' flexDirection='column' borderTop={1} p={2} pt={1}>
         <Grid container columnSpacing={10} rowSpacing={1} columns={2}>
-            <Grid xs={1}>
+            <Grid size={1}>
                 HA : {hour_angle} {'   '} hms
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 Airmass : {airmass}
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 ZD {'    '} : {(90-Number(axePosw ? axePosw.values[1] : 0)).toFixed(1)}° 
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 LMST: {lmst} hms
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 TAI : {tai}
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 SJD : {sjd} days
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 Focus: {focus} μm
             </Grid>
-            <Grid xs={1}>
+            <Grid size={1}>
                 Scale: {scale} 1e6
             </Grid>
-            <Grid xs={1}>
-                Cartridge: {cartridge}
-            </Grid>
+            <Grid size={1} />
         </Grid>
         </Box>
     )

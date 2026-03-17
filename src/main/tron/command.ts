@@ -31,7 +31,10 @@ export default class Command {
 
   public readonly replies: Reply[] = [];
 
-  constructor(public rawCommand: string, public internal = false) {
+  constructor(
+    public rawCommand: string,
+    public internal = false
+  ) {
     this.lock = new CommandLock(this);
 
     const chunks: string[] =
