@@ -1,4 +1,4 @@
-import { createTheme, useMediaQuery } from '@mui/material';
+import { Alert, createTheme, useMediaQuery } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import React from 'react';
 import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
@@ -15,6 +15,7 @@ import Preferences from './Preferences/Preferences';
 import { Snapshots } from './Snapshots';
 import { useStore } from './hooks';
 import { MirrorStatus } from './MirrorStatus';
+import { Alerts } from './Alerts';
 
 export type ColorModeValues = 'bright' | 'dark' | 'system';
 
@@ -168,6 +169,9 @@ export default function App() {
       break;
     case 'mirrorstatus':
       view = <MirrorStatus />
+      break;
+    case 'alerts':
+      view = <Alerts />
       break;
     default:
       view = null;

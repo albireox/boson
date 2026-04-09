@@ -218,6 +218,10 @@ export default class MenuBuilder {
           label: 'Focus plot',
           click: () => createWindow('focus_plot'),
         },
+        {
+          label: 'Alerts',
+          click: () => createWindow('alerts'),
+        }
       ],
     };
     const subMenuTCC: MenuItemConstructorOptions = {
