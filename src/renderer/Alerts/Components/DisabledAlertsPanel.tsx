@@ -191,12 +191,6 @@ export default function DisabledAlertsPanel() {
   };
 
   const numDisabled = rows.length;
-  const switchLabel =
-    numDisabled === 0
-      ? "No Disable Alert Rules"
-      : numDisabled === 1
-      ? "1 Disable Alert Rule"
-      : `${numDisabled} Disable Alert Rules`;
 
   const handleAddRule = async () => {
     if (!newActor.trim() || !newKeyword.trim()) {
@@ -238,18 +232,6 @@ export default function DisabledAlertsPanel() {
       <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
         <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
           <Typography variant="h6">Disable Alert Rules</Typography>
-
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={showRules}
-                  onChange={(e) => setShowRules(e.target.checked)}
-                />
-              }
-              label={switchLabel}
-            />
-          </FormGroup>
         </Box>
 
         <Box display="flex" gap={1} flexWrap="wrap">
