@@ -1,3 +1,10 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-04-16
+ *  @Filename: DisabledAlertsPanel.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
 import React from "react";
 import {
     Box,
@@ -27,205 +34,224 @@ import { useKeywords } from "renderer/hooks";
 import type { AlertInfo } from "./AlertInfo";
 
 type RuleRow =
-  | {
-      kind: "downInstrument";
-      disabledID: string;
-      instName: string;
-      issuer: string;
-      severity: "critical";
+// represents either a disabled alert rule or a down instrument, normalized for display in the table
+    | {
+    kind: "downInstrument";
+    disabledID: string;
+    instName: string;
+    issuer: string;
+    severity: "critical";
     }
-  | {
-      kind: "disabledRule";
-      disabledID: string;
-      alertID: string;
-      severity: string;
-      issuer: string;
+    | {
+    kind: "disabledRule";
+    disabledID: string;
+    alertID: string;
+    severity: string;
+    issuer: string;
     };
 
 type ContextMenuState = {
-  mouseX: number;
-  mouseY: number;
-  row: RuleRow | null;
+    //tells the context menu which row was right-clicked and where to open
+    mouseX: number;
+    mouseY: number;
+    row: RuleRow | null;
 } | null;
 
 function rowColor(severity: string): "warning.main" | "error.main" | "text.primary" {
-  switch (severity) {
+    //grabs color based on severity
+    switch (severity) {
     case "warn":
-      return "warning.main";
+        return "warning.main";
     case "serious":
     case "critical":
-      return "error.main";
+        return "error.main";
     default:
-      return "text.primary";
-  }
+        return "text.primary";
+    }
 }
 
 function parseDisabledRules(values: unknown[]): RuleRow[] {
-  const rows: RuleRow[] = [];
-  const rawValues = Array.isArray(values) ? values : [];
+    //parses the disabled rules from the keyword values
+    const rows: RuleRow[] = [];
+    const rawValues = Array.isArray(values) ? values : [];
 
-  for (let i = 0; i + 2 < rawValues.length; i += 3) {
+    for (let i = 0; i + 2 < rawValues.length; i += 3) {
     const rawAlertID = String(rawValues[i] ?? "");
     const rawSeverity = String(rawValues[i + 1] ?? "");
     const rawIssuer = String(rawValues[i + 2] ?? "");
 
+    //some of the keywords have extra parentheses and quotes around them, so we need to clean them up
     const alertID = rawAlertID.replace(/^"+\(?\s*/, "").trim();
     const severity = rawSeverity.replace(/^"+\s*/, "").trim().toLowerCase();
     const issuer = rawIssuer.replace(/\)?"+$/, "").trim();
 
     if (!alertID || !severity) continue;
-
+    
+    //push the rule into the rows array with a unique disabledID that combines the alertID and severity
     rows.push({
-      kind: "disabledRule",
-      disabledID: `(${alertID},${severity})`,
-      alertID,
-      severity,
-      issuer,
+        kind: "disabledRule",
+        disabledID: `(${alertID},${severity})`,
+        alertID,
+        severity,
+        issuer,
     });
-  }
+    }
 
   return rows;
 }
 
 function parseDownInstruments(values: unknown[]): RuleRow[] {
-  const rows: RuleRow[] = [];
-  const rawValues = Array.isArray(values) ? values : [];
 
-  for (const raw of rawValues) {
+    //parses the down instruments from the keyword values, which should just be a list of instrument names
+    const rows: RuleRow[] = [];
+    const rawValues = Array.isArray(values) ? values : [];
+
+    for (const raw of rawValues) {
     if (raw == null) continue;
 
     const instName = String(raw).trim();
     if (!instName || instName === "None") continue;
 
     rows.push({
-      kind: "downInstrument",
-      disabledID: `__downInst.${instName}`,
-      instName,
-      issuer: "?",
-      severity: "critical",
+        kind: "downInstrument",
+        disabledID: `__downInst.${instName}`,
+        instName,
+        issuer: "?",
+        severity: "critical",
     });
-  }
+    }
 
-  return rows;
-}
+    return rows;
+    }
 
 function buildClearCommand(row: RuleRow): { command: string; label: string } {
-  if (row.kind === "downInstrument") {
+    //builds the command to clear the disabled rule or down instrument based on the row data, 
+    // and also returns a label for the context menu item
+    if (row.kind === "downInstrument") {
     return {
-      command: `alerts instrumentState instrument=${row.instName} up`,
-      label: `Enable ${row.instName}`,
+        command: `alerts instrumentState instrument=${row.instName} up`,
+        label: `Enable ${row.instName}`,
     };
-  }
+    }
 
-  return {
+    return {
     command: `alerts enable id=${row.alertID} severity=${row.severity}`,
     label: `Enable ${row.alertID} ${row.severity}`,
-  };
-}
+    };
+    }
 
 export default function DisabledAlertsPanel() {
-  const keywords = useKeywords([
+    const keywords = useKeywords([
     "alerts.disabledAlertRules",
     "alerts.downInstruments",
     "alerts.instrumentNames",
     "alerts.alert",
-  ]);
+    ]);
 
-  const [showRules, setShowRules] = React.useState(true);
-  const [contextMenu, setContextMenu] = React.useState<ContextMenuState>(null);
+    const [showRules, setShowRules] = React.useState(true);
+    const [contextMenu, setContextMenu] = React.useState<ContextMenuState>(null);
 
-  const [addRuleOpen, setAddRuleOpen] = React.useState(false);
-  const [downInstOpen, setDownInstOpen] = React.useState(false);
+    const [addRuleOpen, setAddRuleOpen] = React.useState(false);
+    const [downInstOpen, setDownInstOpen] = React.useState(false);
 
-  const [newActor, setNewActor] = React.useState("");
-  const [newKeyword, setNewKeyword] = React.useState("");
-  const [newSeverity, setNewSeverity] = React.useState("critical");
+    const [newActor, setNewActor] = React.useState("");
+    const [newKeyword, setNewKeyword] = React.useState("");
+    const [newSeverity, setNewSeverity] = React.useState("critical");
 
-  const [selectedInstrument, setSelectedInstrument] = React.useState("");
+    const [selectedInstrument, setSelectedInstrument] = React.useState("");
 
-  const disabledRulesW = keywords?.disabledAlertRules;
-  const downInstrumentsW = keywords?.downInstruments;
-  const instrumentNamesW = keywords?.instrumentNames;
+    const disabledRulesW = keywords?.disabledAlertRules;
+    const downInstrumentsW = keywords?.downInstruments;
+    const instrumentNamesW = keywords?.instrumentNames;
 
-  const disabledRuleRows = React.useMemo(() => {
-    const values = Array.isArray(disabledRulesW?.values) ? disabledRulesW.values : [];
-    return parseDisabledRules(values);
-  }, [disabledRulesW]);
+    const disabledRuleRows = React.useMemo(() => {
+        //grabs the disabled rules from the keyword and parses them into rows for the table
+        const values = Array.isArray(disabledRulesW?.values) ? disabledRulesW.values : [];
+        return parseDisabledRules(values);
+    }, [disabledRulesW]);
 
-  const downInstrumentRows = React.useMemo(() => {
-    const values = Array.isArray(downInstrumentsW?.values) ? downInstrumentsW.values : [];
-    return parseDownInstruments(values);
-  }, [downInstrumentsW]);
+    const downInstrumentRows = React.useMemo(() => {
+        //grabs the down instruments from the keyword and parses them into rows for the table
+        const values = Array.isArray(downInstrumentsW?.values) ? downInstrumentsW.values : [];
+        return parseDownInstruments(values);
+    }, [downInstrumentsW]);
 
-  const instrumentNames = React.useMemo(() => {
-    const values = Array.isArray(instrumentNamesW?.values) ? instrumentNamesW.values : [];
-    return values
-      .map((v: unknown) => String(v))
-      .filter((v: string) => v && v !== "None")
-      .sort((a: string, b: string) => a.localeCompare(b));
-  }, [instrumentNamesW]);
+    const instrumentNames = React.useMemo(() => {
+        //grabs the instrument names from the keyword and 
+        //parses them into a sorted list for the dropdown in the down instrument dialog
+        const values = Array.isArray(instrumentNamesW?.values) ? instrumentNamesW.values : [];
+        return values
+            .map((v: unknown) => String(v))
+            .filter((v: string) => v && v !== "None")
+            .sort((a: string, b: string) => a.localeCompare(b));
+    }, [instrumentNamesW]);
 
-  const rows = React.useMemo(() => {
-    const downSorted = [...downInstrumentRows].sort((a, b) => {
-      if (a.kind !== "downInstrument" || b.kind !== "downInstrument") return 0;
-      return a.instName.localeCompare(b.instName);
-    });
+    const rows = React.useMemo(() => {
+        //disabled rules and down instruments together for the table
+        //sorted with down instruments first (sorted by instrument name) and then disabled rules (sorted by severity and then alertID)
+        const downSorted = [...downInstrumentRows].sort((a, b) => {
+            if (a.kind !== "downInstrument" || b.kind !== "downInstrument") return 0;
+            return a.instName.localeCompare(b.instName);
+        });
 
-    const ruleSorted = [...disabledRuleRows].sort((a, b) => {
-      if (a.kind !== "disabledRule" || b.kind !== "disabledRule") return 0;
-      if (a.severity !== b.severity) return b.severity.localeCompare(a.severity);
-      return a.alertID.localeCompare(b.alertID);
-    });
+        const ruleSorted = [...disabledRuleRows].sort((a, b) => {
+            if (a.kind !== "disabledRule" || b.kind !== "disabledRule") return 0;
+            if (a.severity !== b.severity) return b.severity.localeCompare(a.severity);
+            return a.alertID.localeCompare(b.alertID);
+        });
 
-    return [...downSorted, ...ruleSorted];
-  }, [downInstrumentRows, disabledRuleRows]);
+        return [...downSorted, ...ruleSorted]; //returns a copy of the arrays combined
+    }, [downInstrumentRows, disabledRuleRows]);
 
-  const sendCommand = async (command: string) => {
-    try {
-      await window.electron.tron.send(command);
-    } catch (err) {
-      console.error("tron send failed:", err);
-    } finally {
-      setContextMenu(null);
-    }
-  };
+    const sendCommand = async (command: string) => {
+        //send a command to tron and catch any errors, then close the context menu
+        try {
+            await window.electron.tron.send(command);
+        } catch (err) {
+            console.error("tron send failed:", err);
+        } finally {
+            setContextMenu(null);
+        }
+    };
 
-  const numDisabled = rows.length;
+    const numDisabled = rows.length;
 
-  const handleAddRule = async () => {
-    if (!newActor.trim() || !newKeyword.trim()) {
-      return;
-    }
-
-    const alertID = `${newActor.trim()}.${newKeyword.trim()}`;
-    const command = `alerts disable id=${alertID} severity=${newSeverity.toLowerCase()}`;
-
-    try {
-      await window.electron.tron.send(command);
-      setAddRuleOpen(false);
-      setNewActor("");
-      setNewKeyword("");
-      setNewSeverity("critical");
-    } catch (err) {
-      console.error("tron send failed:", err);
-    }
-  };
-
-  const handleDownInstrument = async () => {
-    if (!selectedInstrument.trim()) {
-      return;
+    const handleAddRule = async () => {
+        //builds the command to add a new disabled alert rule based on the input values and sends it to tron
+        if (!newActor.trim() || !newKeyword.trim()) {
+            return;
     }
 
-    const command = `alerts instrumentState instrument=${selectedInstrument} down`;
+        const alertID = `${newActor.trim()}.${newKeyword.trim()}`;
+        const command = `alerts disable id=${alertID} severity=${newSeverity.toLowerCase()}`;
 
-    try {
-      await window.electron.tron.send(command);
-      setDownInstOpen(false);
-      setSelectedInstrument("");
-    } catch (err) {
-      console.error("tron send failed:", err);
-    }
-  };
+        try {
+            await window.electron.tron.send(command);
+            setAddRuleOpen(false);
+            setNewActor("");
+            setNewKeyword("");
+            setNewSeverity("critical");
+        } catch (err) {
+            console.error("tron send failed:", err);
+        }
+    };
+
+    const handleDownInstrument = async () => {
+        //sends command for down instrument
+        if (!selectedInstrument.trim()) {
+            return;
+        }
+
+        const command = `alerts instrumentState instrument=${selectedInstrument} down`;
+
+        try {
+            await window.electron.tron.send(command);
+            setDownInstOpen(false);
+            setSelectedInstrument("");
+        } catch (err) {
+            console.error("tron send failed:", err);
+        }
+    };
 
   return (
     <Box display="flex" flexDirection="column" gap={2} p={2} pt={1} width="100%">

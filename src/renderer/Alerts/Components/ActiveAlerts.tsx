@@ -1,3 +1,11 @@
+/*
+ *  @Author: Stephen Pan
+ *  @Date: 2026-04-16
+ *  @Filename: ActiveAlerts.tsx
+ *  @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+ */
+
+
 import React from "react";
 import {
     Box,
@@ -36,8 +44,9 @@ type ContextMenuState = {
 } | null;
 
 function severityColor(
+    //determines the color of the alert based on its severity
     severity: AlertInfo["severity"]
-): "warning.main" | "error.main" | "text.primary" {
+    ): "warning.main" | "error.main" | "text.primary" {
     switch (severity) {
         case "warn":
         return "warning.main";
@@ -64,16 +73,15 @@ export default function ActiveAlerts() {
     const alertW = keywords?.alert;
 
     React.useEffect(() => {
+        // Initialize alertDict based on activeAlerts keyword
         if (!activeAlertsW) {
         setAlertDict({});
         return;
         }
 
         const rawValues = Array.isArray(activeAlertsW.values) ? activeAlertsW.values : [];
-        const currentIDs =
-        rawValues.length === 1 && String(rawValues[0]) === "None"
-            ? []
-            : rawValues.map((v: unknown) => String(v));
+        // If the only value is "None", treat it as an empty list
+        const currentIDs = rawValues.length === 1 && String(rawValues[0]) === "None" ? [] : rawValues.map((v: unknown) => String(v));
 
         setAlertDict((prev) => {
         const next: Record<string, AlertInfo> = {};
@@ -87,13 +95,18 @@ export default function ActiveAlerts() {
     }, [activeAlertsW]);
 
     React.useEffect(() => {
+        // Update a single alert based on the alert keyword, which is expected to change whenever any alert updates
         if (!alertW || !Array.isArray(alertW.values)) {
         return;
         }
 
+        //first, parse the alert from the keyword values. If parsing fails, do nothing
         const newAlert = makeAlertFromKeyword(alertW.values);
+        
         if (!newAlert) return;
 
+        //this part checks if the alert already exists, and if it does, if it's changed. 
+        // If it hasn't changed, do nothing. 
         setAlertDict((prev) => {
         const oldAlert = prev[newAlert.alertID];
 
@@ -101,6 +114,8 @@ export default function ActiveAlerts() {
             return prev;
         }
 
+        // If the alert is new or has changed, create a new dict by copying the old one. 
+        // If the alert is done, remove it from the dict
         const next = { ...prev };
 
         if (isAlertDone(newAlert)) {
@@ -115,9 +130,8 @@ export default function ActiveAlerts() {
 
 
     const alertList = React.useMemo(() => {
-        console.log(alertW ? `Received alert update from ${alertW.values[0]} with status ${alertW.values[3]}` : "No alert keyword");
-        console.log(alertDict);
-        console.log(alertW);
+        // Convert the alertDict to a list, filter out disabled alerts if showDisabled is false, 
+        // and sort by severity (critical > serious > warn > ok), then by timestamp (oldest first), then by alertID
         return Object.values(alertDict)
         .filter((alert) => showDisabled || alert.isEnabled)
         .sort((a, b) => {
@@ -132,16 +146,19 @@ export default function ActiveAlerts() {
     }, [alertDict, showDisabled]);
 
     const numDisabled = React.useMemo(() => {
+        // Count the number of disabled alerts in the dict
         return Object.values(alertDict).filter((alert) => !alert.isEnabled).length;
     }, [alertDict]);
 
     const switchLabel = `${numDisabled} disabled`;
 
     const handleCloseMenu = () => {
+        // Closes the context menu by setting its state to null
         setContextMenu(null);
     };
 
   const sendCommand = async (command: string) => {
+    // Sends a command to the main process via tron, and logs any errors. Finally, it closes the context menu.
         try {
         await window.electron.tron.send(command);
         } catch (err) {
@@ -152,6 +169,7 @@ export default function ActiveAlerts() {
   };
 
   const handleAckClick = () => {
+    //sends the ack command
         const alert = contextMenu?.alert;
         if (!alert || isAlertUnknown(alert)) return;
 
@@ -160,6 +178,7 @@ export default function ActiveAlerts() {
   };
 
   const handleEnableClick = () => {
+    //sends enable command, with confirmation window
         const alert = contextMenu?.alert;
         if (!alert || isAlertUnknown(alert)) return;
 
@@ -206,8 +225,6 @@ export default function ActiveAlerts() {
                 <TableRow>
                 <TableCell>Severity</TableCell>
                 <TableCell>Alert ID</TableCell>
-                <TableCell>Actor</TableCell>
-                <TableCell>Keyword</TableCell>
                 <TableCell>Ack</TableCell>
                 <TableCell>Enabled</TableCell>
                 <TableCell>Timestamp</TableCell>
@@ -238,8 +255,6 @@ export default function ActiveAlerts() {
                     {alert.severity}
                     </TableCell>
                     <TableCell>{alert.alertID}</TableCell>
-                    <TableCell>{alert.actor}</TableCell>
-                    <TableCell>{alert.keyword}</TableCell>
                     <TableCell>{alert.isAcknowledged ? "Yes" : "No"}</TableCell>
                     <TableCell>{alert.isEnabled ? "Yes" : "No"}</TableCell>
                     <TableCell>{formatTimestamp(alert.timestamp)}</TableCell>
