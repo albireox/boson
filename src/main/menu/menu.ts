@@ -213,15 +213,16 @@ export default class MenuBuilder {
           label: 'Chat',
           click: () => createWindow('chat'),
         },
+        {
+          label: 'Alerts',
+          click: () => createWindow('alerts'),
+        },
         { type: 'separator' },
         {
           label: 'Focus plot',
           click: () => createWindow('focus_plot'),
         },
-        {
-          label: 'Alerts',
-          click: () => createWindow('alerts'),
-        }
+        
       ],
     };
     const subMenuTCC: MenuItemConstructorOptions = {
