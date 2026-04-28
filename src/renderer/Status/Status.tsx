@@ -32,8 +32,8 @@ export default function Status() {
         top={0}>
         <CssBaseline />
         <BosonHeader/>
-        <Grid container columnSpacing={10} rowSpacing={1} columns={3}>
-            <Grid size={1}>
+        <Grid container columnSpacing={10} rowSpacing={1} columns={5}>
+            <Grid size={3}>
                 <NetPosition />
             </Grid>
             <Grid size={2}>

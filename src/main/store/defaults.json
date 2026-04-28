@@ -68,6 +68,11 @@
       "width": 800,
       "height": 600,
       "resizable": true
+    },
+    "alerts": {
+      "width": 400,
+      "height": 300,
+      "resizable": true
     }
   },
   "profiles": {
