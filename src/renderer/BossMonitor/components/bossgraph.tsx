@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { lineClasses } from "@mui/x-charts/LineChart";
+import { Keyword } from "main/tron/types";
 import { useKeywords } from "renderer/hooks";
 
 type ChartPoint = {
@@ -16,6 +17,12 @@ type ChartPoint = {
 
 type KeywordValue = {
   values?: unknown[];
+};
+
+type TrackedHistory = {
+  sp1r0Read: Keyword[];
+  sp1b2Read: Keyword[];
+  ln2Pressure: Keyword[];
 };
 
 const TIME_RANGE_SECONDS = 1800;
@@ -54,6 +61,100 @@ function buildEmptyHistory(
       sp1r0Nom,
       sp1b2Nom,
       ln2Pressure: null,
+      ln2Threshold: 10.0,
+    });
+  }
+
+  return points;
+}
+
+function buildTrackedHistory(
+  now: number,
+  sp1r0Nom: number | null,
+  sp1b2Nom: number | null,
+  history: TrackedHistory
+): ChartPoint[] {
+  const start = now - TIME_RANGE_SECONDS * 1000;
+
+  const toEvents = (keywords: Keyword[]) =>
+    keywords
+      .map((keyword) => ({
+        time: keyword.timestamp,
+        value: getFirstNumber(keyword.values),
+      }))
+      .filter((event) => Number.isFinite(event.time))
+      .sort((a, b) => a.time - b.time);
+
+  const sp1r0Events = toEvents(history.sp1r0Read);
+  const sp1b2Events = toEvents(history.sp1b2Read);
+  const ln2Events = toEvents(history.ln2Pressure);
+
+  let sp1r0Index = 0;
+  let sp1b2Index = 0;
+  let ln2Index = 0;
+
+  let sp1r0Value: number | null = null;
+  let sp1b2Value: number | null = null;
+  let ln2Value: number | null = null;
+
+  while (
+    sp1r0Index < sp1r0Events.length &&
+    sp1r0Events[sp1r0Index].time <= start
+  ) {
+    sp1r0Value = sp1r0Events[sp1r0Index].value;
+    sp1r0Index += 1;
+  }
+
+  while (
+    sp1b2Index < sp1b2Events.length &&
+    sp1b2Events[sp1b2Index].time <= start
+  ) {
+    sp1b2Value = sp1b2Events[sp1b2Index].value;
+    sp1b2Index += 1;
+  }
+
+  while (
+    ln2Index < ln2Events.length &&
+    ln2Events[ln2Index].time <= start
+  ) {
+    ln2Value = ln2Events[ln2Index].value;
+    ln2Index += 1;
+  }
+
+  const points: ChartPoint[] = [];
+
+  for (let t = start; t <= now; t += TICK_MS) {
+    while (
+      sp1r0Index < sp1r0Events.length &&
+      sp1r0Events[sp1r0Index].time <= t
+    ) {
+      sp1r0Value = sp1r0Events[sp1r0Index].value;
+      sp1r0Index += 1;
+    }
+
+    while (
+      sp1b2Index < sp1b2Events.length &&
+      sp1b2Events[sp1b2Index].time <= t
+    ) {
+      sp1b2Value = sp1b2Events[sp1b2Index].value;
+      sp1b2Index += 1;
+    }
+
+    while (
+      ln2Index < ln2Events.length &&
+      ln2Events[ln2Index].time <= t
+    ) {
+      ln2Value = ln2Events[ln2Index].value;
+      ln2Index += 1;
+    }
+
+    points.push({
+      time: t,
+      sp1r0Read: sp1r0Value,
+      sp1b2Read: sp1b2Value,
+      sp1r0Nom,
+      sp1b2Nom,
+      ln2Pressure: ln2Value,
       ln2Threshold: 10.0,
     });
   }
@@ -103,6 +204,42 @@ export default function BOSSTemperatureMonitor() {
   const [data, setData] = React.useState<ChartPoint[]>(() =>
     buildEmptyHistory(Date.now(), sp1r0Nom, sp1b2Nom)
   );
+
+  React.useEffect(() => {
+    let cancelled = false;
+
+    Promise.all([
+      window.electron.tron
+        .getAllKeywords("boss.SP1R0CCDTempRead")
+        .catch(() => [] as Keyword[]),
+      window.electron.tron
+        .getAllKeywords("boss.SP1B2CCDTempRead")
+        .catch(() => [] as Keyword[]),
+      window.electron.tron
+        .getAllKeywords("boss.SP1SecondaryDewarPress")
+        .catch(() => [] as Keyword[]),
+    ]).then(([sp1r0History, sp1b2History, ln2History]) => {
+      if (cancelled) return;
+
+      const latest = latestRef.current;
+      setData(
+        buildTrackedHistory(
+          Date.now(),
+          latest.sp1r0Nom,
+          latest.sp1b2Nom,
+          {
+            sp1r0Read: sp1r0History,
+            sp1b2Read: sp1b2History,
+            ln2Pressure: ln2History,
+          }
+        )
+      );
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   React.useEffect(() => {
     const tick = () => {

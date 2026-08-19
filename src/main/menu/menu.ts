@@ -239,7 +239,7 @@ export default class MenuBuilder {
       ],
     };
     const subMenuInstr: MenuItemConstructorOptions = {
-      label: 'Instr',
+      label: 'Instruments',
       submenu: [
         {
           label: "BOSS",

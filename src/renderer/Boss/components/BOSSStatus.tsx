@@ -235,15 +235,7 @@ export default function BOSSStatus() {
   console.log("Collimator Summary:", collimatorSummary);
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 1.5,
-        width: "fit-content",
-        minWidth: 275,
-      }}
-    >
-      <Box display="flex" flexDirection="column" gap={1}>
+      <Box display="flex" flexDirection="column" gap={1} pt={1.5} pl={1}>
         <Box
           display="grid"
           gridTemplateColumns="max-content 1fr"
@@ -304,7 +296,7 @@ export default function BOSSStatus() {
         {showCollimator && (
           <Box
             display="grid"
-            gridTemplateColumns="max-content 1fr max-content"
+            gridTemplateColumns="max-content max-content max-content"
             columnGap={1.5}
             rowGap={0.75}
             alignItems="center"
@@ -330,6 +322,5 @@ export default function BOSSStatus() {
           </Box>
         )}
       </Box>
-    </Paper>
   );
 }

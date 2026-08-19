@@ -191,7 +191,6 @@ export default function APOGEEWdg({
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        bgcolor: "background.paper",
         color: "text.primary",
         overflow: "hidden",
         "& .MuiTypography-root, & .MuiButton-root, & .MuiInputBase-root": {
@@ -207,7 +206,7 @@ export default function APOGEEWdg({
           minHeight: 0,
           overflow: "hidden",
           px: 0.25,
-          pt: 0.4,
+          pt: 1.5,
           pb: 0.35,
         }}
       >
